@@ -1,0 +1,120 @@
+asyncapi: '2.6.0'
+info:
+ title: Value-Aware Artificial Intelligence API
+ version: '0.1.0'
+ description: |
+  This api provide the messages that the VALAWAI infrastructure cna manage.
+  This messages are used to start/stop the infrastructure and for
+  mantains the data and control topology.
+ license:
+  name: MIT
+  url: https://opensource.org/license/mit/
+ contact:
+  name: VALAWAI
+  url: https://valawai.eu/
+channels:
+  valawai/component/register:
+    subscribe:
+      summary: Used by the components to inform that they are present on the infratructure.
+      message:
+        $ref: '#/components/messages/register_component'
+  valawai/status:
+    publish:
+      summary: Inform of the status of the VALAWAI infrastructure.
+      message:
+        $ref: '#/components/messages/status'
+  valawai/topology:
+    subscribe:
+      summary: Used by the components to inform of the changes that has to be done to teh topology.
+      message:
+        $ref: '#/components/messages/change_topology'
+
+components:
+  messages:
+    register_component:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/register_component_payload"
+
+    status:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/status_payload"
+
+    change_topology:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/change_topology_payload"
+
+  schemas:
+    register_component_payload:
+      type: object
+      properties:
+        type:
+          description: The type of component.
+          type: string
+          enum:
+            - 'C0'
+            - 'C1'
+            - 'C2'
+        name:
+          description: The component name.
+          type: string
+          pattern: c[0|1|2]_\w+
+          examples: 
+            - c0_voice_to_text
+            - c2_value_awarness_detector
+        version:
+          description: the component version.
+          type: string
+          pattern: \d+\.\d+\.\d+
+          examples: 
+            - 1.0.0
+            - 1.7.2
+        api:
+          description: The api that the component implements
+          type: object
+          properties:
+            version:
+              description: the API version.
+              type: string
+              pattern: \d+\.\d+\.\d+
+              examples: 
+               - 1.0.0
+               - 1.7.2
+            yaml:
+              description: The asyncapi specification.
+              type: string
+              examples: 
+                - "asyncapi: '2.6.0'\ninfo:..."
+
+    status_payload:
+      type: object
+      properties:
+        state:
+          description: The valawai state.
+          type: string
+          enum:
+            - 'STARTING'
+            - 'STOPING'
+            - 'ACTIVE'
+            - 'INACTIVE'
+
+    change_topology_payload:
+      type: object
+      properties:
+        action:
+          description: The type of action to do on the topology
+          enum:
+            - 'ENABLE'
+            - 'DISABLE'
+        source:
+          description: The source channel of the topology to modify.
+          type: string
+          examples: 
+            - "valawai/c0/voice_to_text/text_content"
+        target:
+          description: The target channel of the topology to modify.
+          type: string
+          examples: 
+            - "valawai/c1/norm_engine/text"
