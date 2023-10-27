@@ -25,7 +25,7 @@ channels:
         $ref: '#/components/messages/status'
   valawai/topology:
     subscribe:
-      summary: Used by the components to inform of the changes that has to be done to teh topology.
+      summary: Used by the components to inform of the changes that has to be done to the topology.
       message:
         $ref: '#/components/messages/change_topology'
 

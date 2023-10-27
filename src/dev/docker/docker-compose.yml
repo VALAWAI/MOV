@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  mq:
+    image: rabbitmq:management
+    container_name: valawai_mq_dev
+    restart: unless-stopped
+    ports:
+      - ${MQ_PORT:-5672}:5672
+      - ${MQ_UI_PORT:-8081}:15672
+    networks:
+      - valawai_dev
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MQ_USER:-valawai}
+      RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD:-password}
+      RABBITMQ_DEFAULT_VHOST: "0.0.0.0"
+
+networks:
+  valawai_dev:
