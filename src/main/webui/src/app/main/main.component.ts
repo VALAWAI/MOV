@@ -9,19 +9,20 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+	selector: 'app-main',
+	templateUrl: './main.component.html',
+	styleUrls: ['./main.component.css']
 })
-export class AppComponent {
-
+export class MainComponent {
 
 
 	/**
-	 * Create the component.
+	 *  Create the component.
 	 */
 	constructor(
 	) {
 
 	}
+
+
 }

@@ -9,19 +9,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+  selector: 'app-not-found',
+  templateUrl: './not-found.component.html',
+  styleUrls: ['./not-found.component.css']
 })
-export class AppComponent {
+export class NotFoundComponent{
 
+  constructor() { }
 
-
-	/**
-	 * Create the component.
-	 */
-	constructor(
-	) {
-
-	}
 }
