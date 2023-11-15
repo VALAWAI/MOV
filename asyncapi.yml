@@ -60,14 +60,14 @@ components:
         name:
           description: The component name.
           type: string
-          pattern: c[0|1|2]_\w+
+          pattern: "c[0|1|2]_\\w+"
           examples: 
             - c0_voice_to_text
             - c2_value_awarness_detector
         version:
           description: the component version.
           type: string
-          pattern: \d+\.\d+\.\d+
+          pattern: "\\d+\\.\\d+\\.\\d+"
           examples: 
             - 1.0.0
             - 1.7.2
@@ -78,7 +78,7 @@ components:
             version:
               description: the API version.
               type: string
-              pattern: \d+\.\d+\.\d+
+              pattern: "\\d+\\.\\d+\\.\\d+"
               examples: 
                - 1.0.0
                - 1.7.2
