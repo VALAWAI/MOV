@@ -9,15 +9,13 @@
 package eu.valawai.mov.events;
 
 import static eu.valawai.mov.ValueGenerator.nextUUID;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.Duration;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import eu.valawai.mov.persistence.ComponentEntity;
+import eu.valawai.mov.persistence.ComponentRepository;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * Test the {@link RegisterComponent}.
@@ -28,6 +26,12 @@ import io.quarkus.test.junit.QuarkusTest;
  */
 @QuarkusTest
 public class RegisterComponentTest extends MovEventTestCase {
+
+	/**
+	 * The repository to test.
+	 */
+	@Inject
+	ComponentRepository repository;
 
 	/**
 	 * Check that the user register a component.
@@ -49,10 +53,7 @@ public class RegisterComponentTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayload();
 		payload.name = nextUUID().toString();
 		this.assertPublish("valawai/component/register", payload);
-		final var components = ComponentEntity.find(" name = ?1", payload.name).list().await()
-				.atMost(Duration.ofSeconds(30));
-		assertNotNull(components);
-		assertTrue(components.isEmpty());
+		assertNull(this.repository.firstByName(payload.name));
 
 	}
 
