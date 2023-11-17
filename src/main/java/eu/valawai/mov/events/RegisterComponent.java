@@ -10,7 +10,8 @@ package eu.valawai.mov.events;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
-import io.quarkus.logging.Log;
+import eu.valawai.mov.api.v1.logs.LogRecord;
+import eu.valawai.mov.persistence.LogRecordRepository;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -30,6 +31,12 @@ public class RegisterComponent {
 	PayloadService service;
 
 	/**
+	 * The component that manage the registered logs.
+	 */
+	@Inject
+	LogRecordRepository logs;
+
+	/**
 	 * Called when has to register a component.
 	 *
 	 * @param content of the message to consume.
@@ -40,7 +47,8 @@ public class RegisterComponent {
 		final var payload = this.service.decodeAndVerify(content, RegisterComponentPayload.class);
 		if (payload == null) {
 
-			Log.errorv("The {0} is not a valid register component payload.", content);
+			this.logs.add(LogRecord.builder().withError().withMessage("Received invalid register component payload.")
+					.withPayload(content).build());
 
 		} else {
 

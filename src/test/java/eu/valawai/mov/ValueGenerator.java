@@ -132,4 +132,15 @@ public class ValueGenerator {
 
 	}
 
+	/**
+	 * Generate a new boolean value.
+	 *
+	 * @return the flip coin result..
+	 */
+	public static final boolean flipCoin() {
+
+		return CURRENT.nextBoolean();
+
+	}
+
 }
