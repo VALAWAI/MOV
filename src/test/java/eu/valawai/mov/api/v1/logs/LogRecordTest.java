@@ -50,12 +50,11 @@ public class LogRecordTest extends ModelTestCase<LogRecord> {
 		model.message = nextPattern("Message of the log {0}");
 		if (flipCoin()) {
 
-			model.payload = nextPattern("""
-					{
-						"number": {0},
-						"msg": "Message {1}"
-					}
-					""", 2);
+			final var values = new HashMap<String, Object>();
+			values.put("number", rnd().nextInt());
+			values.put("flip", flipCoin());
+			values.put("message", nextPattern("Message {0}"));
+			model.payload = new JsonObject(values).encodePrettily();
 
 		}
 		return model;
