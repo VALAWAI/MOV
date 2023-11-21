@@ -100,8 +100,8 @@ public class ValueGenerator {
 		final var args = new Object[max];
 		for (var i = 0; i < max; i++) {
 
-			final var value = CURRENT.nextInt(0, 99999999);
-			args[i] = String.format("%09d", value);
+			final var value = CURRENT.nextInt(0, 999999);
+			args[i] = String.format("%06d", value);
 
 		}
 		return MessageFormat.format(pattern, args);

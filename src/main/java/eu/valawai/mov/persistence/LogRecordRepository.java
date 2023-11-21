@@ -174,14 +174,38 @@ public class LogRecordRepository {
 
 			}
 		}
+		page.total = page.logs.size();
 		if (order != null) {
 
-			final var factors = order.split("\\w*,\\w*");
+			final var factors = order.split("\\s*,\\s*");
 			page.logs.sort((log1, log2) -> {
 
-				final var cmp = 0;
+				var cmp = 0;
 				for (final var factor : factors) {
 
+					switch (factor) {
+					case "timestamp":
+					case "+timestamp":
+						cmp = Long.compare(log1.timestamp, log2.timestamp);
+						break;
+					case "-timestamp":
+						cmp = Long.compare(log2.timestamp, log1.timestamp);
+						break;
+					case "message":
+					case "+message":
+						cmp = log1.message.compareTo(log2.message);
+						break;
+					case "-message":
+						cmp = log2.message.compareTo(log1.message);
+						break;
+					case "level":
+					case "+level":
+						cmp = log1.level.compareTo(log2.level);
+						break;
+					case "-level":
+						cmp = log2.level.compareTo(log1.level);
+						break;
+					}
 					if (cmp != 0) {
 						break;
 					}
@@ -191,7 +215,7 @@ public class LogRecordRepository {
 		}
 
 		final var max = page.logs.size();
-		if (max == 0 || offset > max) {
+		if (offset >= max) {
 
 			page.logs = null;
 
