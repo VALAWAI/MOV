@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger.Level;
 
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.logs.LogRecord;
 import eu.valawai.mov.api.v1.logs.LogRecordPage;
 import io.quarkus.logging.Log;
@@ -61,6 +62,7 @@ public class LogRecordRepository {
 				Log.logv(Level.valueOf(log.level.name()), log.message + "\n{0}", log.payload);
 			}
 
+			log.timestamp = TimeManager.now();
 			synchronized (LOGS) {
 
 				final var added = LOGS.add(log);
@@ -147,7 +149,7 @@ public class LogRecordRepository {
 	/**
 	 * Return the page with the logs that satisfy the parameters.
 	 *
-	 * @param pattern to match the logs message.
+	 * @param pattern to match the logs message or payload.
 	 * @param level   to match the logs.
 	 * @param order   to return the logs.
 	 * @param offset  to the first log to return.
@@ -158,8 +160,73 @@ public class LogRecordRepository {
 	public LogRecordPage getLogRecordPage(String pattern, String level, String order, int offset, int limit) {
 
 		final var page = new LogRecordPage();
+		page.offset = offset;
+		page.logs = new ArrayList<>();
+		synchronized (LOGS) {
 
+			for (final var log : LOGS) {
+
+				final var add = this.match(pattern, log.message) && this.match(level, log.level.name());
+				if (add) {
+
+					page.logs.add(log);
+				}
+
+			}
+		}
+		if (order != null) {
+
+			final var factors = order.split("\\w*,\\w*");
+			page.logs.sort((log1, log2) -> {
+
+				final var cmp = 0;
+				for (final var factor : factors) {
+
+					if (cmp != 0) {
+						break;
+					}
+				}
+				return cmp;
+			});
+		}
+
+		final var max = page.logs.size();
+		if (max == 0 || offset > max) {
+
+			page.logs = null;
+
+		} else {
+
+			page.logs = page.logs.subList(offset, Math.min(offset + limit, max));
+
+		}
 		return page;
+	}
+
+	/**
+	 * Check if the value is equals or match the regular expressions.
+	 *
+	 * @param pattern to check.
+	 * @param value   to compare.
+	 *
+	 * @return {@code true} if the value match the pattern.
+	 */
+	private boolean match(String pattern, String value) {
+
+		if (pattern == null) {
+
+			return true;
+
+		} else if (pattern.startsWith("/")) {
+
+			final var regex = "(?i)" + pattern.substring(1, pattern.length() - 1);
+			return value.matches(regex);
+
+		} else {
+
+			return pattern.equalsIgnoreCase(value);
+		}
+
 	}
 
 }

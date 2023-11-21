@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
+import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.api.v1.logs.LogRecordPage;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -60,8 +62,12 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 
 		final var expectedCount = this.repository.count() + 1;
 		final var expected = new LogRecordTest().nextModel();
+		final var now = TimeManager.now();
 		assertTrue(this.repository.add(expected));
-		assertEquals(expected, this.repository.last());
+		final var last = this.repository.last();
+		assertTrue(last.timestamp >= now);
+		expected.timestamp = last.timestamp;
+		assertEquals(expected, last);
 		assertEquals(expectedCount, this.repository.count());
 
 	}
@@ -76,8 +82,12 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 		for (var i = this.repository.count(); i < this.maxLogs; i++) {
 
 			final var expected = new LogRecordTest().nextModel();
+			final var now = TimeManager.now();
 			assertTrue(this.repository.add(expected));
-			assertEquals(expected, this.repository.last());
+			final var last = this.repository.last();
+			assertTrue(last.timestamp >= now);
+			expected.timestamp = last.timestamp;
+			assertEquals(expected, last);
 			assertEquals(i + 1, this.repository.count());
 
 		}
@@ -86,7 +96,12 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 
 			final var expected = new LogRecordTest().nextModel();
 			assertTrue(this.repository.add(expected));
-			assertEquals(expected, this.repository.last());
+			final var now = TimeManager.now();
+			assertTrue(this.repository.add(expected));
+			final var last = this.repository.last();
+			assertTrue(last.timestamp >= now);
+			expected.timestamp = last.timestamp;
+			assertEquals(expected, last);
 			assertEquals(this.maxLogs, this.repository.count());
 			final var newFirst = this.repository.first();
 			assertNotEquals(first, newFirst);
@@ -106,7 +121,7 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 		assertEquals(0, this.repository.count());
 		assertNull(this.repository.last());
 		assertNull(this.repository.first());
-
+		assertEquals(new LogRecordPage(), this.repository.getLogRecordPage(null, null, null, 0, 20));
 	}
 
 }

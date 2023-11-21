@@ -42,6 +42,12 @@ public class LogRecord extends Model {
 	public String payload;
 
 	/**
+	 * The timestamp when the log has added.
+	 */
+	@Schema(title = "The timestamp when the .")
+	public long timestamp;
+
+	/**
 	 * Return the component to build a log record.
 	 *
 	 * @return the component to create a new log record.
