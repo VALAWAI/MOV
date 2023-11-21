@@ -93,6 +93,17 @@ public class LogRecordRepository {
 	}
 
 	/**
+	 * Clear all the logs.
+	 */
+	public void clear() {
+
+		synchronized (LOGS) {
+
+			LOGS.clear();
+		}
+	}
+
+	/**
 	 * Obtain the last log record.
 	 *
 	 * @return the last record message or {@code null} if not record exists.
@@ -109,6 +120,26 @@ public class LogRecordRepository {
 			} else {
 
 				return null;
+			}
+		}
+	}
+
+	/**
+	 * Obtain the first log record.
+	 *
+	 * @return the first record message or {@code null} if not record exists.
+	 */
+	public LogRecord first() {
+
+		synchronized (LOGS) {
+
+			if (LOGS.isEmpty()) {
+
+				return null;
+
+			} else {
+
+				return LOGS.get(0);
 			}
 		}
 	}
