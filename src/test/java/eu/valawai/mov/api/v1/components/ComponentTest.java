@@ -10,9 +10,9 @@ package eu.valawai.mov.api.v1.components;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
+import static eu.valawai.mov.ValueGenerator.rnd;
 
 import eu.valawai.mov.api.ModelTestCase;
-import eu.valawai.mov.events.ComponentType;
 
 /**
  * Test the {@link Component}.
@@ -41,9 +41,12 @@ public class ComponentTest extends ModelTestCase<Component> {
 	public Component nextModel() {
 
 		final var model = this.createEmptyModel();
-		model.type = next(ComponentType.values());
-		model.name = model.type.name().toLowerCase() + nextPattern("_test_{0}");
+		model.id = next("{0}");
+		model.name = nextPattern("Name of component {0}");
+		model.description = nextPattern("Description of component {0}");
 		model.version = nextPattern("{0}.{1}.{2}", 3);
+		model.type = next(ComponentType.values());
+		model.since = rnd().nextLong();
 		return model;
 	}
 

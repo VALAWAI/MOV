@@ -6,7 +6,7 @@
   https://opensource.org/licenses/MIT.
 */
 
-package eu.valawai.mov.api.v1.logs;
+package eu.valawai.mov.api.v1.components;
 
 import java.util.List;
 
@@ -15,17 +15,17 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import eu.valawai.mov.api.Model;
 
 /**
- * A page with some logs.
+ * A page with some components.
  *
  * @author UDT-IA, IIIA-CSIC
  */
-@Schema(title = "A page with some logs.")
-public class LogRecordPage extends Model {
+@Schema(title = "A page with some components.")
+public class ComponentPage extends Model {
 
 	/**
-	 * The number of logs that satisfy the query.
+	 * The number of components that satisfy the query.
 	 */
-	@Schema(title = "The total number of logs that satisfy the query.")
+	@Schema(title = "The total number of components that satisfy the query.")
 	public long total = 0;
 
 	/**
@@ -35,9 +35,9 @@ public class LogRecordPage extends Model {
 	public int offset = 0;
 
 	/**
-	 * The logs that match the query.
+	 * The components that match the query.
 	 */
-	@Schema(title = "The logs that satisfy the query")
-	public List<LogRecord> logs;
+	@Schema(title = "The components that satisfy the query")
+	public List<Component> components;
 
 }

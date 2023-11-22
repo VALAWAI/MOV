@@ -59,7 +59,7 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 	}
 
 	/**
-	 * Should add log.
+	 * Should add a log.
 	 */
 	@Test
 	public void shouldAddLog() {

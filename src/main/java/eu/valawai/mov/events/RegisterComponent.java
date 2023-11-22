@@ -8,8 +8,12 @@
 
 package eu.valawai.mov.events;
 
-import org.eclipse.microprofile.reactive.messaging.Incoming;
+import java.util.Map;
 
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.yaml.snakeyaml.Yaml;
+
+import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.logs.LogRecord;
 import eu.valawai.mov.persistence.LogRecordRepository;
 import io.vertx.core.json.JsonObject;
@@ -51,6 +55,24 @@ public class RegisterComponent {
 					.withPayload(content).build());
 
 		} else {
+
+			try {
+
+				final Yaml yaml = new Yaml();
+				final Map<String, Object> api = yaml.load(payload.asyncapiYaml);
+				final var component = new Component();
+				component.type = payload.type;
+				component.name = payload.name;
+				component.version = payload.version;
+				component.apiVersion = (String) ((Map<String, Object>) api.get("info")).get("version");
+
+			} catch (final Throwable error) {
+
+				this.logs.add(LogRecord.builder().withError()
+						.withMessage("Received invalid async API of the register component payload.")
+						.withPayload(content).build());
+
+			}
 
 		}
 

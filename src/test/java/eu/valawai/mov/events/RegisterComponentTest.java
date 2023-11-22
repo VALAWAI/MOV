@@ -9,12 +9,15 @@
 package eu.valawai.mov.events;
 
 import static eu.valawai.mov.ValueGenerator.nextUUID;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.persistence.ComponentRepository;
+import eu.valawai.mov.persistence.LogRecordRepository;
 import io.quarkus.test.junit.QuarkusTest;
+import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
 
 /**
@@ -28,10 +31,16 @@ import jakarta.inject.Inject;
 public class RegisterComponentTest extends MovEventTestCase {
 
 	/**
-	 * The repository to test.
+	 * The repository with the components.
 	 */
 	@Inject
-	ComponentRepository repository;
+	ComponentRepository components;
+
+	/**
+	 * The repository with the logs.
+	 */
+	@Inject
+	LogRecordRepository logs;
 
 	/**
 	 * Check that the user register a component.
@@ -50,10 +59,16 @@ public class RegisterComponentTest extends MovEventTestCase {
 	@Test
 	public void shouldNotRegisterComponent() {
 
+		final var countComponents = this.components.count();
+		final var countLogs = this.logs.count();
 		final var payload = new RegisterComponentPayload();
 		payload.name = nextUUID().toString();
 		this.assertPublish("valawai/component/register", payload);
-		assertNull(this.repository.firstByName(payload.name));
+		assertEquals(countComponents, this.components.count());
+		assertEquals(countLogs + 1, this.logs.count());
+		final var log = this.logs.last();
+		assertEquals(LogLevel.ERROR, log.level);
+		assertEquals(JsonObject.mapFrom(payload), log.payload);
 
 	}
 

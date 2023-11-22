@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.persistence;
 
+import static eu.valawai.mov.persistence.Repositories.match;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -166,7 +168,7 @@ public class LogRecordRepository {
 
 			for (final var log : LOGS) {
 
-				final var add = this.match(pattern, log.message) && this.match(level, log.level.name());
+				final var add = match(pattern, log.message) && match(level, log.level.name());
 				if (add) {
 
 					page.logs.add(log);
@@ -225,32 +227,6 @@ public class LogRecordRepository {
 
 		}
 		return page;
-	}
-
-	/**
-	 * Check if the value is equals or match the regular expressions.
-	 *
-	 * @param pattern to check.
-	 * @param value   to compare.
-	 *
-	 * @return {@code true} if the value match the pattern.
-	 */
-	private boolean match(String pattern, String value) {
-
-		if (pattern == null) {
-
-			return true;
-
-		} else if (pattern.startsWith("/")) {
-
-			final var regex = "(?i)" + pattern.substring(1, pattern.length() - 1);
-			return value.matches(regex);
-
-		} else {
-
-			return pattern.equalsIgnoreCase(value);
-		}
-
 	}
 
 }

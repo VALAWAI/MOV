@@ -12,7 +12,9 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import eu.valawai.mov.api.v1.components.ComponentType;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -36,9 +38,8 @@ public class RegisterComponentPayload extends Payload {
 	/**
 	 * The name of the component to register.
 	 */
-	@NotNull
-	@Pattern(regexp = "c[0|1|2]_\\w+")
 	@Schema(title = "The component name.")
+	@NotNull
 	public String name;
 
 	/**
@@ -50,10 +51,10 @@ public class RegisterComponentPayload extends Payload {
 	public String version;
 
 	/**
-	 * The API of the component.
+	 * The asyncapi specification in yaml.
 	 */
-	@NotNull
-	@Schema(title = "The component API.")
-	public ComponentApiInfo api;
+	@Schema(title = "The asyncapi specification in yaml.")
+	@NotEmpty
+	public String asyncapiYaml;
 
 }

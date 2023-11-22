@@ -8,10 +8,11 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.List;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
-import eu.valawai.mov.events.ComponentType;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -25,11 +26,23 @@ import jakarta.validation.constraints.Pattern;
 public class Component extends Model {
 
 	/**
+	 * The identifier of the component.
+	 */
+	@Schema(title = "The component identifier.")
+	public String id;
+
+	/**
 	 * The name of the component.
 	 */
 	@Schema(title = "The component name.")
-	@Pattern(regexp = "c[0|1|2]_\\w+")
+	@NotEmpty
 	public String name;
+
+	/**
+	 * The description of the component.
+	 */
+	@Schema(title = "The component description.")
+	public String description;
 
 	/**
 	 * The version of the components.
@@ -40,9 +53,30 @@ public class Component extends Model {
 	public String version;
 
 	/**
+	 * The version of the API.
+	 */
+	@Schema(title = "The component API version.")
+	@NotEmpty
+	@Pattern(regexp = "\\d+\\.\\d+\\.\\d+")
+	public String apiVersion;
+
+	/**
 	 * The type of component.
 	 */
 	@Schema(title = "The component type.")
 	@NotNull
 	public ComponentType type;
+
+	/**
+	 * The time when the component is registered.
+	 */
+	@Schema(title = "The time when the component is registered.")
+	public long since;
+
+	/**
+	 * The channels defined on the component.
+	 */
+	@Schema(title = "The channel associated to the component.")
+	public List<ChannelSchema> channels;
+
 }

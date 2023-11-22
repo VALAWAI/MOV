@@ -6,10 +6,12 @@
   https://opensource.org/licenses/MIT.
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.api.v1.components;
 
 /**
  * The possible types of components.
+ *
+ * @see Component
  *
  * @author UDT-IA, IIIA-CSIC
  */
