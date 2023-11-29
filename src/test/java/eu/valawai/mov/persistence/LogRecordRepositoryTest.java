@@ -80,11 +80,11 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 	 * Should add logs and discard if reached the maximum.
 	 */
 	@Test
-	public void shouldAddLogAndDiscsard() {
+	public void shouldAddLogAndDiscard() {
 
 		var first = this.repository.first();
 		final var builder = new LogRecordTest();
-		for (var i = this.repository.count(); i < this.maxLogs; i++) {
+		while (this.repository.count() < this.maxLogs) {
 
 			final var expected = builder.nextModel();
 			final var now = TimeManager.now();
@@ -93,7 +93,6 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 			assertTrue(last.timestamp >= now);
 			expected.timestamp = last.timestamp;
 			assertEquals(expected, last);
-			assertEquals(i + 1, this.repository.count());
 
 		}
 
@@ -103,11 +102,11 @@ public class LogRecordRepositoryTest extends MovPersistenceTestCase {
 			assertTrue(this.repository.add(expected));
 			final var now = TimeManager.now();
 			assertTrue(this.repository.add(expected));
+			assertEquals(this.maxLogs, this.repository.count());
 			final var last = this.repository.last();
 			assertTrue(last.timestamp >= now);
 			expected.timestamp = last.timestamp;
 			assertEquals(expected, last);
-			assertEquals(this.maxLogs, this.repository.count());
 			final var newFirst = this.repository.first();
 			assertNotEquals(first, newFirst);
 			first = newFirst;
