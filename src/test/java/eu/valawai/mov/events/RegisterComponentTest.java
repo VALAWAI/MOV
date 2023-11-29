@@ -8,14 +8,14 @@
 
 package eu.valawai.mov.events;
 
-import static eu.valawai.mov.ValueGenerator.nextUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.persistence.ComponentRepository;
-import eu.valawai.mov.persistence.LogRecordRepository;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
@@ -37,10 +37,43 @@ public class RegisterComponentTest extends MovEventTestCase {
 	ComponentRepository components;
 
 	/**
-	 * The repository with the logs.
+	 * Check that cannot register with an invalid payload.
 	 */
-	@Inject
-	LogRecordRepository logs;
+	@Test
+	public void shouldNotRegisterComponentWithInvalidPayload() {
+
+		final var payload = new RegisterComponentPayload();
+		final var countLogs = this.logs.count() + 1;
+		final var countComponents = this.components.count();
+		this.assertPublish("valawai/component/register", payload);
+		this.wainUntilLog(countLogs, Duration.ofSeconds(30));
+		assertEquals(countComponents, this.components.count());
+
+		final var log = this.logs.last();
+		assertEquals(LogLevel.ERROR, log.level);
+		assertEquals(JsonObject.mapFrom(payload).encodePrettily(), log.payload);
+
+	}
+
+	/**
+	 * Check that the not register with an invalid AsyncAPI.
+	 */
+	@Test
+	public void shouldNotRegisterComponentWithInvalidAsyncAPI() {
+
+		final var payload = new RegisterComponentPayloadTest().nextPayload();
+		payload.asyncapiYaml += "channels:\n\tBad:\n\ttype: string";
+		final var countLogs = this.logs.count() + 1;
+		final var countComponents = this.components.count();
+		this.assertPublish("valawai/component/register", payload);
+		this.wainUntilLog(countLogs, Duration.ofSeconds(30));
+		assertEquals(countComponents, this.components.count());
+
+		final var log = this.logs.last();
+		assertEquals(LogLevel.ERROR, log.level);
+		assertEquals(JsonObject.mapFrom(payload).encodePrettily(), log.payload);
+
+	}
 
 	/**
 	 * Check that the user register a component.
@@ -49,26 +82,11 @@ public class RegisterComponentTest extends MovEventTestCase {
 	public void shouldRegisterComponent() {
 
 		final var payload = new RegisterComponentPayloadTest().nextPayload();
-		this.assertPublish("valawai/component/register", payload);
-
-	}
-
-	/**
-	 * Check that the not register a bad component.
-	 */
-	@Test
-	public void shouldNotRegisterComponent() {
-
+		final var countLogs = this.logs.count() + 1;
 		final var countComponents = this.components.count();
-		final var countLogs = this.logs.count();
-		final var payload = new RegisterComponentPayload();
-		payload.name = nextUUID().toString();
 		this.assertPublish("valawai/component/register", payload);
-		assertEquals(countComponents, this.components.count());
-		assertEquals(countLogs + 1, this.logs.count());
-		final var log = this.logs.last();
-		assertEquals(LogLevel.ERROR, log.level);
-		assertEquals(JsonObject.mapFrom(payload), log.payload);
+		this.wainUntilLog(countLogs, Duration.ofSeconds(30));
+		assertEquals(countComponents + 1, this.components.count());
 
 	}
 

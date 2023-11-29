@@ -72,8 +72,8 @@ public class RegisterComponent {
 				component.name = payload.name;
 				component.version = payload.version;
 				if (!this.components.add(component)) {
-
-					this.logs.add(LogRecord.builder().withError().withMessage("Cannot register a component.")
+					// It never happens in theory
+					this.logs.add(LogRecord.builder().withError().withMessage("Cannot store the component to register.")
 							.withPayload(content).build());
 
 				} else {
