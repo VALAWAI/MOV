@@ -34,4 +34,18 @@ public class BasicPayloadSchema extends PayloadSchema {
 		this.type = PayloadType.BASIC;
 	}
 
+	/**
+	 * Create a basic payload with specific format.
+	 *
+	 * @param format of the basic payload.
+	 *
+	 * @return the basic payload with the specified format.
+	 */
+	public static BasicPayloadSchema with(BasicPayloadFormat format) {
+
+		final var schema = new BasicPayloadSchema();
+		schema.format = format;
+		return schema;
+	}
+
 }

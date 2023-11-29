@@ -1,0 +1,72 @@
+{
+	"name": "Account Service",
+	"version": "1.0.0",
+	"apiVersion": "1.0.0",
+	"description": "This service is in charge of processing user signups",
+	"channels": [
+		{
+			"id": "user/signedup",
+			"publish": {
+				"type": "OBJECT",
+				"properties": {
+					"displayName": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"email": {
+						"type": "BASIC",
+						"format": "STRING"
+					}
+				}
+			}
+		},
+		{
+			"id": "user/signedin",
+			"subscribe": {
+				"type": "OBJECT",
+				"properties": {
+					"displayName": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"avatar": {
+						"type": "BASIC",
+						"format": "BOOLEAN"
+					},
+					"since": {
+						"type": "BASIC",
+						"format": "INTEGER"
+					},
+					"counter": {
+						"type": "BASIC",
+						"format": "NUMBER"
+					},
+					"role": {
+						"type": "ENUM",
+						"values": [
+							"Admin",
+							"Student",
+							"User"
+						]
+					},
+					"names": {
+						"type": "ARRAY",
+						"items": {
+							"type": "BASIC",
+							"format": "STRING"
+						}
+					},
+					"content": {
+						"type": "OBJECT",
+						"properties": {
+							"msg": {
+								"type": "BASIC",
+								"format": "STRING"
+							}
+						}
+					}
+				}
+			}
+		}
+	]
+}

@@ -8,13 +8,11 @@
 
 package eu.valawai.mov.events;
 
-import java.util.Map;
-
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.yaml.snakeyaml.Yaml;
 
-import eu.valawai.mov.api.v1.components.Component;
+import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.logs.LogRecord;
+import eu.valawai.mov.persistence.ComponentRepository;
 import eu.valawai.mov.persistence.LogRecordRepository;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -35,10 +33,16 @@ public class RegisterComponent {
 	PayloadService service;
 
 	/**
-	 * The component that manage the registered logs.
+	 * The service that manage the registered logs.
 	 */
 	@Inject
 	LogRecordRepository logs;
+
+	/**
+	 * The service that manage the registered components.
+	 */
+	@Inject
+	ComponentRepository components;
 
 	/**
 	 * Called when has to register a component.
@@ -56,24 +60,29 @@ public class RegisterComponent {
 
 		} else {
 
-			try {
+			final var component = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+			if (component == null) {
 
-				final Yaml yaml = new Yaml();
-				final Map<String, Object> api = yaml.load(payload.asyncapiYaml);
-				final var component = new Component();
+				this.logs.add(LogRecord.builder().withError().withMessage("Received invalid async API.")
+						.withPayload(content).build());
+
+			} else {
+
 				component.type = payload.type;
 				component.name = payload.name;
 				component.version = payload.version;
-				component.apiVersion = (String) ((Map<String, Object>) api.get("info")).get("version");
+				if (!this.components.add(component)) {
 
-			} catch (final Throwable error) {
+					this.logs.add(LogRecord.builder().withError().withMessage("Cannot register a component.")
+							.withPayload(content).build());
 
-				this.logs.add(LogRecord.builder().withError()
-						.withMessage("Received invalid async API of the register component payload.")
-						.withPayload(content).build());
+				} else {
 
+					this.logs.add(LogRecord.builder().withInfo().withMessage("Registered the component {0}", component)
+							.withPayload(content).build());
+
+				}
 			}
-
 		}
 
 	}

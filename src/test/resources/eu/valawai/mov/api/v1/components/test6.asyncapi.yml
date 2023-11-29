@@ -1,0 +1,69 @@
+asyncapi: 2.6.0
+
+info:
+  title: Account Service
+  version: 1.0.0
+  description: This service is in charge of processing user signups
+
+channels:
+  user/signedup:
+    publish:
+      message:
+        $ref: '#/components/messages/UserSignedUp'
+
+  user/signedin:
+    subscribe:
+      message:
+        $ref: '#/components/messages/UserSignedIn'
+
+components:
+  messages:
+    UserSignedUp:
+      payload:
+        $ref: '#/components/schemas/UserSignedUpPayload'
+    UserSignedIn:
+      payload:
+        $ref: '#/components/schemas/UserSignedInPayload'
+
+  schemas:
+    UserSignedUpPayload:
+      type: object
+      properties:
+        displayName:
+          $ref: '#/components/schemas/DisplayName'
+
+        email:
+          type: string
+          format: email
+          description: Email of the user
+
+    UserSignedInPayload:
+      type: object
+      properties:
+        displayName:
+          type: string
+        avatar:
+          type: boolean
+        since:
+          type: integer
+        counter:
+          type: number
+        role:
+          type: string
+          enum:
+           - Admin
+           - Student
+           - User
+        names:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisplayName'
+        content:
+          type: object
+          properties:
+            msg:
+              type: string
+          
+    DisplayName:
+      type: string
+      description: Name of the user
