@@ -9,7 +9,6 @@
 package eu.valawai.mov.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,7 +46,7 @@ public class ComponentRepositoryTest extends MovPersistenceTestCase {
 	@Test
 	public void shouldNotAddNullComponent() {
 
-		assertFalse(this.repository.add(null));
+		assertNull(this.repository.add(null));
 	}
 
 	/**
@@ -59,11 +58,14 @@ public class ComponentRepositoryTest extends MovPersistenceTestCase {
 		final var component = new ComponentTest().nextModel();
 		final var now = TimeManager.now();
 		final var count = this.repository.count();
-		assertTrue(this.repository.add(component));
-		final var last = this.repository.last();
-		assertNotNull(last.id);
-		assertTrue(last.since >= now);
+		final var added = this.repository.add(component);
 		assertEquals(count + 1, this.repository.count());
+
+		assertNotNull(added);
+		assertNotNull(added.id);
+		assertTrue(added.since >= now);
+		final var last = this.repository.last();
+		assertEquals(added, last);
 		component.since = last.since;
 		component.id = last.id;
 		assertEquals(component, last);
@@ -98,12 +100,14 @@ public class ComponentRepositoryTest extends MovPersistenceTestCase {
 			final var component = builder.nextModel();
 			final var now = TimeManager.now();
 			final var count = this.repository.count();
-			assertTrue(this.repository.add(component));
-			final var last = this.repository.last();
-			assertNotNull(last.id);
-			assertEquals(String.valueOf(i + 1), last.id);
-			assertTrue(last.since >= now);
+			final var added = this.repository.add(component);
 			assertEquals(count + 1, this.repository.count());
+
+			assertNotNull(added);
+			assertNotNull(added.id);
+			assertTrue(added.since >= now);
+			final var last = this.repository.last();
+			assertEquals(added, last);
 			component.since = last.since;
 			component.id = last.id;
 			assertEquals(component, last);
@@ -126,9 +130,10 @@ public class ComponentRepositoryTest extends MovPersistenceTestCase {
 		final var builder = new ComponentTest();
 		for (var i = 0; i < expected.total; i++) {
 
-			assertTrue(this.repository.add(builder.nextModel()));
-			final var last = this.repository.last();
-			expected.components.add(last);
+			final var component = builder.nextModel();
+			final var added = this.repository.add(component);
+			assertNotNull(added);
+			expected.components.add(added);
 
 		}
 

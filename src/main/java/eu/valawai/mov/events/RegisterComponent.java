@@ -71,14 +71,15 @@ public class RegisterComponent {
 				component.type = payload.type;
 				component.name = payload.name;
 				component.version = payload.version;
-				if (!this.components.add(component)) {
+				final var added = this.components.add(component);
+				if (added == null) {
 					// It never happens in theory
 					this.logs.add(LogRecord.builder().withError().withMessage("Cannot store the component to register.")
 							.withPayload(content).build());
 
 				} else {
 
-					this.logs.add(LogRecord.builder().withInfo().withMessage("Registered the component {0}", component)
+					this.logs.add(LogRecord.builder().withInfo().withMessage("Registered the component {0}", added)
 							.withPayload(content).build());
 
 				}

@@ -39,9 +39,9 @@ public class ComponentRepository {
 	 *
 	 * @param component to add.
 	 *
-	 * @return {@code true} if the component has been added.
+	 * @return the added component or {@code null} if it cannot be added.
 	 */
-	public boolean add(Component component) {
+	public Component add(Component component) {
 
 		if (component != null) {
 
@@ -61,11 +61,11 @@ public class ComponentRepository {
 				COMPONENTS.add(component);
 			}
 
-			return true;
+			return component;
 
 		} else {
 
-			return false;
+			return null;
 		}
 
 	}
