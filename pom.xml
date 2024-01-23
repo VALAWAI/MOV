@@ -15,10 +15,10 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.6.5</quarkus.platform.version>
+		<quarkus.platform.version>3.6.6</quarkus.platform.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.1.2</surefire-plugin.version>
-		<io.quarkiverse.rabbitmqclient.version>3.0.0</io.quarkiverse.rabbitmqclient.version>
+		<io.quarkiverse.rabbitmqclient.version>3.0.1</io.quarkiverse.rabbitmqclient.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>io.quarkiverse.quinoa</groupId>
 			<artifactId>quarkus-quinoa</artifactId>
-			<version>2.3.2</version>
+			<version>2.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
