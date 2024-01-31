@@ -10,9 +10,14 @@ package eu.valawai.mov.api.v1.components;
 
 import java.util.List;
 
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import eu.valawai.mov.api.Model;
+import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -28,8 +33,10 @@ public class Component extends Model {
 	/**
 	 * The identifier of the component.
 	 */
-	@Schema(title = "The component identifier.")
-	public String id;
+	@Schema(title = "The identifier of the component", readOnly = true, example = "000000000000000000000000", implementation = String.class)
+	@BsonProperty("_id")
+	@JsonSerialize(using = ObjectIdSerializer.class)
+	public ObjectId id;
 
 	/**
 	 * The name of the component.
@@ -70,7 +77,7 @@ public class Component extends Model {
 	/**
 	 * The time when the component is registered.
 	 */
-	@Schema(title = "The time when the component is registered.")
+	@Schema(title = "The time when the component is registered. The epoch time in seconds when the component is registered", readOnly = true)
 	public long since;
 
 	/**

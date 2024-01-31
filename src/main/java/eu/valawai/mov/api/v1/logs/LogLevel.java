@@ -23,8 +23,18 @@ public enum LogLevel {
 	ERROR,
 
 	/**
+	 * A log message of the level warning.
+	 */
+	WARN,
+
+	/**
 	 * A log message of the level info.
 	 */
-	INFO;
+	INFO,
+
+	/**
+	 * A log message of the level debug.
+	 */
+	DEBUG;
 
 }

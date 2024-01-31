@@ -8,13 +8,12 @@
 
 package eu.valawai.mov;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Duration;
 
-import eu.valawai.mov.api.v1.logs.LogRecord;
-import eu.valawai.mov.persistence.LogRecordRepository;
-import jakarta.inject.Inject;
+import eu.valawai.mov.persistence.AbstractEntityOperator;
+import io.smallrye.mutiny.Uni;
 
 /**
  * The common infrastructure to run a test that uses the Master Of VALAWAI
@@ -25,41 +24,29 @@ import jakarta.inject.Inject;
 public class MasterOfValawaiTestCase {
 
 	/**
-	 * The repository with the logs.
+	 * Check that a component is executed and return a non null value.
+	 *
+	 * @param operator to execute.
+	 *
+	 * @reutnr the result of the execution.
 	 */
-	@Inject
-	protected LogRecordRepository logs;
+	protected <T> T assertExecutionNotNull(AbstractEntityOperator<T, ?> operator) {
+
+		return this.assertItemNotNull(operator.execute());
+	}
 
 	/**
-	 * Wait until received a log.
+	 * Check that a component is executed and return a non null value.
 	 *
-	 * @param index    number of logs to wait.
-	 * @param duration maximum time to wait.
+	 * @param operator to execute.
 	 *
-	 * @return the last log.
-	 *
-	 * @throws AssertionError if reached timeout.
+	 * @reutnr the result of the execution.
 	 */
-	protected LogRecord wainUntilLog(int index, Duration duration) {
+	protected <T> T assertItemNotNull(Uni<T> operator) {
 
-		final var deadline = System.currentTimeMillis() + duration.toMillis();
-		do {
-
-			try {
-
-				Thread.sleep(1000);
-
-			} catch (final Throwable ignored) {
-			}
-
-			if (System.currentTimeMillis() > deadline) {
-
-				fail("Timeout reached when wait for a log..");
-			}
-
-		} while (this.logs.count() < index);
-
-		return this.logs.last();
+		final var result = operator.onFailure().recoverWithNull().await().atMost(Duration.ofSeconds(30));
+		assertNotNull(result);
+		return result;
 	}
 
 }

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM node:20.9.0-bookworm-slim
+FROM node:20.10.0-bookworm-slim
 
 USER root
 
@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get -qy full-upgrade && \
     apt-get -qq -y install curl openjdk-17-jdk zip unzip && \
     curl -sSL https://get.docker.com/ | sh
-    
+
 RUN npm install -g npm @angular/cli
 
 RUN curl -s "https://get.sdkman.io" | bash && \

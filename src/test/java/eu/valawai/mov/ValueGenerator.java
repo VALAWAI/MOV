@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.bson.types.ObjectId;
+
 /**
  * Used to generate values for the tests.
  *
@@ -140,6 +142,17 @@ public class ValueGenerator {
 	public static final boolean flipCoin() {
 
 		return CURRENT.nextBoolean();
+
+	}
+
+	/**
+	 * Return the next ObjectId.
+	 *
+	 * @return the next random ObjectId.
+	 */
+	public static ObjectId nextObjectId() {
+
+		return new ObjectId(CURRENT.nextInt(0, 16777215), CURRENT.nextInt(0, 16777215));
 
 	}
 

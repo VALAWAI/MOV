@@ -12,8 +12,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.logs.LogRecord;
-import eu.valawai.mov.persistence.ComponentRepository;
-import eu.valawai.mov.persistence.LogRecordRepository;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -33,18 +31,6 @@ public class RegisterComponent {
 	PayloadService service;
 
 	/**
-	 * The service that manage the registered logs.
-	 */
-	@Inject
-	LogRecordRepository logs;
-
-	/**
-	 * The service that manage the registered components.
-	 */
-	@Inject
-	ComponentRepository components;
-
-	/**
 	 * Called when has to register a component.
 	 *
 	 * @param content of the message to consume.
@@ -55,34 +41,42 @@ public class RegisterComponent {
 		final var payload = this.service.decodeAndVerify(content, RegisterComponentPayload.class);
 		if (payload == null) {
 
-			this.logs.add(LogRecord.builder().withError().withMessage("Received invalid register component payload.")
-					.withPayload(content).build());
+			LogRecord.builder().withError().withMessage("Received invalid register component payload.")
+					.withPayload(content).store();
 
 		} else {
 
 			final var component = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
 			if (component == null) {
 
-				this.logs.add(LogRecord.builder().withError().withMessage("Received invalid async API.")
-						.withPayload(content).build());
+				LogRecord.builder().withError().withMessage("Received invalid async API.").withPayload(content).store();
 
 			} else {
 
 				component.type = payload.type;
 				component.name = payload.name;
 				component.version = payload.version;
-				final var added = this.components.add(component);
-				if (added == null) {
-					// It never happens in theory
-					this.logs.add(LogRecord.builder().withError().withMessage("Cannot store the component to register.")
-							.withPayload(content).build());
-
-				} else {
-
-					this.logs.add(LogRecord.builder().withInfo().withMessage("Registered the component {0}", added)
-							.withPayload(content).build());
-
-				}
+//				final var added = this.components.add(component);
+//				if (added == null) {
+//					// It never happens in theory
+//					LogRecord.builder().withError().withMessage("Cannot store the component to register.")
+//							.withPayload(content).store();
+//
+//				} else {
+//
+//					LogRecord.builder().withInfo().withMessage("Registered the component {0}", added)
+//							.withPayload(content).store();
+//
+//					for (final var channel : added.channels) {
+//
+//						if (channel.subscribe != null) {
+//
+//						}
+//						if (channel.publish != null) {
+//
+//						}
+//					}
+//				}
 			}
 		}
 

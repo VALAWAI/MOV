@@ -14,9 +14,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
-import eu.valawai.mov.persistence.ComponentRepository;
+import eu.valawai.mov.persistence.components.GetComponentPage;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -42,12 +41,6 @@ import jakarta.ws.rs.core.Response;
 public class ComponentResource {
 
 	/**
-	 * The repository with the components.
-	 */
-	@Inject
-	ComponentRepository repository;
-
-	/**
 	 * Get the information of some components.
 	 *
 	 * @param pattern to match the components message.
@@ -68,8 +61,8 @@ public class ComponentResource {
 			@Parameter(description = "The index of the first component to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of components to return") @QueryParam("limit") @DefaultValue("20") @Valid @Min(1) final int limit) {
 
-		final var page = this.repository.getComponentPage(pattern, order, offset, limit);
-		return Uni.createFrom().item(Response.ok(page).build());
+		return GetComponentPage.fresh().withPattern(pattern).withOrder(order).withOffset(offset).withLimit(limit)
+				.execute().map(page -> Response.ok(page).build());
 
 	}
 

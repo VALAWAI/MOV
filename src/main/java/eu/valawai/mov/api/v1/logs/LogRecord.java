@@ -13,6 +13,8 @@ import java.text.MessageFormat;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import eu.valawai.mov.persistence.logs.AddLogRecord;
+import io.quarkus.logging.Log;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -85,6 +87,16 @@ public class LogRecord extends Model {
 		}
 
 		/**
+		 * Set warning as the log level.
+		 *
+		 * @return this component that build the log record.
+		 */
+		public Builder withWarning() {
+
+			return this.withLevel(LogLevel.WARN);
+		}
+
+		/**
 		 * Set info as the log level.
 		 *
 		 * @return this component that build the log record.
@@ -92,6 +104,16 @@ public class LogRecord extends Model {
 		public Builder withInfo() {
 
 			return this.withLevel(LogLevel.INFO);
+		}
+
+		/**
+		 * Set debug as the log level.
+		 *
+		 * @return this component that build the log record.
+		 */
+		public Builder withDebug() {
+
+			return this.withLevel(LogLevel.DEBUG);
 		}
 
 		/**
@@ -142,6 +164,47 @@ public class LogRecord extends Model {
 		public LogRecord build() {
 
 			return this.record;
+		}
+
+		/**
+		 * Store the log.
+		 */
+		public void store() {
+
+			final var log = this.build();
+			AddLogRecord.fresh().withLog(log).execute().subscribe().with(added -> {
+
+				if (added) {
+
+					Log.debugv("Stored {0}", log);
+
+				} else {
+
+					Log.errorv("Cannot store {0}", log);
+				}
+
+				if (log.message != null) {
+
+					switch (log.level) {
+
+					case ERROR:
+						Log.error(log.message);
+						break;
+					case WARN:
+						Log.warn(log.message);
+						break;
+					case INFO:
+						Log.info(log.message);
+						break;
+					default:
+						Log.debug(log.message);
+						break;
+					}
+
+				}
+
+			});
+
 		}
 
 	}

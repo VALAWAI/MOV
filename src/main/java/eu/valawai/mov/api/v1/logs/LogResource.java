@@ -14,10 +14,9 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
-import eu.valawai.mov.persistence.LogRecordRepository;
+import eu.valawai.mov.persistence.logs.GetLogRecordPage;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -43,12 +42,6 @@ import jakarta.ws.rs.core.Response;
 public class LogResource {
 
 	/**
-	 * The repository with the logs.
-	 */
-	@Inject
-	LogRecordRepository repository;
-
-	/**
 	 * Get the information of some logs.
 	 *
 	 * @param pattern to match the logs message.
@@ -71,8 +64,8 @@ public class LogResource {
 			@Parameter(description = "The index of the first log to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of logs to return") @QueryParam("limit") @DefaultValue("20") @Valid @Min(1) final int limit) {
 
-		final var page = this.repository.getLogRecordPage(pattern, level, order, offset, limit);
-		return Uni.createFrom().item(Response.ok(page).build());
+		return GetLogRecordPage.fresh().withPattern(pattern).withLevel(level).withOrder(order).withOffset(offset)
+				.withLimit(limit).execute().map(page -> Response.ok(page).build());
 
 	}
 

@@ -17,6 +17,8 @@ import eu.valawai.mov.api.Model;
 /**
  * A page with some logs.
  *
+ * @see LogRecord
+ *
  * @author UDT-IA, IIIA-CSIC
  */
 @Schema(title = "A page with some logs.")

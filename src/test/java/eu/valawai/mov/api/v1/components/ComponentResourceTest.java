@@ -9,16 +9,19 @@
 package eu.valawai.mov.api.v1.components;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.ArrayList;
-
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
-import eu.valawai.mov.persistence.ComponentRepository;
+import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.APITestCase;
+import eu.valawai.mov.persistence.components.ComponentEntities;
+import eu.valawai.mov.persistence.components.ComponentEntity;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -29,13 +32,16 @@ import jakarta.ws.rs.core.Response.Status;
  * @author UDT-IA, IIIA-CSIC
  */
 @QuarkusTest
-public class ComponentResourceTest {
+public class ComponentResourceTest extends APITestCase {
 
 	/**
-	 * The repository with the components.
+	 * Create some components that can be used.
 	 */
-	@Inject
-	ComponentRepository repository;
+	@BeforeClass
+	public static void createComponents() {
+
+		ComponentEntities.minComponents(100);
+	}
 
 	/**
 	 * Should not get a page with a bad order.
@@ -89,55 +95,33 @@ public class ComponentResourceTest {
 	@Test
 	public void shouldGetPage() {
 
-		final var currentPage = given().when().get("/v1/components").then().statusCode(Status.OK.getStatusCode())
-				.extract().as(ComponentPage.class);
-		assertNotNull(currentPage);
-
-		final var offset = 3;
-		final var limit = 7;
-		final var pattern = ".*1.*";
+		final var offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var limit = ValueGenerator.rnd().nextInt(2, 5);
+		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
 		final var expected = new ComponentPage();
 		expected.offset = offset;
-		if (currentPage.components != null) {
 
-			expected.components = currentPage.components.stream().filter(component -> component.name.matches(pattern))
-					.toList();
+		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
+				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
+				.queryParam("order", "-name").get("/v1/components").then().statusCode(Status.OK.getStatusCode())
+				.extract().as(ComponentPage.class);
+		final var total = this.assertItemNotNull(ComponentEntity.count("name like ?1 or description like ?1", pattern));
+		assertEquals(total, page.total);
+		assertEquals(offset, page.offset);
+		final var components = this.assertItemNotNull(ComponentEntity
+				.find("name like ?1 or description like ?1",
+						Sort.descending("name").and("_id", Sort.Direction.Ascending), pattern)
+				.page(Page.of(offset, limit)).list());
+		if (!components.isEmpty()) {
+
+			assertEquals(components, page.components);
+
 		} else {
 
-			expected.components = new ArrayList<>();
+			assertNull(page.components);
 
 		}
-		final var max = offset + limit + 3;
-		final var builder = new ComponentTest();
-		while (expected.components.size() < max) {
 
-			this.repository.add(builder.nextModel());
-			final var component = this.repository.last();
-			if (component.name.matches(pattern)) {
-
-				expected.components.add(component);
-			}
-		}
-
-		expected.total = expected.components.size();
-		expected.components.sort((c1, c2) -> {
-
-			var cmp = Long.compare(c2.since, c1.since);
-			if (cmp == 0) {
-
-				cmp = c1.name.compareTo(c2.name);
-			}
-
-			return cmp;
-
-		});
-		expected.components = expected.components.subList(offset, offset + limit);
-
-		final var page = given().when().queryParam("pattern", "/" + pattern + "/").queryParam("level", "info")
-				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "-since,name").get("/v1/components").then().statusCode(Status.OK.getStatusCode())
-				.extract().as(ComponentPage.class);
-		assertEquals(expected, page);
 	}
 
 }

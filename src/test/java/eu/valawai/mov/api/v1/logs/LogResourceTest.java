@@ -9,16 +9,19 @@
 package eu.valawai.mov.api.v1.logs;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.ArrayList;
-
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
-import eu.valawai.mov.persistence.LogRecordRepository;
+import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.APITestCase;
+import eu.valawai.mov.persistence.logs.LogEntities;
+import eu.valawai.mov.persistence.logs.LogEntity;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -29,13 +32,16 @@ import jakarta.ws.rs.core.Response.Status;
  * @author UDT-IA, IIIA-CSIC
  */
 @QuarkusTest
-public class LogResourceTest {
+public class LogResourceTest extends APITestCase {
 
 	/**
-	 * The repository with the logs.
+	 * Create some logs that can be used.
 	 */
-	@Inject
-	LogRecordRepository repository;
+	@BeforeClass
+	public static void createLogs() {
+
+		LogEntities.minLogs(100);
+	}
 
 	/**
 	 * Should not get a page with a bad order.
@@ -82,60 +88,103 @@ public class LogResourceTest {
 	}
 
 	/**
+	 * Should get page with some message pattern.
+	 */
+	@Test
+	public void shouldGetPageWithPattern() {
+
+		final var offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var limit = ValueGenerator.rnd().nextInt(2, 5);
+		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
+		final var expected = new LogRecordPage();
+		expected.offset = offset;
+
+		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
+				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
+				.queryParam("order", "-message").get("/v1/logs").then().statusCode(Status.OK.getStatusCode()).extract()
+				.as(LogRecordPage.class);
+		final var total = this.assertItemNotNull(LogEntity.count("message like ?1", pattern));
+		assertEquals(total, page.total);
+		assertEquals(offset, page.offset);
+		final var logs = this.assertItemNotNull(LogEntity
+				.find("message like ?1", Sort.descending("message").and("_id", Sort.Direction.Ascending), pattern)
+				.page(Page.of(offset, limit)).list());
+		if (!logs.isEmpty()) {
+
+			assertEquals(logs, page.logs);
+
+		} else {
+
+			assertNull(page.logs);
+
+		}
+	}
+
+	/**
+	 * Should get page with some specific log level.
+	 */
+	@Test
+	public void shouldGetPageWithLevel() {
+
+		final var offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var limit = ValueGenerator.rnd().nextInt(2, 5);
+		final var level = ValueGenerator.next(LogLevel.values()).name();
+		final var expected = new LogRecordPage();
+		expected.offset = offset;
+
+		final var page = given().when().queryParam("level", level).queryParam("limit", String.valueOf(limit))
+				.queryParam("offset", String.valueOf(expected.offset)).queryParam("order", "-message").get("/v1/logs")
+				.then().statusCode(Status.OK.getStatusCode()).extract().as(LogRecordPage.class);
+		final var total = this.assertItemNotNull(LogEntity.count("level = ?1", level));
+		assertEquals(total, page.total);
+		assertEquals(offset, page.offset);
+		final var logs = this.assertItemNotNull(
+				LogEntity.find("level = ?1", Sort.descending("message").and("_id", Sort.Direction.Ascending), level)
+						.page(Page.of(offset, limit)).list());
+		if (!logs.isEmpty()) {
+
+			assertEquals(logs, page.logs);
+
+		} else {
+
+			assertNull(page.logs);
+
+		}
+	}
+
+	/**
 	 * Should get page.
 	 */
 	@Test
 	public void shouldGetPage() {
 
-		final var currentPage = given().when().get("/v1/logs").then().statusCode(Status.OK.getStatusCode()).extract()
-				.as(LogRecordPage.class);
-		assertNotNull(currentPage);
-
-		final var offset = 3;
-		final var limit = 7;
-		final var pattern = ".*1.*";
+		final var offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var limit = ValueGenerator.rnd().nextInt(2, 5);
+		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
+		final var level = ".*" + ValueGenerator.next(LogLevel.values()).name().substring(1, 3) + ".*";
 		final var expected = new LogRecordPage();
 		expected.offset = offset;
-		if (currentPage.logs != null) {
 
-			expected.logs = currentPage.logs.stream()
-					.filter(log -> log.level == LogLevel.INFO && log.message.matches(pattern)).toList();
+		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
+				.queryParam("level", "/" + level + "/").queryParam("limit", String.valueOf(limit))
+				.queryParam("offset", String.valueOf(expected.offset)).queryParam("order", "-message").get("/v1/logs")
+				.then().statusCode(Status.OK.getStatusCode()).extract().as(LogRecordPage.class);
+		final var total = this.assertItemNotNull(LogEntity.count("message like ?1 and level like ?2", pattern, level));
+		assertEquals(total, page.total);
+		assertEquals(offset, page.offset);
+		final var logs = this.assertItemNotNull(LogEntity
+				.find("message like ?1 and level like ?2",
+						Sort.descending("message").and("_id", Sort.Direction.Ascending), pattern, level)
+				.page(Page.of(offset, limit)).list());
+		if (!logs.isEmpty()) {
+
+			assertEquals(logs, page.logs);
+
 		} else {
 
-			expected.logs = new ArrayList<>();
+			assertNull(page.logs);
 
 		}
-		final var max = offset + limit + 3;
-		final var builder = new LogRecordTest();
-		while (expected.logs.size() < max) {
-
-			this.repository.add(builder.nextModel());
-			final var log = this.repository.last();
-			if (log.level == LogLevel.INFO && log.message.matches(pattern)) {
-
-				expected.logs.add(log);
-			}
-		}
-
-		expected.total = expected.logs.size();
-		expected.logs.sort((l1, l2) -> {
-
-			var cmp = Long.compare(l2.timestamp, l1.timestamp);
-			if (cmp == 0) {
-
-				cmp = l1.message.compareTo(l2.message);
-			}
-
-			return cmp;
-
-		});
-		expected.logs = expected.logs.subList(offset, offset + limit);
-
-		final var page = given().when().queryParam("pattern", "/" + pattern + "/").queryParam("level", "info")
-				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "-timestamp,message").get("/v1/logs").then().statusCode(Status.OK.getStatusCode())
-				.extract().as(LogRecordPage.class);
-		assertEquals(expected, page);
 	}
 
 }

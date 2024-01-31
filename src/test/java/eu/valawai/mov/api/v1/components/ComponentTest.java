@@ -9,6 +9,7 @@
 package eu.valawai.mov.api.v1.components;
 
 import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
@@ -41,7 +42,7 @@ public class ComponentTest extends ModelTestCase<Component> {
 	public Component nextModel() {
 
 		final var model = this.createEmptyModel();
-		model.id = next("{0}");
+		model.id = nextObjectId();
 		model.name = nextPattern("Name of component {0}");
 		model.description = nextPattern("Description of component {0}");
 		model.version = nextPattern("{0}.{1}.{2}", 3);
