@@ -29,12 +29,12 @@ public interface Queries {
 	 */
 	public static Bson filterByValueOrRegexp(String name, String value) {
 
-		if (value.matches("/.+/.?")) {
+		if (value.matches("/.+/.*")) {
 
 			var index = value.lastIndexOf('/');
 			final var regexp = value.substring(1, index);
 			index++;
-			if (regexp.length() > index) {
+			if (value.length() > index) {
 
 				final var options = value.substring(index);
 				return Filters.regex(name, regexp, options);

@@ -26,7 +26,7 @@ public interface Bsons {
 	 *
 	 * @param bson to convert into a string.
 	 *
-	 * @return the JSOn codification of the {@link Bson}.
+	 * @return the JSON codification of the {@link Bson}.
 	 */
 	public static String toString(Bson bson) {
 
