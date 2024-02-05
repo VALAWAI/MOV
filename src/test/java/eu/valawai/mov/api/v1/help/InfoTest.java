@@ -1,9 +1,9 @@
 /*
   Copyright 2022-2026 VALAWAY
 
-  Use of this source code is governed by an MIT-style
+  Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+  https://opensource.org/license/gpl-3-0/
 */
 
 package eu.valawai.mov.api.v1.help;
@@ -18,7 +18,7 @@ import eu.valawai.mov.api.ModelTestCase;
  *
  * @see Info
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public class InfoTest extends ModelTestCase<Info> {
 
@@ -40,7 +40,6 @@ public class InfoTest extends ModelTestCase<Info> {
 	public Info nextModel() {
 
 		final var model = this.createEmptyModel();
-		model.name = nextPattern("Name of {0}");
 		model.profile = next("prod", "dev", "test");
 		model.version = nextPattern("{0}.{1}.{2}", 3);
 		return model;

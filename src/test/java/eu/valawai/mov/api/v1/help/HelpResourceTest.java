@@ -1,9 +1,9 @@
 /*
   Copyright 2022-2026 VALAWAY
 
-  Use of this source code is governed by an MIT-style
+  Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+  https://opensource.org/license/gpl-3-0/
 */
 
 package eu.valawai.mov.api.v1.help;
@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response.Status;
  *
  * @see HelpResource
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 @QuarkusTest
 public class HelpResourceTest extends MovApiTestCase {
@@ -37,7 +37,6 @@ public class HelpResourceTest extends MovApiTestCase {
 		final var config = ConfigProvider.getConfig();
 		final var model = new Info();
 		model.version = config.getOptionalValue("quarkus.application.version", String.class).orElse("1.0");
-		model.name = config.getOptionalValue("quarkus.application.name", String.class).orElse("mov-api");
 		model.profile = config.getOptionalValue("quarkus.profile", String.class).orElse("test");
 		final var received = given().when().get("/v1/help/info").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(Info.class);

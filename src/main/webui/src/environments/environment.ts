@@ -3,13 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  movApiUrl: (window as { [key: string]: any })["env"]["movApiUrl"] || "http://localhost:8080",
-  movUiUrl: (window as { [key: string]: any })["env"]["movUiUrl"] || "http://localhost:4200",
-  lang: (window as { [key: string]: any })["env"]["lang"] || "en-devel",
-  version: (window as { [key: string]: any })["env"]["version"] || "undefined",
-  buildTime: (window as { [key: string]: any })["env"]["buildTime"] || "0",
-  startTime: (window as { [key: string]: any })["env"]["startTime"] || "0"
+	production: false,
+	movUrl: (window as { [key: string]: any })["env"]["movUrl"] || "http://localhost:8080"
 };
 
 /*

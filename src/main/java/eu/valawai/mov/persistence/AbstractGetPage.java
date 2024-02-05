@@ -1,9 +1,9 @@
 /*
   Copyright 2024 UDT-IA, IIIA-CSIC
 
-  Use of this source code is governed by an MIT-style
+  Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+  https://opensource.org/license/gpl-3-0/
 */
 
 package eu.valawai.mov.persistence;
@@ -27,7 +27,7 @@ import io.smallrye.mutiny.Uni;
  * @param <T> type of page that it obtains.
  * @param <O> type of the operator.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public abstract class AbstractGetPage<T, O extends AbstractGetPage<T, O>> extends AbstractEntityOperator<T, O> {
 

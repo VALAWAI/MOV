@@ -1,14 +1,14 @@
 /*
   Copyright 2023 UDT-IA, IIIA-CSIC
 
-  Use of this source code is governed by an MIT-style
+  Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+  https://opensource.org/license/gpl-3-0/
 */
 
 /**
  * 
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 package eu.valawai.mov.events;

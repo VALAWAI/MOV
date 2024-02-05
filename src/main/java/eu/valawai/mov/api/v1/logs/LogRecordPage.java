@@ -1,9 +1,9 @@
 /*
   Copyright 2023 UDT-IA, IIIA-CSIC
 
-  Use of this source code is governed by an MIT-style
+  Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+  https://opensource.org/license/gpl-3-0/
 */
 
 package eu.valawai.mov.api.v1.logs;
@@ -19,7 +19,7 @@ import eu.valawai.mov.api.Model;
  *
  * @see LogRecord
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 @Schema(title = "A page with some logs.")
 public class LogRecordPage extends Model {

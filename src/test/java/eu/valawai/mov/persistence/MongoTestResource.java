@@ -1,9 +1,9 @@
 /*
   Copyright 2022-2026 VALAWAY
 
-  Use of this source code is governed by an MIT-style
+  Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.
+  https://opensource.org/license/gpl-3-0/
 */
 package eu.valawai.mov.persistence;
 
@@ -20,7 +20,7 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 /**
  * The resource that start a docker container with a Mongo database.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public class MongoTestResource implements QuarkusTestResourceLifecycleManager {
 
