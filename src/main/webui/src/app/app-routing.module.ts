@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAY
 
   Use of this source code is governed by an MIT-style
   license that can be found in the LICENSE file or at
@@ -18,7 +18,6 @@ const routes: Routes = [
 			{ path: 'main', loadChildren: () => import('./main/main.module').then(m => m.MainModule) },
 			{ path: '', redirectTo: 'main', pathMatch: 'full' },
 			{ path: '**', loadChildren: () => import('./shared/not-found/not-found.module').then(m => m.NotFoundModule) }
-
 		]
 	}
 ];

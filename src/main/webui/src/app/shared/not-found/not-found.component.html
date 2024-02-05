@@ -1,21 +1,15 @@
-<div class="app-row-layout page">
-	<div></div>
-	<div class="app-full-width not-found">
-		<div class="app-column-layout">
-			<div class="title" i18n="Not found title@@shared_not-found_title">
-				Page not found
-			</div>
-			<div class="message" i18n="Not found message@@shared_not-found_message">
-				The page you are looking for might have been removed, or its name changed, or it temporarily
-				unavailable.
-			</div>
-			<div>
-				<button mat-flat-button color="primary" i18n="Not found go home page@@shared_not-found_go-home"
-					routerLink="/">
-					Go to home page
-				</button>
-			</div>
+<div class="flex flex-row justify-center">
+	<div class="p-7 gap-3 flex flex-col border rounded-md border-amber-300 content-center max-w-96">
+		<div class="font-bold text-lg"
+			i18n="Not found title@@shared_not-found_title">Page not found</div>
+		<div class="text-base"
+			i18n="Not found message@@shared_not-found_message">The page you
+			are looking for might have been removed, or its name changed, or it
+			temporarily unavailable.</div>
+		<div class="place-content-center">
+			<button mat-flat-button color="primary"
+				i18n="Not found go home page@@shared_not-found_go-home"
+				routerLink="/">Go to home page</button>
 		</div>
 	</div>
-	<div></div>
 </div>

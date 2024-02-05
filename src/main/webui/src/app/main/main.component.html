@@ -1,3 +1,80 @@
-<div class="app-column-layout">
-	MAIN
+<div class="gap-3 flex flex-col">
+	<header
+		class="p-1 bg-green-700 text-slate-100 gap-7 h-13 flex flex-row flex-wrap">
+		<div class="grow-0">
+			<button mat-icon-button [matMenuTriggerFor]="movMenu">
+				<mat-icon>menu</mat-icon>
+			</button>
+			<mat-menu #movMenu="matMenu">
+			<button mat-menu-item
+				i18n="The menu item to go to the status@@main_menu_status"
+				routerLink="/main/status">Status</button>
+			<button mat-menu-item
+				i18n="The menu item to go to the components@@main_menu_components"
+				routerLink="/main/components">Components</button>
+			<button mat-menu-item
+				i18n="The menu item to go to the logs@@main_menu_logs"
+				routerLink="/main/logs">Logs</button>
+			</mat-menu>
+		</div>
+		<div class="grow text-center text-xl py-2 font-bold">{{headerTitle|async}}</div>
+	</header>
+	<div class="grow">
+		<router-outlet></router-outlet>
+	</div>
+	<footer class="p-11 gap-7 bg-green-950 text-slate-50 flex flex-col">
+		<div class="gap-7 place-content-around flex flex-row flex-wrap">
+			<div class="grow flex flex-col">
+				<div class="font-bold text-base"
+					i18n="The menu index item@@main_menu-index">Index</div>
+				<ul>
+					<li><a routerLink="/main/status" class="text-sm"
+						i18n="The menu item to go to the status@@main_menu_status">Status</a></li>
+					<li><a routerLink="/main/components" class="text-sm"
+						i18n="The menu item to go to the components@@main_menu_components">Components</a></li>
+					<li><a routerLink="/main/logs" class="text-sm"
+						i18n="The menu item to go to the logs@@main_menu_logs">Logs</a></li>
+				</ul>
+			</div>
+			<div class="grow flex flex-col gap-3">
+				<div class="font-bold"
+					i18n="The menu acknowledgement item@@main_menu-acknowledgement">Acknowledgement</div>
+				<div class="w-72"
+					i18n="The acknowledgement text@@main_acknowledgement-text">
+					VALAWAI project is funded by the European Union under the European
+					Innovation Council (EIC) research and innovation programme under
+					Grant Agreement number 101070930.</div>
+				<div>
+					<img class="h-16"
+						src="assets/images/EN-Funded-by-the-EU-NEG-768x161.png"
+						alt="EU funding logo">
+				</div>
+			</div>
+			<div class="grow flex flex-col">
+				<div class="font-bold text-base"
+					i18n="The menu more item@@main_menu-more">More</div>
+				<div class="text-sm">
+					<a href="https://valawai.eu/"
+						i18n="The menu item to go to the project web page@@main_menu_project-web-page">Project
+						web page</a>
+					<mat-icon class="px-1 py-2 text-sm">arrow_outward</mat-icon>
+				</div>
+				<div class="text-sm">
+					<a class="text-sm" href="https://twitter.com/ValawaiEU"
+						i18n="The menu item to go to the project twitter@@main_menu_project-twitter">Twitter</a>
+					<mat-icon class="px-1 py-2 text-sm">arrow_outward</mat-icon>
+				</div>
+				<div class="text-sm">
+					<a href="https://github.com/VALAWAI/"
+						i18n="The menu item to go to the project GitHub@@main_menu_project-github">GitHub</a>
+					<mat-icon class="px-1 py-2 text-sm">arrow_outward</mat-icon>
+				</div>
+			</div>
+		</div>
+		<div class="flex justify-center text-xs"
+			i18n="The copyright text@@main_copyright-text">
+			Copyright © 2022-2026 <img class="h-4" src="assets/images/logo.png"
+				alt="VALAWAI logo">
+		</div>
+	</footer>
 </div>

@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAY
 
   Use of this source code is governed by an MIT-style
   license that can be found in the LICENSE file or at
@@ -14,12 +14,35 @@ import { MainComponent } from './main.component';
 const routes: Routes = [
 	{
 		path: '',
-		component: MainComponent
+		component: MainComponent,
+		children: [
+			{
+				path: 'status',
+				loadChildren: () => import('./status/status.module').then(m => m.StatusModule)
+			},
+			{
+				path: 'logs',
+				loadChildren: () => import('./logs/logs.module').then(m => m.LogsModule)
+			},
+			{
+				path: 'components',
+				loadChildren: () => import('./components/components.module').then(m => m.ComponentsModule)
+			},
+			{
+				path: '',
+				pathMatch: 'full',
+				redirectTo: 'status'
+			},
+			{
+				path: '**',
+				loadChildren: () => import('src/app/shared/not-found/not-found.module').then(m => m.NotFoundModule)
+			}
+
+		]
 	}
 ];
-
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+	imports: [RouterModule.forChild(routes)],
+	exports: [RouterModule]
 })
 export class MainRoutingModule { }
