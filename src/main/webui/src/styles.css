@@ -1,6 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@tailwind base ;
+@tailwind components ;
+@tailwind utilities ;
+
+html, body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.success-snackbar {
+	--mdc-snackbar-supporting-text-color: #155724;
+	--mdc-snackbar-container-color: #d4edda;
+	color: #155724;
+	background-color: #d4edda;
+}
+
+.info-snackbar {
+	--mdc-snackbar-supporting-text-color: #004085;
+	--mdc-snackbar-container-color: #cce5ff;
+	color: #004085;
+	background-color: #cce5ff;
+}
+
+.warn-snackbar {
+	--mdc-snackbar-supporting-text-color: #856404;
+	--mdc-snackbar-container-color: #fff3cd;
+	color: #856404;
+	background-color: #fff3cd;
+}
+
+.error-snackbar {
+	--mdc-snackbar-supporting-text-color: #721c24;
+	--mdc-snackbar-container-color: #f8d7da;
+	color: #721c24;
+	background-color: #f8d7da;
+}

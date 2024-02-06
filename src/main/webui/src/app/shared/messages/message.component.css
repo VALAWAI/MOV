@@ -1,0 +1,19 @@
+.success-msg {
+	color: #155724;
+	background-color: #d4edda;
+}
+
+.info-msg {
+	color: #004085;
+	background-color: #cce5ff;
+}
+
+.warn-msg {
+	color: #856404;
+	background-color: #fff3cd;
+}
+
+.error-msg {
+	color: #721c24;
+	background-color: #f8d7da;
+}

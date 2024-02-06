@@ -1,0 +1,12 @@
+<div class="p-3 gap-2 flex flex-row"
+	[ngClass]="{'error-msgr':type=='error','warn-msg':type=='warn','info-msg':type=='info','success-msg':type=='success'}">
+	<div class="grow-0">
+		<mat-icon *ngIf="type=='error'">error</mat-icon>
+		<mat-icon *ngIf="type=='warn'">warning</mat-icon>
+		<mat-icon *ngIf="type=='info'">info</mat-icon>
+		<mat-icon *ngIf="type=='success'">check_circle</mat-icon>
+	</div>
+	<div class="grow">
+		<ng-content></ng-content>
+	</div>
+</div>

@@ -1,1 +1,68 @@
-LOGS
+<div class="p-3 gap-7 flex flex-col justify-center content-center"
+	[formGroup]="form">
+	<div class="grow flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label of the field to match the messages@@main_logs_search-label">Message</mat-label>
+		<input matInput type="text" formControlName="message"> </mat-form-field>
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<mat-form-field> <mat-label
+			i18n="The label to select the order of teh logs@@main_logs_order-by-label">Order
+		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
+			value="timestamp"
+			i18n="The option to order by timestamp@@main_logs_order-by-timestamp">Timestamp</mat-option>
+		<mat-option value="level"
+			i18n="The option to order by level@@main_logs_order-by-level">Level</mat-option>
+		<mat-option value="message"
+			i18n="The option to order by message@@main_logs_order-by-message">Message</mat-option>
+		</mat-select> </mat-form-field>
+		<mat-checkbox formControlName="reverse"
+			i18n="The label of the checkbox to order in reverse order@@main_logs_order-by-reverse-label">In
+		reverse order</mat-checkbox>
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label to select the level of the log messages@@main_logs_levels-label">Filter
+		logs messages with level:</mat-label> <mat-select formControlName="levels"
+			multiple> <mat-option *ngFor="let level of logNames"
+			[value]="level">{{level}}</mat-option> </mat-select> </mat-form-field>
+
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<button
+			i18n="Label of the button to reload the logs@@main_logs_reload-label"
+			(click)="updatePage()" mat-raised-button color="primary"
+			class="max-w-72">
+			<mat-icon>refresh</mat-icon>
+			Reload
+		</button>
+	</div>
+	<div *ngIf="page && page.logs">
+		<table mat-table [dataSource]="page.logs" class="mat-elevation-z8">
+
+			<ng-container matColumnDef=timestamp>
+			<th mat-header-cell *matHeaderCellDef>Time</th>
+			<td mat-cell *matCellDef="let element">{{element.timestamp}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="level">
+			<th mat-header-cell *matHeaderCellDef>Level</th>
+			<td mat-cell *matCellDef="let element">{{element.level}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="message">
+			<th mat-header-cell *matHeaderCellDef>Message</th>
+			<td mat-cell *matCellDef="let element">{{element.message}}</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+	<div *ngIf="page && page.total > 5">
+		<mat-paginator [length]="page.total"
+			[pageSizeOptions]="[5,10, 50, 100]" [pageSize]="pageSize"
+			[pageIndex]="pageIndex" (page)="pageChanged($event)"
+			aria-label="Select page"> </mat-paginator>
+	</div>
+</div>

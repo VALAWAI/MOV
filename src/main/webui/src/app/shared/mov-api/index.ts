@@ -8,4 +8,7 @@
 
 
 export * from './mov-api.service';
-export * from 'src/app/shared/mov-api/info.model';
+export * from './info.model';
+export * from './log-level.model';
+export * from './log-record.model';
+export * from './log-record-page.model';

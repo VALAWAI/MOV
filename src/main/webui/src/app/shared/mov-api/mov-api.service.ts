@@ -11,6 +11,7 @@ import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Info } from './info.model';
+import { LogRecordPage } from './log-record-page.model';
 
 
 /**
@@ -98,4 +99,14 @@ export class MovApiService {
 		var url = this.url('/v1/help/info');
 		return this.http.get<Info>(url);
 	}
+
+	/**
+	 * Get some logs.
+	 */
+	public getLogRecordPage(pattern: string | null = null, level: string | null = null, order: string | null = null, offset: number = 0, limit: number = 20): Observable<LogRecordPage> {
+
+		var url = this.url('/v1/logs');
+		return this.http.get<LogRecordPage>(url, this.optionsWithParams({ pattern: pattern, level: level, order: order, offset: offset, limit: limit }));
+	}
+
 }
