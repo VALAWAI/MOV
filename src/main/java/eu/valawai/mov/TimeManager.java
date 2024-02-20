@@ -7,6 +7,7 @@
 */
 package eu.valawai.mov;
 
+import java.time.Clock;
 import java.time.Instant;
 
 /**
@@ -23,7 +24,7 @@ public interface TimeManager {
 	 */
 	static long now() {
 
-		return toTime(Instant.now());
+		return toTime(Instant.now(Clock.systemUTC()));
 
 	}
 
