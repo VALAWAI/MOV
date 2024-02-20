@@ -11,7 +11,7 @@ package eu.valawai.mov.api.v1.components;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
- * The basic
+ * The basic payload schema.
  *
  * @see PayloadSchema
  *

@@ -6,6 +6,8 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { LogLevel } from "./log-level.model";
+
 /**
  * A log message that has been done in VALAWAI.
  *
@@ -21,7 +23,7 @@ export class LogRecord {
 	/**
 	 * The level of the log.
 	 */
-	public level: string | null = null;
+	public level: LogLevel | null = null;
 
 	/**
 	 * The message of the log.

@@ -10,6 +10,7 @@ package eu.valawai.mov.api.v1.logs;
 
 import static eu.valawai.mov.ValueGenerator.flipCoin;
 import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextPastTime;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.api.ModelTestCase;
+import eu.valawai.mov.persistence.logs.LogEntity;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -43,9 +45,8 @@ public class LogRecordTest extends ModelTestCase<LogRecord> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LogRecord nextModel() {
+	public void fillIn(LogRecord model) {
 
-		final var model = this.createEmptyModel();
 		model.level = next(LogLevel.values());
 		model.message = nextPattern("Message of the log {0}");
 		if (flipCoin()) {
@@ -57,7 +58,8 @@ public class LogRecordTest extends ModelTestCase<LogRecord> {
 			model.payload = new JsonObject(values).encodePrettily();
 
 		}
-		return model;
+		model.timestamp = nextPastTime();
+
 	}
 
 	/**
@@ -108,6 +110,32 @@ public class LogRecordTest extends ModelTestCase<LogRecord> {
 		final var log = LogRecord.builder().withPayload(payload).build();
 		assertEquals(payload.encodePrettily(), log.payload);
 
+	}
+
+	/**
+	 * Return the model from an entity.
+	 *
+	 * @param entity to get the model.
+	 *
+	 * @return the model from the entity.
+	 */
+	public static LogRecord from(LogEntity entity) {
+
+		if (entity == null) {
+
+			return null;
+
+		} else {
+
+			final var model = new LogRecord();
+			model.level = entity.level;
+			model.message = entity.message;
+			model.payload = entity.payload;
+			model.timestamp = entity.timestamp;
+
+			return model;
+
+		}
 	}
 
 }

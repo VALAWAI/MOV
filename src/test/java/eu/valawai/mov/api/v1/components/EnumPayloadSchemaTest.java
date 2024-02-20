@@ -33,17 +33,14 @@ public class EnumPayloadSchemaTest extends PayloadSchemaTestCase<EnumPayloadSche
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EnumPayloadSchema nextModel() {
+	public void fillIn(EnumPayloadSchema model) {
 
-		final var model = this.createEmptyModel();
 		final var max = rnd().nextInt(2, 11);
 		for (var i = 0; i < max; i++) {
 
 			final var value = next("enum_value_{0}");
 			model.values.add(value);
 		}
-
-		return model;
 	}
 
 }

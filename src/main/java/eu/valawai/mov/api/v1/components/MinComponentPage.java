@@ -20,7 +20,7 @@ import eu.valawai.mov.api.Model;
  * @author VALAWAI
  */
 @Schema(title = "A page with some components.")
-public class ComponentPage extends Model {
+public class MinComponentPage extends Model {
 
 	/**
 	 * The number of components that satisfy the query.
@@ -38,6 +38,6 @@ public class ComponentPage extends Model {
 	 * The components that match the query.
 	 */
 	@Schema(title = "The components that satisfy the query")
-	public List<Component> components;
+	public List<MinComponent> components;
 
 }

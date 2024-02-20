@@ -83,8 +83,9 @@ public class ComponentResourceTest extends APITestCase {
 	public void shouldGetEmptyPage() {
 
 		final var page = given().when().queryParam("pattern", "1").queryParam("limit", "1").queryParam("offset", "3")
-				.get("/v1/components").then().statusCode(Status.OK.getStatusCode()).extract().as(ComponentPage.class);
-		final var expected = new ComponentPage();
+				.get("/v1/components").then().statusCode(Status.OK.getStatusCode()).extract()
+				.as(MinComponentPage.class);
+		final var expected = new MinComponentPage();
 		expected.offset = 3;
 		assertEquals(expected, page);
 	}
@@ -98,13 +99,13 @@ public class ComponentResourceTest extends APITestCase {
 		final var offset = ValueGenerator.rnd().nextInt(2, 5);
 		final var limit = ValueGenerator.rnd().nextInt(2, 5);
 		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
-		final var expected = new ComponentPage();
+		final var expected = new MinComponentPage();
 		expected.offset = offset;
 
 		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
 				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
 				.queryParam("order", "-name").get("/v1/components").then().statusCode(Status.OK.getStatusCode())
-				.extract().as(ComponentPage.class);
+				.extract().as(MinComponentPage.class);
 		final var total = this.assertItemNotNull(ComponentEntity.count("name like ?1 or description like ?1", pattern));
 		assertEquals(total, page.total);
 		assertEquals(offset, page.offset);

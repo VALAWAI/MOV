@@ -36,9 +36,8 @@ public class ChannelSchemaTest extends ModelTestCase<ChannelSchema> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ChannelSchema nextModel() {
+	public void fillIn(ChannelSchema model) {
 
-		final var model = this.createEmptyModel();
 		model.id = next("valawai/channel_{0}");
 		model.description = next("Description of the channel {0}");
 		if (flipCoin()) {
@@ -50,7 +49,6 @@ public class ChannelSchemaTest extends ModelTestCase<ChannelSchema> {
 			model.publish = nextPayloadSchema();
 
 		}
-		return model;
 	}
 
 }

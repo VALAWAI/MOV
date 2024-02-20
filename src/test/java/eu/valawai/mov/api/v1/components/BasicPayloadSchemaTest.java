@@ -32,11 +32,9 @@ public class BasicPayloadSchemaTest extends PayloadSchemaTestCase<BasicPayloadSc
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BasicPayloadSchema nextModel() {
+	protected void fillIn(BasicPayloadSchema model) {
 
-		final var model = this.createEmptyModel();
 		model.format = next(BasicPayloadFormat.values());
-		return model;
 	}
 
 }

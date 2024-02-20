@@ -12,6 +12,15 @@ import { CommonModule } from '@angular/common';
 import { ComponentsRoutingModule } from './components-routing.module';
 import { ComponentsComponent } from './components.component';
 
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
 	declarations: [
@@ -19,7 +28,16 @@ import { ComponentsComponent } from './components.component';
 	],
 	imports: [
 		CommonModule,
-		ComponentsRoutingModule
+		ComponentsRoutingModule,
+		MatPaginatorModule,
+		MatTableModule,
+		MatFormFieldModule,
+		MatInputModule,
+		ReactiveFormsModule,
+		MatIconModule,
+		MatButtonModule,
+		MatSelectModule,
+		MatCheckboxModule
 	],
 	exports: [
 	],

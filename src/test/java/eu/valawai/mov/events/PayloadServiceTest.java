@@ -59,7 +59,7 @@ public class PayloadServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldDecodeValidObject() {
 
-		final var expected = new RegisterComponentPayloadTest().nextPayload();
+		final var expected = new RegisterComponentPayloadTest().nextModel();
 		final var object = JsonObject.mapFrom(expected);
 		assertEquals(expected, this.service.decodeAndVerify(object, RegisterComponentPayload.class));
 

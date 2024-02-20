@@ -19,7 +19,7 @@ export const LOG_LEVEL_NAMES = [
 ] as const;
 
 /**
- * The possible level of thge log messages.
+ * The possible level of the log messages.
  *
  * @author VALAWAI
  */

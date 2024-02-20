@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.conversions.Bson;
+
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
 import io.quarkus.logging.Log;
 
@@ -41,7 +43,7 @@ public interface LogEntities {
 	}
 
 	/**
-	 * Create some entities.
+	 * Create some log entities.
 	 *
 	 * @param num number of logs to create.
 	 *
@@ -50,9 +52,10 @@ public interface LogEntities {
 	public static List<LogEntity> nextLogs(long num) {
 
 		final var logs = new ArrayList<LogEntity>();
+		final var builder = new LogRecordTest();
 		for (var i = 0; i < num; i++) {
 
-			final var next = new LogRecordTest().nextModel();
+			final var next = builder.nextModel();
 			final LogEntity entity = new LogEntity();
 			entity.level = next.level;
 			entity.message = next.message;
@@ -76,6 +79,37 @@ public interface LogEntities {
 		}
 
 		return logs;
+
+	}
+
+	/**
+	 * Create some log entities until they are equals to the specified value.
+	 *
+	 * @param filter to count the log entities that has to be created.
+	 * @param num    number of logs to create.
+	 *
+	 * @return the number of logs entities that satisfy the filter.
+	 */
+	public static long nextLogsUntil(Bson filter, long num) {
+
+		var total = LogEntity.mongoCollection().countDocuments(filter).onFailure().recoverWithItem(error -> {
+
+			Log.errorv(error, "Cannot count the log entities");
+			return null;
+
+		}).await().atMost(Duration.ofSeconds(30));
+		while (total < num) {
+
+			LogEntities.nextLogs(num - total);
+			total = LogEntity.mongoCollection().countDocuments(filter).onFailure().recoverWithItem(error -> {
+
+				Log.errorv(error, "Cannot count the log entities");
+				return null;
+
+			}).await().atMost(Duration.ofSeconds(30));
+		}
+
+		return total;
 
 	}
 

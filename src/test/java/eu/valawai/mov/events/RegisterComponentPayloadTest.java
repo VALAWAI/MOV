@@ -26,7 +26,7 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RegisterComponentPayload createEmptyPayload() {
+	public RegisterComponentPayload createEmptyModel() {
 
 		return new RegisterComponentPayload();
 	}
@@ -35,9 +35,8 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RegisterComponentPayload nextPayload() {
+	public void fillIn(RegisterComponentPayload payload) {
 
-		final var payload = this.createEmptyPayload();
 		payload.type = next(ComponentType.values());
 		payload.name = payload.type.name().toLowerCase() + nextPattern("_test_{0}");
 		payload.version = nextPattern("{0}.{1}.{2}", 3);
@@ -68,7 +67,6 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 				                - {1}
 				                - {2}
 				""", 3).trim().replaceAll("\\t", "");
-		return payload;
 	}
 
 }

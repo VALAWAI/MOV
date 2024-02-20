@@ -30,11 +30,9 @@ public class ArrayPayloadSchemaTest extends PayloadSchemaTestCase<ArrayPayloadSc
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ArrayPayloadSchema nextModel() {
+	protected void fillIn(ArrayPayloadSchema model) {
 
-		final var model = this.createEmptyModel();
 		model.items = nextPayloadSchema();
-		return model;
 	}
 
 }

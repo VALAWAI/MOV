@@ -33,9 +33,8 @@ public class ObjectPayloadSchemaTest extends PayloadSchemaTestCase<ObjectPayload
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ObjectPayloadSchema nextModel() {
+	public void fillIn(ObjectPayloadSchema model) {
 
-		final var model = this.createEmptyModel();
 		final var max = rnd().nextInt(1, 7);
 		for (var i = 0; i < max; i++) {
 
@@ -44,7 +43,6 @@ public class ObjectPayloadSchemaTest extends PayloadSchemaTestCase<ObjectPayload
 			model.properties.put(name, type);
 		}
 
-		return model;
 	}
 
 }

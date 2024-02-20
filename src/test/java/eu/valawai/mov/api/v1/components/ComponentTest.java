@@ -13,6 +13,9 @@ import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
+import java.util.ArrayList;
+
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 
 /**
@@ -39,16 +42,28 @@ public class ComponentTest extends ModelTestCase<Component> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Component nextModel() {
+	public void fillIn(Component model) {
 
-		final var model = this.createEmptyModel();
 		model.id = nextObjectId();
 		model.name = nextPattern("Name of component {0}");
 		model.description = nextPattern("Description of component {0}");
 		model.version = nextPattern("{0}.{1}.{2}", 3);
 		model.type = next(ComponentType.values());
 		model.since = rnd().nextLong();
-		return model;
+		model.apiVersion = nextPattern("{0}.{1}.{2}", 3);
+
+		final var max = ValueGenerator.rnd().nextInt(0, 5);
+		if (max > 0) {
+
+			model.channels = new ArrayList<>();
+			final var builder = new ChannelSchemaTest();
+			for (var i = 0; i < max; i++) {
+
+				final var channel = builder.nextModel();
+				model.channels.add(channel);
+			}
+
+		}
 	}
 
 }

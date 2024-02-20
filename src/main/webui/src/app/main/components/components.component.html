@@ -1,1 +1,69 @@
-COMPONENTS
+<div class="p-3 gap-7 flex flex-col justify-center content-center"
+	[formGroup]="form">
+	<div class="grow flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label of the field to match the name or desciption of teh compponent@@main_components_search-label">Name or description</mat-label>
+		<input matInput type="text" formControlName="pattern"> </mat-form-field>
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<mat-form-field> <mat-label
+			i18n="The label to select the order of teh components@@main_components_order-by-label">Order
+		by</mat-label> <mat-select formControlName="orderBy">
+		<mat-option value="type"
+			i18n="The option to order by type@@main_components_order-by-type">Type</mat-option>
+		<mat-option value="name"
+			i18n="The option to order by name@@main_components_order-by-name">Name</mat-option>
+		<mat-option value="description"
+			i18n="The option to order by description@@main_components_order-by-description">Description</mat-option>
+		</mat-select> </mat-form-field>
+		<mat-checkbox formControlName="reverse"
+			i18n="The label of the checkbox to order in reverse order@@main_components_order-by-reverse-label">In
+		reverse order</mat-checkbox>
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label to select the type of the component messages@@main_components_types-label">
+			Filter components by type:
+			</mat-label> <mat-select formControlName="types"
+			multiple> <mat-option *ngFor="let type of componentNames"
+			[value]="type">{{type}}</mat-option> </mat-select> </mat-form-field>
+
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<button
+			i18n="Label of the button to reload the components@@main_components_reload-label"
+			(click)="updatePage()" mat-raised-button color="primary"
+			class="max-w-72">
+			<mat-icon>refresh</mat-icon>
+			Reload
+		</button>
+	</div>
+	<div *ngIf="page && page.components">
+		<table mat-table [dataSource]="page.components" class="mat-elevation-z8">
+
+			<ng-container matColumnDef=timestamp>
+			<th mat-header-cell *matHeaderCellDef>Time</th>
+			<td mat-cell *matCellDef="let element">{{element.timestamp}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="type">
+			<th mat-header-cell *matHeaderCellDef>Type</th>
+			<td mat-cell *matCellDef="let element">{{element.type}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="message">
+			<th mat-header-cell *matHeaderCellDef>Message</th>
+			<td mat-cell *matCellDef="let element">{{element.message}}</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+	<div *ngIf="page && page.total > 5">
+		<mat-paginator [length]="page.total"
+			[pageSizeOptions]="[5,10, 50, 100]" [pageSize]="pageSize"
+			[pageIndex]="pageIndex" (page)="pageChanged($event)"
+			aria-label="Select page"> </mat-paginator>
+	</div>
+</div>

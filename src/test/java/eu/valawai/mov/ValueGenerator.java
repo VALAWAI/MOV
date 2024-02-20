@@ -9,6 +9,7 @@
 package eu.valawai.mov;
 
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -154,6 +155,16 @@ public class ValueGenerator {
 
 		return new ObjectId(CURRENT.nextInt(0, 16777215), CURRENT.nextInt(0, 16777215));
 
+	}
+
+	/**
+	 * Return a past time.
+	 *
+	 * @return the next past time.
+	 */
+	public static final long nextPastTime() {
+
+		return TimeManager.now() - rnd().nextLong(Duration.ofMinutes(5).toSeconds(), Duration.ofDays(1).toSeconds());
 	}
 
 }

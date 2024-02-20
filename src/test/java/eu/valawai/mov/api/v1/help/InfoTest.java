@@ -37,12 +37,11 @@ public class InfoTest extends ModelTestCase<Info> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Info nextModel() {
+	public void fillIn(Info model) {
 
-		final var model = this.createEmptyModel();
 		model.profile = next("prod", "dev", "test");
 		model.version = nextPattern("{0}.{1}.{2}", 3);
-		return model;
+
 	}
 
 }

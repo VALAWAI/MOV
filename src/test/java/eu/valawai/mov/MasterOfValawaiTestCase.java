@@ -11,8 +11,10 @@ package eu.valawai.mov;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Duration;
+import java.util.function.Function;
 
 import eu.valawai.mov.persistence.AbstractEntityOperator;
+import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -44,7 +46,13 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected <T> T assertItemNotNull(Uni<T> operator) {
 
-		final var result = operator.onFailure().recoverWithNull().await().atMost(Duration.ofSeconds(30));
+		final Function<? super Throwable, ? extends T> manageError = error -> {
+
+			Log.errorv(error, "Cannot do the operation");
+			return null;
+
+		};
+		final var result = operator.onFailure().recoverWithItem(manageError).await().atMost(Duration.ofSeconds(30));
 		assertNotNull(result);
 		return result;
 	}

@@ -36,9 +36,8 @@ public class LogRecordPageTest extends ModelTestCase<LogRecordPage> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LogRecordPage nextModel() {
+	public void fillIn(LogRecordPage model) {
 
-		final var model = this.createEmptyModel();
 		model.offset = rnd().nextInt();
 		model.total = rnd().nextInt();
 		final var max = rnd().nextInt(0, 11);
@@ -53,7 +52,7 @@ public class LogRecordPageTest extends ModelTestCase<LogRecordPage> {
 
 			}
 		}
-		return model;
+
 	}
 
 }

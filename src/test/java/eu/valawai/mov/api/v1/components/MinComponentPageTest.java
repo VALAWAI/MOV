@@ -15,37 +15,36 @@ import java.util.ArrayList;
 import eu.valawai.mov.api.ModelTestCase;
 
 /**
- * Test the {@link ComponentPage}.
+ * Test the {@link MinComponentPage}.
  *
- * @see ComponentPage
+ * @see MinComponentPage
  *
  * @author VALAWAI
  */
-public class ComponentPageTest extends ModelTestCase<ComponentPage> {
+public class MinComponentPageTest extends ModelTestCase<MinComponentPage> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ComponentPage createEmptyModel() {
+	public MinComponentPage createEmptyModel() {
 
-		return new ComponentPage();
+		return new MinComponentPage();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ComponentPage nextModel() {
+	public void fillIn(MinComponentPage model) {
 
-		final var model = this.createEmptyModel();
 		model.offset = rnd().nextInt();
 		model.total = rnd().nextInt();
 		final var max = rnd().nextInt(0, 11);
 		if (max > 0) {
 
 			model.components = new ArrayList<>();
-			final var builder = new ComponentTest();
+			final var builder = new MinComponentTest();
 			for (var i = 0; i < max; i++) {
 
 				final var log = builder.nextModel();
@@ -53,7 +52,7 @@ public class ComponentPageTest extends ModelTestCase<ComponentPage> {
 
 			}
 		}
-		return model;
+
 	}
 
 }

@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.conversions.Bson;
+
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import io.quarkus.logging.Log;
 
@@ -79,6 +81,37 @@ public interface ComponentEntities {
 		}
 
 		return components;
+
+	}
+
+	/**
+	 * Create some component entities until they are equals to the specified value.
+	 *
+	 * @param filter to count the component entities that has to be created.
+	 * @param num    number of components to create.
+	 *
+	 * @return the number of components entities that satisfy the filter.
+	 */
+	public static long nextComponentsUntil(Bson filter, long num) {
+
+		var total = ComponentEntity.mongoCollection().countDocuments(filter).onFailure().recoverWithItem(error -> {
+
+			Log.errorv(error, "Cannot count the component entities");
+			return null;
+
+		}).await().atMost(Duration.ofSeconds(30));
+		while (total < num) {
+
+			ComponentEntities.nextComponents(num - total);
+			total = ComponentEntity.mongoCollection().countDocuments(filter).onFailure().recoverWithItem(error -> {
+
+				Log.errorv(error, "Cannot count the component entities");
+				return null;
+
+			}).await().atMost(Duration.ofSeconds(30));
+		}
+
+		return total;
 
 	}
 

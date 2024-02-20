@@ -32,17 +32,17 @@ import io.smallrye.mutiny.Uni;
 public abstract class AbstractGetPage<T, O extends AbstractGetPage<T, O>> extends AbstractEntityOperator<T, O> {
 
 	/**
-	 * The pattern to match the assignment has returned.
+	 * The pattern to match the model has returned.
 	 */
 	protected String pattern;
 
 	/**
-	 * The order in with the assignment has returned.
+	 * The order in with the model has returned.
 	 */
 	protected String order;
 
 	/**
-	 * The offset to the first assignment to return.
+	 * The offset to the first model to return.
 	 */
 	protected int offset = 0;
 

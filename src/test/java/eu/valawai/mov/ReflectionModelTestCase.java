@@ -38,7 +38,19 @@ public abstract class ReflectionModelTestCase<T extends ReflectionModel> {
 	 *
 	 * @return the created a random next model.
 	 */
-	public abstract T nextModel();
+	public final T nextModel() {
+
+		final var model = this.createEmptyModel();
+		this.fillIn(model);
+		return model;
+	}
+
+	/**
+	 * Fill in a model.
+	 *
+	 * @param model to fill in.
+	 */
+	protected abstract void fillIn(T model);
 
 	/**
 	 * Check that can encode decode form Json.

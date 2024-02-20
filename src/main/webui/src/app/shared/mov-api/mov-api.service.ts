@@ -11,7 +11,8 @@ import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Info } from './info.model';
-import { LogRecordPage } from './log-record-page.model';
+import { LogRecordPage } from './logs/log-record-page.model';
+import { MinComponentPage } from './components/min-component-page.model';
 
 
 /**
@@ -107,6 +108,15 @@ export class MovApiService {
 
 		var url = this.url('/v1/logs');
 		return this.http.get<LogRecordPage>(url, this.optionsWithParams({ pattern: pattern, level: level, order: order, offset: offset, limit: limit }));
+	}
+
+	/**
+	 * Get some components.
+	 */
+	public getMinComponentPage(pattern: string | null = null, type: string | null = null, order: string | null = null, offset: number = 0, limit: number = 20): Observable<MinComponentPage> {
+
+		var url = this.url('/v1/components');
+		return this.http.get<MinComponentPage>(url, this.optionsWithParams({ pattern: pattern, type: type, order: order, offset: offset, limit: limit }));
 	}
 
 }
