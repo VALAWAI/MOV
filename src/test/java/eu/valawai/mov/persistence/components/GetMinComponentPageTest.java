@@ -131,7 +131,7 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
 		components.sort((l1, l2) -> {
 
-			var cmp = l2.type.compareTo(l1.type);
+			var cmp = l2.type.name().compareTo(l1.type.name());
 			if (cmp == 0) {
 
 				cmp = l1.id.compareTo(l2.id);
@@ -219,10 +219,10 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
 		components.sort((l1, l2) -> {
 
-			var cmp = l2.type.compareTo(l1.type);
+			var cmp = l1.description.compareTo(l2.description);
 			if (cmp == 0) {
 
-				cmp = l1.description.compareTo(l2.description);
+				cmp = l2.name.compareTo(l1.name);
 				if (cmp == 0) {
 
 					cmp = l1.id.compareTo(l2.id);
@@ -240,7 +240,7 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 		}
 
 		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withPattern("/" + pattern + "/")
-				.withType(type.name()).withOrder("-type,description").withOffset(expected.offset).withLimit(limit));
+				.withType(type.name()).withOrder("description,-name").withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
 
 	}

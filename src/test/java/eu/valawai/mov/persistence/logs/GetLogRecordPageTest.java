@@ -131,7 +131,7 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 				.assertItemNotNull(LogEntity.mongoCollection().find(filter, LogEntity.class).collect().asList());
 		logs.sort((l1, l2) -> {
 
-			var cmp = l2.level.compareTo(l1.level);
+			var cmp = l2.level.name().compareTo(l1.level.name());
 			if (cmp == 0) {
 
 				cmp = l1.id.compareTo(l2.id);
@@ -217,14 +217,10 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 				.assertItemNotNull(LogEntity.mongoCollection().find(filter, LogEntity.class).collect().asList());
 		logs.sort((l1, l2) -> {
 
-			var cmp = l2.level.compareTo(l1.level);
+			var cmp = l2.message.compareTo(l1.message);
 			if (cmp == 0) {
 
-				cmp = l1.message.compareTo(l2.message);
-				if (cmp == 0) {
-
-					cmp = l1.id.compareTo(l2.id);
-				}
+				cmp = l1.id.compareTo(l2.id);
 			}
 
 			return cmp;
@@ -238,7 +234,7 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 		}
 
 		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withPattern("/" + pattern + "/")
-				.withLevel(level.name()).withOrder("-level,message").withOffset(expected.offset).withLimit(limit));
+				.withLevel(level.name()).withOrder("-message").withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
 
 	}
