@@ -15,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import eu.valawai.mov.api.Model;
 import eu.valawai.mov.persistence.logs.AddLogRecord;
 import io.quarkus.logging.Log;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -153,6 +154,19 @@ public class LogRecord extends Model {
 		public Builder withPayload(JsonObject payload) {
 
 			this.record.payload = payload.encodePrettily();
+			return this;
+		}
+
+		/**
+		 * Set payload for the log record.
+		 *
+		 * @param payload for the log record.
+		 *
+		 * @return this component that build the log record.
+		 */
+		public Builder withPayload(Object payload) {
+
+			this.record.payload = Json.encodePrettily(payload);
 			return this;
 		}
 
