@@ -32,16 +32,21 @@ startServer
 
 Alternative to run the test using the started quarkus client, you can use maven.
 
- * __mvn test__ to run all the tests
- * __mvnd test__ to run all the tests on debugging mode.
- * __mvn -DuseDevDatabase=true test__ to run all the tests using the started database,
+ * __mvn test__  to run all the tests
+ * __mvnd test__  to run all the tests on debugging mode.
+ * __mvn -DuseDevDatabase=true test__  to run all the tests using the started database,
  	intead an independent container.
- 	
+
 Also, this starts the tools:
 
- * __RabbitMQ__ the server to manage the messages to interchange with the components.
- The management web interface cna be open at **http://localhost:8081** with the credential
- **valawai**:**password**.
+ * __RabbitMQ__  the server to manage the messages to interchange with the components.
+ The management web interface can be open at **http://localhost:8081** with the credential
+ **mov**:**password**.
+ * __MongoDB__  the database to store the data used by the MOV. The database is named as **movDB** and the user credentials **mov:password**.
+ The management web interface can be open at **http://localhost:8081** with the credential
+ **mov**:**password**.
+ * __Mongo express__  the web interface to interact with the mongoDB. The web interface
+  can be open at **http://localhost:8082**.
 
 
 # Deploy
