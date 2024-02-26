@@ -21,7 +21,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import org.eclipse.microprofile.reactive.messaging.spi.Connector;
 import org.eclipse.microprofile.reactive.messaging.spi.ConnectorFactory;
 
-import eu.valawai.mov.api.v1.logs.LogRecord;
+import eu.valawai.mov.persistence.logs.AddLog;
 import io.quarkus.logging.Log;
 import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.reactive.messaging.rabbitmq.RabbitMQConnector;
@@ -30,12 +30,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 /**
- * The element used to manage the topology management.
+ * The element used to manage the changes on the topology.
+ *
+ * @see ChangeTopologyPayload
  *
  * @author VALAWAI
  */
 @ApplicationScoped
-public class ChangeTopology {
+public class ChangeTopologyManager {
 
 	/**
 	 * The component to manage the messages.
@@ -53,7 +55,7 @@ public class ChangeTopology {
 	/**
 	 * The current topology connections.
 	 */
-	private final List<TopologyManager> managers = new ArrayList<>();
+	protected final List<TopologyConnectionManager> managers = new ArrayList<>();
 
 	/**
 	 * Called when has to register a component.
@@ -63,15 +65,15 @@ public class ChangeTopology {
 	@Incoming("change_topology")
 	public void consume(JsonObject content) {
 
-		final var payload = this.service.decodeAndVerify(content, ChangeTopologyComponentPayload.class);
+		final var payload = this.service.decodeAndVerify(content, ChangeTopologyPayload.class);
 		if (payload == null) {
 
-			LogRecord.builder().withError().withMessage("Received invalid change topology payload.")
-					.withPayload(content).store();
+			AddLog.fresh().withError().withMessage("Received invalid change topology payload.").withPayload(content)
+					.store();
 
 		} else {
 			// do something
-			final var top = new TopologyManager();
+			final var top = new TopologyConnectionManager();
 			top.setTarget(payload.target);
 			top.setSource(payload.source);
 			this.managers.add(top);
@@ -80,9 +82,9 @@ public class ChangeTopology {
 	}
 
 	/**
-	 * The topology manager.
+	 * The manager of a topology connection.
 	 */
-	protected class TopologyManager implements Subscriber<Message<?>> {
+	protected class TopologyConnectionManager implements Subscriber<Message<?>> {
 
 		/**
 		 * The source channel.
@@ -109,7 +111,8 @@ public class ChangeTopology {
 		 */
 		@Override
 		public void onSubscribe(Subscription subscription) {
-			Log.debug("HERE");
+
+			Log.debugv("Subscriber to receive messages from {0}", this.source);
 			this.subscription = subscription;
 			subscription.request(1);
 
@@ -124,14 +127,13 @@ public class ChangeTopology {
 			try {
 
 				final var body = item.getPayload();
-				Log.debug("HERE");
-				Log.debug(body);
 				this.publisher.onNext(item);
+				Log.debugv("Received from {0} the payload {1} and sent to {2}.", this.source, body, this.target);
 				this.subscription.request(1);
 
 			} catch (final Throwable error) {
 
-				Log.errorv(error, "Cannot open the RabbitMQ channel.");
+				Log.errorv(error, "Cannot manage a message received from {0}.", this.source);
 			}
 		}
 
@@ -139,9 +141,9 @@ public class ChangeTopology {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void onError(Throwable throwable) {
+		public void onError(Throwable error) {
 
-			Log.debug("HERE");
+			Log.errorv(error, "Error when manage the channel {0}.", this.source);
 		}
 
 		/**
@@ -150,7 +152,7 @@ public class ChangeTopology {
 		@Override
 		public void onComplete() {
 
-			Log.debug("HERE");
+			Log.debugv("Finished to manage the channel {0}.", this.source);
 		}
 
 		/**
@@ -168,7 +170,7 @@ public class ChangeTopology {
 				final var builder = ConfigProviderResolver.instance().getBuilder();
 				builder.withSources(new PropertiesConfigSource(properties, ""));
 				final var config = builder.build();
-				final var publisher = ChangeTopology.this.connector.getPublisher(config);
+				final var publisher = ChangeTopologyManager.this.connector.getPublisher(config);
 				publisher.subscribe(this);
 
 			} catch (final Throwable error) {
@@ -194,7 +196,7 @@ public class ChangeTopology {
 				builder.withSources(new PropertiesConfigSource(properties, ""));
 				final var config = builder.build();
 
-				this.publisher = (Subscriber<Message<?>>) ChangeTopology.this.connector.getSubscriber(config);
+				this.publisher = (Subscriber<Message<?>>) ChangeTopologyManager.this.connector.getSubscriber(config);
 				final var subscription = new Flow.Subscription() {
 
 					@Override

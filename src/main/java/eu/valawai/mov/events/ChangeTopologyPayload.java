@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 @RegisterForReflection
 @JsonRootName("change_topology_payload")
 @Schema(title = "The information necessary to change the topology.")
-public class ChangeTopologyComponentPayload extends Payload {
+public class ChangeTopologyPayload extends Payload {
 
 	/**
 	 * he type of action to do on the topology.
