@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.Response;
 public class EnvironmentResource {
 
 	/**
-	 * The version of the application.
+	 * The URL of the application.
 	 */
 	@ConfigProperty(name = "mov.url", defaultValue = "http://${quarkus.http.host}:${quarkus.http.port}")
 	String movUrl;
