@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -9,6 +9,7 @@
 package eu.valawai.mov.events;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Flow.Subscriber;
@@ -60,7 +61,7 @@ public class ChangeTopologyManager {
 	/**
 	 * The current topology connections.
 	 */
-	protected final List<TopologyConnectionManager> managers = new ArrayList<>();
+	protected volatile List<TopologyConnectionManager> managers = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * Called when has to register a component.
@@ -78,10 +79,25 @@ public class ChangeTopologyManager {
 
 		} else {
 			// do something
-			final var top = new TopologyConnectionManager();
-			top.setTarget(payload.target);
-			top.setSource(payload.source);
-			this.managers.add(top);
+//			final var top = new TopologyConnectionManager();
+//			synchronized (managers) {
+//
+//				for(var manager : this.managers) {
+//
+//					if( manager.source.equals(payload.source) ) {
+//
+//						if( payload.action == TopologyAction.DISABLE) {
+//
+//						}
+//						//else  It is already enabled => nothing to do
+//						return;
+//					}
+//				}
+//
+//			}
+//			top.setTarget(payload.target);
+//			top.setSource();
+//			this.managers.add(top);
 		}
 
 	}
@@ -95,11 +111,6 @@ public class ChangeTopologyManager {
 		 * The source channel.
 		 */
 		protected String source;
-
-		/**
-		 * The target channel.
-		 */
-		protected String target;
 
 		/**
 		 * The subscription.
@@ -127,8 +138,8 @@ public class ChangeTopologyManager {
 			try {
 
 				final var body = item.getPayload();
-				ChangeTopologyManager.this.publish.sendMessage(this.target, item);
-				Log.debugv("Received from {0} the payload {1} and sent to {2}.", this.source, body, this.target);
+//				ChangeTopologyManager.this.publish.sendMessage(this.target, item);
+//				Log.debugv("Received from {0} the payload {1} and sent to {2}.", this.source, body, this.target);
 				this.subscription.request(1);
 
 			} catch (final Throwable error) {
@@ -167,6 +178,7 @@ public class ChangeTopologyManager {
 				this.source = source;
 				final var properties = new Properties();
 				properties.put(ConnectorFactory.CHANNEL_NAME_ATTRIBUTE, source);
+				properties.put("queue.name", source);
 				properties.put("content_type", "application/json");
 
 				final var builder = ConfigProviderResolver.instance().getBuilder();
@@ -179,16 +191,6 @@ public class ChangeTopologyManager {
 
 				Log.errorv(error, "Cannot open the RabbitMQ channel.");
 			}
-		}
-
-		/**
-		 * Create the component to publish messages on the target channel.
-		 *
-		 * @param target channel to publish messages.
-		 */
-		public void setTarget(String target) {
-
-			this.target = target;
 		}
 
 	}

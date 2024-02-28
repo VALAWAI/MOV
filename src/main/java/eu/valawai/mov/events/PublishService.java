@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -68,39 +68,6 @@ public class PublishService {
 		} catch (final Throwable error) {
 
 			Log.errorv(error, "Cannot send to {0} the {1}", channelName, payload);
-			return false;
-		}
-
-	}
-
-	/**
-	 * Publish the specified payload.
-	 *
-	 * @param channelName name of the channel to publish a message.
-	 * @param message     to publish.
-	 *
-	 * @return {@code true} if the payload has been sent.
-	 */
-	public boolean sendMessage(String channelName, Message<?> message) {
-
-		try {
-
-			final var properties = new Properties();
-			properties.put(ConnectorFactory.CHANNEL_NAME_ATTRIBUTE, channelName);
-			properties.put("content_type", "application/json");
-
-			final var builder = ConfigProviderResolver.instance().getBuilder();
-			builder.withSources(new PropertiesConfigSource(properties, ""));
-			final var config = builder.build();
-
-			@SuppressWarnings("unchecked")
-			final var publisher = (Subscriber<Message<?>>) this.connector.getSubscriber(config);
-			Multi.createFrom().item(message).subscribe(publisher);
-			return true;
-
-		} catch (final Throwable error) {
-
-			Log.errorv(error, "Cannot send to {0} the {1}", channelName, message);
 			return false;
 		}
 

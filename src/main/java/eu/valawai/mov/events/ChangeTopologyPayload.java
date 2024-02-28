@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.events;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -33,16 +34,10 @@ public class ChangeTopologyPayload extends Payload {
 	public TopologyAction action;
 
 	/**
-	 * The source channel of the topology to modify.
+	 * The identifier of the connection to modify.
 	 */
-	@Schema(title = "The source channel of the topology to modify.")
+	@Schema(title = "The identifier of the connection to modify.")
 	@NotNull
-	public String source;
+	public ObjectId connectionId;
 
-	/**
-	 * The target channel of the topology to modify.
-	 */
-	@Schema(title = "The target channel of the topology to modify.")
-	@NotNull
-	public String target;
 }

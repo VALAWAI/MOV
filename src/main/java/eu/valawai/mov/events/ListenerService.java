@@ -8,21 +8,14 @@
 
 package eu.valawai.mov.events;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
- * The type of action to do over the topology.
+ * The component to listener
  *
  * @author VALAWAI
  */
-public enum TopologyAction {
-
-	/**
-	 * Enable the connection between components.
-	 */
-	ENABLE,
-
-	/**
-	 * Disable the connection between components.
-	 */
-	DISABLE;
+@ApplicationScoped
+public class ListenerService {
 
 }

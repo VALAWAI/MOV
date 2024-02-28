@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
