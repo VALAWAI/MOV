@@ -24,20 +24,20 @@ import jakarta.inject.Inject;
  * @author VALAWAI
  */
 @ApplicationScoped
-public class RegisterComponent {
+public class RegisterComponentManager {
 
 	/**
 	 * The component to manage the messages.
 	 */
 	@Inject
-	PayloadService service;
+	protected PayloadService service;
 
 	/**
 	 * Called when has to register a component.
 	 *
 	 * @param content of the message to consume.
 	 */
-	@Incoming("register")
+	@Incoming("register_component")
 	public void consume(JsonObject content) {
 
 		final var payload = this.service.decodeAndVerify(content, RegisterComponentPayload.class);

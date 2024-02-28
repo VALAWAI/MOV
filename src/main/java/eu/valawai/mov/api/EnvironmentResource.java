@@ -20,7 +20,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 /**
- *
+ * Return the values that define the environment of the user interface.
  *
  * @author UDT-IA, IIIA-CSIC
  */

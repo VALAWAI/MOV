@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import eu.valawai.mov.persistence.AbstractEntityOperator;
+import eu.valawai.mov.persistence.logs.LogEntity;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 
@@ -96,6 +97,8 @@ public class MasterOfValawaiTestCase {
 	 *
 	 * @param supplier  to provide the value to check.
 	 * @param predicate to be true.
+	 *
+	 * @see #waitUntilNotNull(Supplier, Predicate, Duration, Duration)
 	 */
 	protected <T> T waitUntil(Supplier<T> supplier, Predicate<T> predicate) {
 
@@ -103,17 +106,123 @@ public class MasterOfValawaiTestCase {
 	}
 
 	/**
-	 * Wait until the condition is satisfied or teh duration is reached..
+	 * Wait until the condition is satisfied or the duration is reached..
 	 *
 	 * @param supplier  to provide the value to check.
 	 * @param predicate to be true.
 	 * @param stepTime  time between steps.
 	 * @param deadline  time that the wait has to be stopped.
+	 *
+	 * @see #waitUntilNotNull(Supplier, Predicate, long, long)
 	 */
 	protected <T> T waitUntil(Supplier<T> supplier, Predicate<T> predicate, Duration stepTime, Duration deadline) {
 
 		return this.waitUntil(supplier, predicate, Duration.ofSeconds(1).toMillis(),
 				Duration.ofMinutes(1).toMillis() + System.currentTimeMillis());
+	}
+
+	/**
+	 * Wait until the value is not null and the condition is satisfied.
+	 *
+	 * @param supplier  to provide the value to check.
+	 * @param predicate to be true.
+	 * @param stepTime  time between steps.
+	 * @param deadline  time that the wait has to be stopped.
+	 *
+	 * @see #assertItemNotNull(Uni)
+	 */
+	protected <T> T waitUntilNotNull(Supplier<Uni<T>> supplier, Predicate<T> predicate, long stepTime, long deadline) {
+
+		while (System.currentTimeMillis() < deadline) {
+
+			final T value = this.assertItemNotNull(supplier.get());
+			if (predicate.test(value)) {
+
+				return value;
+
+			} else {
+				try {
+					Thread.sleep(stepTime);
+
+				} catch (final InterruptedException ignored) {
+				}
+			}
+		}
+
+		fail("Deadline reached.");
+		return null;
+
+	}
+
+	/**
+	 * Wait until the value is not null and the condition is satisfied or a minutes
+	 * passes.
+	 *
+	 * @param supplier  to provide the value to check.
+	 * @param predicate to be true.
+	 *
+	 * @see #waitUntilNotNull(Supplier, Predicate, Duration, Duration)
+	 */
+	protected <T> T waitUntilNotNull(Supplier<Uni<T>> supplier, Predicate<T> predicate) {
+
+		return this.waitUntilNotNull(supplier, predicate, Duration.ofSeconds(1), Duration.ofMinutes(1));
+	}
+
+	/**
+	 * Wait until the value is not null and the condition is satisfied or the
+	 * duration is reached..
+	 *
+	 * @param supplier  to provide the value to check.
+	 * @param predicate to be true.
+	 * @param stepTime  time between steps.
+	 * @param deadline  time that the wait has to be stopped.
+	 *
+	 * @see #waitUntilNotNull(Supplier, Predicate, long, long)
+	 */
+	protected <T> T waitUntilNotNull(Supplier<Uni<T>> supplier, Predicate<T> predicate, Duration stepTime,
+			Duration deadline) {
+
+		return this.waitUntilNotNull(supplier, predicate, Duration.ofSeconds(1).toMillis(),
+				Duration.ofMinutes(1).toMillis() + System.currentTimeMillis());
+	}
+
+	/**
+	 * Do an action and wait at maximum one minute that a new log message is stored.
+	 *
+	 * @param action to do.
+	 *
+	 * @see #executeAndWaitUntilNewLog(Runnable, Duration)
+	 */
+	protected void executeAndWaitUntilNewLog(Runnable action) {
+
+		this.executeAndWaitUntilNewLog(action, Duration.ofMinutes(1));
+	}
+
+	/**
+	 * Do an action and wait until a new log message is stored or the deadline
+	 * period has passed.
+	 *
+	 * @param action   to do.
+	 * @param deadline maximum time to wait that the action is done.
+	 */
+	protected void executeAndWaitUntilNewLog(Runnable action, Duration deadline) {
+
+		final var countLogs = LogEntity.count().await().atMost(Duration.ofSeconds(30));
+		try {
+
+			action.run();
+
+		} catch (final AssertionError cause) {
+
+			throw cause;
+
+		} catch (final Throwable error) {
+
+			error.printStackTrace();
+			fail("Cannot execute the action");
+		}
+		this.waitUntilNotNull(() -> LogEntity.count(), c -> c != countLogs, Duration.ofSeconds(1), deadline);
+
 	}
 
 }

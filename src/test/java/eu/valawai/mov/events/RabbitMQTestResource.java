@@ -33,8 +33,8 @@ public class RabbitMQTestResource implements QuarkusTestResourceLifecycleManager
 	 * The mongo service container.
 	 */
 	static GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(RABBITMQ_DOCKER_NAME))
-			.withStartupAttempts(1).withEnv("RABBITMQ_DEFAULT_USER", "valawai")
-			.withEnv("RABBITMQ_DEFAULT_PASS", "password").withExposedPorts(5672).waitingFor(Wait.forListeningPort());
+			.withStartupAttempts(1).withEnv("RABBITMQ_DEFAULT_USER", "mov").withEnv("RABBITMQ_DEFAULT_PASS", "password")
+			.withExposedPorts(5672).waitingFor(Wait.forListeningPort());
 
 	/**
 	 * Start the mocked server.

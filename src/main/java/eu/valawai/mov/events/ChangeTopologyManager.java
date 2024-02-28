@@ -11,7 +11,6 @@ package eu.valawai.mov.events;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;
 
@@ -51,6 +50,12 @@ public class ChangeTopologyManager {
 	@Inject
 	@Connector(RabbitMQConnector.CONNECTOR_NAME)
 	RabbitMQConnector connector;
+
+	/**
+	 * Service to send messages to the message broker.
+	 */
+	@Inject
+	PublishService publish;
 
 	/**
 	 * The current topology connections.
@@ -102,11 +107,6 @@ public class ChangeTopologyManager {
 		Subscription subscription;
 
 		/**
-		 * The component to publish messages.
-		 */
-		Flow.Subscriber<Message<?>> publisher;
-
-		/**
 		 * {@inheritDoc}
 		 */
 		@Override
@@ -127,7 +127,7 @@ public class ChangeTopologyManager {
 			try {
 
 				final var body = item.getPayload();
-				this.publisher.onNext(item);
+				ChangeTopologyManager.this.publish.sendMessage(this.target, item);
 				Log.debugv("Received from {0} the payload {1} and sent to {2}.", this.source, body, this.target);
 				this.subscription.request(1);
 
@@ -164,8 +164,10 @@ public class ChangeTopologyManager {
 
 			try {
 
+				this.source = source;
 				final var properties = new Properties();
 				properties.put(ConnectorFactory.CHANNEL_NAME_ATTRIBUTE, source);
+				properties.put("content_type", "application/json");
 
 				final var builder = ConfigProviderResolver.instance().getBuilder();
 				builder.withSources(new PropertiesConfigSource(properties, ""));
@@ -184,35 +186,9 @@ public class ChangeTopologyManager {
 		 *
 		 * @param target channel to publish messages.
 		 */
-		@SuppressWarnings("unchecked")
 		public void setTarget(String target) {
 
-			try {
-
-				final var properties = new Properties();
-				properties.put(ConnectorFactory.CHANNEL_NAME_ATTRIBUTE, target);
-
-				final var builder = ConfigProviderResolver.instance().getBuilder();
-				builder.withSources(new PropertiesConfigSource(properties, ""));
-				final var config = builder.build();
-
-				this.publisher = (Subscriber<Message<?>>) ChangeTopologyManager.this.connector.getSubscriber(config);
-				final var subscription = new Flow.Subscription() {
-
-					@Override
-					public void request(long n) {
-					}
-
-					@Override
-					public void cancel() {
-					}
-				};
-				this.publisher.onSubscribe(subscription);
-
-			} catch (final Throwable error) {
-
-				Log.errorv(error, "Cannot open the RabbitMQ channel.");
-			}
+			this.target = target;
 		}
 
 	}
