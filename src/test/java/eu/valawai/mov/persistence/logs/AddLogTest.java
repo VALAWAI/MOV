@@ -66,7 +66,7 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	public void shouldStoreLogOf(LogLevel level) {
 
 		final var count = this.assertItemNotNull(LogEntity.count());
-		final var message = ValueGenerator.next("Message of the log {0}");
+		final var message = ValueGenerator.nextPattern("Message of the log {0}");
 		AddLog.fresh().withLevel(level).withMessage(message).store();
 		this.waitUntil(() -> this.assertItemNotNull(LogEntity.count()), newCount -> newCount != count);
 
@@ -84,7 +84,7 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	public void shouldStoreErrorLog() {
 
 		final var count = this.assertItemNotNull(LogEntity.count());
-		final var message = ValueGenerator.next("Message of the log {0}");
+		final var message = ValueGenerator.nextPattern("Message of the log {0}");
 		final var payload = new HashMap<String, Object>();
 		payload.put("int", rnd().nextInt());
 		payload.put("flip", flipCoin());
@@ -107,7 +107,7 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	public void shouldStoreWarnLog() {
 
 		final var count = this.assertItemNotNull(LogEntity.count());
-		final var message = ValueGenerator.next("Message of the log {0}");
+		final var message = ValueGenerator.nextPattern("Message of the log {0}");
 		final var payload = new HashMap<String, Object>();
 		payload.put("int", rnd().nextInt());
 		payload.put("flip", flipCoin());
@@ -129,7 +129,7 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	public void shouldStoreInfoLog() {
 
 		final var count = this.assertItemNotNull(LogEntity.count());
-		final var message = ValueGenerator.next("Message of the log {0}");
+		final var message = ValueGenerator.nextPattern("Message of the log {0}");
 		final var payload = new HashMap<String, Object>();
 		payload.put("int", rnd().nextInt());
 		payload.put("flip", flipCoin());
@@ -152,7 +152,7 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	public void shouldStoreDebugLog() {
 
 		final var count = this.assertItemNotNull(LogEntity.count());
-		final var message = ValueGenerator.next("Message of the log {0}");
+		final var message = ValueGenerator.nextPattern("Message of the log {0}");
 		final var payload = new HashMap<String, Object>();
 		payload.put("int", rnd().nextInt());
 		payload.put("flip", flipCoin());
