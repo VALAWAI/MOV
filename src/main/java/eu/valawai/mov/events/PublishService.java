@@ -10,6 +10,7 @@ package eu.valawai.mov.events;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -17,7 +18,6 @@ import org.eclipse.microprofile.reactive.messaging.spi.Connector;
 import org.eclipse.microprofile.reactive.messaging.spi.ConnectorFactory;
 
 import io.quarkus.logging.Log;
-import io.quarkus.virtual.threads.VirtualThreads;
 import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.reactive.messaging.rabbitmq.RabbitMQConnector;
@@ -44,9 +44,7 @@ public class PublishService {
 	/**
 	 * The component to execute the send process.
 	 */
-	@Inject
-	@VirtualThreads
-	ExecutorService executor;
+	ExecutorService executor = new ScheduledThreadPoolExecutor(4);
 
 	/**
 	 * Publish the specified payload.

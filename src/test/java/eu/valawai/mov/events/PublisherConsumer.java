@@ -39,8 +39,12 @@ public class PublisherConsumer {
 	@Incoming("publisher_service_test")
 	public void consume(JsonObject payload) {
 
-		QUEUE.add(payload);
-		QUEUE.notifyAll();
+		synchronized (QUEUE) {
+
+			QUEUE.add(payload);
+			QUEUE.notifyAll();
+
+		}
 	}
 
 	/**

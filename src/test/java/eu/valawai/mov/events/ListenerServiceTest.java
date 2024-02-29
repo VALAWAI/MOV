@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +28,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.ValueGenerator;
+import io.quarkus.logging.Log;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
@@ -86,12 +88,23 @@ public class ListenerServiceTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check not create closer with {@code null} queue name.
+	 * Check not close with {@code null} queue name.
 	 */
 	@Test
 	public void shouldNotCloseWithNullQueueName() {
 
 		assertFalse(this.service.close(null));
+
+	}
+
+	/**
+	 * Check not close undefined queue name.
+	 */
+	@Test
+	public void shouldNotCloseUndefinedQueueName() {
+
+		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
+		assertFalse(this.service.close(queueName));
 
 	}
 
@@ -161,6 +174,33 @@ public class ListenerServiceTest extends MovEventTestCase {
 		assertTrue(this.service.close(this.channelName));
 		assertEquals(1, messages.size());
 		assertEquals(payload, messages.get(0).getPayload());
+
+	}
+
+	/**
+	 * Check that can not register two times to the same queue.
+	 */
+	@Test
+	public void shoulnotOpenTwoTimesTheSameChanel() {
+
+		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
+		final List<Throwable> errors = new ArrayList<>();
+		this.service.open(queueName).subscribe().with(msg -> Log.error("Unexpected message"));
+		final var semaphore = new Semaphore(0);
+		this.service.open(queueName).subscribe().with(msg -> Log.error("Unexpected message"), error -> {
+			errors.add(error);
+			semaphore.release();
+		});
+		try {
+
+			semaphore.tryAcquire(1, TimeUnit.MINUTES);
+
+		} catch (final InterruptedException ignored) {
+		}
+
+		assertTrue(this.service.close(queueName));
+		assertEquals(1, errors.size());
+		assertInstanceOf(IllegalArgumentException.class, errors.get(0));
 
 	}
 

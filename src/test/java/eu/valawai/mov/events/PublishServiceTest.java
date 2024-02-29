@@ -57,25 +57,17 @@ public class PublishServiceTest extends MovEventTestCase {
 	String channelName;
 
 	/**
-	 * Check not send {@code null} object.
-	 */
-	@Test
-	public void shouldNotSendNullValue() {
-
-		assertFalse(this.service.send(null, null));
-		assertFalse(this.service.send(null, "payload"));
-		assertFalse(this.service.send("queue_name", null));
-	}
-
-	/**
 	 * Check send messages that are captured by a listener.
+	 *
+	 * @throws InterruptedException if a waiting time fails.
 	 */
 	@Test
-	public void shouldSendToListener() {
+	public void shouldSendToListener() throws InterruptedException {
 
 		final var semaphore = new Semaphore(0);
 		final var messages = Collections.synchronizedList(new ArrayList<Message<?>>());
 		final var queueName = ValueGenerator.nextPattern("exchange_name_{0}");
+
 		this.listener.open(queueName).subscribe().with(msg -> {
 
 			messages.add(msg);
@@ -85,21 +77,23 @@ public class PublishServiceTest extends MovEventTestCase {
 
 			semaphore.release();
 		});
-		final var payload = new JsonObject();
-		payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
-		this.service.send(queueName, payload);
-
 		try {
 
+			// Wait some time that the listener will be ready.
+			Thread.sleep(1);
+
+			final var payload = new JsonObject();
+			payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
+			assertTrue(this.service.send(queueName, payload));
 			semaphore.tryAcquire(1, TimeUnit.MINUTES);
 
-		} catch (final InterruptedException ignored) {
+			assertEquals(1, messages.size());
+			assertEquals(payload, messages.get(0).getPayload());
+
+		} finally {
+
+			assertTrue(this.listener.close(queueName));
 		}
-
-		assertTrue(this.listener.close(queueName));
-		assertEquals(1, messages.size());
-		assertEquals(payload, messages.get(0).getPayload());
-
 	}
 
 	/**
@@ -117,6 +111,17 @@ public class PublishServiceTest extends MovEventTestCase {
 		assertNotNull(received);
 		assertEquals(payload, received);
 
+	}
+
+	/**
+	 * Check not send {@code null} object.
+	 */
+	@Test
+	public void shouldNotSendNullValue() {
+
+		assertFalse(this.service.send(null, null));
+		assertFalse(this.service.send(null, "payload"));
+		assertFalse(this.service.send("queue_name", null));
 	}
 
 }

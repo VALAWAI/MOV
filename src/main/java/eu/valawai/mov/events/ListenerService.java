@@ -67,7 +67,8 @@ public class ListenerService {
 
 					if (listener.queueName.equals(channelName)) {
 						// already defined
-						return null;
+						return Multi.createFrom()
+								.failure(() -> new IllegalArgumentException("The queue is already defined"));
 					}
 				}
 
@@ -98,11 +99,14 @@ public class ListenerService {
 
 			synchronized (this.listeners) {
 
-				for (final var subscriber : this.listeners) {
+				final var max = this.listeners.size();
+				for (var i = 0; i < max; i++) {
 
-					if (subscriber.queueName.equals(channelName)) {
+					final var listener = this.listeners.get(i);
+					if (listener.queueName.equals(channelName)) {
 						// already defined
-						subscriber.incoming.terminate();
+						listener.incoming.terminate();
+						this.listeners.remove(i);
 						return true;
 					}
 				}
