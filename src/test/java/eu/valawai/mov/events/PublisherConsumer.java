@@ -76,16 +76,14 @@ public class PublisherConsumer {
 				} catch (final InterruptedException ignored) {
 				}
 
+				if (QUEUE.isEmpty()) {
+
+					return null;
+
+				}
 			}
+			return QUEUE.remove(0);
 
-			if (QUEUE.isEmpty()) {
-
-				return null;
-
-			} else {
-
-				return QUEUE.remove(0);
-			}
 		}
 
 	}

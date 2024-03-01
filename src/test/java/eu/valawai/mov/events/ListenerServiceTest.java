@@ -9,7 +9,6 @@
 package eu.valawai.mov.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
-import org.eclipse.microprofile.reactive.messaging.Message;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.ValueGenerator;
@@ -93,7 +91,8 @@ public class ListenerServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldNotCloseWithNullQueueName() {
 
-		assertFalse(this.service.close(null));
+		final var error = this.assertFailure(this.service.close(null));
+		assertInstanceOf(IllegalArgumentException.class, error);
 
 	}
 
@@ -104,84 +103,18 @@ public class ListenerServiceTest extends MovEventTestCase {
 	public void shouldNotCloseUndefinedQueueName() {
 
 		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
-		assertFalse(this.service.close(queueName));
-
-	}
-
-	/**
-	 * Check listen messages from publisher.
-	 */
-	@Test
-	public void shouldReceiveFromPublisher() {
-
-		final var semaphore = new Semaphore(0);
-		final var messages = Collections.synchronizedList(new ArrayList<Message<?>>());
-		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
-		this.service.open(queueName).subscribe().with(msg -> {
-
-			messages.add(msg);
-			semaphore.release();
-
-		}, error -> {
-
-			semaphore.release();
-		});
-		final var payload = new JsonObject();
-		payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
-		this.publisher.send(queueName, payload);
-
-		try {
-
-			semaphore.tryAcquire(1, TimeUnit.MINUTES);
-
-		} catch (final InterruptedException ignored) {
-		}
-
-		assertTrue(this.service.close(queueName));
-		assertEquals(1, messages.size());
-		assertEquals(payload, messages.get(0).getPayload());
-
-	}
-
-	/**
-	 * Check listen messages from emitter.
-	 */
-	@Test
-	public void shouldReceiveFromEmitter() {
-
-		final var semaphore = new Semaphore(0);
-		final var messages = Collections.synchronizedList(new ArrayList<Message<?>>());
-		this.service.open(this.channelName).subscribe().with(msg -> {
-
-			messages.add(msg);
-			semaphore.release();
-
-		}, error -> {
-
-			semaphore.release();
-		});
-		final var payload = new JsonObject();
-		payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
-		this.emitter.send(payload);
-
-		try {
-
-			semaphore.tryAcquire(1, TimeUnit.MINUTES);
-
-		} catch (final InterruptedException ignored) {
-		}
-
-		assertTrue(this.service.close(this.channelName));
-		assertEquals(1, messages.size());
-		assertEquals(payload, messages.get(0).getPayload());
+		final var error = this.assertFailure(this.service.close(queueName));
+		assertInstanceOf(IllegalArgumentException.class, error);
 
 	}
 
 	/**
 	 * Check that can not register two times to the same queue.
+	 *
+	 * @throws InterruptedException If the thread is interrupted.
 	 */
 	@Test
-	public void shoulnotOpenTwoTimesTheSameChanel() {
+	public void shoulnotOpenTwoTimesTheSameChanel() throws InterruptedException {
 
 		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
 		final List<Throwable> errors = new ArrayList<>();
@@ -195,13 +128,162 @@ public class ListenerServiceTest extends MovEventTestCase {
 
 			semaphore.tryAcquire(1, TimeUnit.MINUTES);
 
-		} catch (final InterruptedException ignored) {
-		}
+			assertEquals(1, errors.size());
+			assertInstanceOf(IllegalArgumentException.class, errors.get(0));
 
-		assertTrue(this.service.close(queueName));
-		assertEquals(1, errors.size());
-		assertInstanceOf(IllegalArgumentException.class, errors.get(0));
+		} finally {
+
+			this.assertItemIsNull(this.service.close(queueName));
+		}
+	}
+
+	/**
+	 * Check listen messages from publisher.
+	 *
+	 * @throws InterruptedException If the thread is interrupted.
+	 */
+	@Test
+	public void shouldOpenMultipleListeners() throws InterruptedException {
+
+		final var semaphore = new Semaphore(0);
+		final var receivedPayloads = Collections.synchronizedList(new ArrayList<JsonObject>());
+		final List<String> queueNames = new ArrayList<>();
+		try {
+
+			for (var i = 0; i < 10; i++) {
+
+				final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
+				queueNames.add(queueName);
+				this.service.open(queueName).subscribe().with(payload -> {
+
+					receivedPayloads.add(payload);
+					semaphore.release();
+
+				}, error -> {
+
+					semaphore.release();
+				});
+			}
+
+			final var expectedPayloads = new ArrayList<JsonObject>();
+			for (final var queueName : queueNames) {
+
+				final var payload = new JsonObject();
+				payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
+				expectedPayloads.add(payload);
+				this.assertItemIsNull(this.publisher.send(queueName, payload));
+
+			}
+
+			semaphore.tryAcquire(expectedPayloads.size(), 1, TimeUnit.MINUTES);
+
+			assertEquals(expectedPayloads.size(), receivedPayloads.size());
+			for (final var payload : expectedPayloads) {
+
+				assertTrue(receivedPayloads.remove(payload));
+
+			}
+
+		} finally {
+
+			for (final var queueName : queueNames) {
+
+				this.service.close(queueName);
+			}
+		}
 
 	}
 
+	/**
+	 * Check send multiple messages to a listener.
+	 *
+	 * @throws InterruptedException If the thread is interrupted.
+	 */
+	@Test
+	public void shouldSendMultipleMessagesToTheSameListener() throws InterruptedException {
+
+		final var semaphore = new Semaphore(0);
+		final var receivedPayloads = Collections.synchronizedList(new ArrayList<JsonObject>());
+		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
+		this.service.open(queueName).subscribe().with(payload -> {
+
+			receivedPayloads.add(payload);
+			semaphore.release();
+
+		}, error -> {
+
+			semaphore.release();
+		});
+		try {
+
+			final var expectedPayloads = new ArrayList<JsonObject>();
+			for (var i = 0; i < 100; i++) {
+
+				final var payload = new JsonObject();
+				payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
+				expectedPayloads.add(payload);
+				this.assertItemIsNull(this.publisher.send(queueName, payload));
+
+			}
+
+			semaphore.tryAcquire(expectedPayloads.size(), 1, TimeUnit.MINUTES);
+
+			assertEquals(expectedPayloads.size(), receivedPayloads.size());
+			for (final var payload : expectedPayloads) {
+
+				assertTrue(receivedPayloads.remove(payload));
+
+			}
+
+		} finally {
+
+			this.assertItemIsNull(this.service.close(queueName));
+		}
+
+	}
+
+	/**
+	 * Check listen messages from emitter.
+	 *
+	 * @throws InterruptedException If the thread is interrupted.
+	 */
+	@Test
+	public void shouldReceiveAlotFromEmitter() throws InterruptedException {
+
+		final var semaphore = new Semaphore(0);
+		final var receivedPayloads = Collections.synchronizedList(new ArrayList<JsonObject>());
+		this.service.open(this.channelName).subscribe().with(payload -> {
+
+			receivedPayloads.add(payload);
+			semaphore.release();
+
+		}, error -> {
+
+			semaphore.release();
+		});
+		try {
+
+			final var expectedPayloads = new ArrayList<JsonObject>();
+			for (var i = 0; i < 100; i++) {
+
+				final var payload = new JsonObject();
+				payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
+				expectedPayloads.add(payload);
+				this.emitter.send(payload);
+			}
+
+			semaphore.tryAcquire(expectedPayloads.size(), 1, TimeUnit.MINUTES);
+
+			assertEquals(expectedPayloads.size(), receivedPayloads.size());
+			for (final var payload : expectedPayloads) {
+
+				assertTrue(receivedPayloads.remove(payload));
+
+			}
+
+		} finally {
+
+			this.assertItemIsNull(this.service.close(this.channelName));
+		}
+	}
 }

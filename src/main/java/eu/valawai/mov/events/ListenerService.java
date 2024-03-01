@@ -11,18 +11,12 @@ package eu.valawai.mov.events;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
-import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
-import org.eclipse.microprofile.reactive.messaging.Message;
-import org.eclipse.microprofile.reactive.messaging.spi.Connector;
-import org.eclipse.microprofile.reactive.messaging.spi.ConnectorFactory;
-
-import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.reactive.messaging.rabbitmq.RabbitMQConnector;
-import io.smallrye.reactive.messaging.rabbitmq.RabbitMQConnectorIncomingConfiguration;
-import io.smallrye.reactive.messaging.rabbitmq.internals.IncomingRabbitMQChannel;
+import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.rabbitmq.RabbitMQConsumer;
+import io.vertx.rabbitmq.QueueOptions;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -35,123 +29,95 @@ import jakarta.inject.Inject;
 public class ListenerService {
 
 	/**
-	 * Client to connect with the RabbitMQ.
+	 * The Rabbit MQ service.
 	 */
 	@Inject
-	@Connector(RabbitMQConnector.CONNECTOR_NAME)
-	RabbitMQConnector connector;
+	RabbitMQService service;
 
 	/**
-	 * The active listeners.
+	 * The open connections.
 	 */
-	protected volatile List<ActiveListener> listeners = Collections.synchronizedList(new ArrayList<>());
+	List<RabbitMQConsumer> consumers = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * Publish the specified payload.
 	 *
-	 * @param channelName name of the channel to lister for messages.
+	 * @param queueName name of the queue to lister for messages.
 	 *
-	 * @return the messages that are received by the channel.
+	 * @return the payload that are received by the queue.
 	 */
-	public Multi<? extends Message<?>> open(String channelName) {
+	public Multi<JsonObject> open(String queueName) {
 
-		if (channelName == null) {
+		if (queueName == null) {
 
-			return Multi.createFrom().failure(() -> new IllegalArgumentException("The queue name cannot be null"));
+			return Multi.createFrom().failure(new IllegalArgumentException("The name of the queue can not be null"));
 
 		} else {
 
-			synchronized (this.listeners) {
+			synchronized (this.consumers) {
 
-				for (final var listener : this.listeners) {
+				for (final var consumer : this.consumers) {
 
-					if (listener.queueName.equals(channelName)) {
-						// already defined
-						return Multi.createFrom()
-								.failure(() -> new IllegalArgumentException("The queue is already defined"));
+					if (queueName.equals(consumer.queueName())) {
+
+						return Multi.createFrom().failure(new IllegalArgumentException("The queue is already opened"));
+
 					}
 				}
+				final var options = new QueueOptions();
+				options.setAutoAck(true);
+				options.setConsumerExclusive(false);
+				options.setConsumerTag(this.getClass().getName() + "#" + queueName);
+				return this.service.client().chain(client -> {
 
-				try {
+					return client.queueDeclare(queueName, true, false, false).map(any -> {
 
-					final var listener = new ActiveListener(channelName);
-					this.listeners.add(listener);
-					return listener.incoming.getStream();
+						return client;
+					});
 
-				} catch (final Throwable error) {
+				}).chain(client -> client.basicConsumer(queueName, options)).onItem().transformToMulti(consumer -> {
 
-					return Multi.createFrom().failure(error);
-				}
+					this.consumers.add(consumer);
+					return consumer.toMulti().map(msg -> {
+
+						final var body = msg.body();
+						return body.toJsonObject();
+					});
+				});
 			}
 		}
 	}
 
 	/**
-	 * Close a channel.
+	 * Close a queue.
 	 *
-	 * @param channelName name of the channel to close.
+	 * @param queueName name of the queue to close.
 	 *
-	 * @return {@code true} if the channel is closed or {@code false} otherwise}.
+	 * @return an empty result if the queue is closed or an error that explain why
+	 *         cannot close the queue.
 	 */
-	public boolean close(String channelName) {
+	public Uni<Void> close(String queueName) {
 
-		if (channelName != null) {
+		if (queueName != null) {
 
-			synchronized (this.listeners) {
+			synchronized (this.consumers) {
 
-				final var max = this.listeners.size();
+				final var max = this.consumers.size();
 				for (var i = 0; i < max; i++) {
 
-					final var listener = this.listeners.get(i);
-					if (listener.queueName.equals(channelName)) {
-						// already defined
-						listener.incoming.terminate();
-						this.listeners.remove(i);
-						return true;
+					final var consumer = this.consumers.get(i);
+					if (queueName.equals(consumer.queueName())) {
+
+						this.consumers.remove(i);
+						return consumer.cancel();
+
 					}
 				}
 			}
 		}
 
-		return false;
-	}
-
-	/**
-	 * The clients to manage the messages that comes from the broker.
-	 */
-	protected class ActiveListener {
-
-		/**
-		 * The name of the queue that the messages come from.
-		 */
-		public String queueName;
-
-		/**
-		 * The channel with the broker.
-		 */
-		public IncomingRabbitMQChannel incoming;
-
-		/**
-		 * Create the component to receive the messages of a specific queue name.
-		 *
-		 * @param queueName name of the channel to lister for messages.
-		 */
-		public ActiveListener(String queueName) {
-
-			this.queueName = queueName;
-			final var properties = new Properties();
-			properties.put(ConnectorFactory.CHANNEL_NAME_ATTRIBUTE, queueName);
-			properties.put("queue.name", queueName);
-			properties.put("content_type", "application/json");
-
-			final var builder = ConfigProviderResolver.instance().getBuilder();
-			builder.withSources(new PropertiesConfigSource(properties, ""));
-			final var config = builder.build();
-
-			final RabbitMQConnectorIncomingConfiguration ic = new RabbitMQConnectorIncomingConfiguration(config);
-			this.incoming = new IncomingRabbitMQChannel(ListenerService.this.connector, ic);
-
-		}
+		return Uni.createFrom().failure(
+				new IllegalArgumentException("Does not exist an open queue associated with the specified name."));
 	}
 
 }

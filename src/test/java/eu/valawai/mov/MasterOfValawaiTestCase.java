@@ -8,10 +8,14 @@
 
 package eu.valawai.mov;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -225,4 +229,69 @@ public class MasterOfValawaiTestCase {
 
 	}
 
+	/**
+	 * Check that a Uni fails.
+	 *
+	 * @param uni      to check.
+	 * @param duration to wait that the uni fails.
+	 *
+	 * @return the error that happened.
+	 */
+	protected Throwable assertFailure(Uni<?> uni, Duration duration) {
+
+		final List<Throwable> errors = new ArrayList<>();
+		final var result = uni.onFailure().recoverWithItem(error -> {
+			errors.add(error);
+			return null;
+		}).await().atMost(duration);
+
+		assertNull(result, "The uni has returned a result without fail.");
+		assertEquals(1, errors.size(), "Not get the failed error");
+		return errors.get(0);
+
+	}
+
+	/**
+	 * Check that a Uni fails at most in 30 seconds.
+	 *
+	 * @param uni to check.
+	 *
+	 * @return the error that happened.
+	 */
+	protected Throwable assertFailure(Uni<?> uni) {
+
+		return this.assertFailure(uni, Duration.ofSeconds(30));
+	}
+
+	/**
+	 * Check that the execution of the uni is a success and return a null value.
+	 *
+	 * @param uni      to check.
+	 * @param duration to wait that the uni fails.
+	 */
+	protected void assertItemIsNull(Uni<?> uni, Duration duration) {
+
+		final List<Throwable> errors = new ArrayList<>();
+		final var result = uni.onFailure().recoverWithItem(error -> {
+			errors.add(error);
+			return null;
+		}).await().atMost(duration);
+
+		assertNull(result, "The uni has returned a result .");
+		if (!errors.isEmpty()) {
+
+			fail(errors.get(0));
+		}
+	}
+
+	/**
+	 * Check that the execution of the uni is a success and return a null value in
+	 * at least 30 seconds.
+	 *
+	 * @param uni to check.
+	 */
+	protected void assertItemIsNull(Uni<?> uni) {
+
+		this.assertItemIsNull(uni, Duration.ofSeconds(30));
+	}
 }

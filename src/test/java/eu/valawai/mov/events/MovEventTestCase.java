@@ -8,8 +8,6 @@
 
 package eu.valawai.mov.events;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import eu.valawai.mov.MasterOfValawaiTestCase;
 import io.quarkus.test.common.QuarkusTestResource;
 import jakarta.inject.Inject;
@@ -36,7 +34,7 @@ public class MovEventTestCase extends MasterOfValawaiTestCase {
 	 */
 	protected <P extends Payload> void assertPublish(String channelName, P payload) {
 
-		assertTrue(this.publish.send(channelName, payload), "Cannot publish message");
+		this.assertItemIsNull(this.publish.send(channelName, payload));
 
 	}
 

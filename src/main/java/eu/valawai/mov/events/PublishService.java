@@ -8,21 +8,12 @@
 
 package eu.valawai.mov.events;
 
-import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import com.rabbitmq.client.AMQP.BasicProperties;
 
-import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
-import org.eclipse.microprofile.reactive.messaging.Message;
-import org.eclipse.microprofile.reactive.messaging.spi.Connector;
-import org.eclipse.microprofile.reactive.messaging.spi.ConnectorFactory;
-
-import io.quarkus.logging.Log;
-import io.smallrye.config.PropertiesConfigSource;
-import io.smallrye.mutiny.Multi;
-import io.smallrye.reactive.messaging.rabbitmq.RabbitMQConnector;
-import io.smallrye.reactive.messaging.rabbitmq.RabbitMQConnectorOutgoingConfiguration;
-import io.smallrye.reactive.messaging.rabbitmq.internals.OutgoingRabbitMQChannel;
+import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.core.buffer.Buffer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -35,68 +26,62 @@ import jakarta.inject.Inject;
 public class PublishService {
 
 	/**
-	 * Client to connect with the RabbitMQ.
+	 * The Rabbit MQ service.
 	 */
 	@Inject
-	@Connector(RabbitMQConnector.CONNECTOR_NAME)
-	RabbitMQConnector connector;
+	RabbitMQService service;
 
 	/**
-	 * The component to execute the send process.
-	 */
-	ExecutorService executor = new ScheduledThreadPoolExecutor(4);
-
-	/**
-	 * Publish the specified payload.
+	 * Publish the specified JSON payload.
 	 *
-	 * @param channelName name of the channel to publish a message.
-	 * @param payload     of the message to publish.
+	 * @param queueName name of the queue to publish a message.
+	 * @param payload   of the message to publish.
 	 *
 	 * @return {@code true} if the payload has been sent.
 	 */
-	public <P> boolean send(String channelName, P payload) {
+	public Uni<Void> send(String queueName, Object payload) {
 
-		if (channelName == null || payload == null) {
+		if (payload instanceof final JsonObject json) {
 
-			return false;
+			return this.sendJson(queueName, json);
 
 		} else {
 
-			this.executor.execute(() -> this.sendProcess(channelName, payload));
-			return true;
-		}
+			try {
 
+				final var json = Json.encodeToBuffer(payload).toJsonObject();
+				return this.sendJson(queueName, json);
+
+			} catch (final Throwable error) {
+
+				return Uni.createFrom().failure(error);
+			}
+		}
 	}
 
 	/**
-	 * Process to send the payload.
+	 * Publish the specified JSON payload.
 	 *
-	 * @param channelName name of the channel to publish a message.
-	 * @param payload     of the message to publish.
+	 * @param queueName name of the queue to publish a message.
+	 * @param payload   of the message to publish.
+	 *
+	 * @return {@code true} if the payload has been sent.
 	 */
-	private void sendProcess(String channelName, Object payload) {
+	public Uni<Void> sendJson(String queueName, JsonObject payload) {
 
 		try {
 
-			final var properties = new Properties();
-			properties.put(ConnectorFactory.CHANNEL_NAME_ATTRIBUTE, channelName);
-			properties.put("default-routing-key", channelName);
-			properties.put("exchange.name", "\"\"");
-			properties.put("content_type", "application/json");
+			final var buffer = new Buffer(Json.encodeToBuffer(payload));
+			return this.service.client().chain(client -> {
 
-			final var builder = ConfigProviderResolver.instance().getBuilder();
-			builder.withSources(new PropertiesConfigSource(properties, ""));
-			final var config = builder.build();
+				final var properties = new BasicProperties.Builder().contentType("application/json").build();
+				return client.basicPublish("", queueName, properties, buffer);
 
-			final RabbitMQConnectorOutgoingConfiguration oc = new RabbitMQConnectorOutgoingConfiguration(config);
-			final var outgoing = new OutgoingRabbitMQChannel(this.connector, oc);
-
-			final var subscriber = outgoing.getSubscriber();
-			Multi.createFrom().item(Message.of(payload)).subscribe(subscriber);
+			});
 
 		} catch (final Throwable error) {
 
-			Log.errorv(error, "Cannot send {0} to {1}", payload, channelName);
+			return Uni.createFrom().failure(error);
 		}
 
 	}
