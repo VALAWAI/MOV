@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.ValueGenerator;
@@ -42,19 +41,7 @@ public class PublishServiceTest extends MovEventTestCase {
 	 * The service to test.
 	 */
 	@Inject
-	PublishService service;
-
-	/**
-	 * The component to listen for messages.
-	 */
-	@Inject
-	ListenerService listener;
-
-	/**
-	 * The default name of the channel to send events.
-	 */
-	@ConfigProperty(name = "mp.messaging.incoming.publisher_service_test.queue.name", defaultValue = "test/publisher_service")
-	String channelName;
+	TestQueue testQueue;
 
 	/**
 	 * Check not send {@code null} object.
@@ -62,13 +49,13 @@ public class PublishServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldNotSendNullValue() {
 
-		var error = this.assertFailure(this.service.send(null, null));
+		var error = this.assertFailure(this.publish.send(null, null));
 		assertInstanceOf(DecodeException.class, error);
 
-		error = this.assertFailure(this.service.send(null, "payload"));
+		error = this.assertFailure(this.publish.send(null, "payload"));
 		assertInstanceOf(DecodeException.class, error);
 
-		error = this.assertFailure(this.service.send("queue_name", null));
+		error = this.assertFailure(this.publish.send("queue_name", null));
 		assertInstanceOf(DecodeException.class, error);
 	}
 
@@ -82,7 +69,7 @@ public class PublishServiceTest extends MovEventTestCase {
 
 		final var semaphore = new Semaphore(0);
 		final var messages = Collections.synchronizedList(new ArrayList<JsonObject>());
-		final var queueName = ValueGenerator.nextPattern("exchange_name_{0}");
+		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
 
 		this.listener.open(queueName).subscribe().with(payload -> {
 
@@ -91,22 +78,19 @@ public class PublishServiceTest extends MovEventTestCase {
 
 		}, error -> {
 
+			error.printStackTrace();
 			semaphore.release();
 		});
-		try {
+		this.waitUntilQueueIsOpen(queueName);
 
-			final var payload = new JsonObject();
-			payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
-			this.assertItemIsNull(this.service.send(queueName, payload));
-			semaphore.tryAcquire(1, TimeUnit.MINUTES);
+		final var payload = new JsonObject();
+		payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
+		this.assertPublish(queueName, payload);
 
-			assertEquals(1, messages.size());
-			assertEquals(payload, messages.get(0));
+		semaphore.tryAcquire(30, TimeUnit.SECONDS);
 
-		} finally {
-
-			this.assertItemIsNull(this.listener.close(queueName));
-		}
+		assertEquals(1, messages.size());
+		assertEquals(payload, messages.get(0));
 	}
 
 	/**
@@ -115,11 +99,11 @@ public class PublishServiceTest extends MovEventTestCase {
 	 * @throws InterruptedException if a waiting time fails.
 	 */
 	@Test
-	public void shouldSendAlotToListener() throws InterruptedException {
+	public void shouldSendSomeMessagesToAListener() throws InterruptedException {
 
 		final var semaphore = new Semaphore(0);
 		final var receivedPayloads = Collections.synchronizedList(new ArrayList<JsonObject>());
-		final var queueName = ValueGenerator.nextPattern("exchange_name_{0}");
+		final var queueName = ValueGenerator.nextPattern("queue_name_{0}");
 
 		this.listener.open(queueName).subscribe().with(payload -> {
 
@@ -128,33 +112,28 @@ public class PublishServiceTest extends MovEventTestCase {
 
 		}, error -> {
 
+			error.printStackTrace();
 			semaphore.release();
 		});
-		try {
+		this.waitUntilQueueIsOpen(queueName);
 
-			final var expectedPayloads = new ArrayList<JsonObject>();
-			final var max = 100;
-			for (var i = 0; i < max; i++) {
+		final var expectedPayloads = new ArrayList<JsonObject>();
+		for (var i = 0; i < 100; i++) {
 
-				final var payload = new JsonObject();
-				payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
-				expectedPayloads.add(payload);
-				this.assertItemIsNull(this.service.send(this.channelName, payload));
+			final var payload = new JsonObject();
+			payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
+			expectedPayloads.add(payload);
+			this.assertPublish(queueName, payload);
 
-			}
+		}
 
-			semaphore.tryAcquire(max, TimeUnit.MINUTES);
+		semaphore.tryAcquire(expectedPayloads.size(), 1, TimeUnit.MINUTES);
 
-			assertEquals(max, receivedPayloads.size());
+		assertEquals(expectedPayloads.size(), receivedPayloads.size());
 
-			for (final var payload : receivedPayloads) {
+		for (final var payload : receivedPayloads) {
 
-				assertTrue(expectedPayloads.remove(payload));
-			}
-
-		} finally {
-
-			this.assertItemIsNull(this.listener.close(queueName));
+			assertTrue(expectedPayloads.remove(payload));
 		}
 
 	}
@@ -165,12 +144,12 @@ public class PublishServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldSendToIncoming() {
 
-		PublisherConsumer.clear();
+		TestQueue.clear();
 		final var payload = new JsonObject();
 		payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
-		this.assertItemIsNull(this.service.send(this.channelName, payload));
+		this.assertItemIsNull(this.publish.send(this.testQueue.getInputQueueName(), payload));
 
-		final var received = PublisherConsumer.waitForPayload(Duration.ofMinutes(1));
+		final var received = TestQueue.waitForPayload();
 		assertNotNull(received);
 		assertEquals(payload, received);
 
@@ -182,19 +161,19 @@ public class PublishServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldSendAlotToIncoming() {
 
-		PublisherConsumer.clear();
+		TestQueue.clear();
 		final var expectedPayloads = new ArrayList<JsonObject>();
 		for (var i = 0; i < 100; i++) {
 
 			final var payload = new JsonObject();
 			payload.put("pattern", ValueGenerator.nextPattern("pattern_{0}"));
 			expectedPayloads.add(payload);
-			this.assertItemIsNull(this.service.send(this.channelName, payload));
+			this.assertItemIsNull(this.publish.send(this.testQueue.getInputQueueName(), payload));
 
 		}
 		do {
 
-			final var received = PublisherConsumer.waitForPayload(Duration.ofMinutes(1));
+			final var received = TestQueue.waitForPayload(Duration.ofMinutes(1));
 			assertNotNull(received);
 			assertTrue(expectedPayloads.remove(received));
 

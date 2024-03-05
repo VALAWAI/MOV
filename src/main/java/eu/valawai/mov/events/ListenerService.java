@@ -10,7 +10,9 @@ package eu.valawai.mov.events;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -37,7 +39,12 @@ public class ListenerService {
 	/**
 	 * The open connections.
 	 */
-	List<RabbitMQConsumer> consumers = Collections.synchronizedList(new ArrayList<>());
+	private final List<RabbitMQConsumer> consumers = Collections.synchronizedList(new ArrayList<>());
+
+	/**
+	 * The connections that try to open.
+	 */
+	private final Set<String> starting = Collections.synchronizedSet(new HashSet<>());
 
 	/**
 	 * Publish the specified payload.
@@ -56,36 +63,74 @@ public class ListenerService {
 
 			synchronized (this.consumers) {
 
-				for (final var consumer : this.consumers) {
+				if (!this.starting.add(queueName)) {
 
-					if (queueName.equals(consumer.queueName())) {
+					return Multi.createFrom().failure(new IllegalArgumentException("The queue is starting"));
 
-						return Multi.createFrom().failure(new IllegalArgumentException("The queue is already opened"));
+				} else {
 
+					for (final var consumer : this.consumers) {
+
+						if (queueName.equals(consumer.queueName())) {
+
+							return Multi.createFrom()
+									.failure(new IllegalArgumentException("The queue is already opened"));
+
+						}
 					}
+					final var options = new QueueOptions();
+					options.setAutoAck(true);
+					options.setConsumerExclusive(false);
+					options.setConsumerTag(this.getClass().getName() + "#" + queueName);
+					return this.service.client().chain(client -> {
+
+						return client.queueDeclare(queueName, true, false, false).map(any -> {
+
+							return client;
+						});
+
+					}).chain(client -> {
+
+						return client.basicConsumer(queueName, options);
+
+					}).onFailure().invoke(any -> {
+
+						this.starting.remove(queueName);
+
+					}).onItem().transformToMulti(consumer -> {
+
+						this.consumers.add(consumer);
+						this.starting.remove(queueName);
+						return consumer.toMulti().map(msg -> {
+
+							final var body = msg.body();
+							return body.toJsonObject();
+						});
+					});
 				}
-				final var options = new QueueOptions();
-				options.setAutoAck(true);
-				options.setConsumerExclusive(false);
-				options.setConsumerTag(this.getClass().getName() + "#" + queueName);
-				return this.service.client().chain(client -> {
-
-					return client.queueDeclare(queueName, true, false, false).map(any -> {
-
-						return client;
-					});
-
-				}).chain(client -> client.basicConsumer(queueName, options)).onItem().transformToMulti(consumer -> {
-
-					this.consumers.add(consumer);
-					return consumer.toMulti().map(msg -> {
-
-						final var body = msg.body();
-						return body.toJsonObject();
-					});
-				});
 			}
 		}
+	}
+
+	/**
+	 * Check if the queue is open.
+	 *
+	 * @param queueName name of the queue to check.
+	 *
+	 * @return {@code true} if the queue is open.
+	 */
+	public boolean isOpen(String queueName) {
+
+		for (final var consumer : this.consumers) {
+
+			if (queueName.equals(consumer.queueName())) {
+
+				return true;
+
+			}
+		}
+
+		return false;
 	}
 
 	/**

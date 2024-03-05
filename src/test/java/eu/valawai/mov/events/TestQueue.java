@@ -13,10 +13,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * The test component to capture messages from a publisher.
@@ -24,7 +28,7 @@ import jakarta.enterprise.context.ApplicationScoped;
  * @author VALAWAI
  */
 @ApplicationScoped
-public class PublisherConsumer {
+public class TestQueue {
 
 	/**
 	 * The component to store the received messages.
@@ -32,11 +36,30 @@ public class PublisherConsumer {
 	private static List<JsonObject> QUEUE = Collections.synchronizedList(new ArrayList<>());
 
 	/**
+	 * The default name of the channel to send events.
+	 */
+	@ConfigProperty(name = "mp.messaging.incoming.test_in.queue.name", defaultValue = "test/queue/in")
+	String inputQueueName;
+
+	/**
+	 * The default name of the channel to send events.
+	 */
+	@ConfigProperty(name = "mp.messaging.outgoing.test_out.queue.name", defaultValue = "test/queue/out")
+	String outputQueueName;
+
+	/**
+	 * The component to send messages to the queue.
+	 */
+	@Inject
+	@Channel("test_out")
+	Emitter<Object> emitter;
+
+	/**
 	 * Called when a message is send to the queue.
 	 *
 	 * @param payload of the received messages.
 	 */
-	@Incoming("publisher_service_test")
+	@Incoming("test_in")
 	public void consume(JsonObject payload) {
 
 		synchronized (QUEUE) {
@@ -48,12 +71,59 @@ public class PublisherConsumer {
 	}
 
 	/**
+	 * Send a message to the test queue.
+	 *
+	 * @param payload to send.
+	 */
+	public void send(JsonObject payload) {
+
+		this.emitter.send(payload).whenComplete((any, error) -> {
+
+			if (error != null) {
+
+				error.printStackTrace();
+			}
+
+		});
+	}
+
+	/**
+	 * The input queue name.
+	 *
+	 * @return the name of the input queue name.
+	 */
+	public String getInputQueueName() {
+
+		return this.inputQueueName;
+	}
+
+	/**
+	 * The output queue name.
+	 *
+	 * @return the name of the output queue name.
+	 */
+	public String getOutputQueueName() {
+
+		return this.outputQueueName;
+	}
+
+	/**
 	 * Remove all the messages of the queue.
 	 */
 	public static void clear() {
 
 		QUEUE.clear();
 
+	}
+
+	/**
+	 * Return the next payload received message waiting at most for 30 seconds.
+	 *
+	 * @return the received payload or {@code null} if any message is received.
+	 */
+	public static JsonObject waitForPayload() {
+
+		return waitForPayload(Duration.ofSeconds(30));
 	}
 
 	/**
