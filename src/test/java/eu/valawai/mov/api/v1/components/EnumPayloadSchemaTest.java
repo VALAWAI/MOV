@@ -8,7 +8,7 @@
 
 package eu.valawai.mov.api.v1.components;
 
-import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
 /**
@@ -38,7 +38,7 @@ public class EnumPayloadSchemaTest extends PayloadSchemaTestCase<EnumPayloadSche
 		final var max = rnd().nextInt(2, 11);
 		for (var i = 0; i < max; i++) {
 
-			final var value = next("enum_value_{0}");
+			final var value = nextPattern("enum_value_{0}");
 			model.values.add(value);
 		}
 	}

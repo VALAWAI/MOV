@@ -6,15 +6,17 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.events.components;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
+import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.persistence.components.AddComponent;
 import eu.valawai.mov.persistence.logs.AddLog;
 import io.quarkus.logging.Log;
 import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -31,6 +33,12 @@ public class RegisterComponentManager {
 	 */
 	@Inject
 	protected PayloadService service;
+
+	/**
+	 * The component to send events.
+	 */
+	@Inject
+	EventBus bus;
 
 	/**
 	 * Called when has to register a component.
@@ -64,11 +72,15 @@ public class RegisterComponentManager {
 
 					component.version = payload.version;
 				}
-				AddComponent.fresh().withComponent(component).execute().subscribe().with(result -> {
+				AddComponent.fresh().withComponent(component).execute().subscribe().with(componentId -> {
 
-					if (result) {
+					if (componentId != null) {
 
-						AddLog.fresh().withInfo().withMessage("Added component.").withPayload(component).store();
+						AddLog.fresh().withInfo().withMessage("Added the component {0}.", component)
+								.withPayload(payload).store();
+						final var msg = new ComponentPlayload();
+						msg.componentId = componentId;
+						this.bus.send(ComponentAddedManager.EVENT_ADDRESS, msg);
 
 					} else {
 

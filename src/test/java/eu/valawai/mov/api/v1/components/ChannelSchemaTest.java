@@ -9,7 +9,7 @@
 package eu.valawai.mov.api.v1.components;
 
 import static eu.valawai.mov.ValueGenerator.flipCoin;
-import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.api.v1.components.PayloadSchemaTestCase.nextPayloadSchema;
 
 import eu.valawai.mov.api.ModelTestCase;
@@ -38,8 +38,8 @@ public class ChannelSchemaTest extends ModelTestCase<ChannelSchema> {
 	@Override
 	public void fillIn(ChannelSchema model) {
 
-		model.id = next("valawai/channel_{0}");
-		model.description = next("Description of the channel {0}");
+		model.id = nextPattern("valawai/channel_{0}");
+		model.description = nextPattern("Description of the channel {0}");
 		if (flipCoin()) {
 
 			model.subscribe = nextPayloadSchema();

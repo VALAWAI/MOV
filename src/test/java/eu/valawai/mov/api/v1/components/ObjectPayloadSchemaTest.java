@@ -8,7 +8,7 @@
 
 package eu.valawai.mov.api.v1.components;
 
-import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
 /**
@@ -38,7 +38,7 @@ public class ObjectPayloadSchemaTest extends PayloadSchemaTestCase<ObjectPayload
 		final var max = rnd().nextInt(1, 7);
 		for (var i = 0; i < max; i++) {
 
-			final var name = next("property_name_{0}");
+			final var name = nextPattern("property_name_{0}");
 			final var type = nextPayloadSchema();
 			model.properties.put(name, type);
 		}

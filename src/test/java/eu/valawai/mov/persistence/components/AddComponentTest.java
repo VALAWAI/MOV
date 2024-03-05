@@ -8,8 +8,19 @@
 
 package eu.valawai.mov.persistence.components;
 
-import eu.valawai.mov.MasterOfValawaiTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Duration;
+
+import org.junit.jupiter.api.Test;
+
+import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.api.v1.components.ComponentTest;
+import eu.valawai.mov.persistence.MovPersistenceTestCase;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Test the operation to add a component.
@@ -19,6 +30,28 @@ import io.quarkus.test.junit.QuarkusTest;
  * @author VALAWAI
  */
 @QuarkusTest
-public class AddComponentTest extends MasterOfValawaiTestCase {
+public class AddComponentTest extends MovPersistenceTestCase {
 
+	/**
+	 * Check that add a component.
+	 */
+	@Test
+	public void shouldAddComponent() {
+
+		final var component = new ComponentTest().nextModel();
+		final var now = TimeManager.now();
+		final var componentId = AddComponent.fresh().withComponent(component).execute().await()
+				.atMost(Duration.ofSeconds(30));
+		assertNotNull(componentId);
+
+		final Uni<ComponentEntity> find = ComponentEntity.findById(componentId);
+		final var entity = find.await().atMost(Duration.ofSeconds(30));
+		assertNotNull(entity);
+		assertTrue(now <= entity.since);
+		final var result = ComponentTest.from(entity);
+		component.id = entity.id;
+		component.since = entity.since;
+		assertEquals(component, result);
+
+	}
 }

@@ -6,12 +6,13 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.events.components;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 
 import eu.valawai.mov.api.v1.components.ComponentType;
+import eu.valawai.mov.events.PayloadTestCase;
 
 /**
  * Test the {@link RegisterComponentPayload}.
@@ -47,26 +48,23 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 				  version: {0}.{1}.{2}
 				  description: This service is in charge of processing user signups
 				channels:
-				  user/signedup:
+				  valawai/test_in_{3}:
 				    subscribe:
 				      message:
 				        payload:
 				          type: object
 				          properties:
-				            displayName:
+				            field_{3}:
 				              type: string
-				              description: Name of the user
-				            email:
+				  valawai/test_out_{4}:
+				    publish:
+				      message:
+				        payload:
+				          type: object
+				          properties:
+				            field_{4}:
 				              type: string
-				              format: email
-				              description: Email of the user
-				            since:
-				              type: string
-				              enum:
-				                - {0}
-				                - {1}
-				                - {2}
-				""", 3).trim().replaceAll("\\t", "");
+				""", 5).trim().replaceAll("\\t", "");
 	}
 
 }

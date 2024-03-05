@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
+import eu.valawai.mov.events.components.RegisterComponentPayload;
+import eu.valawai.mov.events.components.RegisterComponentPayloadTest;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;

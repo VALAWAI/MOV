@@ -6,13 +6,14 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.events.components;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 import eu.valawai.mov.api.v1.components.ComponentType;
+import eu.valawai.mov.events.Payload;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

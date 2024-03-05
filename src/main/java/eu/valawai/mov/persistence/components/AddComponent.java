@@ -8,7 +8,11 @@
 
 package eu.valawai.mov.persistence.components;
 
+import org.bson.types.ObjectId;
+
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.Component;
+import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -58,11 +62,35 @@ public class AddComponent {
 	/**
 	 * Store the component in the database.
 	 *
-	 * @return a {@code true} item if the component has been stored.
+	 * @return the identifier of the added component or {2code null} otherwise.
 	 */
-	public Uni<Boolean> execute() {
+	public Uni<ObjectId> execute() {
 
-		return null;
+		final var entity = new ComponentEntity();
+		entity.name = this.component.name;
+		entity.description = this.component.description;
+		entity.version = this.component.version;
+		entity.apiVersion = this.component.apiVersion;
+		entity.type = this.component.type;
+		entity.since = TimeManager.now();
+		entity.channels = this.component.channels;
+		return entity.persist().onFailure().recoverWithItem(error -> {
+
+			Log.errorv(error, "Cannot add the {0}", this.component);
+			return null;
+
+		}).map(result -> {
+
+			if (result != null) {
+
+				return entity.id;
+
+			} else {
+
+				return null;
+			}
+
+		});
 	}
 
 }

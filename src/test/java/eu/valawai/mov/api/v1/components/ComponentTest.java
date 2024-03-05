@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
+import eu.valawai.mov.persistence.components.ComponentEntity;
 
 /**
  * Test the {@link Component}.
@@ -64,6 +65,35 @@ public class ComponentTest extends ModelTestCase<Component> {
 			}
 
 		}
+	}
+
+	/**
+	 * Create a model from an entity.
+	 *
+	 * @param entity to get the information.
+	 *
+	 * @return the model with the data of the entity.
+	 */
+	public static Component from(ComponentEntity entity) {
+
+		if (entity == null) {
+
+			return null;
+
+		} else {
+
+			final var component = new Component();
+			component.apiVersion = entity.apiVersion;
+			component.channels = entity.channels;
+			component.description = entity.description;
+			component.id = entity.id;
+			component.name = entity.name;
+			component.since = entity.since;
+			component.type = entity.type;
+			component.version = entity.version;
+			return component;
+		}
+
 	}
 
 }

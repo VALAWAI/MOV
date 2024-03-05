@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.events.components;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,8 +16,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.api.v1.logs.LogLevel;
+import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.LogEntity;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
 
@@ -70,19 +72,28 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
 	}
 
-//	/**
-//	 * Check that the user register a component.
-//	 */
-//	@Test
-//	public void shouldRegisterComponent() {
-//
-//		final var payload = new RegisterComponentPayloadTest().nextPayload();
-//		final var countLogs = this.logs.count() + 1;
-//		final var countComponents = this.components.count();
-//		this.assertPublish("valawai/component/register", payload);
-//		this.wainUntilLog(countLogs, Duration.ofSeconds(30));
-//		assertEquals(countComponents + 1, this.components.count());
-//
-//	}
+	/**
+	 * Check that the user register a component.
+	 */
+	@Test
+	public void shouldRegisterComponent() {
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+
+		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
+
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerCcomponentQueueName, payload));
+
+		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.INFO, Json.encodePrettily(payload))
+				.await().atMost(Duration.ofSeconds(30)));
+		assertEquals(countComponents + 1, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
+
+		final ComponentEntity lastComponent = (ComponentEntity) ComponentEntity.findAll(Sort.descending("_id"))
+				.firstResult().await().atMost(Duration.ofSeconds(30));
+
+		assertEquals(lastComponent.name, payload.name);
+		assertEquals(lastComponent.version, payload.version);
+
+	}
 
 }
