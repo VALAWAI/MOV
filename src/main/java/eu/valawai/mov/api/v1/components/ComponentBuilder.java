@@ -73,7 +73,7 @@ public interface ComponentBuilder {
 
 		} catch (final Throwable error) {
 
-			Log.debugv(error, "Cannot build a component form {0}", api);
+			Log.debugv(error, "Cannot build a component with {0}", api);
 		}
 		return null;
 

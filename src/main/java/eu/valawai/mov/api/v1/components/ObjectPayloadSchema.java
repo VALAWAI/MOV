@@ -37,4 +37,15 @@ public class ObjectPayloadSchema extends PayloadSchema {
 		this.properties = new TreeMap<>();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean match(PayloadSchema other) {
+
+		return other instanceof final ObjectPayloadSchema object && (this.properties == object.properties
+				|| this.properties != null && this.properties.equals(object.properties));
+
+	}
+
 }

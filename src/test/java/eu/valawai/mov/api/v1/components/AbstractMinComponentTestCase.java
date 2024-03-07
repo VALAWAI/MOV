@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -17,7 +17,7 @@ import eu.valawai.mov.api.ModelTestCase;
  *
  * @param <T> type of model to test.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public abstract class AbstractMinComponentTestCase<T extends MinComponent> extends ModelTestCase<T> {
 

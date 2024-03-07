@@ -6,12 +6,14 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.events.topology;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import eu.valawai.mov.events.Payload;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.constraints.NotNull;
 
@@ -35,14 +37,7 @@ public class ChangeTopologyPayload extends Payload {
 	/**
 	 * The source channel of the topology to modify.
 	 */
-	@Schema(title = "The source channel of the topology to modify.")
+	@Schema(title = "The identifier of the topology connection that has changed.")
 	@NotNull
-	public String source;
-
-	/**
-	 * The target channel of the topology to modify.
-	 */
-	@Schema(title = "The target channel of the topology to modify.")
-	@NotNull
-	public String target;
+	public ObjectId connectionId;
 }

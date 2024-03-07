@@ -12,7 +12,7 @@ import { BasicPayloadFormat } from "./basic-payload-format.model";
 /**
  *  A payload that is defined of one value of a set.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export class EnumPayloadSchema extends AbstractPayloadSchema {
 

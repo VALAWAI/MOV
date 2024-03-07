@@ -7,8 +7,8 @@
 */
 
 /**
- * The classes used to manage the topology into the database.
+ * The managers for the events that manage the topology of the VALAWAI.
  *
  * @author VALAWAI
  */
-package eu.valawai.mov.persistence.topology;
+package eu.valawai.mov.events.topology;

@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -43,6 +43,35 @@ public interface ComponentEntities {
 	}
 
 	/**
+	 * Create a new component.
+	 *
+	 * @return the created component.
+	 */
+	public static ComponentEntity nextComponent() {
+
+		final var next = new ComponentTest().nextModel();
+		final ComponentEntity entity = new ComponentEntity();
+		entity.apiVersion = next.apiVersion;
+		entity.channels = next.channels;
+		entity.description = next.description;
+		entity.name = next.name;
+		entity.since = next.since;
+		entity.type = next.type;
+		entity.version = next.version;
+		final var stored = entity.persist().onFailure().recoverWithItem(error -> {
+
+			Log.errorv(error, "Cannot persist {}", entity);
+			return null;
+
+		}).await().atMost(Duration.ofSeconds(30));
+		if (stored == null) {
+
+			fail("Cannot persist a component.");
+		}
+		return entity;
+	}
+
+	/**
 	 * Create some entities.
 	 *
 	 * @param num number of components to create.
@@ -54,29 +83,8 @@ public interface ComponentEntities {
 		final var components = new ArrayList<ComponentEntity>();
 		for (var i = 0; i < num; i++) {
 
-			final var next = new ComponentTest().nextModel();
-			final ComponentEntity entity = new ComponentEntity();
-			entity.apiVersion = next.apiVersion;
-			entity.channels = next.channels;
-			entity.description = next.description;
-			entity.name = next.name;
-			entity.since = next.since;
-			entity.type = next.type;
-			entity.version = next.version;
-			final var stored = entity.persist().onFailure().recoverWithItem(error -> {
-
-				Log.errorv(error, "Cannot persist {}", entity);
-				return null;
-
-			}).await().atMost(Duration.ofSeconds(30));
-			if (stored == null) {
-
-				fail("Cannot persist a component.");
-
-			} else {
-
-				components.add(entity);
-			}
+			final var next = nextComponent();
+			components.add(next);
 
 		}
 

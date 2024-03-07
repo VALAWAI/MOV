@@ -12,7 +12,7 @@ import { BasicPayloadFormat } from "./basic-payload-format.model";
 /**
  * The basic payload schema.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export class BasicPayloadSchema extends AbstractPayloadSchema {
 

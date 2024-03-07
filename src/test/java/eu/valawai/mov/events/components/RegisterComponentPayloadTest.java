@@ -44,27 +44,27 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 		payload.asyncapiYaml = nextPattern("""
 				asyncapi: 2.6.0
 				info:
-				  title: Account Service
-				  version: {0}.{1}.{2}
+				  title: Service {0}
+				  version: {1}.{2}.{3}
 				  description: This service is in charge of processing user signups
 				channels:
-				  valawai/test_in_{3}:
+				  valawai/test_in_{4}:
 				    subscribe:
-				      message:
-				        payload:
-				          type: object
-				          properties:
-				            field_{3}:
-				              type: string
-				  valawai/test_out_{4}:
-				    publish:
 				      message:
 				        payload:
 				          type: object
 				          properties:
 				            field_{4}:
 				              type: string
-				""", 5).trim().replaceAll("\\t", "");
+				  valawai/test_out_54}:
+				    publish:
+				      message:
+				        payload:
+				          type: object
+				          properties:
+				            field_{5}:
+				              type: string
+				""", 6).trim().replaceAll("\\t", "");
 	}
 
 }

@@ -48,4 +48,13 @@ public class BasicPayloadSchema extends PayloadSchema {
 		return schema;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean match(PayloadSchema other) {
+
+		return other instanceof final BasicPayloadSchema basic && this.format == basic.format;
+	}
+
 }

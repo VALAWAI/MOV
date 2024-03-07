@@ -44,4 +44,13 @@ public abstract class PayloadSchema extends Model {
 	@Schema(title = "The type of payload.")
 	public PayloadType type;
 
+	/**
+	 * Check if this schema match another schema.
+	 *
+	 * @param other to check.
+	 *
+	 * @return {@code true} if this schema is equivalent to the other schema.
+	 */
+	public abstract boolean match(PayloadSchema other);
+
 }

@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events;
+package eu.valawai.mov.events.topology;
 
 /**
  * The type of action to do over the topology.

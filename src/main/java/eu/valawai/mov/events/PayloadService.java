@@ -12,6 +12,7 @@ import io.quarkus.logging.Log;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 
 /**
@@ -32,14 +33,14 @@ public class PayloadService {
 	Validator validator;
 
 	/**
-	 * Obtain the payload defined on a Json object.
+	 * Obtain the payload defined on a Json object and capture the exceptions.
 	 *
 	 * @param content to obtains the payload.
 	 * @param type    of payload to obtain.
 	 *
 	 * @return the valid payload or {@code null} if it is not valid.
 	 */
-	public <T extends Payload> T decodeAndVerify(JsonObject content, Class<T> type) {
+	public <T extends Payload> T safeDecodeAndVerify(JsonObject content, Class<T> type) {
 
 		try {
 
@@ -61,6 +62,33 @@ public class PayloadService {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Obtain the payload defined on a Json object or throws an exception if it .
+	 *
+	 * @param content to obtains the payload.
+	 * @param type    of payload to obtain.
+	 *
+	 * @return the valid payload.
+	 *
+	 * @throws ConstraintViolationException if the content is not valid.
+	 * @throws IllegalArgumentException     if the content is not encode the
+	 *                                      required class.
+	 */
+	public <T extends Payload> T decodeAndVerify(JsonObject content, Class<T> type)
+			throws ConstraintViolationException, IllegalArgumentException {
+
+		final var payload = content.mapTo(type);
+		final var violations = this.validator.validate(payload);
+		if (violations.isEmpty()) {
+
+			return payload;
+
+		} else {
+
+			throw new ConstraintViolationException("", violations);
+		}
 	}
 
 }

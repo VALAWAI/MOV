@@ -8,15 +8,26 @@
 
 package eu.valawai.mov.events.components;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
+import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.events.PayloadService;
+import eu.valawai.mov.events.PublishService;
+import eu.valawai.mov.events.topology.ChangeTopologyPayload;
+import eu.valawai.mov.events.topology.TopologyAction;
 import eu.valawai.mov.persistence.components.AddComponent;
+import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.AddLog;
+import eu.valawai.mov.persistence.topology.AddTopologyConnection;
 import io.quarkus.logging.Log;
+import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
+import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
+import io.smallrye.mutiny.Multi;
 import io.vertx.core.json.JsonObject;
-import io.vertx.mutiny.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -35,10 +46,16 @@ public class RegisterComponentManager {
 	protected PayloadService service;
 
 	/**
-	 * The component to send events.
+	 * Notify that a new connection is created.
+	 */
+	@ConfigProperty(name = "mp.messaging.incoming.change_topology.queue.name", defaultValue = "valawai/topology/change")
+	String changeTopologyQueueName;
+
+	/**
+	 * The service to send messages.
 	 */
 	@Inject
-	EventBus bus;
+	PublishService publish;
 
 	/**
 	 * Called when has to register a component.
@@ -48,7 +65,7 @@ public class RegisterComponentManager {
 	@Incoming("register_component")
 	public void consume(JsonObject content) {
 
-		final var payload = this.service.decodeAndVerify(content, RegisterComponentPayload.class);
+		final var payload = this.service.safeDecodeAndVerify(content, RegisterComponentPayload.class);
 		if (payload == null) {
 
 			AddLog.fresh().withError().withMessage("Received invalid register component payload.").withPayload(content)
@@ -72,15 +89,15 @@ public class RegisterComponentManager {
 
 					component.version = payload.version;
 				}
-				AddComponent.fresh().withComponent(component).execute().subscribe().with(componentId -> {
+				AddComponent.fresh().withComponent(component).execute().subscribe().with(source -> {
 
-					if (componentId != null) {
+					if (source != null) {
 
-						AddLog.fresh().withInfo().withMessage("Added the component {0}.", component)
-								.withPayload(payload).store();
-						final var msg = new ComponentPlayload();
-						msg.componentId = componentId;
-						this.bus.send(ComponentAddedManager.EVENT_ADDRESS, msg);
+						AddLog.fresh().withInfo().withMessage("Added the component {0}.", source).withPayload(payload)
+								.store();
+						final var paginator = ComponentEntity.find("channels != null", Sort.ascending("_id"))
+								.page(Page.ofSize(10));
+						this.createConnections(source, paginator);
 
 					} else {
 
@@ -89,6 +106,103 @@ public class RegisterComponentManager {
 
 				});
 			}
+		}
+
+	}
+
+	/**
+	 * Create the connection with the source and the components of a page.
+	 *
+	 * @param source    component to check to create the connection.
+	 * @param paginator function that paginate the components.
+	 */
+	private void createConnections(ComponentEntity source,
+			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
+
+		paginator.hasNextPage().subscribe().with(hasNext -> {
+
+			if (hasNext) {
+
+				final Multi<ComponentEntity> pageGetter = paginator.nextPage().stream();
+				pageGetter.onCompletion().invoke(() -> {
+
+					this.createConnections(source, paginator);
+
+				}).subscribe().with(target -> {
+
+					this.createConnections(source, target);
+
+				}, error -> {
+
+					Log.errorv(error, "Error when checking if is necessary a connection.");
+
+				});
+			}
+
+		}, error -> {
+
+			Log.errorv(error, "Error when paginate the component to create connections.");
+
+		});
+
+	}
+
+	/**
+	 * Create the connection between two components.
+	 *
+	 * @param source node of the connection.
+	 * @param target node of the connection.
+	 */
+	private void createConnections(ComponentEntity source, ComponentEntity target) {
+
+		if (source.channels != null && target.channels != null) {
+
+			for (final var sourceChannel : source.channels) {
+
+				for (final var targetChannel : target.channels) {
+
+					this.createConnections(source, sourceChannel, target, targetChannel);
+					this.createConnections(target, targetChannel, source, sourceChannel);
+
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Check if the channels match to create a connection.
+	 *
+	 * @param source        node of the connection.
+	 * @param sourceChannel to check if needs connection.
+	 * @param target        node of the connection.
+	 * @param targetChannel to check if needs connection.
+	 */
+	private void createConnections(ComponentEntity source, ChannelSchema sourceChannel, ComponentEntity target,
+			ChannelSchema targetChannel) {
+
+		if (sourceChannel.publish != null && sourceChannel.publish.match(targetChannel.subscribe)) {
+
+			AddTopologyConnection.fresh().withSourceComponent(source.id).withSourceChannel(sourceChannel.id)
+					.withTargetComponent(target.id).withTargetChannel(targetChannel.id).execute().subscribe()
+					.with(connectionId -> {
+
+						if (connectionId != null) {
+
+							AddLog.fresh().withInfo().withMessage("Added connection between {0} and {1}",
+									sourceChannel.id, targetChannel.id).store();
+							final var msg = new ChangeTopologyPayload();
+							msg.action = TopologyAction.ENABLE;
+							msg.connectionId = connectionId;
+							this.publish.send(this.changeTopologyQueueName, msg);
+
+						} else {
+
+							Log.errorv("Cannot create connection between {0} and {1}", sourceChannel.id,
+									targetChannel.id);
+						}
+
+					});
 		}
 
 	}

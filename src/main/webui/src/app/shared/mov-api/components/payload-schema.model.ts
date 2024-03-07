@@ -15,7 +15,7 @@ import { ObjectPayloadSchema } from "./object-payload-schema.model";
  * The description of a payload of a message send or received from
  * {@link ChannelSchema}.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export type PayloadSchema = BasicPayloadSchema
 	| EnumPayloadSchema
@@ -27,6 +27,6 @@ export type PayloadSchema = BasicPayloadSchema
 /**
  * The possible types of payload schema.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export type PayloadType = 'BASIC' | 'ENUM' | 'OBJECT' | 'ARRAY';

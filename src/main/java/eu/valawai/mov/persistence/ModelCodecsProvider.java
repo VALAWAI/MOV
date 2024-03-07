@@ -21,7 +21,7 @@ import eu.valawai.mov.api.v1.components.PayloadSchema;
  *
  * @see PayloadSchema
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public class ModelCodecsProvider implements CodecProvider {
 

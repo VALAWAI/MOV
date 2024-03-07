@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -7,8 +7,6 @@
 */
 
 package eu.valawai.mov.persistence.components;
-
-import org.bson.types.ObjectId;
 
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.Component;
@@ -62,9 +60,9 @@ public class AddComponent {
 	/**
 	 * Store the component in the database.
 	 *
-	 * @return the identifier of the added component or {2code null} otherwise.
+	 * @return the added entitye or {@code null} otherwise.
 	 */
-	public Uni<ObjectId> execute() {
+	public Uni<ComponentEntity> execute() {
 
 		final var entity = new ComponentEntity();
 		entity.name = this.component.name;
@@ -83,7 +81,7 @@ public class AddComponent {
 
 			if (result != null) {
 
-				return entity.id;
+				return entity;
 
 			} else {
 

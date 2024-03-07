@@ -37,4 +37,14 @@ public class ArrayPayloadSchema extends PayloadSchema {
 		this.type = PayloadType.ARRAY;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean match(PayloadSchema other) {
+
+		return other instanceof final ArrayPayloadSchema array
+				&& (this.items == array.items || this.items != null && this.items.match(array.items));
+	}
+
 }

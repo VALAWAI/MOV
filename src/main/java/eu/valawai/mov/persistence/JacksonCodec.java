@@ -21,11 +21,11 @@ import org.bson.codecs.EncoderContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The generic component to encode and decode any {@link Model} using jackson.
+ * The generic component to encode and decode any model using jackson.
  *
  * @param <T> the type of model to encode/decode.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public class JacksonCodec<T> implements Codec<T> {
 

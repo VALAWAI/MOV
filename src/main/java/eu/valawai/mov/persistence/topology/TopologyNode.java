@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -21,7 +21,7 @@ import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
  * @see TopologyConnectionEntity#source
  * @see TopologyConnectionEntity#target
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 public class TopologyNode extends Model {
 

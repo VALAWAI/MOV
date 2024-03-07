@@ -41,7 +41,7 @@ public class PayloadServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldNotDecodeNullObject() {
 
-		assertNull(this.service.decodeAndVerify(null, Payload.class));
+		assertNull(this.service.safeDecodeAndVerify(null, Payload.class));
 
 	}
 
@@ -51,7 +51,7 @@ public class PayloadServiceTest extends MovEventTestCase {
 	@Test
 	public void shouldNotDecodeUnvalidObject() {
 
-		assertNull(this.service.decodeAndVerify(new JsonObject(), RegisterComponentPayload.class));
+		assertNull(this.service.safeDecodeAndVerify(new JsonObject(), RegisterComponentPayload.class));
 
 	}
 
@@ -63,7 +63,7 @@ public class PayloadServiceTest extends MovEventTestCase {
 
 		final var expected = new RegisterComponentPayloadTest().nextModel();
 		final var object = JsonObject.mapFrom(expected);
-		assertEquals(expected, this.service.decodeAndVerify(object, RegisterComponentPayload.class));
+		assertEquals(expected, this.service.safeDecodeAndVerify(object, RegisterComponentPayload.class));
 
 	}
 

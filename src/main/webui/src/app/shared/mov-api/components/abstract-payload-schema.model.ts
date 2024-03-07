@@ -12,7 +12,7 @@ import { PayloadType } from "./payload-schema.model";
  * The description of a payload of a message send or received from
  * {@link ChannelSchema}.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export abstract class AbstractPayloadSchema {
 

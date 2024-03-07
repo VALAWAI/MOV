@@ -37,4 +37,14 @@ public class EnumPayloadSchema extends PayloadSchema {
 		this.values = new TreeSet<>();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean match(PayloadSchema other) {
+
+		return other instanceof final EnumPayloadSchema schema
+				&& (this.values == schema.values || this.values != null && this.values.equals(schema.values));
+	}
+
 }

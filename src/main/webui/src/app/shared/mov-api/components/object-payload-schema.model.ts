@@ -12,7 +12,7 @@ import { PayloadSchema } from "./payload-schema.model";
 /**
  *  A definition of a schema that describe an object.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export class ObjectPayloadSchema extends AbstractPayloadSchema {
 

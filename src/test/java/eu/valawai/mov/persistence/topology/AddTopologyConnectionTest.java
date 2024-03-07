@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -28,7 +28,7 @@ import io.smallrye.mutiny.Uni;
  *
  * @see AddTopologyConnection
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 @QuarkusTest
 public class AddTopologyConnectionTest extends MovPersistenceTestCase {

@@ -12,7 +12,7 @@ import { PayloadSchema } from "./payload-schema.model";
 /**
  *  A payload that is represented by an array of values.
  *
- * @author UDT-IA, IIIA-CSIC
+ * @author VALAWAI
  */
 export class ArrayPayloadSchema extends AbstractPayloadSchema {
 

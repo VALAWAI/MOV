@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 UDT-IA, IIIA-CSIC
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -34,6 +34,11 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	protected LogEntity log;
 
 	/**
+	 * The error for the log.
+	 */
+	protected Throwable error;
+
+	/**
 	 * Create the operator.
 	 */
 	private AddLog() {
@@ -53,6 +58,19 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	}
 
 	/**
+	 * Set error as the log level and an error exception.
+	 *
+	 * @param error that has generated this log message.
+	 *
+	 * @return the operation to store a log record.
+	 */
+	public AddLog withError(Throwable error) {
+
+		this.error = error;
+		return this.withError();
+	}
+
+	/**
 	 * Set error as the log level.
 	 *
 	 * @return the operation to store a log record.
@@ -60,6 +78,19 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	public AddLog withError() {
 
 		return this.withLevel(LogLevel.ERROR);
+	}
+
+	/**
+	 * Set warning as the log level and an error exception.
+	 *
+	 * @param error that has generated this log message.
+	 *
+	 * @return the operation to store a log record.
+	 */
+	public AddLog withWarning(Throwable error) {
+
+		this.error = error;
+		return this.withWarning();
 	}
 
 	/**
@@ -198,16 +229,16 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 				switch (this.log.level) {
 
 				case ERROR:
-					Log.error(this.log.message);
+					Log.errorv(this.error, this.log.message);
 					break;
 				case WARN:
-					Log.warn(this.log.message);
+					Log.warnv(this.error, this.log.message);
 					break;
 				case INFO:
-					Log.info(this.log.message);
+					Log.infov(this.error, this.log.message);
 					break;
 				default:
-					Log.debug(this.log.message);
+					Log.debugv(this.error, this.log.message);
 					break;
 				}
 
