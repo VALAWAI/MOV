@@ -47,17 +47,48 @@ public class ListenerService {
 	private final Set<String> starting = Collections.synchronizedSet(new HashSet<>());
 
 	/**
-	 * Publish the specified payload.
+	 * Open a component to listen for the messages of a queue.
 	 *
 	 * @param queueName name of the queue to lister for messages.
 	 *
-	 * @return the payload that are received by the queue.
+	 * @return the body if the messages received by the queue.
 	 */
 	public Multi<JsonObject> open(String queueName) {
 
+		return this.toMultiBody(this.openConsumer(queueName));
+	}
+
+	/**
+	 * Convert a consumer to a listener.
+	 *
+	 * @param open to process to create the consumer.
+	 *
+	 * @return the body if the messages received by the consumer.
+	 */
+	public Multi<JsonObject> toMultiBody(Uni<RabbitMQConsumer> open) {
+
+		return open.onItem().transformToMulti(consumer -> {
+
+			return consumer.toMulti().map(msg -> {
+
+				final var body = msg.body();
+				return body.toJsonObject();
+			});
+		});
+	}
+
+	/**
+	 * Open a component to consume for the messages of a queue.
+	 *
+	 * @param queueName name of the queue to consume for messages.
+	 *
+	 * @return the consumer for the queue messages.
+	 */
+	public Uni<RabbitMQConsumer> openConsumer(String queueName) {
+
 		if (queueName == null) {
 
-			return Multi.createFrom().failure(new IllegalArgumentException("The name of the queue can not be null"));
+			return Uni.createFrom().failure(new IllegalArgumentException("The name of the queue can not be null"));
 
 		} else {
 
@@ -65,7 +96,7 @@ public class ListenerService {
 
 				if (!this.starting.add(queueName)) {
 
-					return Multi.createFrom().failure(new IllegalArgumentException("The queue is starting"));
+					return Uni.createFrom().failure(new IllegalArgumentException("The queue is starting"));
 
 				} else {
 
@@ -73,7 +104,7 @@ public class ListenerService {
 
 						if (queueName.equals(consumer.queueName())) {
 
-							return Multi.createFrom()
+							return Uni.createFrom()
 									.failure(new IllegalArgumentException("The queue is already opened"));
 
 						}
@@ -97,15 +128,10 @@ public class ListenerService {
 
 						this.starting.remove(queueName);
 
-					}).onItem().transformToMulti(consumer -> {
+					}).onItem().invoke(consumer -> {
 
 						this.consumers.add(consumer);
 						this.starting.remove(queueName);
-						return consumer.toMulti().map(msg -> {
-
-							final var body = msg.body();
-							return body.toJsonObject();
-						});
 					});
 				}
 			}
@@ -121,12 +147,15 @@ public class ListenerService {
 	 */
 	public boolean isOpen(String queueName) {
 
-		for (final var consumer : this.consumers) {
+		if (queueName != null) {
 
-			if (queueName.equals(consumer.queueName())) {
+			for (final var consumer : this.consumers) {
 
-				return true;
+				if (queueName.equals(consumer.queueName())) {
 
+					return true;
+
+				}
 			}
 		}
 

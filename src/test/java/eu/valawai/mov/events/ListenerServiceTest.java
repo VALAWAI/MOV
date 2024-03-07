@@ -9,6 +9,7 @@
 package eu.valawai.mov.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,7 +41,7 @@ import jakarta.inject.Inject;
 public class ListenerServiceTest extends MovEventTestCase {
 
 	/**
-	 * The service to test.
+	 * A component that receive messages form a queue used for testing.
 	 */
 	@Inject
 	TestQueue testQueue;
@@ -53,6 +54,16 @@ public class ListenerServiceTest extends MovEventTestCase {
 
 		final var error = this.assertNotOpenQueue(null);
 		assertInstanceOf(IllegalArgumentException.class, error);
+
+	}
+
+	/**
+	 * Check taht ois not open a {@code null} queue name.
+	 */
+	@Test
+	public void shouldNotBeOpenedANullinputQueueName() {
+
+		assertFalse(this.listener.isOpen(null));
 
 	}
 

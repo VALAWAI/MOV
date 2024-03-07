@@ -49,10 +49,10 @@ import io.vertx.core.json.Json;
 public class RegisterComponentManagerTest extends MovEventTestCase {
 
 	/**
-	 * The URL of the application.
+	 * The name of teh queue to send the register component events.
 	 */
 	@ConfigProperty(name = "mp.messaging.incoming.register_component.queue.name", defaultValue = "valawai/component/register")
-	String registerCcomponentQueueName;
+	String registerComponentQueueName;
 
 	/**
 	 * Check that cannot register with an invalid payload.
@@ -63,7 +63,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayload();
 		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
 
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerCcomponentQueueName, payload));
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
 				.await().atMost(Duration.ofSeconds(30)));
@@ -80,7 +80,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		payload.asyncapiYaml += "channels:\n\tBad:\n\ttype: string";
 		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
 
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerCcomponentQueueName, payload));
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
 				.await().atMost(Duration.ofSeconds(30)));
@@ -105,7 +105,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
 
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerCcomponentQueueName, payload));
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
 				.await().atMost(Duration.ofSeconds(30)));
@@ -174,7 +174,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
 		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
 		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.registerCcomponentQueueName, payload));
+		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		// check updated the components
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());

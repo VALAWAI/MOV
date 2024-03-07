@@ -19,6 +19,7 @@ import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.logs.AddLog;
 import eu.valawai.mov.persistence.topology.EnableTopologyConnection;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -69,63 +70,94 @@ public class ChangeTopologyManager {
 			final Uni<TopologyConnectionEntity> find = TopologyConnectionEntity.findById(payload.connectionId);
 			final Uni<Throwable> startLink = find.onFailure().recoverWithItem(error -> {
 
+				Log.errorv(error, "Cannot search for the connection {0}", payload.connectionId);
 				return null;
 
 			}).map(entity -> {
 
 				if (entity == null) {
 
+					AddLog.fresh().withError()
+							.withMessage("Received change topology payload for an undefined connection.")
+							.withPayload(content).store();
 					return new IllegalArgumentException("No connection associated to the identifier");
-
-				} else if (payload.action == TopologyAction.DISABLE) {
-
-					final var source = entity.source.channelName;
-					this.listener.close(source).chain(any -> {
-
-						return EnableTopologyConnection.fresh().withConnection(payload.connectionId)
-								.withAction(payload.action).execute();
-
-					}).subscribe().with(success -> {
-
-						if (success) {
-
-							AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", entity.id)
-									.withPayload(entity).store();
-
-						} else {
-
-							AddLog.fresh().withError().withMessage("Cannot disable the connection {0}", entity.id)
-									.withPayload(entity).store();
-
-						}
-
-					}, error -> {
-
-						AddLog.fresh().withError(error).withMessage("Cannot disable the connection {0}", entity.id)
-								.withPayload(entity).store();
-					});
-					return null;
 
 				} else {
 
 					final var source = entity.source.channelName;
 					final var target = entity.target.channelName;
-					this.listener.open(source).onSubscription().invoke(any -> {
+					final var connectionLog = entity.id.toHexString() + " ( from '" + source + "' to '" + target + "')";
+					if (payload.action == TopologyAction.DISABLE) {
 
-						AddLog.fresh().withInfo().withMessage("Enabled the connection {0}", entity.id)
-								.withPayload(entity).store();
+						this.listener.close(source).chain(any -> {
 
-					}).subscribe().with(received -> {
+							return EnableTopologyConnection.fresh().withConnection(payload.connectionId)
+									.withAction(payload.action).execute();
 
-						this.publish.send(target, received);
+						}).subscribe().with(success -> {
 
-					}, error -> {
+							if (success) {
 
-						AddLog.fresh().withError(error).withMessage("Cannot enable the connection {0}", entity.id)
-								.withPayload(entity).store();
-					});
+								AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connectionLog)
+										.store();
 
-					return null;
+							} else {
+
+								AddLog.fresh().withError()
+										.withMessage("Disabled the connection {0}, but not market as disabled",
+												connectionLog)
+										.store();
+
+							}
+
+						}, error -> {
+
+							AddLog.fresh().withError(error)
+									.withMessage("Cannot disable the connection {0}", connectionLog).store();
+						});
+						return null;
+
+					} else {
+
+						this.listener.toMultiBody(this.listener.openConsumer(source).onItem().invoke(consumer -> {
+
+							EnableTopologyConnection.fresh().withConnection(payload.connectionId)
+									.withAction(payload.action).execute().subscribe().with(done -> {
+
+										AddLog.fresh().withInfo()
+												.withMessage("Enabled the connection {0}", connectionLog).store();
+
+									}, error -> {
+
+										AddLog.fresh().withError(error)
+												.withMessage("Opened connection {0}, but not marked as enabled",
+														connectionLog)
+												.store();
+
+									});
+
+						})).subscribe().with(received -> {
+
+							this.publish.send(target, received).subscribe().with(done -> {
+
+								AddLog.fresh().withInfo().withMessage("Sent a message from {0} to {1}", source, target)
+										.withPayload(received).store();
+
+							}, error -> {
+
+								AddLog.fresh().withError(error)
+										.withMessage("Cannot send a message from {0} to {1}", source, target)
+										.withPayload(received).store();
+							});
+
+						}, error -> {
+
+							AddLog.fresh().withError(error)
+									.withMessage("Cannot enable the connection {0}", connectionLog).store();
+						});
+
+						return null;
+					}
 				}
 			});
 			return startLink.subscribeAsCompletionStage().thenCompose(error -> {
