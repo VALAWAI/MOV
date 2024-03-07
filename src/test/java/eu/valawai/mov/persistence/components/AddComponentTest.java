@@ -40,11 +40,12 @@ public class AddComponentTest extends MovPersistenceTestCase {
 
 		final var component = new ComponentTest().nextModel();
 		final var now = TimeManager.now();
-		final var componentId = AddComponent.fresh().withComponent(component).execute().await()
+		final var added = AddComponent.fresh().withComponent(component).execute().await()
 				.atMost(Duration.ofSeconds(30));
-		assertNotNull(componentId);
+		assertNotNull(added);
+		assertNotNull(added.id);
 
-		final Uni<ComponentEntity> find = ComponentEntity.findById(componentId);
+		final Uni<ComponentEntity> find = ComponentEntity.findById(added.id);
 		final var entity = find.await().atMost(Duration.ofSeconds(30));
 		assertNotNull(entity);
 		assertTrue(now <= entity.since);

@@ -211,7 +211,33 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected void executeAndWaitUntilNewLog(Runnable action, Duration deadline) {
 
-		final var countLogs = LogEntity.count().await().atMost(Duration.ofSeconds(30));
+		this.executeAndWaitUntilNewLogs(1, action, deadline);
+
+	}
+
+	/**
+	 * Do an action and wait until a new log message is stored or the deadline
+	 * period has passed.
+	 *
+	 * @param num    of log to wait until happens the specified number of logs.
+	 * @param action to do.
+	 */
+	protected void executeAndWaitUntilNewLogs(int num, Runnable action) {
+
+		this.executeAndWaitUntilNewLogs(num, action, Duration.ofMinutes(1));
+	}
+
+	/**
+	 * Do an action and wait until a new log message is stored or the deadline
+	 * period has passed.
+	 *
+	 * @param num      of log to wait until happens the specified number of logs.
+	 * @param action   to do.
+	 * @param deadline maximum time to wait that the action is done.
+	 */
+	protected void executeAndWaitUntilNewLogs(int num, Runnable action, Duration deadline) {
+
+		final var expectedCount = LogEntity.count().await().atMost(Duration.ofSeconds(30)) + num;
 		try {
 
 			action.run();
@@ -225,7 +251,7 @@ public class MasterOfValawaiTestCase {
 			error.printStackTrace();
 			fail("Cannot execute the action");
 		}
-		this.waitUntilNotNull(() -> LogEntity.count(), c -> c != countLogs, Duration.ofSeconds(1), deadline);
+		this.waitUntilNotNull(() -> LogEntity.count(), c -> c >= expectedCount, Duration.ofSeconds(1), deadline);
 
 	}
 

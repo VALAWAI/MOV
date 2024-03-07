@@ -1,0 +1,21 @@
+{
+	"name": "Test description of a publishing",
+	"version": "3.4.5",
+	"apiVersion": "3.4.5",
+	"description": "API description",
+	"channels": [
+		{
+			"id": "test/valawai_reg_45678",
+			"description": "Description of the channel 456789",
+			"publish": {
+				"type": "OBJECT",
+				"properties": {
+					"field_12345": {
+						"type": "BASIC",
+						"format": "STRING"
+					}
+				}
+			}
+		}
+	]
+}

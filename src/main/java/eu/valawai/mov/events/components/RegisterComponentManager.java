@@ -194,7 +194,16 @@ public class RegisterComponentManager {
 							final var msg = new ChangeTopologyPayload();
 							msg.action = TopologyAction.ENABLE;
 							msg.connectionId = connectionId;
-							this.publish.send(this.changeTopologyQueueName, msg);
+							this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
+
+								Log.debugv("Sent enable the connection between {0} and {1}", sourceChannel.id,
+										targetChannel.id);
+
+							}, error -> {
+
+								Log.errorv(error, "Cannot enable the connection between {0} and {1}", sourceChannel.id,
+										targetChannel.id);
+							});
 
 						} else {
 

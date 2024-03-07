@@ -1,0 +1,15 @@
+asyncapi: 2.6.0
+info:
+  title: Test description of a publishing
+  version: 3.4.5
+  description: API description
+channels:
+  test/valawai_reg_45678:
+    description: Description of the channel 456789
+    publish:
+      message:
+        payload:
+          type: object
+          properties:
+            field_12345:
+              type: string

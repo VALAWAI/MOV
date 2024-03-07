@@ -36,9 +36,9 @@ public interface ComponentEntities {
 	public static void minComponents(int min) {
 
 		final var total = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
-		if (total > min) {
+		if (total < min) {
 
-			nextComponents(total - min);
+			nextComponents(min - total);
 		}
 	}
 

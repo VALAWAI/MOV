@@ -37,7 +37,7 @@ public class ComponentBuilderTest {
 	 * @throws IOException If cannot read the files to compare.
 	 */
 	@ParameterizedTest(name = "Should create a component for the file {0}")
-	@ValueSource(ints = { 1, 2, 3, 4, 5, 6 })
+	@ValueSource(ints = { 1, 2, 3, 4, 5, 6, 7 })
 	public void shouldCrreateComponentFor(int index) throws IOException {
 
 		final var yaml = new String(this.getClass().getClassLoader()
