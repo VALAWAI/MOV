@@ -12,8 +12,10 @@ import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.valawai.mov.events.Payload;
+import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.constraints.NotNull;
 
@@ -35,9 +37,10 @@ public class ChangeTopologyPayload extends Payload {
 	public TopologyAction action;
 
 	/**
-	 * The source channel of the topology to modify.
+	 * The identifier of the topology connection that has changed.
 	 */
 	@Schema(title = "The identifier of the topology connection that has changed.")
 	@NotNull
+	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId connectionId;
 }

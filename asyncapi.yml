@@ -18,11 +18,6 @@ channels:
       summary: Used by the components to inform that they are present on the infratructure.
       message:
         $ref: '#/components/messages/register_component'
-  valawai/status:
-    publish:
-      summary: Inform of the status of the VALAWAI infrastructure.
-      message:
-        $ref: '#/components/messages/status'
   valawai/topology/change:
     subscribe:
       summary: Used by the components to inform of the changes that has to be done to the topology.
@@ -36,11 +31,6 @@ components:
       payload:
         $ref: "#/components/schemas/register_component_payload"
 
-    status:
-      contentType: application/json
-      payload:
-        $ref: "#/components/schemas/status_payload"
-
     change_topology:
       contentType: application/json
       payload:
@@ -48,6 +38,7 @@ components:
 
   schemas:
     register_component_payload:
+      description: The information necessary to register a component.
       type: object
       properties:
         type:
@@ -71,34 +62,11 @@ components:
           examples: 
             - 1.0.0
             - 1.7.2
-        api:
-          description: The api that the component implements
-          type: object
-          properties:
-            version:
-              description: the API version.
-              type: string
-              pattern: "\\d+\\.\\d+\\.\\d+"
-              examples: 
-               - 1.0.0
-               - 1.7.2
-            yaml:
-              description: The asyncapi specification.
-              type: string
-              examples: 
-                - "asyncapi: '2.6.0'\ninfo:..."
-
-    status_payload:
-      type: object
-      properties:
-        state:
-          description: The valawai state.
+        asyncapiYaml:
+          description: The asyncapi specification in yaml.
           type: string
-          enum:
-            - 'STARTING'
-            - 'STOPING'
-            - 'ACTIVE'
-            - 'INACTIVE'
+          examples: 
+            - 'asyncapi: 2.6.0\ninfo:\n  title: Service To test\n  version: 1.5.0\n  description: This service is in charge of processing user signups\nchannels:\n  valawai/test_input:\n    subscribe:\n      message:\n        payload:\n          type: object\n          properties:\n            content:\n              type: string'
 
     change_topology_payload:
       type: object
@@ -108,13 +76,9 @@ components:
           enum:
             - 'ENABLE'
             - 'DISABLE'
-        source:
-          description: The source channel of the topology to modify.
+        connectionId:
+          description: The identifier of the topology connection that has changed.
           type: string
+          pattern: "[0-9a-fA-F]{24}"
           examples: 
-            - "valawai/c0/voice_to_text/text_content"
-        target:
-          description: The target channel of the topology to modify.
-          type: string
-          examples: 
-            - "valawai/c1/norm_engine/text"
+            - "65c1f59ea4cb169f42f5edc4"

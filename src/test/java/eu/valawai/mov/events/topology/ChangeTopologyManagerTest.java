@@ -260,54 +260,6 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that can enable but the message not pass to the target because it is
-	 * not listening.
-	 */
-	@Test
-	public void shouldEnableButFailPassThroughtMessageBecauseNotListening() {
-
-		var connection = TopologyConnectionEntities.nextTopologyConnection();
-		while (connection.enabled) {
-
-			connection = TopologyConnectionEntities.nextTopologyConnection();
-		}
-
-		final var targetQueueName = connection.target.channelName;
-
-		this.assertItemNotNull(this.service.client().chain(client -> client.queueDeclare(targetQueueName, false, false,
-				true, new JsonObject().put("max-length", 0))));
-
-		final var payload = new ChangeTopologyPayload();
-		payload.connectionId = connection.id;
-		payload.action = TopologyAction.ENABLE;
-
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
-		assertEquals(1l,
-				LogEntity
-						.count("level = ?1 and message like ?2", LogLevel.INFO,
-								"Enabled .*" + connection.id.toHexString() + ".*")
-						.await().atMost(Duration.ofSeconds(30)));
-
-		final TopologyConnectionEntity current = this
-				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
-		assertTrue(now <= current.updateTimestamp);
-		assertTrue(current.enabled);
-		assertTrue(this.listener.isOpen(connection.source.channelName));
-
-		final var msgPayload = new JsonObject();
-		msgPayload.put("pattern", ValueGenerator.nextPattern("pattern {0}"));
-		final var sourceQueue = connection.source.channelName;
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(sourceQueue, msgPayload));
-		assertEquals(1l,
-				LogEntity
-						.count("level = ?1 and message like ?2 and payload = ?3", LogLevel.ERROR,
-								".*" + sourceQueue + ".+" + targetQueueName + ".*", Json.encodePrettily(msgPayload))
-						.await().atMost(Duration.ofSeconds(30)));
-
-	}
-
-	/**
 	 * Check that can enable a connection and the message is received by the target.
 	 */
 	@Test

@@ -40,6 +40,7 @@ public class RegisterComponentPayload extends Payload {
 	 * The name of the component to register.
 	 */
 	@Schema(title = "The component name.")
+	@Pattern(regexp = "c[0|1|2]_\\w+")
 	@NotNull
 	public String name;
 
