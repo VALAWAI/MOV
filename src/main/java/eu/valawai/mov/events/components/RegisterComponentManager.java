@@ -8,8 +8,11 @@
 
 package eu.valawai.mov.events.components;
 
+import java.util.concurrent.CompletionStage;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Message;
 
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
@@ -27,6 +30,7 @@ import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -60,23 +64,22 @@ public class RegisterComponentManager {
 	/**
 	 * Called when has to register a component.
 	 *
-	 * @param content of the message to consume.
+	 * @param msg message to consume.
+	 *
+	 * @return the result if the message process.
 	 */
 	@Incoming("register_component")
-	public void consume(JsonObject content) {
+	public CompletionStage<Void> consume(Message<JsonObject> msg) {
 
-		final var payload = this.service.safeDecodeAndVerify(content, RegisterComponentPayload.class);
-		if (payload == null) {
+		final var content = msg.getPayload();
+		try {
 
-			AddLog.fresh().withError().withMessage("Received invalid register component payload.").withPayload(content)
-					.store();
-
-		} else {
-
+			final var payload = this.service.decodeAndVerify(content, RegisterComponentPayload.class);
 			final var component = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
 			if (component == null) {
 
 				AddLog.fresh().withError().withMessage("Received invalid async API.").withPayload(content).store();
+				return msg.nack(new IllegalArgumentException("The async API is not valid."));
 
 			} else {
 
@@ -89,7 +92,7 @@ public class RegisterComponentManager {
 
 					component.version = payload.version;
 				}
-				AddComponent.fresh().withComponent(component).execute().subscribe().with(source -> {
+				final Uni<Throwable> add = AddComponent.fresh().withComponent(component).execute().map(source -> {
 
 					if (source != null) {
 
@@ -98,14 +101,34 @@ public class RegisterComponentManager {
 						final var paginator = ComponentEntity.find("channels != null", Sort.ascending("_id"))
 								.page(Page.ofSize(10));
 						this.createConnections(source, paginator);
+						return null;
 
 					} else {
 
 						Log.errorv("Cannot store the component {0}", component);
+						return new IllegalStateException("Cannot store the component");
+
 					}
 
 				});
+				return add.subscribeAsCompletionStage().thenCompose(error -> {
+
+					if (error == null) {
+
+						return msg.ack();
+
+					} else {
+
+						return msg.nack(error);
+					}
+				});
 			}
+
+		} catch (final Throwable error) {
+
+			AddLog.fresh().withError().withMessage("Received invalid register component payload.").withPayload(content)
+					.store();
+			return msg.nack(error);
 		}
 
 	}

@@ -23,7 +23,6 @@ import org.junit.jupiter.api.AfterEach;
 
 import eu.valawai.mov.MasterOfValawaiTestCase;
 import io.quarkus.logging.Log;
-import io.quarkus.test.common.QuarkusTestResource;
 import jakarta.inject.Inject;
 
 /**
@@ -31,7 +30,6 @@ import jakarta.inject.Inject;
  *
  * @author VALAWAI
  */
-@QuarkusTestResource(RabbitMQTestResource.class)
 public class MovEventTestCase extends MasterOfValawaiTestCase {
 
 	/**

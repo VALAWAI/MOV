@@ -9,18 +9,20 @@
 package eu.valawai.mov.api.v1.components;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.BeforeClass;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.components.ComponentEntity;
-import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -37,7 +39,7 @@ public class ComponentResourceTest extends APITestCase {
 	/**
 	 * Create some components that can be used.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void createComponents() {
 
 		ComponentEntities.minComponents(100);
@@ -91,37 +93,93 @@ public class ComponentResourceTest extends APITestCase {
 	}
 
 	/**
+	 * Should get page with pattern and type.
+	 */
+	@Test
+	public void shouldGetPageWithPatternAndType() {
+
+		final var pattern = ".*1.*";
+		final var type = ValueGenerator.next(ComponentType.values());
+
+		final var expected = new MinComponentPage();
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
+				Filters.eq("type", type));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l1.description.compareTo(l2.description);
+			if (cmp == 0) {
+
+				cmp = l2.name.compareTo(l1.name);
+				if (cmp == 0) {
+
+					cmp = l1.id.compareTo(l2.id);
+				}
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = given().when().queryParam("pattern", "/" + pattern + "/").queryParam("type", type.name())
+				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
+				.queryParam("order", "description,-name").get("/v1/components").then()
+				.statusCode(Status.OK.getStatusCode()).extract().as(MinComponentPage.class);
+		assertEquals(expected, page);
+
+	}
+
+	/**
 	 * Should get page.
 	 */
 	@Test
 	public void shouldGetPage() {
 
-		final var offset = ValueGenerator.rnd().nextInt(2, 5);
-		final var limit = ValueGenerator.rnd().nextInt(2, 5);
-		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
 		final var expected = new MinComponentPage();
-		expected.offset = offset;
+		expected.offset = 0;
 
-		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
-				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "-name").get("/v1/components").then().statusCode(Status.OK.getStatusCode())
-				.extract().as(MinComponentPage.class);
-		final var total = this.assertItemNotNull(ComponentEntity.count("name like ?1 or description like ?1", pattern));
-		assertEquals(total, page.total);
-		assertEquals(offset, page.offset);
-		final var components = this.assertItemNotNull(ComponentEntity
-				.find("name like ?1 or description like ?1",
-						Sort.descending("name").and("_id", Sort.Direction.Ascending), pattern)
-				.page(Page.of(offset, limit)).list());
-		if (!components.isEmpty()) {
+		final var limit = 20;
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.empty();
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
-			assertEquals(components, page.components);
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
 
-		} else {
+			var cmp = Long.compare(l1.since, l2.since);
+			if (cmp == 0) {
 
-			assertNull(page.components);
+				cmp = l1.id.compareTo(l2.id);
+			}
 
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
 		}
+
+		final var page = given().when().get("/v1/components").then().statusCode(Status.OK.getStatusCode()).extract()
+				.as(MinComponentPage.class);
+		assertEquals(expected, page);
 
 	}
 

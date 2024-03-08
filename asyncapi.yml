@@ -7,8 +7,8 @@ info:
   This messages are used to start/stop the infrastructure and for
   mantains the data and control topology.
  license:
-  name: MIT
-  url: https://opensource.org/license/mit/
+  name: GNU General Public License version 3
+  url: https://opensource.org/license/gpl-3-0/
  contact:
   name: VALAWAI
   url: https://valawai.eu/
@@ -18,23 +18,46 @@ channels:
       summary: Used by the components to inform that they are present on the infratructure.
       message:
         $ref: '#/components/messages/register_component'
+
   valawai/topology/change:
     subscribe:
       summary: Used by the components to inform of the changes that has to be done to the topology.
       message:
         $ref: '#/components/messages/change_topology'
 
+  valawai/component/query:
+    subscribe:
+      summary: Used to obtain information about some components defined on VALAWAI.
+      message:
+        $ref: '#/components/messages/query_components'
+
+  valawai/component/page:
+    publish:
+      summary: Used to inform of the components found that satisfy the query.
+      message:
+        $ref: '#/components/messages/components_page'
+
 components:
   messages:
     register_component:
       contentType: application/json
       payload:
-        $ref: "#/components/schemas/register_component_payload"
+        $ref: '#/components/schemas/register_component_payload'
 
     change_topology:
       contentType: application/json
       payload:
-        $ref: "#/components/schemas/change_topology_payload"
+        $ref: '#/components/schemas/change_topology_payload'
+
+    query_components:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/query_components_payload'
+
+    components_page:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/components_page_payload'
 
   schemas:
     register_component_payload:
@@ -43,26 +66,23 @@ components:
       properties:
         type:
           description: The type of component.
-          type: string
-          enum:
-            - 'C0'
-            - 'C1'
-            - 'C2'
+          oneOf:
+            - $ref: '#/components/schemas/component_type'
         name:
           description: The component name.
           type: string
-          pattern: "c[0|1|2]_\\w+"
+          pattern: 'c[0|1|2]_\\w+'
           examples: 
             - c0_voice_to_text
             - c2_value_awarness_detector
         version:
           description: the component version.
           type: string
-          pattern: "\\d+\\.\\d+\\.\\d+"
+          pattern: '\\d+\\.\\d+\\.\\d+'
           examples: 
             - 1.0.0
             - 1.7.2
-        asyncapiYaml:
+        asyncapi_yaml:
           description: The asyncapi specification in yaml.
           type: string
           examples: 
@@ -76,9 +96,224 @@ components:
           enum:
             - 'ENABLE'
             - 'DISABLE'
-        connectionId:
+        connection_id:
           description: The identifier of the topology connection that has changed.
           type: string
-          pattern: "[0-9a-fA-F]{24}"
+          pattern: '[0-9a-fA-F]{24}'
           examples: 
-            - "65c1f59ea4cb169f42f5edc4"
+            - '65c1f59ea4cb169f42f5edc4'
+
+    query_components_payload:
+      type: object
+      properties:
+        id:
+          description: The identifier of the query.
+          type: string
+          example:
+            - '1elkjfg289'
+        pattern:
+          description: The pattern to match the name or description of the components to return. If it is defined between / it is considered a PCRE regular expression.
+          type: string
+          examples: 
+            - 'c0_voice_to_text'
+            - '/.+voice.+/i'
+        type:
+          description: The type to match the components to return. If it is defined between / it is considered a PCRE regular expression.
+          type: string
+          examples: 
+            - 'c0'
+            - '/c[1|2]/'
+        order:
+          description: The order in witch the components has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.
+          type: string
+          default: '+since'
+          pattern: (,?[+|-]?[type|name|description|since])*
+          examples: 
+            - 'type'
+            - '-message,+type'
+        offset:
+          description: The index of the first component to return.
+          type: integer
+          default: 0
+          minimum: 0
+          examples: 
+            - '1'
+            - '7'
+        limit:
+          description: The maximum number of components to return.
+          type: integer
+          default: 20
+          minimum: 1
+          examples: 
+            - '5'
+            - '10'
+
+    components_page_payload:
+      type: object
+      properties:
+        query_id:
+          description: The identifier of the query that this is the answer.
+          type: string
+          example:
+            - '1elkjfg289'
+        total:
+          description: The number of components that satisfy the query.
+          type: integer
+          minimum: 0
+          examples: 
+            - '5'
+            - '10'
+        components:
+          description: The components that satisfy the query.
+          type: array
+          items: 
+            - $ref: '#/components/schemas/component_payload'
+
+    component_payload:
+      type: object
+      properties:
+        id:
+          description: The identifier of the component.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+        name:
+          description: The name of the component.
+          type: string
+          examples: 
+            - 'c0_voice_to_text'
+        description:
+          description: The description of the component.
+          type: string
+          examples: 
+            - 'Generate text from the ambinetal audio'
+        version:
+          description: The component version.
+          type: string
+          pattern: '\\d+\\.\\d+\\.\\d+'
+          examples: 
+            - '1.0.5'
+        api_version:
+          description: The version of the component API.
+          type: string
+          pattern: '\\d+\\.\\d+\\.\\d+'
+          examples: 
+            - '2.3.0'
+        type:
+          description: The type level of the component in the VALAWAI.
+          oneOf:
+            - $ref: '#/components/schemas/component_type'
+        since:
+          description: The epoch time, in seconds, since the component is available in VALAWAI.
+          type: integer
+          minimum: 0
+          examples: 
+            - '1709902001'
+        channels:
+          description: The channels that the component have.
+          type: array
+          items:
+            - $ref: '#/components/schemas/channel_schema'
+
+    component_type:
+      type: string
+      enum:
+        - 'C0'
+        - 'C1'
+        - 'C2'
+
+    channel_schema:
+      type: object
+      description: A schema that define the messages that a channel can receive or send.
+      properties:
+        id:
+          description: The identifier of the channel.
+          type: string
+          examples: 
+            - 'valawai/c0_voice_to_text/audio'
+        description:
+          description: The description of the channel.
+          type: string
+          examples: 
+            - 'Provide the audio to convert to text'
+        subscribe:
+          description: The type of payload that the channel can receive.
+          oneOf:
+            - $ref: '#/components/schemas/payload_schema'
+        publish:
+          description: The type of payload that the channel can send.
+          oneOf:
+            - $ref: '#/components/schemas/payload_schema'
+
+    payload_schema:
+      type: object
+      discriminator: type
+      
+      properties:
+        type:
+          type: string
+          enum:
+            - 'BASIC'
+            - 'ENUM'
+            - 'OBJECT'
+            - 'ARRAY'
+      required:
+        - type
+
+    basic_payload_schema:
+      description: The basic payload schema.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'BASIC'
+            format:
+              type: string
+              description: The format of the basic type.
+              enum:
+                - 'INTEGER'
+                - 'NUMBER'
+                - 'BOOLEAN'
+                - 'STRING'
+
+    enum_payload_schema:
+      description: A payload that is defined of one value of a set.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ENUM'
+            values:
+              type: array
+              description: The possible enum values.
+              items:
+                - type: string
+
+    object_payload_schema:
+      description: A definition of a schema that describe an object.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'OBJECT'
+            properties:
+              description: The properties that define the object.
+              additionalProperties:
+                $ref: '#/components/schemas/payload_schema'
+            
+    array_payload_schema:
+      description: A payload that is represented by an array of values.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ARRAY'
+            items:
+              description: The type for the elements on the array.
+              oneOf:
+                - $ref: '#/components/schemas/payload_schema'

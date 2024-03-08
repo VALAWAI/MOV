@@ -20,9 +20,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import eu.valawai.mov.events.RabbitMQTestResource;
 import eu.valawai.mov.persistence.AbstractEntityOperator;
+import eu.valawai.mov.persistence.MongoTestResource;
 import eu.valawai.mov.persistence.logs.LogEntity;
 import io.quarkus.logging.Log;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -31,6 +34,8 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
+@QuarkusTestResource(MongoTestResource.class)
+@QuarkusTestResource(RabbitMQTestResource.class)
 public class MasterOfValawaiTestCase {
 
 	/**

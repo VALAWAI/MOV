@@ -49,7 +49,7 @@ import io.vertx.core.json.Json;
 public class RegisterComponentManagerTest extends MovEventTestCase {
 
 	/**
-	 * The name of teh queue to send the register component events.
+	 * The name of the queue to send the register component events.
 	 */
 	@ConfigProperty(name = "mp.messaging.incoming.register_component.queue.name", defaultValue = "valawai/component/register")
 	String registerComponentQueueName;

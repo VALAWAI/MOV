@@ -8,7 +8,11 @@
 
 package eu.valawai.mov.persistence.components;
 
+import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextUUID;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,19 +26,20 @@ import com.mongodb.client.model.Filters;
 import eu.valawai.mov.MasterOfValawaiTestCase;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ComponentType;
-import eu.valawai.mov.api.v1.components.MinComponentPage;
-import eu.valawai.mov.api.v1.components.MinComponentTest;
+import eu.valawai.mov.events.components.ComponentPayloadTest;
+import eu.valawai.mov.events.components.ComponentsPagePayload;
+import eu.valawai.mov.events.components.QueryComponentsPayload;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**
- * Test the operation to get some components.
+ * Test the {@link GetComponentsPagePayload}.
  *
- * @see GetMinComponentPage
+ * @see GetComponentsPagePayload
  *
  * @author VALAWAI
  */
 @QuarkusTest
-public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
+public class GetComponentsPagePayloadTest extends MasterOfValawaiTestCase {
 
 	/**
 	 * Create some components that can be used.
@@ -51,8 +56,9 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	@Test
 	public void shouldReturnEmptyPageBecausenopOneMatchThePattern() {
 
-		final var page = this.assertExecutionNotNull(
-				GetMinComponentPage.fresh().withPattern("undefined Pattern that has not match any possible component"));
+		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh()
+				.withPattern("undefined Pattern that has not match any possible component"));
+		assertNull(page.queryId);
 		assertEquals(0l, page.total);
 		assertEquals(Collections.EMPTY_LIST, page.components);
 
@@ -66,9 +72,9 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 
 		final var offset = Integer.MAX_VALUE;
 		final var total = this.assertItemNotNull(ComponentEntity.count());
-		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withOffset(offset));
+		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh().withOffset(offset));
+		assertNull(page.queryId);
 		assertEquals(total, page.total);
-		assertEquals(offset, page.offset);
 		assertEquals(Collections.EMPTY_LIST, page.components);
 
 	}
@@ -79,27 +85,29 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	@Test
 	public void shouldReturnPage() {
 
-		final var expected = new MinComponentPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
-
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		final var max = expected.offset + limit + 10;
+		final var query = new QueryComponentsPayload();
+		query.id = nextUUID().toString();
+		query.offset = rnd().nextInt(2, 5);
+		query.limit = rnd().nextInt(5, 11);
+		final var max = query.offset + query.limit + 10;
 		final var filter = Filters.empty();
+
+		final var expected = new ComponentsPagePayload();
+		expected.queryId = query.id;
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(
 				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
 		components.sort((l1, l2) -> l1.id.compareTo(l2.id));
 		expected.components = new ArrayList<>();
-		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+		for (int i = query.offset; i < query.offset + query.limit && i < components.size(); i++) {
 
 			final var component = components.get(i);
-			final var expectedComponent = MinComponentTest.from(component);
+			final var expectedComponent = ComponentPayloadTest.from(component);
 			expected.components.add(expectedComponent);
 		}
 
-		final var page = this
-				.assertExecutionNotNull(GetMinComponentPage.fresh().withOffset(expected.offset).withLimit(limit));
+		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh().withQuery(query));
 		assertEquals(expected, page);
 
 	}
@@ -112,18 +120,23 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	@Test
 	public void shouldReturnPageWithType() {
 
-		final var type1 = ValueGenerator.next(ComponentType.values());
-		var type2 = ValueGenerator.next(ComponentType.values());
+		final var query = new QueryComponentsPayload();
+		query.id = nextUUID().toString();
+		query.offset = rnd().nextInt(2, 5);
+		query.limit = rnd().nextInt(5, 11);
+		query.order = "-type";
+		final var type1 = next(ComponentType.values());
+		var type2 = next(ComponentType.values());
 		while (type1 == type2) {
 
-			type2 = ValueGenerator.next(ComponentType.values());
+			type2 = next(ComponentType.values());
 		}
+		query.type = "/" + type1.name() + "|" + type2.name() + "/";
 
-		final var expected = new MinComponentPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var expected = new ComponentsPagePayload();
+		expected.queryId = query.id;
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		final var max = expected.offset + limit + 10;
+		final var max = query.offset + query.limit + 10;
 		final var filter = Filters.or(Filters.eq("type", type1), Filters.eq("type", type2));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
@@ -140,16 +153,14 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 			return cmp;
 		});
 		expected.components = new ArrayList<>();
-		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+		for (int i = query.offset; i < query.offset + query.limit && i < components.size(); i++) {
 
 			final var component = components.get(i);
-			final var expectedComponent = MinComponentTest.from(component);
+			final var expectedComponent = ComponentPayloadTest.from(component);
 			expected.components.add(expectedComponent);
 		}
 
-		final var page = this.assertExecutionNotNull(
-				GetMinComponentPage.fresh().withType("/" + type1.name() + "|" + type2.name() + "/").withOrder("-type")
-						.withOffset(expected.offset).withLimit(limit));
+		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh().withQuery(query));
 		assertEquals(expected, page);
 
 	}
@@ -160,13 +171,18 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	@Test
 	public void shouldReturnPageWithPattern() {
 
+		final var query = new QueryComponentsPayload();
+		query.id = nextUUID().toString();
+		query.offset = rnd().nextInt(2, 5);
+		query.limit = rnd().nextInt(5, 11);
 		final var pattern = ".*1.*";
+		query.pattern = "/" + pattern + "/";
+		query.order = "-name";
 
-		final var expected = new MinComponentPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var expected = new ComponentsPagePayload();
+		expected.queryId = query.id;
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		final var max = expected.offset + limit + 10;
+		final var max = query.offset + query.limit + 10;
 		final var filter = Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
@@ -183,15 +199,14 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 			return cmp;
 		});
 		expected.components = new ArrayList<>();
-		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+		for (int i = query.offset; i < query.offset + query.limit && i < components.size(); i++) {
 
 			final var component = components.get(i);
-			final var expectedComponent = MinComponentTest.from(component);
+			final var expectedComponent = ComponentPayloadTest.from(component);
 			expected.components.add(expectedComponent);
 		}
 
-		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withPattern("/" + pattern + "/")
-				.withOrder("-name").withOffset(expected.offset).withLimit(limit));
+		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh().withQuery(query));
 		assertEquals(expected, page);
 
 	}
@@ -202,14 +217,21 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	@Test
 	public void shouldReturnPageWithPatternAndType() {
 
+		final var query = new QueryComponentsPayload();
+		query.id = nextUUID().toString();
+		query.offset = rnd().nextInt(2, 5);
+		query.limit = rnd().nextInt(5, 11);
 		final var pattern = ".*1.*";
+		query.pattern = "/" + pattern + "/";
+		query.order = "description,-name";
+		query.offset = ValueGenerator.rnd().nextInt(2, 5);
 		final var type = ValueGenerator.next(ComponentType.values());
+		query.type = type.name();
 
-		final var expected = new MinComponentPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var expected = new ComponentsPagePayload();
+		expected.queryId = query.id;
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		final var max = expected.offset + limit + 10;
+		final var max = query.offset + query.limit + 10;
 		final var filter = Filters.and(
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
 				Filters.eq("type", type));
@@ -232,15 +254,14 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 			return cmp;
 		});
 		expected.components = new ArrayList<>();
-		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+		for (int i = query.offset; i < query.offset + query.limit && i < components.size(); i++) {
 
 			final var component = components.get(i);
-			final var expectedComponent = MinComponentTest.from(component);
+			final var expectedComponent = ComponentPayloadTest.from(component);
 			expected.components.add(expectedComponent);
 		}
 
-		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withPattern("/" + pattern + "/")
-				.withType(type.name()).withOrder("description,-name").withOffset(expected.offset).withLimit(limit));
+		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh().withQuery(query));
 		assertEquals(expected, page);
 
 	}

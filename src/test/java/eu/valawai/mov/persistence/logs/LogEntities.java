@@ -36,9 +36,9 @@ public interface LogEntities {
 	public static void minLogs(int min) {
 
 		final var total = LogEntity.count().await().atMost(Duration.ofSeconds(30));
-		if (total > min) {
+		if (total < min) {
 
-			nextLogs(total - min);
+			nextLogs(min - total);
 		}
 	}
 

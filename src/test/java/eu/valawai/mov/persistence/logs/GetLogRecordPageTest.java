@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
@@ -39,7 +39,7 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 	/**
 	 * Create some logs that can be used.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void createlogs() {
 
 		LogEntities.minLogs(100);

@@ -11,6 +11,7 @@ package eu.valawai.mov.events.topology;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -42,5 +43,6 @@ public class ChangeTopologyPayload extends Payload {
 	@Schema(title = "The identifier of the topology connection that has changed.")
 	@NotNull
 	@JsonSerialize(using = ObjectIdSerializer.class)
+	@JsonProperty("connection_id")
 	public ObjectId connectionId;
 }

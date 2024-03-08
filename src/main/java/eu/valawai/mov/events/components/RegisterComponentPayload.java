@@ -10,6 +10,7 @@ package eu.valawai.mov.events.components;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -57,6 +58,7 @@ public class RegisterComponentPayload extends Payload {
 	 */
 	@Schema(title = "The asyncapi specification in yaml.")
 	@NotEmpty
+	@JsonProperty("asyncapi_yaml")
 	public String asyncapiYaml;
 
 }
