@@ -17,6 +17,7 @@ import eu.valawai.mov.events.ListenerService;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.logs.AddLog;
+import eu.valawai.mov.persistence.topology.DeleteTopologyConnection;
 import eu.valawai.mov.persistence.topology.EnableTopologyConnection;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
@@ -87,7 +88,52 @@ public class ChangeTopologyManager {
 					final var source = entity.source.channelName;
 					final var target = entity.target.channelName;
 					final var connectionLog = entity.id.toHexString() + " ( from '" + source + "' to '" + target + "')";
-					if (payload.action == TopologyAction.DISABLE) {
+					if (payload.action == TopologyAction.REMOVE) {
+
+						DeleteTopologyConnection.fresh().withConnection(payload.connectionId).execute()
+								.chain(deleted -> this.listener.close(source)).subscribe().with(success -> {
+
+									AddLog.fresh().withInfo().withMessage("Removed the connection {0}", connectionLog)
+											.store();
+
+								}, error -> {
+
+									AddLog.fresh().withError(error)
+											.withMessage("Cannot remove the connection {0}", connectionLog).store();
+								});
+						return null;
+
+					} else if (payload.action == TopologyAction.DISABLE) {
+
+						this.listener.close(source).chain(any -> {
+
+							return EnableTopologyConnection.fresh().withConnection(payload.connectionId)
+									.withAction(payload.action).execute();
+
+						}).subscribe().with(success -> {
+
+							if (success) {
+
+								AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connectionLog)
+										.store();
+
+							} else {
+
+								AddLog.fresh().withError()
+										.withMessage("Disabled the connection {0}, but not market as disabled",
+												connectionLog)
+										.store();
+
+							}
+
+						}, error -> {
+
+							AddLog.fresh().withError(error)
+									.withMessage("Cannot disable the connection {0}", connectionLog).store();
+						});
+						return null;
+
+					} else if (payload.action == TopologyAction.DISABLE) {
 
 						this.listener.close(source).chain(any -> {
 

@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.events.topology;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -304,4 +305,128 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 
 	}
 
+	/**
+	 * Check that cannot remove a finished connection.
+	 */
+	@Test
+	public void shouldNotRemoveADeletedConnection() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		connection.deletedTimestamp = TimeManager.now();
+		this.assertItemNotNull(connection.update());
+
+		final var payload = new ChangeTopologyPayload();
+		payload.connectionId = connection.id;
+		payload.action = TopologyAction.REMOVE;
+
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+
+		assertEquals(1l, LogEntity
+				.count("level = ?1 and message like ?2", LogLevel.ERROR, ".*" + connection.id.toHexString() + ".*")
+				.await().atMost(Duration.ofSeconds(30)));
+
+		final TopologyConnectionEntity current = this
+				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertEquals(connection.updateTimestamp, current.updateTimestamp);
+		assertEquals(connection.enabled, current.enabled);
+	}
+
+	/**
+	 * Check that can enable and remove a connection.
+	 */
+	@Test
+	public void shouldEnableAndRemove() {
+
+		var connection = TopologyConnectionEntities.nextTopologyConnection();
+		while (connection.enabled) {
+
+			connection = TopologyConnectionEntities.nextTopologyConnection();
+		}
+
+		final var payload = new ChangeTopologyPayload();
+		payload.connectionId = connection.id;
+		payload.action = TopologyAction.ENABLE;
+
+		var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Enabled .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		TopologyConnectionEntity current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertTrue(now <= current.updateTimestamp);
+		assertTrue(current.enabled);
+		assertTrue(this.listener.isOpen(connection.source.channelName));
+
+		payload.action = TopologyAction.REMOVE;
+		now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Removed .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertNotNull(current.deletedTimestamp);
+		assertTrue(now <= current.deletedTimestamp);
+		assertFalse(this.listener.isOpen(connection.source.channelName));
+	}
+
+	/**
+	 * Check that can enable and remove a connection but not remove a second time.
+	 */
+	@Test
+	public void shouldEnableAndRemoveButNotremoveAsecondTime() {
+
+		var connection = TopologyConnectionEntities.nextTopologyConnection();
+		while (connection.enabled) {
+
+			connection = TopologyConnectionEntities.nextTopologyConnection();
+		}
+
+		final var payload = new ChangeTopologyPayload();
+		payload.connectionId = connection.id;
+		payload.action = TopologyAction.ENABLE;
+
+		var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Enabled .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		TopologyConnectionEntity current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertTrue(now <= current.updateTimestamp);
+		assertTrue(current.enabled);
+		assertTrue(this.listener.isOpen(connection.source.channelName));
+
+		payload.action = TopologyAction.REMOVE;
+		now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Removed .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertNotNull(current.deletedTimestamp);
+		assertTrue(now <= current.deletedTimestamp);
+		assertFalse(this.listener.isOpen(connection.source.channelName));
+
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+		assertEquals(1l, LogEntity
+				.count("level = ?1 and message like ?2", LogLevel.ERROR, ".*" + connection.id.toHexString() + ".*")
+				.await().atMost(Duration.ofSeconds(30)));
+
+		final TopologyConnectionEntity last = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertEquals(current.updateTimestamp, last.updateTimestamp);
+		assertEquals(current.enabled, last.enabled);
+		assertFalse(this.listener.isOpen(connection.source.channelName));
+
+	}
 }

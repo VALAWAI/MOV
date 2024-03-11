@@ -15,7 +15,7 @@ info:
 channels:
   valawai/component/register:
     subscribe:
-      summary: Used by the components to inform that they are present on the infratructure.
+      summary: Used by the components to inform that it is present on the infratructure.
       message:
         $ref: '#/components/messages/register_component'
 
@@ -36,6 +36,12 @@ channels:
       summary: Used to inform of the components found that satisfy the query.
       message:
         $ref: '#/components/messages/components_page'
+
+  valawai/component/unregister:
+    subscribe:
+      summary: Used by the components to inform that it leave the infratructure.
+      message:
+        $ref: '#/components/messages/unregister_component'
 
 components:
   messages:
@@ -58,6 +64,11 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/components_page_payload'
+
+    unregister_component:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/unregister_component_payload'
 
   schemas:
     register_component_payload:
@@ -317,3 +328,15 @@ components:
               description: The type for the elements on the array.
               oneOf:
                 - $ref: '#/components/schemas/payload_schema'
+                
+    unregister_component_payload:
+      description: The information necessary to unregister a component.
+      type: object
+      properties:
+        component_id:
+          type: string
+          description: The identifeir of the component to unregister.
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+

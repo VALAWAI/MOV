@@ -12,59 +12,32 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 
 import eu.valawai.mov.TimeManager;
-import eu.valawai.mov.events.topology.TopologyAction;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 
 /**
- * Enable or disable a connection from the topology.
+ * Mark a {@link TopologyConnectionEntity} as deleted.
  *
  * @see TopologyConnectionEntity
  *
  * @author VALAWAI
  */
-public class EnableTopologyConnection extends AbstractTopologyConnectionOperation<Boolean, EnableTopologyConnection> {
-
-	/**
-	 * The enable value for the connection.
-	 */
-	protected boolean enabled = true;
+public class DeleteTopologyConnection extends AbstractTopologyConnectionOperation<Boolean, DeleteTopologyConnection> {
 
 	/**
 	 * Create a new operator.
 	 */
-	private EnableTopologyConnection() {
-
+	private DeleteTopologyConnection() {
 	}
 
 	/**
-	 * Create the operator to enable/disable a topology connection.
+	 * Create the operator to delete a topology connection.
 	 *
-	 * @return the operator to change the enable status of a connection.
+	 * @return the operator to delete a connection.
 	 */
-	public static EnableTopologyConnection fresh() {
+	public static DeleteTopologyConnection fresh() {
 
-		return new EnableTopologyConnection();
-	}
-
-	/**
-	 * Set the type of action that change the connection status.
-	 *
-	 * @param action do do over the connection.
-	 *
-	 * @return this operator.
-	 */
-	public EnableTopologyConnection withAction(TopologyAction action) {
-
-		if (action == TopologyAction.ENABLE) {
-
-			this.enabled = true;
-
-		} else {
-
-			this.enabled = false;
-		}
-		return this;
+		return new DeleteTopologyConnection();
 	}
 
 	/**
@@ -77,8 +50,7 @@ public class EnableTopologyConnection extends AbstractTopologyConnectionOperatio
 
 		final var filter = Filters.and(Filters.eq("_id", this.connectionId),
 				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)));
-		final var update = Updates.combine(Updates.set("enabled", this.enabled),
-				Updates.set("updateTimestamp", TimeManager.now()));
+		final var update = Updates.set("deletedTimestamp", TimeManager.now());
 		return TopologyConnectionEntity.mongoCollection().updateOne(filter, update).onFailure()
 				.recoverWithItem(error -> {
 

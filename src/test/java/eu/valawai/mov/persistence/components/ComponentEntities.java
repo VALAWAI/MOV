@@ -58,6 +58,7 @@ public interface ComponentEntities {
 		entity.since = next.since;
 		entity.type = next.type;
 		entity.version = next.version;
+		entity.finishedTime = null;
 		final var stored = entity.persist().onFailure().recoverWithItem(error -> {
 
 			Log.errorv(error, "Cannot persist {}", entity);

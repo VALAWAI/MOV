@@ -228,6 +228,100 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		// Guarantee that exist some components
 		ComponentEntities.minComponents(100);
+
+		// The message to register the target component of the connection
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		final var apiVersion = nextPattern("{0}.{1}.{2}", 3);
+		final var targetChannelName = nextPattern("test/register_component_publish_{0}");
+		final var targetChannelDescription = nextPattern("Description of a channel {0}");
+		final var fieldName = nextPattern("field_to_test_{0}");
+		payload.asyncapiYaml = MessageFormat.format("""
+				asyncapi: 2.6.0
+				info:
+				  title: Test description of a publishing
+				  version: {0}
+				  description: API description
+				channels:
+				  {1}:
+				    description: {2}
+				    subscribe:
+				      message:
+				        payload:
+				          type: object
+				          properties:
+				            {3}:
+				              type: string
+								""", apiVersion, targetChannelName, targetChannelDescription, fieldName).trim()
+				.replaceAll("\\t", "");
+
+		// Create the component that will be the source of the connection
+		final var next = new ComponentTest().nextModel();
+		final ComponentEntity source = new ComponentEntity();
+		source.apiVersion = next.apiVersion;
+		source.channels = new ArrayList<ChannelSchema>();
+		source.description = next.description;
+		source.name = next.name;
+		source.since = next.since;
+		source.type = next.type;
+		source.version = next.version;
+		final var channel = new ChannelSchema();
+		final var sourceChannelName = nextPattern("test/register_component_subscribe_{0}");
+		;
+		channel.id = sourceChannelName;
+		final var object = new ObjectPayloadSchema();
+		final var basic = new BasicPayloadSchema();
+		basic.format = BasicPayloadFormat.STRING;
+		object.properties.put(fieldName, basic);
+		channel.publish = object;
+		source.channels.add(channel);
+
+		this.assertItemNotNull(source.persist());
+
+		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
+		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// check updated the components
+		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
+		assertEquals(countComponentsBefore + 1, countComponentsAfter);
+		// Get last component
+		final ComponentEntity lastComponent = this
+				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= lastComponent.since);
+		assertEquals(payload.name, lastComponent.name);
+		assertEquals(payload.type, lastComponent.type);
+		assertEquals(payload.version, lastComponent.version);
+		assertEquals(apiVersion, lastComponent.apiVersion);
+		assertNull(lastComponent.finishedTime);
+		assertNotNull(lastComponent.channels);
+		assertEquals(1, lastComponent.channels.size());
+		assertEquals(targetChannelName, lastComponent.channels.get(0).id);
+		assertEquals(targetChannelDescription, lastComponent.channels.get(0).description);
+		assertNull(lastComponent.channels.get(0).publish);
+		assertNotNull(lastComponent.channels.get(0).subscribe);
+		assertInstanceOf(ObjectPayloadSchema.class, lastComponent.channels.get(0).subscribe);
+		assertEquals(object, lastComponent.channels.get(0).subscribe);
+
+		// check updated the connections
+		final var countConnectionsAfter = this.assertItemNotNull(TopologyConnectionEntity.count());
+		assertEquals(countConnectionsBefore + 1, countConnectionsAfter);
+
+		// Get last connection
+		final TopologyConnectionEntity lastConnection = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= lastConnection.createTimestamp);
+		assertEquals(lastConnection.createTimestamp, lastConnection.updateTimestamp);
+		assertNull(lastConnection.deletedTimestamp);
+		assertNotNull(lastConnection.target);
+		assertEquals(targetChannelName, lastConnection.target.channelName);
+		assertEquals(lastComponent.id, lastConnection.target.componentId);
+		assertNotNull(lastConnection.source);
+		assertEquals(sourceChannelName, lastConnection.source.channelName);
+		assertEquals(source.id, lastConnection.source.componentId);
+
+		// Check that the connection is working
+		assertTrue(this.listener.isOpen(sourceChannelName));
 	}
 
 }
