@@ -23,7 +23,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 /**
- * The manager to manage the events that asks for some components.
+ * The manager to consume the events that asks for some components.
+ *
+ * @see QueryComponentsPayload
  *
  * @author VALAWAI
  */
@@ -69,8 +71,8 @@ public class QueryComponentsManager {
 
 						} else {
 
-							AddLog.fresh().withInfo().withMessage("No page found for query {0}.", payload.id).store();
-							return msg.nack(new IllegalArgumentException());
+							AddLog.fresh().withError().withMessage("No page found for query {0}.", payload.id).store();
+							return msg.nack(new IllegalArgumentException("Cannot get the query result"));
 						}
 					});
 

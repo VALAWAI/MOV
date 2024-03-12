@@ -159,8 +159,12 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	 */
 	public AddLog withPayload(JsonObject payload) {
 
-		this.log.payload = payload.encodePrettily();
-		return this;
+		String str = null;
+		if (payload != null) {
+
+			str = payload.encodePrettily();
+		}
+		return this.withPayload(str);
 	}
 
 	/**
@@ -172,7 +176,24 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	 */
 	public AddLog withPayload(Object payload) {
 
-		this.log.payload = Json.encodePrettily(payload);
+		String str = null;
+		if (payload != null) {
+
+			str = Json.encodePrettily(payload);
+		}
+		return this.withPayload(str);
+	}
+
+	/**
+	 * Set payload for the log.
+	 *
+	 * @param payload for the log.
+	 *
+	 * @return the operation to store a log record.
+	 */
+	public AddLog withPayload(String payload) {
+
+		this.log.payload = payload;
 		return this;
 	}
 

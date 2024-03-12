@@ -16,6 +16,9 @@ import java.util.UUID;
 
 import org.bson.types.ObjectId;
 
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+
 /**
  * Used to generate values for the tests.
  *
@@ -165,6 +168,35 @@ public class ValueGenerator {
 	public static final long nextPastTime() {
 
 		return TimeManager.now() - rnd().nextLong(Duration.ofMinutes(5).toSeconds(), Duration.ofDays(1).toSeconds());
+	}
+
+	/**
+	 * Return the next Json object.
+	 *
+	 * @return a random json object.
+	 */
+	public static JsonObject nextJsonObject() {
+
+		final var json = new JsonObject();
+		final var max = rnd().nextInt(0, 5);
+		for (var i = 0; i < max; i++) {
+
+			json.put("field_" + i, rnd().nextInt());
+		}
+		return json;
+
+	}
+
+	/**
+	 * Return the next Json string.
+	 *
+	 * @return a random json encoded prettily in json.
+	 */
+	public static String nextJsonPretty() {
+
+		final var json = nextJsonObject();
+		return Json.encodePrettily(json);
+
 	}
 
 }

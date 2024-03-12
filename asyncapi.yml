@@ -43,6 +43,12 @@ channels:
       message:
         $ref: '#/components/messages/unregister_component'
 
+  valawai/log/add:
+    subscribe:
+      summary: Add a new log message to be stored.
+      message:
+        $ref: '#/components/messages/add_log'
+
 components:
   messages:
     register_component:
@@ -69,6 +75,11 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/unregister_component_payload'
+
+    add_log:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/sdd_log_payload'
 
   schemas:
     register_component_payload:
@@ -339,4 +350,28 @@ components:
           pattern: '[0-9a-fA-F]{24}'
           examples: 
             - '65c1f59ea4cb169f42f5edc4'
+
+    add_log_payload:
+      description: The information of a log to add.
+      type: object
+      properties:
+        level:
+          type: string
+          description: The level of the log.
+          enum: 
+            - 'ERROR'
+            - 'WARN'
+            - 'INFO'
+            - 'DEBUG'
+        message:
+          type: string
+          description: The message of the log.
+          maxLength: 1
+          examples: 
+            - 'The component is active'
+        payload:
+          type: string
+          description: The payload of the log.
+          examples: 
+            - '{"pattern:"p1"}'
 
