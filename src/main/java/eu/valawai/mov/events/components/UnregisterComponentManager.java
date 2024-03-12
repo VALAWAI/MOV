@@ -115,46 +115,45 @@ public class UnregisterComponentManager {
 	private void closeConnectionsOf(UnregisterComponentPayload payload,
 			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
 
-		paginator.hasNextPage().subscribe().with(hasNext -> {
+		final Multi<TopologyConnectionEntity> getter = paginator.stream();
+		getter.onCompletion().invoke(() -> {
 
-			if (hasNext) {
+			paginator.hasNextPage().subscribe().with(hasNext -> {
 
-				final Multi<TopologyConnectionEntity> pageGetter = paginator.nextPage().stream();
-				pageGetter.onCompletion().invoke(() -> {
+				if (hasNext) {
 
-					this.closeConnectionsOf(payload, paginator);
+					this.closeConnectionsOf(payload, paginator.nextPage());
 
-				}).subscribe().with(connection -> {
-
-					final var msg = new ChangeTopologyPayload();
-					msg.action = TopologyAction.REMOVE;
-					msg.connectionId = connection.id;
-					this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
-
-						Log.debugv("Sent remove the connection {0}", connection.id);
-
-					}, error -> {
-
-						Log.errorv(error, "Cannot send remove connection {0}", connection.id);
-					});
-
-				}, error -> {
+				} else {
 
 					this.finishedComponent(payload);
-					Log.errorv(error, "Error when get the connections to close.");
+				}
 
-				});
-
-			} else {
+			}, error -> {
 
 				this.finishedComponent(payload);
+				Log.errorv(error, "Error when paginate the components to close.");
 
-			}
+			});
+
+		}).subscribe().with(connection -> {
+
+			final var msg = new ChangeTopologyPayload();
+			msg.action = TopologyAction.REMOVE;
+			msg.connectionId = connection.id;
+			this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
+
+				Log.debugv("Sent remove the connection {0}", connection.id);
+
+			}, error -> {
+
+				Log.errorv(error, "Cannot send remove connection {0}", connection.id);
+			});
 
 		}, error -> {
 
 			this.finishedComponent(payload);
-			Log.errorv(error, "Error when paginate the components to close.");
+			Log.errorv(error, "Error when get the connections to close.");
 
 		});
 

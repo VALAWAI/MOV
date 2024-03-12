@@ -10,6 +10,7 @@ package eu.valawai.mov.events.components;
 
 import static eu.valawai.mov.ValueGenerator.flipCoin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -59,8 +60,8 @@ public class UnregisterComponentManagerTest extends MovEventTestCase {
 		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.unregisterComponentQueueName, payload));
 
-		assertEquals(1l, LogEntity.count("level = ?1 and timestamp >= ?2", LogLevel.ERROR, now).await()
-				.atMost(Duration.ofSeconds(30)));
+		assertEquals(1l,
+				this.assertItemNotNull(LogEntity.count("level = ?1 and timestamp >= ?2", LogLevel.ERROR, now)));
 		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
 	}
 
@@ -75,8 +76,8 @@ public class UnregisterComponentManagerTest extends MovEventTestCase {
 
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.unregisterComponentQueueName, payload));
 
-		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
-				.await().atMost(Duration.ofSeconds(30)));
+		assertEquals(1l, this.assertItemNotNull(
+				LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))));
 		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
 	}
 
@@ -89,9 +90,11 @@ public class UnregisterComponentManagerTest extends MovEventTestCase {
 
 		final var component = ComponentEntities.nextComponent();
 		final List<TopologyConnectionEntity> connections = new ArrayList<>();
-		for (var i = 0; i < 100; i++) {
+		final var max = 25;
+		for (var i = 0; i < max; i++) {
 
 			final var connection = TopologyConnectionEntities.nextTopologyConnection();
+			connection.enabled = true;
 			if (flipCoin()) {
 
 				connection.source.componentId = component.id;
@@ -102,15 +105,17 @@ public class UnregisterComponentManagerTest extends MovEventTestCase {
 			}
 			this.assertItemNotNull(connection.update());
 			connections.add(connection);
+			this.waitOpenQueue(connection.source.channelName);
+
 		}
 
 		final var payload = new UnregisterComponentPayload();
 		payload.componentId = component.id;
 
 		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(101, () -> this.assertPublish(this.unregisterComponentQueueName, payload));
-		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.INFO, Json.encodePrettily(payload))
-				.await().atMost(Duration.ofSeconds(30)));
+		this.executeAndWaitUntilNewLogs(max + 1, () -> this.assertPublish(this.unregisterComponentQueueName, payload));
+		assertEquals(max + 1l,
+				this.assertItemNotNull(LogEntity.count("level = ?1 and timestamp >= ?2", LogLevel.INFO, now)));
 
 		final ComponentEntity updated = this.assertItemNotNull(ComponentEntity.findById(component.id));
 		assertNotNull(updated.finishedTime);
@@ -122,6 +127,7 @@ public class UnregisterComponentManagerTest extends MovEventTestCase {
 					.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
 			assertNotNull(updatedConnection.deletedTimestamp);
 			assertTrue(now <= updatedConnection.deletedTimestamp);
+			assertFalse(this.listener.isOpen(connection.source.channelName));
 
 		}
 

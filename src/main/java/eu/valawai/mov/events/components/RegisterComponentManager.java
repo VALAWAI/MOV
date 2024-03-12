@@ -142,29 +142,31 @@ public class RegisterComponentManager {
 	private void createConnections(ComponentEntity source,
 			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
 
-		paginator.hasNextPage().subscribe().with(hasNext -> {
+		final Multi<ComponentEntity> getter = paginator.stream();
+		getter.onCompletion().invoke(() -> {
 
-			if (hasNext) {
+			paginator.hasNextPage().subscribe().with(hasNext -> {
 
-				final Multi<ComponentEntity> pageGetter = paginator.nextPage().stream();
-				pageGetter.onCompletion().invoke(() -> {
+				if (hasNext) {
 
-					this.createConnections(source, paginator);
+					this.createConnections(source, paginator.nextPage());
 
-				}).subscribe().with(target -> {
+				}
+				// else finished nothing to do
 
-					this.createConnections(source, target);
+			}, error -> {
 
-				}, error -> {
+				Log.errorv(error, "Error when paginate the component to create connections.");
 
-					Log.errorv(error, "Error when checking if is necessary a connection.");
+			});
 
-				});
-			}
+		}).subscribe().with(target -> {
+
+			this.createConnections(source, target);
 
 		}, error -> {
 
-			Log.errorv(error, "Error when paginate the component to create connections.");
+			Log.errorv(error, "Error when checking if is necessary a connection.");
 
 		});
 

@@ -260,7 +260,7 @@ public class RabbitMQService {
 		if (this.client == null) {
 
 			return Uni.createFrom()
-					.failure(new IllegalStateException("Not opened connection to the Rabbit MQ broker."));
+					.failure(() -> new IllegalStateException("Not opened connection to the Rabbit MQ broker."));
 
 		} else {
 

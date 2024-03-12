@@ -88,7 +88,8 @@ public class ListenerService {
 
 		if (queueName == null) {
 
-			return Uni.createFrom().failure(new IllegalArgumentException("The name of the queue can not be null"));
+			return Uni.createFrom()
+					.failure(() -> new IllegalArgumentException("The name of the queue can not be null"));
 
 		} else {
 
@@ -96,7 +97,7 @@ public class ListenerService {
 
 				if (!this.starting.add(queueName)) {
 
-					return Uni.createFrom().failure(new IllegalArgumentException("The queue is starting"));
+					return Uni.createFrom().failure(() -> new IllegalArgumentException("The queue is starting"));
 
 				} else {
 
@@ -105,7 +106,7 @@ public class ListenerService {
 						if (queueName.equals(consumer.queueName())) {
 
 							return Uni.createFrom()
-									.failure(new IllegalArgumentException("The queue is already opened"));
+									.failure(() -> new IllegalArgumentException("The queue is already opened"));
 
 						}
 					}
@@ -191,7 +192,7 @@ public class ListenerService {
 		}
 
 		return Uni.createFrom().failure(
-				new IllegalArgumentException("Does not exist an open queue associated with the specified name."));
+				() -> new IllegalArgumentException("Does not exist an open queue associated with the specified name."));
 	}
 
 }

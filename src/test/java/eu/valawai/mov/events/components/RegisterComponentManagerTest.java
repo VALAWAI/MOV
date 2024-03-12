@@ -120,9 +120,6 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	@Test
 	public void shouldRegisterComponentAndCreateConnectionAsSource() {
 
-		// Guarantee that exist some components
-		ComponentEntities.minComponents(100);
-
 		// The message to register the source component of the connection
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		final var apiVersion = nextPattern("{0}.{1}.{2}", 3);
@@ -160,7 +157,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		target.version = next.version;
 		final var channel = new ChannelSchema();
 		final var targetChannelName = nextPattern("test/register_component_subscribe_{0}");
-		;
+
 		channel.id = targetChannelName;
 		final var object = new ObjectPayloadSchema();
 		final var basic = new BasicPayloadSchema();
@@ -170,11 +167,12 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		target.channels.add(channel);
 
 		this.assertItemNotNull(target.persist());
+		ComponentEntities.minComponents(100);
 
 		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
 		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
 		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.registerComponentQueueName, payload));
+		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		// check updated the components
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
@@ -280,7 +278,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
 		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
 		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.registerComponentQueueName, payload));
+		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		// check updated the components
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
