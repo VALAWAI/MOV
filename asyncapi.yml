@@ -49,6 +49,18 @@ channels:
       message:
         $ref: '#/components/messages/add_log'
 
+  valawai/topology/query:
+    subscribe:
+      summary: Used to obtain information about some topology defined on VALAWAI.
+      message:
+        $ref: '#/components/messages/query_connections'
+
+  valawai/topology/page:
+    publish:
+      summary: Used to inform of the topology connections found that satisfy the query.
+      message:
+        $ref: '#/components/messages/connections_page'
+
 components:
   messages:
     register_component:
@@ -80,6 +92,16 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/sdd_log_payload'
+
+    query_connections:
+      contentType: application/json
+      payload:
+        $ref: '#/connections/schemas/query_connections_payload'
+
+    connections_page:
+      contentType: application/json
+      payload:
+        $ref: '#/connections/schemas/connections_page_payload'
 
   schemas:
     register_component_payload:
@@ -375,3 +397,128 @@ components:
           examples: 
             - '{"pattern:"p1"}'
 
+    query_connections_payload:
+      type: object
+      properties:
+        id:
+          description: The identifier of the query.
+          type: string
+          example:
+            - '1elkjfg289'
+        source_channel_name:
+          description: The name to match the source channel of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
+          type: string
+          examples: 
+            - 'c0_voice_to_text'
+            - '/.+voice.+/i'
+        source_component_id:
+          description: The identifier to match the source component of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
+          type: string
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+            - '/.+59ea.+/i'
+        target_channel_name:
+          description: The name to match the target channel of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
+          type: string
+          examples: 
+            - 'c0_voice_to_text'
+            - '/.+voice.+/i'
+        target_component_id:
+          description: The identifier to match the target component of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
+          type: string
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+            - '/.+59ea.+/i'
+        order:
+          description: The order in witch the topology connections has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.
+          type: string
+          default: '+since'
+          pattern: (,?[+|-]?[createTimestamp|updateTimestamp|enabled|source.componentId|source.channelName|target.componentId|target.channelName])*
+          examples: 
+            - 'type'
+            - '-message,+type'
+        offset:
+          description: The index of the first topology connection to return.
+          type: integer
+          default: 0
+          minimum: 0
+          examples: 
+            - '1'
+            - '7'
+        limit:
+          description: The maximum number of topology connections to return.
+          type: integer
+          default: 20
+          minimum: 1
+          examples: 
+            - '5'
+            - '10'
+
+    connections_page_payload:
+      type: object
+      properties:
+        query_id:
+          description: The identifier of the query that this is the answer.
+          type: string
+          example:
+            - '1elkjfg289'
+        total:
+          description: The number of topology connections that satisfy the query.
+          type: integer
+          minimum: 0
+          examples: 
+            - '5'
+            - '10'
+        connections:
+          description: The topology connections that satisfy the query.
+          type: array
+          items: 
+            - $ref: '#/connections/schemas/connection_payload'
+
+    connection_payload:
+      type: object
+      properties:
+        id:
+          description: The identifier of the topology component.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+        create_timestamp:
+          description: The epoch time, in seconds, when the connection has been created.
+          type: integer
+          examples:
+            - '1709902001'
+        update_timestamp:
+          description: The epoch time, in seconds, when the connection has been updated.
+          type: integer
+          examples:
+            - '1709902001'
+        source:
+          description: The node that is the source of the connection.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+        target:
+          description: The node that is the target of the connection.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+        enabled:
+          description: This is 'true' if the connection is enabled.
+          type: boolean
+          
+    node_payload:
+      type: object
+      properties:
+        component_id:
+          description: The identifier of the component that the topology connection starts or ends.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+        channel_name:
+          description: The name of the channel of the component that do the connection.
+          type: string
+          examples: 
+            - 'valawai/C0_voice_to_text/audio'
+          
+          

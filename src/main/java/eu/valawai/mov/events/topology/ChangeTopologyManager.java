@@ -133,36 +133,6 @@ public class ChangeTopologyManager {
 						});
 						return null;
 
-					} else if (payload.action == TopologyAction.DISABLE) {
-
-						this.listener.close(source).chain(any -> {
-
-							return EnableTopologyConnection.fresh().withConnection(payload.connectionId)
-									.withAction(payload.action).execute();
-
-						}).subscribe().with(success -> {
-
-							if (success) {
-
-								AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connectionLog)
-										.store();
-
-							} else {
-
-								AddLog.fresh().withError()
-										.withMessage("Disabled the connection {0}, but not market as disabled",
-												connectionLog)
-										.store();
-
-							}
-
-						}, error -> {
-
-							AddLog.fresh().withError(error)
-									.withMessage("Cannot disable the connection {0}", connectionLog).store();
-						});
-						return null;
-
 					} else {
 
 						this.listener.toMultiBody(this.listener.openConsumer(source).onItem().invoke(consumer -> {

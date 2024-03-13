@@ -19,7 +19,7 @@ import jakarta.validation.constraints.Pattern;
  *
  * @author VALAWAI
  */
-@JsonRootName("query_component_payload")
+@JsonRootName("query_components_payload")
 public class QueryComponentsPayload extends Payload {
 
 	/**

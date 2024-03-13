@@ -46,10 +46,10 @@ public class ComponentTest extends ModelTestCase<Component> {
 	public void fillIn(Component model) {
 
 		model.id = nextObjectId();
-		model.name = nextPattern("Name of component {0}");
+		model.type = next(ComponentType.values());
+		model.name = nextPattern("valaway/" + model.type.name().toLowerCase() + "_component_{0}");
 		model.description = nextPattern("Description of component {0}");
 		model.version = nextPattern("{0}.{1}.{2}", 3);
-		model.type = next(ComponentType.values());
 		model.since = rnd().nextLong();
 		model.apiVersion = nextPattern("{0}.{1}.{2}", 3);
 
@@ -61,6 +61,7 @@ public class ComponentTest extends ModelTestCase<Component> {
 			for (var i = 0; i < max; i++) {
 
 				final var channel = builder.nextModel();
+				channel.id = model.name + nextPattern("/action_{0}");
 				model.channels.add(channel);
 			}
 

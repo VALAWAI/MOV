@@ -73,7 +73,7 @@ public class QueryComponentsManagerTest extends MovEventTestCase {
 	 * Check that query return an empty page.
 	 */
 	@Test
-	public void shouldQueryREturnrEmptyPage() {
+	public void shouldQueryReturnrEmptyPage() {
 
 		final var queue = this.waitOpenQueue(this.componentsPagetQueueName);
 

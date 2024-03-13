@@ -54,7 +54,7 @@ public class GetComponentsPagePayloadTest extends MasterOfValawaiTestCase {
 	 * Test get an empty page because no one match the pattern.
 	 */
 	@Test
-	public void shouldReturnEmptyPageBecausenopOneMatchThePattern() {
+	public void shouldReturnEmptyPageBecauseNoOneMatchThePattern() {
 
 		final var page = this.assertExecutionNotNull(GetComponentsPagePayload.fresh()
 				.withPattern("undefined Pattern that has not match any possible component"));
@@ -68,7 +68,7 @@ public class GetComponentsPagePayloadTest extends MasterOfValawaiTestCase {
 	 * Test get an empty page because the offset is too large.
 	 */
 	@Test
-	public void shouldReturnEmptyPageBecauseOffsettooLarge() {
+	public void shouldReturnEmptyPageBecauseOffsetTooLarge() {
 
 		final var offset = Integer.MAX_VALUE;
 		final var total = this.assertItemNotNull(ComponentEntity.count());
