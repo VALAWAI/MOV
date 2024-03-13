@@ -61,6 +61,12 @@ channels:
       message:
         $ref: '#/components/messages/connections_page'
 
+  valawai/topology/create:
+    subscribe:
+      summary: Used to create a connection between two components of the VALAWAI infrastructure.
+      message:
+        $ref: '#/components/messages/create_connection'
+
 components:
   messages:
     register_component:
@@ -102,6 +108,11 @@ components:
       contentType: application/json
       payload:
         $ref: '#/connections/schemas/connections_page_payload'
+
+    create_connection:
+      contentType: application/json
+      payload:
+        $ref: '#/connections/schemas/create_connection_payload'
 
   schemas:
     register_component_payload:
@@ -521,4 +532,17 @@ components:
           examples: 
             - 'valawai/C0_voice_to_text/audio'
           
-          
+    create_connection_payload:
+      type: object
+      properties:
+        source:
+          description: The node that is the source of the connection.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+        target:
+          description: The node that is the target of the connection.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+        enabled:
+          description: This is 'true' if the connection has to be enabled.
+          type: boolean

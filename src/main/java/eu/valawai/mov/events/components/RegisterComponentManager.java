@@ -208,27 +208,31 @@ public class RegisterComponentManager {
 
 		if (sourceChannel.publish != null && sourceChannel.publish.match(targetChannel.subscribe)) {
 
+			final var enable = source.type != target.type;
 			AddTopologyConnection.fresh().withSourceComponent(source.id).withSourceChannel(sourceChannel.id)
-					.withTargetComponent(target.id).withTargetChannel(targetChannel.id).execute().subscribe()
-					.with(connectionId -> {
+					.withTargetComponent(target.id).withTargetChannel(targetChannel.id).withEnabled(enable).execute()
+					.subscribe().with(connectionId -> {
 
 						if (connectionId != null) {
 
 							AddLog.fresh().withInfo().withMessage("Added connection between {0} and {1}",
 									sourceChannel.id, targetChannel.id).store();
-							final var msg = new ChangeTopologyPayload();
-							msg.action = TopologyAction.ENABLE;
-							msg.connectionId = connectionId;
-							this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
+							if (enable) {
 
-								Log.debugv("Sent enable the connection between {0} and {1}", sourceChannel.id,
-										targetChannel.id);
+								final var msg = new ChangeTopologyPayload();
+								msg.action = TopologyAction.ENABLE;
+								msg.connectionId = connectionId;
+								this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
 
-							}, error -> {
+									Log.debugv("Sent enable the connection between {0} and {1}", sourceChannel.id,
+											targetChannel.id);
 
-								Log.errorv(error, "Cannot enable the connection between {0} and {1}", sourceChannel.id,
-										targetChannel.id);
-							});
+								}, error -> {
+
+									Log.errorv(error, "Cannot enable the connection between {0} and {1}",
+											sourceChannel.id, targetChannel.id);
+								});
+							}
 
 						} else {
 

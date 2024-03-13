@@ -8,8 +8,10 @@
 
 package eu.valawai.mov.events.components;
 
+import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,6 +29,7 @@ import eu.valawai.mov.api.v1.components.BasicPayloadFormat;
 import eu.valawai.mov.api.v1.components.BasicPayloadSchema;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentTest;
+import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
@@ -154,6 +157,10 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		target.name = next.name;
 		target.since = next.since;
 		target.type = next.type;
+		while (target.type == payload.type) {
+
+			target.type = next(ComponentType.values());
+		}
 		target.version = next.version;
 		final var channel = new ChannelSchema();
 		final var targetChannelName = nextPattern("test/register_component_subscribe_{0}");
@@ -260,11 +267,11 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		source.description = next.description;
 		source.name = next.name;
 		source.since = next.since;
-		source.type = next.type;
+		source.type = payload.type;
 		source.version = next.version;
 		final var channel = new ChannelSchema();
 		final var sourceChannelName = nextPattern("test/register_component_subscribe_{0}");
-		;
+
 		channel.id = sourceChannelName;
 		final var object = new ObjectPayloadSchema();
 		final var basic = new BasicPayloadSchema();
@@ -318,8 +325,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(sourceChannelName, lastConnection.source.channelName);
 		assertEquals(source.id, lastConnection.source.componentId);
 
-		// Check that the connection is working
-		assertTrue(this.listener.isOpen(sourceChannelName));
+		// Check that the connection is not working
+		assertFalse(this.listener.isOpen(sourceChannelName));
 	}
 
 }

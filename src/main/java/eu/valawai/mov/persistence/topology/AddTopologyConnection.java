@@ -16,6 +16,7 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 
 import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.persistence.AbstractEntityOperator;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 
@@ -26,7 +27,7 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
-public class AddTopologyConnection {
+public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddTopologyConnection> {
 
 	/**
 	 * The node that is the source of the connection.
@@ -116,11 +117,25 @@ public class AddTopologyConnection {
 	}
 
 	/**
+	 * Specify the channel has to be enabled or not.
+	 *
+	 * @param enabled of the connection.
+	 *
+	 * @return this operator.
+	 */
+	public AddTopologyConnection withEnabled(boolean enabled) {
+
+		this.enabled = enabled;
+		return this;
+	}
+
+	/**
 	 * Add the connection.
 	 *
 	 * @return the identifier of the added connection or {@code null} if the
 	 *         connection has not been added.
 	 */
+	@Override
 	public Uni<ObjectId> execute() {
 
 		final var filter = Filters.and(Filters.eq("source.componentId", this.source.componentId),
@@ -131,7 +146,7 @@ public class AddTopologyConnection {
 		final var now = TimeManager.now();
 		final var update = Updates.setOnInsert(new Document().append("createTimestamp", now)
 				.append("updateTimestamp", now).append("source", this.toDocument(this.source))
-				.append("source", this.toDocument(this.source)).append("enabled", this.enabled));
+				.append("target", this.toDocument(this.target)).append("enabled", this.enabled));
 		final var options = new UpdateOptions();
 		options.upsert(true);
 		return TopologyConnectionEntity.mongoCollection().updateOne(filter, update, options).onFailure()

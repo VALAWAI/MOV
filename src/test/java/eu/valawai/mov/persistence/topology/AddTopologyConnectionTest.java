@@ -50,10 +50,9 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		suplicatedEliminatedEntity.persist().await().atMost(Duration.ofSeconds(30));
 		assertNotNull(suplicatedEliminatedEntity.id);
 
-		final var connectionId = AddTopologyConnection.fresh().withSourceComponent(source.componentId)
+		this.assertItemIsNull(AddTopologyConnection.fresh().withSourceComponent(source.componentId)
 				.withSourceChannel(source.channelName).withTargetComponent(target.componentId)
-				.withTargetChannel(target.channelName).execute().await().atMost(Duration.ofSeconds(30));
-		assertNull(connectionId);
+				.withTargetChannel(target.channelName).execute());
 
 	}
 
@@ -67,10 +66,9 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		final var source = builder.nextModel();
 		final var target = builder.nextModel();
 		final var now = TimeManager.now();
-		final var connectionId = AddTopologyConnection.fresh().withSourceComponent(source.componentId)
-				.withSourceChannel(source.channelName).withTargetComponent(target.componentId)
-				.withTargetChannel(target.channelName).execute().await().atMost(Duration.ofSeconds(30));
-		assertNotNull(connectionId);
+		final var connectionId = this.assertExecutionNotNull(AddTopologyConnection.fresh()
+				.withSourceComponent(source.componentId).withSourceChannel(source.channelName)
+				.withTargetComponent(target.componentId).withTargetChannel(target.channelName));
 
 		final Uni<TopologyConnectionEntity> find = TopologyConnectionEntity.findById(connectionId);
 		final var entity = find.await().atMost(Duration.ofSeconds(30));
@@ -103,10 +101,9 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		assertNotNull(suplicatedEliminatedEntity.id);
 
 		final var now = TimeManager.now();
-		final var connectionId = AddTopologyConnection.fresh().withSourceComponent(source.componentId)
-				.withSourceChannel(source.channelName).withTargetComponent(target.componentId)
-				.withTargetChannel(target.channelName).execute().await().atMost(Duration.ofSeconds(30));
-		assertNotNull(connectionId);
+		final var connectionId = this.assertExecutionNotNull(AddTopologyConnection.fresh()
+				.withSourceComponent(source.componentId).withSourceChannel(source.channelName)
+				.withTargetComponent(target.componentId).withTargetChannel(target.channelName));
 
 		final Uni<TopologyConnectionEntity> find = TopologyConnectionEntity.findById(connectionId);
 		final var entity = find.await().atMost(Duration.ofSeconds(30));
