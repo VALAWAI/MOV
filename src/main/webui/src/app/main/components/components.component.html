@@ -2,14 +2,15 @@
 	[formGroup]="form">
 	<div class="grow flex flex-row justify-center content-center">
 		<mat-form-field class="max-w-96 grow"> <mat-label
-			i18n="The label of the field to match the name or desciption of teh compponent@@main_components_search-label">Name or description</mat-label>
-		<input matInput type="text" formControlName="pattern"> </mat-form-field>
+			i18n="The label of the field to match the name or desciption of teh compponent@@main_components_search-label">Name
+		or description</mat-label> <input matInput type="text" formControlName="pattern">
+		</mat-form-field>
 	</div>
 	<div class="flex flex-row justify-center content-center">
 		<mat-form-field> <mat-label
-			i18n="The label to select the order of teh components@@main_components_order-by-label">Order
-		by</mat-label> <mat-select formControlName="orderBy">
-		<mat-option value="type"
+			i18n="The label to select the order of the components@@main_components_order-by-label">Order
+		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
+			value="type"
 			i18n="The option to order by type@@main_components_order-by-type">Type</mat-option>
 		<mat-option value="name"
 			i18n="The option to order by name@@main_components_order-by-name">Name</mat-option>
@@ -23,10 +24,10 @@
 	<div class="flex flex-row justify-center content-center">
 		<mat-form-field class="max-w-96 grow"> <mat-label
 			i18n="The label to select the type of the component messages@@main_components_types-label">
-			Filter components by type:
-			</mat-label> <mat-select formControlName="types"
-			multiple> <mat-option *ngFor="let type of componentNames"
-			[value]="type">{{type}}</mat-option> </mat-select> </mat-form-field>
+		Filter components by type: </mat-label> <mat-select formControlName="types"
+			multiple> <mat-option
+			*ngFor="let type of componentNames" [value]="type">{{type}}</mat-option>
+		</mat-select> </mat-form-field>
 
 	</div>
 	<div class="flex flex-row justify-center content-center">
@@ -39,21 +40,47 @@
 		</button>
 	</div>
 	<div *ngIf="page && page.components">
-		<table mat-table [dataSource]="page.components" class="mat-elevation-z8">
-
-			<ng-container matColumnDef=timestamp>
-			<th mat-header-cell *matHeaderCellDef>Time</th>
-			<td mat-cell *matCellDef="let element">{{element.timestamp}}</td>
-			</ng-container>
+		<table mat-table [dataSource]="page.components"
+			class="mat-elevation-z8">
 
 			<ng-container matColumnDef="type">
-			<th mat-header-cell *matHeaderCellDef>Type</th>
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the component type column header@@main_components_type-header-label">Type</th>
 			<td mat-cell *matCellDef="let element">{{element.type}}</td>
 			</ng-container>
 
-			<ng-container matColumnDef="message">
-			<th mat-header-cell *matHeaderCellDef>Message</th>
-			<td mat-cell *matCellDef="let element">{{element.message}}</td>
+			<ng-container matColumnDef="name">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the component name column header@@main_components_name-header-label">Name</th>
+			<td mat-cell *matCellDef="let element">{{element.name}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="description">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the component description column header@@main_components_description-header-label">Description</th>
+			<td mat-cell *matCellDef="let element">{{element.description}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the component actions column header@@main_components_actions-header-label">Actions</th>
+			<td mat-cell *matCellDef="let element">
+				<button mat-icon-button aria-label="Component menu"
+					[matMenuTriggerFor]="componentMenu">
+					<mat-icon>more_vert</mat-icon>
+				</button> <mat-menu #componentMenu="matMenu">
+				<button mat-menu-item
+					i18n="The label of the menu to show a component@@main_components_show-menu-label"
+					[routerLink]="['/main/components',element.id,'show']">Show</button>
+				<button mat-menu-item
+					i18n="The label of the menu to unregister a component@@main_components_unregister-menu-label"
+					[routerLink]="['/main/components',element.id,'unregister']">Unregister</button>
+				<button mat-menu-item
+					i18n="The label of the menu to show the connection to a component@@main_components_show-connections-label"
+					[routerLink]="['/main/components',element.id,'connections']">Show
+					connections</button>
+				</mat-menu>
+			</td>
 			</ng-container>
 
 			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -9,8 +9,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ComponentsRoutingModule } from './components-routing.module';
-import { ComponentsComponent } from './components.component';
+import { UnregisterComponentRoutingModule } from './unregister-component-routing.module';
+import { UnregisterComponentComponent } from './unregister-component.component';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -25,11 +25,11 @@ import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
 	declarations: [
-		ComponentsComponent,
+		UnregisterComponentComponent,
 	],
 	imports: [
 		CommonModule,
-		ComponentsRoutingModule,
+		UnregisterComponentRoutingModule,
 		MatPaginatorModule,
 		MatTableModule,
 		MatFormFieldModule,
@@ -45,4 +45,4 @@ import { MatMenuModule } from '@angular/material/menu';
 	],
 	providers: []
 })
-export class ComponentsModule { }
+export class UnregisterComponentModule { }

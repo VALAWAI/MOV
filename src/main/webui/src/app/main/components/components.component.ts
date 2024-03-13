@@ -24,7 +24,7 @@ export class ComponentsComponent implements OnInit {
 	/**
 	 * The columns to display.
 	 */
-	public displayedColumns: string[] = ['timestamp', 'type', 'message'];
+	public displayedColumns: string[] = ['type', 'name', 'description', 'actions'];
 
 	/**
 	 * The component to manage the messages.

@@ -25,6 +25,18 @@ const routes: Routes = [
 				loadChildren: () => import('./logs/logs.module').then(m => m.LogsModule)
 			},
 			{
+				path: 'components/:id/show',
+				loadChildren: () => import('./components/show/show-component.module').then(m => m.ShowComponentModule)
+			},
+			{
+				path: 'components/:id/unregister',
+				loadChildren: () => import('./components/unregister/unregister-component.module').then(m => m.UnregisterComponentModule)
+			},
+			{
+				path: 'components/:id/connections',
+				loadChildren: () => import('./components/connections/connections-component.module').then(m => m.ConnectionsComponentModule)
+			},
+			{
 				path: 'components',
 				loadChildren: () => import('./components/components.module').then(m => m.ComponentsModule)
 			},
