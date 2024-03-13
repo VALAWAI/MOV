@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
+import { LoadingModule } from 'src/app/shared/loading/loading.module';
 
 @NgModule({
 	declarations: [
@@ -39,7 +40,8 @@ import { MatMenuModule } from '@angular/material/menu';
 		MatButtonModule,
 		MatSelectModule,
 		MatCheckboxModule,
-		MatMenuModule
+		MatMenuModule,
+		LoadingModule
 	],
 	exports: [
 	],

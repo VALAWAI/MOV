@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { Info } from './info.model';
 import { LogRecordPage } from './logs/log-record-page.model';
 import { MinComponentPage } from './components/min-component-page.model';
+import { Component } from './components/component.model';
 
 
 /**
@@ -117,6 +118,15 @@ export class MovApiService {
 
 		var url = this.url('/v1/components');
 		return this.http.get<MinComponentPage>(url, this.optionsWithParams({ pattern: pattern, type: type, order: order, offset: offset, limit: limit }));
+	}
+
+	/**
+	 * Get a component.
+	 */
+	public getComponent(id: string): Observable<Component> {
+
+		var url = this.url('/v1/components', [id]);
+		return this.http.get<Component>(url);
 	}
 
 }

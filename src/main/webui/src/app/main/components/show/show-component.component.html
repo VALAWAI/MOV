@@ -1,2 +1,6 @@
-<div class="p-3 gap-7 flex flex-col justify-center content-center">
-	Show COMPONENT</div>
+<div class="p-3 gap-7 flex flex-col justify-center content-center"
+	*ngIf="component$ |async as component; else loading">
+	<h1>{{component.name}}</h1>
+	<p>{{component.description}}</p>
+</div>
+<ng-template #loading> <app-loading></app-loading> </ng-template>

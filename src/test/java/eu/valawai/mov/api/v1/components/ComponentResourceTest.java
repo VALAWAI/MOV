@@ -8,6 +8,9 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextObjectId;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
-import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.components.ComponentEntity;
@@ -99,12 +101,12 @@ public class ComponentResourceTest extends APITestCase {
 	public void shouldGetPageWithPatternAndType() {
 
 		final var pattern = ".*1.*";
-		final var type = ValueGenerator.next(ComponentType.values());
+		final var type = next(ComponentType.values());
 
 		final var expected = new MinComponentPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		expected.offset = rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var limit = rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.and(
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
@@ -180,6 +182,32 @@ public class ComponentResourceTest extends APITestCase {
 		final var page = given().when().get("/v1/components").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(MinComponentPage.class);
 		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Should not get a n undefined component.
+	 */
+	@Test
+	public void shouldNotFoundUndefinedComponent() {
+
+		final var id = nextObjectId().toHexString();
+		given().when().get("/v1/components/" + id).then().statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Should not get a n undefined component.
+	 */
+	@Test
+	public void shouldGetComponent() {
+
+		final var component = ComponentEntities.nextComponent();
+		final var expected = ComponentTest.from(component);
+		final var id = component.id.toHexString();
+		final var result = given().when().get("/v1/components/" + id).then().statusCode(Status.OK.getStatusCode())
+				.extract().as(Component.class);
+		assertEquals(expected, result);
 
 	}
 

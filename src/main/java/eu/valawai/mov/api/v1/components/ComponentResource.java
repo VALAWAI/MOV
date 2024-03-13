@@ -8,12 +8,14 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import eu.valawai.mov.persistence.components.GetComponent;
 import eu.valawai.mov.persistence.components.GetMinComponentPage;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;
@@ -23,10 +25,12 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Web services to manage the {@link Component}s.
@@ -65,6 +69,37 @@ public class ComponentResource {
 
 		return GetMinComponentPage.fresh().withPattern(pattern).withType(type).withOrder(order).withOffset(offset)
 				.withLimit(limit).execute().map(page -> Response.ok(page).build());
+
+	}
+
+	/**
+	 * Get the information of a components.
+	 *
+	 * @param componentId identifier of the component to get.
+	 *
+	 * @return the found component.
+	 */
+	@GET
+	@Path("/{componentId:[0-9a-fA-F]{24}}")
+	@Operation(description = "Obtain a component.")
+	@APIResponse(responseCode = "200", description = "The component with the identifier", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinComponentPage.class)) })
+	@APIResponse(responseCode = "404", description = "When the component is not found.")
+	public Uni<Response> getComponent(
+			@Parameter(description = "Identifier of the component to get.", example = "000000000000000000000000", schema = @Schema(implementation = String.class)) @PathParam("componentId") final ObjectId componentId) {
+
+		return GetComponent.fresh().withComponent(componentId).execute().map(model -> {
+
+			if (model == null) {
+
+				return Response.status(Status.NOT_FOUND).build();
+
+			} else {
+
+				return Response.ok(model).build();
+
+			}
+		});
 
 	}
 
