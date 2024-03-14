@@ -1,6 +1,42 @@
-<div class="p-3 gap-7 flex flex-col justify-center content-center"
+<div
+	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
 	*ngIf="component$ |async as component; else loading">
-	<h1>{{component.name}}</h1>
-	<p>{{component.description}}</p>
+	<div class="max-w-3xl grid grid-cols-2 gap-3">
+		<div class="text-2xl font-bold col-span-2">{{component.name}}</div>
+		<div class="col-span-2">{{component.description}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the component type attribute@@main_components_show_type-label">Type</div>
+		<div class="text-left">{{component.type}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the component version attribute@@main_components_show_version-label">Version</div>
+		<div class="text-left">{{component.version}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the component API version attribute@@main_components_show_api-version-label">API
+			version</div>
+		<div class="text-left">{{component.apiVersion}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the component since attribute@@main_components_show_since-label">Since</div>
+		<div class="text-left">{{component.since}}</div>
+		<fieldSet class="col-span-2">
+			<legend class="text-left font-bold"
+				i18n="The label of the component channels attribute@@main_components_show_channels-label">
+				Channels </legend>
+			<div *ngFor="let channel of component.channels"
+				class="pl-11 grid grid-cols-2 gap-3">
+				<div class="text-lg font-bold col-span-2">{{channel.id}}</div>
+				<div class="col-span-2">{{channel.description}}</div>
+				<div *ngIf="channel.subscribe" class="font-bold"
+					i18n="The label of the component channel subscribe@@main_components_show_component-channel-subscribe-label">Subscribe</div>
+				<ngx-json-viewer *ngIf="channel.subscribe"
+					[json]="channel.subscribe"></ngx-json-viewer>
+				<div *ngIf="channel.publish" class="font-bold"
+					i18n="The label of the component channel publish@@main_components_show_component-channel-publish-label">Publish</div>
+				<ngx-json-viewer *ngIf="channel.publish" [json]="channel.publish"></ngx-json-viewer>
+			</div>
+		</fieldSet>
+	</div>
+	<button mat-raised-button color="primary" routerLink="/main/components"
+		i18n="The label of the button to go bacl to the components view@@main_components_show_go-back-label">Go
+		to components</button>
 </div>
 <ng-template #loading> <app-loading></app-loading> </ng-template>
