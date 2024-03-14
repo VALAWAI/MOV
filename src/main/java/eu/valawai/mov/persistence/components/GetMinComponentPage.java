@@ -12,11 +12,7 @@ import java.util.List;
 
 import org.bson.conversions.Bson;
 
-import com.mongodb.client.model.Filters;
-
 import eu.valawai.mov.api.v1.components.MinComponentPage;
-import eu.valawai.mov.persistence.AbstractGetPage;
-import eu.valawai.mov.persistence.Queries;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 
@@ -28,12 +24,7 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
-public class GetMinComponentPage extends AbstractGetPage<MinComponentPage, GetMinComponentPage> {
-
-	/**
-	 * The type to match the component to return.
-	 */
-	protected String type;
+public class GetMinComponentPage extends AbstractGetPageComponents<MinComponentPage, GetMinComponentPage> {
 
 	/**
 	 * Create a new operation.
@@ -54,19 +45,6 @@ public class GetMinComponentPage extends AbstractGetPage<MinComponentPage, GetMi
 	}
 
 	/**
-	 * The type to match the page components.
-	 *
-	 * @param type to match the components to return.
-	 *
-	 * @return this operator.
-	 */
-	public GetMinComponentPage withType(final String type) {
-
-		this.type = type;
-		return this.operator();
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -80,35 +58,6 @@ public class GetMinComponentPage extends AbstractGetPage<MinComponentPage, GetMi
 					page.offset = this.offset;
 					return page;
 				});
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Bson createFilter() {
-
-		if (this.pattern != null && this.type != null) {
-
-			return Filters.and(
-					Filters.or(Queries.filterByValueOrRegexp("name", this.pattern),
-							Queries.filterByValueOrRegexp("description", this.pattern)),
-					Queries.filterByValueOrRegexp("type", this.type));
-
-		} else if (this.pattern != null) {
-
-			return Filters.or(Queries.filterByValueOrRegexp("name", this.pattern),
-					Queries.filterByValueOrRegexp("description", this.pattern));
-
-		} else if (this.type != null) {
-
-			return Queries.filterByValueOrRegexp("type", this.type);
-
-		} else {
-
-			return null;
-		}
-
 	}
 
 }

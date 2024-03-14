@@ -118,6 +118,7 @@ public class QueryComponentsManagerTest extends MovEventTestCase {
 
 		final var max = query.offset + query.limit + 10;
 		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
 				Filters.eq("type", type));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);

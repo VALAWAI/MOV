@@ -114,6 +114,7 @@ public class ComponentResourceTest extends APITestCase {
 		final var limit = rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
 				Filters.eq("type", type));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
@@ -161,7 +162,7 @@ public class ComponentResourceTest extends APITestCase {
 
 		final var limit = 20;
 		final var max = expected.offset + limit + 10;
-		final var filter = Filters.empty();
+		final var filter = Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(

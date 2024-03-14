@@ -10,6 +10,7 @@ package eu.valawai.mov.persistence.components;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.MasterOfValawaiTestCase;
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.MinComponentPage;
@@ -42,7 +44,14 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	@BeforeAll
 	public static void createComponents() {
 
-		ComponentEntities.minComponents(100);
+		for (var i = 0; i < 101; i += 10) {
+
+			final var finished = ComponentEntities.nextComponent();
+			finished.finishedTime = TimeManager.now();
+			finished.update().await().atMost(Duration.ofSeconds(30));
+
+			ComponentEntities.minComponents(i);
+		}
 	}
 
 	/**
@@ -62,10 +71,11 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 	 * Test get an empty page because the offset is too large.
 	 */
 	@Test
-	public void shouldReturnEmptyPageBecauseOffsettooLarge() {
+	public void shouldReturnEmptyPageBecauseOffsetTooLarge() {
 
 		final var offset = Integer.MAX_VALUE;
-		final var total = this.assertItemNotNull(ComponentEntity.count());
+		final var total = this.assertItemNotNull(ComponentEntity.mongoCollection()
+				.countDocuments(Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null))));
 		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withOffset(offset));
 		assertEquals(total, page.total);
 		assertEquals(offset, page.offset);
@@ -84,7 +94,7 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
-		final var filter = Filters.empty();
+		final var filter = Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(
@@ -124,7 +134,9 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
-		final var filter = Filters.or(Filters.eq("type", type1), Filters.eq("type", type2));
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.or(Filters.eq("type", type1), Filters.eq("type", type2)));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(
@@ -167,7 +179,9 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
-		final var filter = Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern));
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(
@@ -211,6 +225,7 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
 				Filters.eq("type", type));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);

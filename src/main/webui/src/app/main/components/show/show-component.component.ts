@@ -6,12 +6,10 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MainService } from 'src/app/main';
-import { Observable, EMPTY } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
 import { MessagesService } from 'src/app/shared/messages';
-import { MovApiService, Component as VComponent } from 'src/app/shared/mov-api';
+import { MovApiService } from 'src/app/shared/mov-api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractComponentComponent } from '../abstract-component.component';
 
@@ -29,9 +27,9 @@ export class ShowComponentComponent extends AbstractComponentComponent {
 	constructor(
 		private header: MainService,
 		protected override mov: MovApiService,
-		protected override  route: ActivatedRoute,
-		protected override  router: Router,
-		protected override  messages: MessagesService
+		protected override route: ActivatedRoute,
+		protected override router: Router,
+		protected override messages: MessagesService
 	) {
 
 		super(mov, route, router, messages);

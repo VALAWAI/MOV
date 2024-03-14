@@ -31,9 +31,9 @@ export class UnregisterComponentComponent extends AbstractComponentComponent {
 	constructor(
 		private header: MainService,
 		protected override mov: MovApiService,
-		protected override  route: ActivatedRoute,
-		protected override  router: Router,
-		protected override  messages: MessagesService
+		protected override route: ActivatedRoute,
+		protected override router: Router,
+		protected override messages: MessagesService
 	) {
 
 		super(mov, route, router, messages);

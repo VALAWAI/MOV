@@ -15,32 +15,25 @@ import org.bson.conversions.Bson;
 
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Field;
-import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.events.components.ComponentsPagePayload;
 import eu.valawai.mov.events.components.QueryComponentsPayload;
-import eu.valawai.mov.persistence.AbstractGetPage;
-import eu.valawai.mov.persistence.Queries;
 import io.smallrye.mutiny.Uni;
 
 /**
- * Operator to obtain the {2link ComponentsPagePayload}.
+ * Operator to obtain the {@link ComponentsPagePayload}.
  *
  * @see ComponentsPagePayload
  *
  * @author VALAWAI
  */
-public class GetComponentsPagePayload extends AbstractGetPage<ComponentsPagePayload, GetComponentsPagePayload> {
+public class GetComponentsPagePayload
+		extends AbstractGetPageComponents<ComponentsPagePayload, GetComponentsPagePayload> {
 
 	/**
 	 * The identifier of the query.
 	 */
 	protected String queryId;
-
-	/**
-	 * The type to match the components to be returned.
-	 */
-	protected String type;
 
 	/**
 	 * Create the operator.
@@ -58,19 +51,6 @@ public class GetComponentsPagePayload extends AbstractGetPage<ComponentsPagePayl
 	public static GetComponentsPagePayload fresh() {
 
 		return new GetComponentsPagePayload();
-	}
-
-	/**
-	 * The type to match the components.
-	 *
-	 * @param type to match the components to return.
-	 *
-	 * @return this operator.
-	 */
-	public GetComponentsPagePayload withType(final String type) {
-
-		this.type = type;
-		return this.operator();
 	}
 
 	/**
@@ -106,35 +86,6 @@ public class GetComponentsPagePayload extends AbstractGetPage<ComponentsPagePayl
 			pipeline.add(Aggregates.addFields(new Field<>("queryId", this.queryId)));
 		}
 		return ComponentEntity.mongoCollection().aggregate(pipeline, ComponentsPagePayload.class).collect().first();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Bson createFilter() {
-
-		if (this.pattern != null && this.type != null) {
-
-			return Filters.and(
-					Filters.or(Queries.filterByValueOrRegexp("name", this.pattern),
-							Queries.filterByValueOrRegexp("description", this.pattern)),
-					Queries.filterByValueOrRegexp("type", this.type));
-
-		} else if (this.pattern != null) {
-
-			return Filters.or(Queries.filterByValueOrRegexp("name", this.pattern),
-					Queries.filterByValueOrRegexp("description", this.pattern));
-
-		} else if (this.type != null) {
-
-			return Queries.filterByValueOrRegexp("type", this.type);
-
-		} else {
-
-			return null;
-		}
-
 	}
 
 }
