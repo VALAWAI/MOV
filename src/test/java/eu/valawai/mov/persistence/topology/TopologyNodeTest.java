@@ -33,7 +33,7 @@ public class TopologyNodeTest extends ModelTestCase<TopologyNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void fillIn(TopologyNode model) {
+	public void fillIn(TopologyNode model) {
 
 		model.componentId = ValueGenerator.nextObjectId();
 		model.channelName = ValueGenerator.nextPattern("valawai/CX_source_name_{0}");

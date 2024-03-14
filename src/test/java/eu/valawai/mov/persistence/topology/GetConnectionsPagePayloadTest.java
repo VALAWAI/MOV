@@ -49,7 +49,7 @@ public class GetConnectionsPagePayloadTest extends MasterOfValawaiTestCase {
 	@BeforeAll
 	public static void createConnections() {
 
-		TopologyConnectionEntities.minTopologyConnection(100);
+		TopologyConnectionEntities.minTopologyConnections(100);
 	}
 
 	/**

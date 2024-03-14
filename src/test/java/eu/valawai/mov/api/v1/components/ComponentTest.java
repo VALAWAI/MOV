@@ -8,15 +8,12 @@
 
 package eu.valawai.mov.api.v1.components;
 
-import static eu.valawai.mov.ValueGenerator.next;
-import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
 import java.util.ArrayList;
 
 import eu.valawai.mov.ValueGenerator;
-import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 
 /**
@@ -26,7 +23,7 @@ import eu.valawai.mov.persistence.components.ComponentEntity;
  *
  * @author VALAWAI
  */
-public class ComponentTest extends ModelTestCase<Component> {
+public class ComponentTest extends AbstractMinComponentTestCase<Component> {
 
 	/**
 	 * {@inheritDoc}
@@ -45,10 +42,7 @@ public class ComponentTest extends ModelTestCase<Component> {
 	@Override
 	public void fillIn(Component model) {
 
-		model.id = nextObjectId();
-		model.type = next(ComponentType.values());
-		model.name = nextPattern("valaway/" + model.type.name().toLowerCase() + "_component_{0}");
-		model.description = nextPattern("Description of component {0}");
+		super.fillIn(model);
 		model.version = nextPattern("{0}.{1}.{2}", 3);
 		model.since = rnd().nextLong();
 		model.apiVersion = nextPattern("{0}.{1}.{2}", 3);

@@ -8,7 +8,6 @@
 
 package eu.valawai.mov.api.v1.components;
 
-import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 
 /**
@@ -27,19 +26,6 @@ public class MinComponentTest extends AbstractMinComponentTestCase<MinComponent>
 	public MinComponent createEmptyModel() {
 
 		return new MinComponent();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void fillIn(MinComponent model) {
-
-		model.id = ValueGenerator.nextObjectId();
-		model.name = ValueGenerator.nextPattern("Name of component  {0}");
-		model.description = ValueGenerator.nextPattern("Description of component  {0}");
-		model.type = ValueGenerator.next(ComponentType.values());
-
 	}
 
 	/**

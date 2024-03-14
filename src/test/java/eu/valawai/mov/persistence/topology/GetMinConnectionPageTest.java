@@ -6,13 +6,14 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.api.v1.topology;
+package eu.valawai.mov.persistence.topology;
 
 import static eu.valawai.mov.ValueGenerator.rnd;
-import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -20,22 +21,23 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
-import eu.valawai.mov.api.APITestCase;
+import eu.valawai.mov.MasterOfValawaiTestCase;
+import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.v1.topology.MinConnectionPage;
+import eu.valawai.mov.api.v1.topology.MinConnectionTest;
 import eu.valawai.mov.persistence.components.ComponentEntities;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntities;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Test the {@link TopologyResource}.
+ * Test the operation to get some connections.
  *
- * @see TopologyResource
+ * @see GetMinConnectionPage
  *
  * @author VALAWAI
  */
 @QuarkusTest
-public class TopologyResourceTest extends APITestCase {
+public class GetMinConnectionPageTest extends MasterOfValawaiTestCase {
 
 	/**
 	 * Create some connections that can be used.
@@ -43,68 +45,88 @@ public class TopologyResourceTest extends APITestCase {
 	@BeforeAll
 	public static void createConnections() {
 
-		TopologyConnectionEntities.minTopologyConnections(100);
+		for (var i = 0; i < 101; i += 10) {
+
+			final var finished = TopologyConnectionEntities.nextTopologyConnection();
+			finished.deletedTimestamp = TimeManager.now();
+			finished.update().await().atMost(Duration.ofSeconds(30));
+
+			TopologyConnectionEntities.minTopologyConnections(i);
+		}
 	}
 
 	/**
-	 * Should not get a page with a bad order.
+	 * Test get an empty page because no one match the pattern.
 	 */
 	@Test
-	public void shouldNotGetPageWithBadOrder() {
+	public void shouldReturnEmptyPageBecausenopOneMatchThePattern() {
 
-		given().when().queryParam("order", "undefined").get("/v1/connections").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode());
-
-	}
-
-	/**
-	 * Should not get a page with a bad offset.
-	 */
-	@Test
-	public void shouldNotGetPageWithBadOffset() {
-
-		given().when().queryParam("offset", "-1").get("/v1/connections").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode());
-
-	}
-
-	/**
-	 * Should not get a page with a bad limit.
-	 */
-	@Test
-	public void shouldNotGetPageWithBadLimit() {
-
-		given().when().queryParam("limit", "0").get("/v1/connections").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode());
+		final var page = this.assertExecutionNotNull(GetMinConnectionPage.fresh()
+				.withPattern("undefined Pattern that has not match any possible connection"));
+		assertEquals(0l, page.total);
+		assertEquals(Collections.EMPTY_LIST, page.connections);
 
 	}
 
 	/**
-	 * Should get empty page.
+	 * Test get an empty page because the offset is too large.
 	 */
 	@Test
-	public void shouldGetEmptyPage() {
+	public void shouldReturnEmptyPageBecauseOffsetTooLarge() {
 
-		final var page = given().when().queryParam("pattern", "1").queryParam("limit", "1").queryParam("offset", "3")
-				.get("/v1/connections").then().statusCode(Status.OK.getStatusCode()).extract()
-				.as(MinConnectionPage.class);
+		final var offset = Integer.MAX_VALUE;
+		final var total = this.assertItemNotNull(TopologyConnectionEntity.mongoCollection().countDocuments(
+				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null))));
+		final var page = this.assertExecutionNotNull(GetMinConnectionPage.fresh().withOffset(offset));
+		assertEquals(total, page.total);
+		assertEquals(offset, page.offset);
+		assertEquals(Collections.EMPTY_LIST, page.connections);
+
+	}
+
+	/**
+	 * Test get a connection page.
+	 */
+	@Test
+	public void shouldReturnPage() {
+
 		final var expected = new MinConnectionPage();
-		expected.offset = 3;
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null));
+		expected.total = TopologyConnectionEntities.nextTopologyConnectionsUntil(filter, max);
+
+		final List<TopologyConnectionEntity> connections = this.assertItemNotNull(TopologyConnectionEntity
+				.mongoCollection().find(filter, TopologyConnectionEntity.class).collect().asList());
+		connections.sort((l1, l2) -> l1.id.compareTo(l2.id));
+		expected.connections = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < connections.size(); i++) {
+
+			final var connection = connections.get(i);
+			final var expectedConnection = MinConnectionTest.from(connection);
+			expected.connections.add(expectedConnection);
+		}
+
+		final var page = this
+				.assertExecutionNotNull(GetMinConnectionPage.fresh().withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
+
 	}
 
 	/**
-	 * Should get page with pattern.
+	 * Test get a page that match a patterns.
 	 */
 	@Test
-	public void shouldGetPageWithPattern() {
+	public void shouldReturnPageWithPattern() {
 
 		final var pattern = ".*1.*";
 
 		final var expected = new MinConnectionPage();
-		expected.offset = rnd().nextInt(2, 5);
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
 
-		final var limit = rnd().nextInt(5, 11);
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.and(
 				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)),
@@ -115,14 +137,10 @@ public class TopologyResourceTest extends APITestCase {
 				.mongoCollection().find(filter, TopologyConnectionEntity.class).collect().asList());
 		connections.sort((l1, l2) -> {
 
-			var cmp = l1.target.channelName.compareTo(l2.target.channelName);
+			var cmp = l2.source.channelName.compareTo(l1.source.channelName);
 			if (cmp == 0) {
 
-				cmp = l2.source.channelName.compareTo(l1.source.channelName);
-				if (cmp == 0) {
-
-					cmp = l1.id.compareTo(l2.id);
-				}
+				cmp = l1.id.compareTo(l2.id);
 			}
 
 			return cmp;
@@ -135,19 +153,17 @@ public class TopologyResourceTest extends APITestCase {
 			expected.connections.add(expectedConnection);
 		}
 
-		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
-				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "target,-source").get("/v1/connections").then()
-				.statusCode(Status.OK.getStatusCode()).extract().as(MinConnectionPage.class);
+		final var page = this.assertExecutionNotNull(GetMinConnectionPage.fresh().withPattern("/" + pattern + "/")
+				.withOrder("-source").withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
 
 	}
 
 	/**
-	 * Should get page for a component.
+	 * Test get a page that match a patterns.
 	 */
 	@Test
-	public void shouldGetPageWithComponentId() {
+	public void shouldReturnPageWithComponentId() {
 
 		final var expected = new MinConnectionPage();
 		expected.offset = rnd().nextInt(2, 5);
@@ -200,10 +216,9 @@ public class TopologyResourceTest extends APITestCase {
 			expected.connections.add(expectedConnection);
 		}
 
-		final var page = given().when().queryParam("pattern", component.id.toHexString())
-				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "target,-source").get("/v1/connections").then()
-				.statusCode(Status.OK.getStatusCode()).extract().as(MinConnectionPage.class);
+		final var page = this
+				.assertExecutionNotNull(GetMinConnectionPage.fresh().withPattern("/" + component.id.toHexString() + "/")
+						.withOrder("-source").withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
 
 	}

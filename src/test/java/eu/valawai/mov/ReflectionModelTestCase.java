@@ -50,7 +50,7 @@ public abstract class ReflectionModelTestCase<T extends ReflectionModel> {
 	 *
 	 * @param model to fill in.
 	 */
-	protected abstract void fillIn(T model);
+	public abstract void fillIn(T model);
 
 	/**
 	 * Check that can encode decode form Json.

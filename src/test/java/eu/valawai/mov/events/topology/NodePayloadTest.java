@@ -34,7 +34,7 @@ public class NodePayloadTest extends PayloadTestCase<NodePayload> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void fillIn(NodePayload model) {
+	public void fillIn(NodePayload model) {
 
 		model.componentId = ValueGenerator.nextObjectId();
 		model.channelName = ValueGenerator.nextPattern("valawai/CX_source_name_{0}");

@@ -98,7 +98,7 @@ public interface TopologyConnectionEntities {
 	 *
 	 * @param min number of topology connections.
 	 */
-	public static void minTopologyConnection(int min) {
+	public static void minTopologyConnections(int min) {
 
 		final var total = TopologyConnectionEntity.count().await().atMost(Duration.ofSeconds(30));
 		if (total < min) {

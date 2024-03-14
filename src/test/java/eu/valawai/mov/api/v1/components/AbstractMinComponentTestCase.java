@@ -8,6 +8,10 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextObjectId;
+import static eu.valawai.mov.ValueGenerator.nextPattern;
+
 import eu.valawai.mov.api.ModelTestCase;
 
 /**
@@ -20,5 +24,18 @@ import eu.valawai.mov.api.ModelTestCase;
  * @author VALAWAI
  */
 public abstract class AbstractMinComponentTestCase<T extends MinComponent> extends ModelTestCase<T> {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void fillIn(T model) {
+
+		model.id = nextObjectId();
+		model.type = next(ComponentType.values());
+		model.name = nextPattern("valaway/" + model.type.name().toLowerCase() + "_component_{0}");
+		model.description = nextPattern("Description of component {0}");
+
+	}
 
 }
