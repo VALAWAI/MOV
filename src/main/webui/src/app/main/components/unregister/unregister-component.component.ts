@@ -6,44 +6,107 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MainService } from 'src/app/main';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
 import { MessagesService } from 'src/app/shared/messages';
-import { COMPONENT_TYPE_NAMES, MinComponentPage, MovApiService } from 'src/app/shared/mov-api';
+import { MovApiService } from 'src/app/shared/mov-api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AbstractComponentComponent } from '../abstract-component.component';
 
 @Component({
 	selector: 'app-unregistercomponent',
 	templateUrl: './unregister-component.component.html',
 	styleUrls: ['./unregister-component.component.css']
 })
-export class UnregisterComponentComponent implements OnInit {
+export class UnregisterComponentComponent extends AbstractComponentComponent {
 
 	/**
-	 * The indeitifer of teh component to unregister.
+	 * This is {@code true} if it is unregistering.
 	 */
-	public componentId: string | null = null;
-
+	public unregistering: boolean = false;
 
 	/**
 	 *  Create the component.
 	 */
 	constructor(
 		private header: MainService,
-		private mov: MovApiService,
-		private messages: MessagesService
+		protected override mov: MovApiService,
+		protected override  route: ActivatedRoute,
+		protected override  router: Router,
+		protected override  messages: MessagesService
 	) {
 
+		super(mov, route, router, messages);
 	}
 
 	/**
 	 * Initialize the component.
 	 */
-	ngOnInit(): void {
+	override ngOnInit(): void {
 
-		this.header.changeHeaderTitle($localize`:The header title for the unregister component @@main_unregister-component_code_page-title:Unregister Component`);
+		super.ngOnInit();
+		this.header.changeHeaderTitle($localize`:The header title for the unregister component@@main_components_unregister_code_page-title:Unregister Component`);
+
+	}
+
+	/**
+	 * Called to unregister.
+	 */
+	public unregister(): void {
+
+		if (this.componentId != null) {
+
+			this.unregistering = true;
+			this.mov.unregisterComponent(this.componentId).subscribe(
+				{
+					next: () => {
+
+						this.checkUnregistered();
+
+					},
+					error: err => {
+
+						this.unregistering = false;
+						this.messages.showError($localize`:The error message when cannot unregister a component@@main_components_unregister_code_error-msg:Cannot unregister the component`);
+						console.error(err);
+					}
+				}
+			);
+
+		}
+	}
+
+	/**
+	 * Check if the component is unregistered.
+	 */
+	private checkUnregistered(iter: number = 60) {
+
+		if (this.componentId != null) {
+
+			this.mov.getComponent(this.componentId).subscribe(
+				{
+					next: () => {
+
+						if (iter == 0) {
+
+							this.unregistering = false;
+							this.messages.showError($localize`:The error message when cannot unregister a component@@main_components_unregister_code_error-msg:Cannot unregister the component`);
+
+						} else {
+
+							setTimeout(() => this.checkUnregistered(iter - 1), 1000);
+						}
+
+					},
+					error: () => {
+
+						this.messages.showSuccess($localize`:The success message when unregistered a component@@main_components_unregister_code_success-msg:Unregistered the component`);
+						this.router.navigate(["/main/components"]);
+
+					}
+				}
+			);
+		}
 
 	}
 

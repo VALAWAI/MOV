@@ -129,4 +129,13 @@ export class MovApiService {
 		return this.http.get<Component>(url);
 	}
 
+	/**
+	 * Unregister a component.
+	 */
+	public unregisterComponent(id: string): Observable<void> {
+
+		var url = this.url('/v1/components', [id]);
+		return this.http.delete<void>(url);
+	}
+
 }

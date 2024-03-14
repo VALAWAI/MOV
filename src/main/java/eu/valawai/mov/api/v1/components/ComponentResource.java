@@ -14,14 +14,19 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import eu.valawai.mov.events.components.UnregisterComponentPayload;
 import eu.valawai.mov.persistence.components.GetComponent;
 import eu.valawai.mov.persistence.components.GetMinComponentPage;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -43,6 +48,13 @@ import jakarta.ws.rs.core.Response.Status;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ComponentResource {
+
+	/**
+	 * The component to send the message to unregister a component.
+	 */
+	@Inject
+	@Channel("send_unregister_component")
+	Emitter<UnregisterComponentPayload> unregister;
 
 	/**
 	 * Get the information of some components.
@@ -100,6 +112,28 @@ public class ComponentResource {
 
 			}
 		});
+
+	}
+
+	/**
+	 * Unregister a component.
+	 *
+	 * @param componentId identifier of the component to unregister.
+	 *
+	 * @return the empty.
+	 */
+	@DELETE
+	@Path("/{componentId:[0-9a-fA-F]{24}}")
+	@Operation(description = "Unregister a component.")
+	@APIResponse(responseCode = "204", description = "When the component started to unregister")
+	@APIResponse(responseCode = "404", description = "When the component is not found.")
+	public Uni<Response> unregisterComponent(
+			@Parameter(description = "Identifier of the component to unregister.", example = "000000000000000000000000", schema = @Schema(implementation = String.class)) @PathParam("componentId") final ObjectId componentId) {
+
+		final var payload = new UnregisterComponentPayload();
+		payload.componentId = componentId;
+		this.unregister.send(payload);
+		return Uni.createFrom().item(Response.noContent().build());
 
 	}
 

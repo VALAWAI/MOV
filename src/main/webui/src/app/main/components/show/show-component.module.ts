@@ -14,7 +14,7 @@ import { ShowComponentComponent } from './show-component.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { LoadingModule } from 'src/app/shared/loading/loading.module';
+import { LoadingModule } from 'src/app/shared/loading';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 

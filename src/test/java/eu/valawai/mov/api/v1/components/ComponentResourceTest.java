@@ -13,6 +13,8 @@ import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,12 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.APITestCase;
+import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.components.ComponentEntity;
+import eu.valawai.mov.persistence.logs.LogEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -197,7 +202,7 @@ public class ComponentResourceTest extends APITestCase {
 	}
 
 	/**
-	 * Should not get a n undefined component.
+	 * Should get a component.
 	 */
 	@Test
 	public void shouldGetComponent() {
@@ -208,6 +213,28 @@ public class ComponentResourceTest extends APITestCase {
 		final var result = given().when().get("/v1/components/" + id).then().statusCode(Status.OK.getStatusCode())
 				.extract().as(Component.class);
 		assertEquals(expected, result);
+
+	}
+
+	/**
+	 * Should unregister a component.
+	 */
+	@Test
+	public void shouldUnregisterAComponent() {
+
+		final var component = ComponentEntities.nextComponent();
+		final var id = component.id.toHexString();
+		given().when().delete("/v1/components/" + id).then().statusCode(Status.NO_CONTENT.getStatusCode());
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> {
+			// Nothing to do
+		});
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and timestamp >= ?2", LogLevel.INFO, now)));
+
+		final ComponentEntity updated = this.assertItemNotNull(ComponentEntity.findById(component.id));
+		assertNotNull(updated.finishedTime);
+		assertTrue(now <= updated.finishedTime);
 
 	}
 
