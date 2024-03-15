@@ -192,7 +192,7 @@ public class ComponentResourceTest extends APITestCase {
 	}
 
 	/**
-	 * Should not get a n undefined component.
+	 * Should not get an undefined component.
 	 */
 	@Test
 	public void shouldNotFoundUndefinedComponent() {

@@ -14,6 +14,8 @@ import { Info } from './info.model';
 import { LogRecordPage } from './logs/log-record-page.model';
 import { MinComponentPage } from './components/min-component-page.model';
 import { Component } from './components/component.model';
+import { MinConnectionPage } from './topology/min-connection-page.model';
+import { TopologyConnection } from './topology/topology-connection.model';
 
 
 /**
@@ -137,5 +139,24 @@ export class MovApiService {
 		var url = this.url('/v1/components', [id]);
 		return this.http.delete<void>(url);
 	}
+
+	/**
+	 * Get some connections.
+	 */
+	public getMinConnectionPage(pattern: string | null = null, component: string | null = null, order: string | null = null, offset: number = 0, limit: number = 20): Observable<MinConnectionPage> {
+
+		var url = this.url('/v1/topology/connections');
+		return this.http.get<MinConnectionPage>(url, this.optionsWithParams({ pattern: pattern, component: component, order: order, offset: offset, limit: limit }));
+	}
+
+	/**
+	 * Get a component.
+	 */
+	public getTopologyConnection(id: string): Observable<TopologyConnection> {
+
+		var url = this.url('/v1/topology/connections', [id]);
+		return this.http.get<TopologyConnection>(url);
+	}
+
 
 }

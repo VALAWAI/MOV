@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.api.v1.topology;
 
+import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -209,6 +210,32 @@ public class TopologyResourceTest extends APITestCase {
 				.queryParam("order", "target,-source").get("/v1/topology/connections").then()
 				.statusCode(Status.OK.getStatusCode()).extract().as(MinConnectionPage.class);
 		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Should not get an undefined connection.
+	 */
+	@Test
+	public void shouldNotFoundUndefinedConnection() {
+
+		final var id = nextObjectId().toHexString();
+		given().when().get("/v1/topology/connections/" + id).then().statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Should get a connection.
+	 */
+	@Test
+	public void shouldGetConnection() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		final var expected = TopologyConnectionTest.from(connection);
+		final var id = connection.id.toHexString();
+		final var result = given().when().get("/v1/topology/connections/" + id).then()
+				.statusCode(Status.OK.getStatusCode()).extract().as(TopologyConnection.class);
+		assertEquals(expected, result);
 
 	}
 

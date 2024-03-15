@@ -18,7 +18,7 @@ export class ChannelSchema {
 	/**
 	 * The identifier of the channel.
 	 */
-	public id: string | null = null;
+	public name: string | null = null;
 
 	/**
 	 * The description of the channel.

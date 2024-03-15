@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.api.v1.topology;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -15,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import eu.valawai.mov.persistence.topology.GetMinConnectionPage;
+import eu.valawai.mov.persistence.topology.GetTopologyConnection;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -23,10 +25,12 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Web s service to manage the topology between components.
@@ -50,7 +54,7 @@ public class TopologyResource {
 	 * @return the matching connections page.
 	 */
 	@GET
-	@Path("connections")
+	@Path("/connections")
 	@Operation(description = "Obtain some connections.")
 	@APIResponse(responseCode = "200", description = "The page with the matching connections", content = {
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinConnectionPage.class)) })
@@ -64,6 +68,37 @@ public class TopologyResource {
 
 		return GetMinConnectionPage.fresh().withPattern(pattern).withComponent(component).withOrder(order)
 				.withOffset(offset).withLimit(limit).execute().map(page -> Response.ok(page).build());
+
+	}
+
+	/**
+	 * Get the information of a topology connections.
+	 *
+	 * @param connectionId identifier of the connection to get.
+	 *
+	 * @return the found topology connection.
+	 */
+	@GET
+	@Path("/connections/{connectionId:[0-9a-fA-F]{24}}")
+	@Operation(description = "Obtain a topology connection.")
+	@APIResponse(responseCode = "200", description = "The topology connection with the identifier", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TopologyConnection.class)) })
+	@APIResponse(responseCode = "404", description = "When the topology connection is not found.")
+	public Uni<Response> getConnection(
+			@Parameter(description = "Identifier of the topology connection to get.", example = "000000000000000000000000", schema = @Schema(implementation = String.class)) @PathParam("connectionId") final ObjectId connectionId) {
+
+		return GetTopologyConnection.fresh().withConnection(connectionId).execute().map(model -> {
+
+			if (model == null) {
+
+				return Response.status(Status.NOT_FOUND).build();
+
+			} else {
+
+				return Response.ok(model).build();
+
+			}
+		});
 
 	}
 }

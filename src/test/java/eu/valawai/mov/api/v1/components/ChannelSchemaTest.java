@@ -38,7 +38,7 @@ public class ChannelSchemaTest extends ModelTestCase<ChannelSchema> {
 	@Override
 	public void fillIn(ChannelSchema model) {
 
-		model.id = nextPattern("valawai/channel_{0}");
+		model.name = nextPattern("valawai/channel_{0}");
 		model.description = nextPattern("Description of the channel {0}");
 		if (flipCoin()) {
 

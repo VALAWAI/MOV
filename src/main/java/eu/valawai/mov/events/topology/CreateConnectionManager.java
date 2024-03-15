@@ -190,7 +190,7 @@ public class CreateConnectionManager {
 
 					for (final var sourceChannel : source.channels) {
 
-						if (sourceChannel.id.equals(payload.source.channelName) && sourceChannel.publish != null) {
+						if (sourceChannel.name.equals(payload.source.channelName) && sourceChannel.publish != null) {
 
 							return null;
 						}
@@ -232,7 +232,7 @@ public class CreateConnectionManager {
 
 					for (final var targetChannel : target.channels) {
 
-						if (targetChannel.id.equals(payload.target.channelName) && targetChannel.subscribe != null) {
+						if (targetChannel.name.equals(payload.target.channelName) && targetChannel.subscribe != null) {
 
 							return null;
 						}

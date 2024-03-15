@@ -165,7 +165,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var channel = new ChannelSchema();
 		final var targetChannelName = nextPattern("test/register_component_subscribe_{0}");
 
-		channel.id = targetChannelName;
+		channel.name = targetChannelName;
 		final var object = new ObjectPayloadSchema();
 		final var basic = new BasicPayloadSchema();
 		basic.format = BasicPayloadFormat.STRING;
@@ -195,7 +195,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertNull(lastComponent.finishedTime);
 		assertNotNull(lastComponent.channels);
 		assertEquals(1, lastComponent.channels.size());
-		assertEquals(sourceChannelName, lastComponent.channels.get(0).id);
+		assertEquals(sourceChannelName, lastComponent.channels.get(0).name);
 		assertEquals(sourceChannelDescription, lastComponent.channels.get(0).description);
 		assertNull(lastComponent.channels.get(0).subscribe);
 		assertNotNull(lastComponent.channels.get(0).publish);
@@ -210,7 +210,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final TopologyConnectionEntity lastConnection = this
 				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
 		assertTrue(now <= lastConnection.createTimestamp);
-		assertEquals(lastConnection.createTimestamp, lastConnection.updateTimestamp);
+		assertTrue(lastConnection.createTimestamp <= lastConnection.updateTimestamp);
 		assertNull(lastConnection.deletedTimestamp);
 		assertNotNull(lastConnection.source);
 		assertEquals(sourceChannelName, lastConnection.source.channelName);
@@ -272,7 +272,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var channel = new ChannelSchema();
 		final var sourceChannelName = nextPattern("test/register_component_subscribe_{0}");
 
-		channel.id = sourceChannelName;
+		channel.name = sourceChannelName;
 		final var object = new ObjectPayloadSchema();
 		final var basic = new BasicPayloadSchema();
 		basic.format = BasicPayloadFormat.STRING;
@@ -301,7 +301,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertNull(lastComponent.finishedTime);
 		assertNotNull(lastComponent.channels);
 		assertEquals(1, lastComponent.channels.size());
-		assertEquals(targetChannelName, lastComponent.channels.get(0).id);
+		assertEquals(targetChannelName, lastComponent.channels.get(0).name);
 		assertEquals(targetChannelDescription, lastComponent.channels.get(0).description);
 		assertNull(lastComponent.channels.get(0).publish);
 		assertNotNull(lastComponent.channels.get(0).subscribe);

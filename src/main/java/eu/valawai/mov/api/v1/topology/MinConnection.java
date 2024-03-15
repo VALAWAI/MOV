@@ -24,6 +24,7 @@ import jakarta.validation.constraints.NotEmpty;
  *
  * @author VALAWAI
  */
+@Schema(title = "The minimal information of a connection.")
 public class MinConnection extends Model {
 
 	/**
@@ -35,23 +36,23 @@ public class MinConnection extends Model {
 	public ObjectId id;
 
 	/**
-	 * The source of the channel name of the connection.
+	 * The source channel name of the connection.
 	 */
 	@Schema(title = "The source channel name of the connection.")
 	@NotEmpty
 	public String source;
 
 	/**
-	 * The target of the channel name of the connection.
+	 * The target channel name of the connection.
 	 */
 	@Schema(title = "The target channel name of the connection.")
 	@NotEmpty
 	public String target;
 
 	/**
-	 * The type of connection.
+	 * This is true if the connection is enabled.
 	 */
-	@Schema(title = "The connection type.")
+	@Schema(title = "This is true if the connection is enabled.")
 	@NotNull
 	public boolean enabled;
 

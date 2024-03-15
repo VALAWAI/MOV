@@ -23,3 +23,6 @@ export { BasicPayloadSchema } from './components/basic-payload-schema.model';
 export { EnumPayloadSchema } from './components/enum-payload-schema.model';
 export { ObjectPayloadSchema } from './components/object-payload-schema.model';
 export { ArrayPayloadSchema } from './components/array-payload-schema.model';
+export { MinConnection } from './topology/min-connection.model';
+export { MinConnectionPage } from './topology/min-connection-page.model';
+export { TopologyConnection } from './topology/topology-connection.model';

@@ -54,7 +54,7 @@ public interface TopologyConnectionEntities {
 					if (channel.publish != null) {
 
 						entity.source.componentId = component.id;
-						entity.source.channelName = channel.id;
+						entity.source.channelName = channel.name;
 						break;
 					}
 				}
@@ -72,7 +72,7 @@ public interface TopologyConnectionEntities {
 					if (channel.subscribe != null) {
 
 						entity.target.componentId = component.id;
-						entity.target.channelName = channel.id;
+						entity.target.channelName = channel.name;
 						break;
 					}
 				}

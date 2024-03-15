@@ -105,7 +105,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish == null && channel.subscribe != null) {
 
 						payload.source.componentId = component.id;
-						payload.source.channelName = channel.id;
+						payload.source.channelName = channel.name;
 						break;
 
 					}
@@ -138,7 +138,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish != null) {
 
 						payload.source.componentId = component.id;
-						payload.source.channelName = channel.id;
+						payload.source.channelName = channel.name;
 						break;
 
 					}
@@ -171,7 +171,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish != null) {
 
 						payload.source.componentId = component.id;
-						payload.source.channelName = channel.id;
+						payload.source.channelName = channel.name;
 						break;
 
 					}
@@ -222,7 +222,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish != null) {
 
 						payload.source.componentId = component.id;
-						payload.source.channelName = channel.id;
+						payload.source.channelName = channel.name;
 						break;
 
 					}
@@ -241,7 +241,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish != null && channel.subscribe == null) {
 
 						payload.target.componentId = component.id;
-						payload.target.channelName = channel.id;
+						payload.target.channelName = channel.name;
 						break;
 
 					}
@@ -293,7 +293,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish != null && channel.subscribe == null) {
 
 						payload.source.componentId = component.id;
-						payload.source.channelName = channel.id;
+						payload.source.channelName = channel.name;
 						break;
 
 					}
@@ -312,7 +312,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish == null && channel.subscribe != null) {
 
 						payload.target.componentId = component.id;
-						payload.target.channelName = channel.id;
+						payload.target.channelName = channel.name;
 						break;
 
 					}
@@ -360,7 +360,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish != null && channel.subscribe == null) {
 
 						payload.source.componentId = component.id;
-						payload.source.channelName = channel.id;
+						payload.source.channelName = channel.name;
 						break;
 
 					}
@@ -379,7 +379,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 					if (channel.publish == null && channel.subscribe != null) {
 
 						payload.target.componentId = component.id;
-						payload.target.channelName = channel.id;
+						payload.target.channelName = channel.name;
 						break;
 
 					}

@@ -11,6 +11,7 @@ package eu.valawai.mov;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
@@ -51,6 +52,16 @@ public class MasterOfValawaiTestCase {
 	}
 
 	/**
+	 * Check that a component is executed and return a null value.
+	 *
+	 * @param operator to execute.
+	 */
+	protected <T> void assertExecutionNull(AbstractEntityOperator<T, ?> operator) {
+
+		this.assertItemNull(operator.execute());
+	}
+
+	/**
 	 * Check that a component is executed and return a non null value.
 	 *
 	 * @param operator to execute.
@@ -68,6 +79,37 @@ public class MasterOfValawaiTestCase {
 		final var result = operator.onFailure().recoverWithItem(manageError).await().atMost(Duration.ofSeconds(30));
 		assertNotNull(result);
 		return result;
+	}
+
+	/**
+	 * Check that a component is executed and return a null value.
+	 *
+	 * @param operator to execute.
+	 */
+	protected <T> void assertItemNull(Uni<T> operator) {
+
+		final List<Throwable> errors = new ArrayList<>();
+		final Function<? super Throwable, ? extends T> manageError = error -> {
+
+			Log.errorv(error, "Cannot do the operation");
+			errors.add(error);
+			return null;
+
+		};
+		final var result = operator.onFailure().recoverWithItem(manageError).await().atMost(Duration.ofSeconds(30));
+		assertNull(result);
+		assertTrue(errors.isEmpty(), "The operator has failed");
+	}
+
+	/**
+	 * Check that a component is executed and return a null value or it has failed.
+	 *
+	 * @param operator to execute.
+	 */
+	protected <T> void assertItemNullOrFailed(Uni<T> operator) {
+
+		final var result = operator.onFailure().recoverWithNull().await().atMost(Duration.ofSeconds(30));
+		assertNull(result);
 	}
 
 	/**

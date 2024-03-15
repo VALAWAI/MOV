@@ -11,15 +11,16 @@ import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { MovApiService } from 'src/app/shared/mov-api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractComponentComponent } from '../abstract-component.component';
+import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
+
 
 
 @Component({
-	selector: 'app-show-component',
-	templateUrl: './show-component.component.html',
-	styleUrls: ['./show-component.component.css']
+	selector: 'app-show-topology-connection',
+	templateUrl: './show-topology-connection.component.html',
+	styleUrls: ['./show-topology-connection.component.css']
 })
-export class ShowComponentComponent extends AbstractComponentComponent {
+export class ShowTopologyConnectionComponent extends AbstractTopologyConnectionComponent {
 
 	/**
 	 *  Create the component.
@@ -41,7 +42,7 @@ export class ShowComponentComponent extends AbstractComponentComponent {
 	override ngOnInit(): void {
 
 		super.ngOnInit();
-		this.header.changeHeaderTitle($localize`:The header title for the show component@@main_components_show_code_page-title:Show Component`);
+		this.header.changeHeaderTitle($localize`:The header title for the show topology connection@@main_topology_connections_show_code_page-title:Show topology conection`);
 	}
 
 

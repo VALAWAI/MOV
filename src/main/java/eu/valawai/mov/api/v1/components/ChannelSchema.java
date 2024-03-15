@@ -27,8 +27,8 @@ public class ChannelSchema extends Model {
 	 * The identifier of the channel.
 	 */
 	@NotEmpty
-	@Schema(title = "The identifier of the channel.")
-	public String id;
+	@Schema(title = "The name that identify the channel.")
+	public String name;
 
 	/**
 	 * The description of the channel.

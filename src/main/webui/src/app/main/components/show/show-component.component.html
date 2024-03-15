@@ -23,7 +23,7 @@
 				Channels </legend>
 			<div *ngFor="let channel of component.channels"
 				class="pl-11 grid grid-cols-2 gap-3">
-				<div class="text-lg font-bold col-span-2">{{channel.id}}</div>
+				<div class="text-lg font-bold col-span-2">{{channel.name}}</div>
 				<div class="col-span-2">{{channel.description}}</div>
 				<div *ngIf="channel.subscribe" class="font-bold"
 					i18n="The label of the component channel subscribe@@main_components_show_component-channel-subscribe-label">Subscribe</div>

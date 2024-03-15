@@ -1,0 +1,13 @@
+<div
+	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+	*ngIf="connection$ |async as connection; else loading">
+	<div class="max-w-3xl grid grid-cols-2 gap-3">
+		<div class="text-left font-bold"
+			i18n="The label of the connection enabled attribute@@main_topology_connections_show_enabled-label">Enabled</div>
+		<div class="text-left">{{connection.enabled}}</div>
+	</div>
+	<button mat-raised-button color="primary" routerLink="/main/topology/connections"
+		i18n="The label of the button to go backl to the connections from the show connectionw@@main_topology_connections_show_go-back-label">Go
+		to connections</button>
+</div>
+<ng-template #loading> <app-loading></app-loading> </ng-template>

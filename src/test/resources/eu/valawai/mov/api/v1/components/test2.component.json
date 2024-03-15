@@ -6,7 +6,7 @@
 	"channels":
 	[
 		{
-			"id":"user/signedup",
+			"name":"user/signedup",
 			"subscribe":
 			{
 				"type":"OBJECT",

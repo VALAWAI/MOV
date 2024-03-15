@@ -5,7 +5,7 @@
 	"description": "API description",
 	"channels": [
 		{
-			"id": "test/valawai_reg_45678",
+			"name": "test/valawai_reg_45678",
 			"description": "Description of the channel 456789",
 			"publish": {
 				"type": "OBJECT",

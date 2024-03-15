@@ -1,0 +1,91 @@
+<div class="p-3 gap-7 flex flex-col justify-center content-center"
+	[formGroup]="form">
+	<div class="grow flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label of the field to match the name or desciption of teh compponent@@main_topology_connections_search-label">Name
+		or description</mat-label> <input matInput type="text" formControlName="pattern">
+		</mat-form-field>
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<mat-form-field> <mat-label
+			i18n="The label to select the order of the connections@@main_topology_connections_order-by-label">Order
+		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
+			value="source"
+			i18n="The option to order by source@@main_topology_connections_order-by-source">Source</mat-option>
+		<mat-option value="target"
+			i18n="The option to order by target@@main_topology_connections_order-by-target">Target</mat-option>
+		<mat-option value="enabled"
+			i18n="The option to order by enabled@@main_topology_connections_order-by-enabled">Enabled</mat-option>
+		</mat-select> </mat-form-field>
+		<mat-checkbox formControlName="reverse"
+			i18n="The label of the checkbox to order in reverse order@@main_topology_connections_order-by-reverse-label">In
+		reverse order</mat-checkbox>
+	</div>
+	<div class="flex flex-row justify-center content-center">
+		<button
+			i18n="Label of the button to reload the connections@@main_topology_connections_reload-label"
+			(click)="updatePage()" mat-raised-button color="primary"
+			class="max-w-72">
+			<mat-icon>refresh</mat-icon>
+			Reload
+		</button>
+	</div>
+	<div *ngIf="page && page.connections">
+		<table mat-table [dataSource]="page.connections"
+			class="mat-elevation-z8">
+
+			<ng-container matColumnDef="source">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the connection source column header@@main_topology_connections_source-header-label">Source</th>
+			<td mat-cell *matCellDef="let element">{{element.source}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="target">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the connection target column header@@main_topology_connections_target-header-label">Target</th>
+			<td mat-cell *matCellDef="let element">{{element.target}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="enabled">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the connection enabled column header@@main_topology_connections_enabled-header-label">Enabled</th>
+			<td mat-cell *matCellDef="let element"><mat-icon
+					*ngIf="element.enabled" color="primary">wifi_on</mat-icon> <mat-icon
+					*ngIf="!element.enabled" color="warn">wifi_off</mat-icon></td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The label of the connection actions column header@@main_topology_connections_actions-header-label">Actions</th>
+			<td mat-cell *matCellDef="let element">
+				<button mat-icon-button aria-label="Connection menu"
+					[matMenuTriggerFor]="connectionMenu">
+					<mat-icon>more_vert</mat-icon>
+				</button> <mat-menu #connectionMenu="matMenu">
+				<button mat-menu-item
+					i18n="The label of the menu to show a connection@@main_topology_connections_show-menu-label"
+					[routerLink]="['/main/topology/connections',element.id,'show']">Show</button>
+				<button mat-menu-item *ngIf="!element.enabled"
+					i18n="The label of the menu to enable a connection@@main_topology_connections_enable-menu-label"
+					[routerLink]="['/main/topology/connections',element.id,'enable']">Enable</button>
+				<button mat-menu-item *ngIf="element.enabled"
+					i18n="The label of the menu to disable a connection@@main_topology_connections_disable-menu-label"
+					[routerLink]="['/main/topology/connections',element.id,'disable']">Disable</button>
+				<button mat-menu-item
+					i18n="The label of the menu to remove a connection@@main_topology_connections_remove-menu-label"
+					[routerLink]="['/main/topology/connections',element.id,'remove']">Remove</button>
+				</mat-menu>
+			</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+	<div *ngIf="page && page.total > 5">
+		<mat-paginator [length]="page.total"
+			[pageSizeOptions]="[5,10, 50, 100]" [pageSize]="pageSize"
+			[pageIndex]="pageIndex" (page)="pageChanged($event)"
+			aria-label="Select page"> </mat-paginator>
+	</div>
+</div>

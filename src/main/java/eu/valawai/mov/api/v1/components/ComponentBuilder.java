@@ -58,7 +58,7 @@ public interface ComponentBuilder {
 					final var channelDef = (Map<String, Object>) channels.get(channelId);
 					final var channel = new ChannelSchema();
 					component.channels.add(channel);
-					channel.id = channelId;
+					channel.name = channelId;
 					channel.description = stringProperty("description", channelDef);
 					final var subscribe = section("subscribe", channelDef);
 					var message = section("message", subscribe);

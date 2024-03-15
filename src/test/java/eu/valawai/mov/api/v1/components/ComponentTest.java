@@ -55,7 +55,7 @@ public class ComponentTest extends AbstractMinComponentTestCase<Component> {
 			for (var i = 0; i < max; i++) {
 
 				final var channel = builder.nextModel();
-				channel.id = model.name + nextPattern("/action_{0}");
+				channel.name = model.name + nextPattern("/action_{0}");
 				model.channels.add(channel);
 			}
 

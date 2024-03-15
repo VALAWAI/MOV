@@ -41,6 +41,19 @@ const routes: Routes = [
 				loadChildren: () => import('./components/components.module').then(m => m.ComponentsModule)
 			},
 			{
+				path: 'topology/connections/:id/show',
+				loadChildren: () => import('./topology/connections/show/show-topology-connection.module').then(m => m.ShowTopologyConnectionModule)
+			},
+			{
+				path: 'topology/connections',
+				loadChildren: () => import('./topology/connections/topology-connections.module').then(m => m.TopologyConnectionsModule)
+			},
+			{
+				path: 'topology',
+				pathMatch: 'full',
+				redirectTo: 'topology/connections'
+			},
+			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'status'
