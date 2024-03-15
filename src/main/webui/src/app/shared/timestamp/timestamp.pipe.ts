@@ -30,10 +30,18 @@ export class TimestampPipe implements PipeTransform {
 	 */
 	transform(value: number | null | undefined, format?: string, timezone?: string, locale?: string): string | null {
 
-		if (value != null) {
+		if (value != null && value > -1) {
 
 			value = value * 1000;
+
+
+		} else {
+
+			value = 0;
+
 		}
+
 		return this.date.transform(value, format, timezone, locale);
+
 	}
 }

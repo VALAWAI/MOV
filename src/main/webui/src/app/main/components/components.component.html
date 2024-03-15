@@ -1,13 +1,12 @@
-<div class="p-3 gap-7 flex flex-col justify-center content-center"
+<div
+	class="p-3 gap-7 flex flex-col items-center justify-center content-center"
 	[formGroup]="form">
-	<div class="grow flex flex-row justify-center content-center">
-		<mat-form-field class="max-w-96 grow"> <mat-label
+	<div class="max-w-3xl grid grid-cols-2 gap-3">
+		<mat-form-field class="text-left col-span-2"> <mat-label
 			i18n="The label of the field to match the name or desciption of teh compponent@@main_components_search-label">Name
 		or description</mat-label> <input matInput type="text" formControlName="pattern">
 		</mat-form-field>
-	</div>
-	<div class="flex flex-row justify-center content-center">
-		<mat-form-field> <mat-label
+		<mat-form-field class="text-left"> <mat-label
 			i18n="The label to select the order of the components@@main_components_order-by-label">Order
 		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
 			value="type"
@@ -17,18 +16,15 @@
 		<mat-option value="description"
 			i18n="The option to order by description@@main_components_order-by-description">Description</mat-option>
 		</mat-select> </mat-form-field>
-		<mat-checkbox formControlName="reverse"
+		<mat-checkbox class="text-left" formControlName="reverse"
 			i18n="The label of the checkbox to order in reverse order@@main_components_order-by-reverse-label">In
 		reverse order</mat-checkbox>
-	</div>
-	<div class="flex flex-row justify-center content-center">
-		<mat-form-field class="max-w-96 grow"> <mat-label
+		<mat-form-field class="text-left col-span-2"> <mat-label
 			i18n="The label to select the type of the component messages@@main_components_types-label">
 		Filter components by type: </mat-label> <mat-select formControlName="types"
 			multiple> <mat-option
 			*ngFor="let type of componentNames" [value]="type">{{type}}</mat-option>
 		</mat-select> </mat-form-field>
-
 	</div>
 	<div class="flex flex-row justify-center content-center">
 		<button
@@ -39,7 +35,7 @@
 			Reload
 		</button>
 	</div>
-	<div *ngIf="page && page.components">
+	<div *ngIf="page && page.components" class="w-full">
 		<table mat-table [dataSource]="page.components"
 			class="mat-elevation-z8">
 
@@ -77,7 +73,9 @@
 					[routerLink]="['/main/components',element.id,'unregister']">Unregister</button>
 				<button mat-menu-item
 					i18n="The label of the menu to show the connection to a component@@main_components_show-connections-label"
-					[routerLink]="['/main/components',element.id,'connections']">Show
+					routerLink="/main/topology/connections"
+					[queryParams]="{'componentId':element.id}"
+					>Show
 					connections</button>
 				</mat-menu>
 			</td>

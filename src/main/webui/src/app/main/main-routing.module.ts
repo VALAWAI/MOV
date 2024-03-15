@@ -33,10 +33,6 @@ const routes: Routes = [
 				loadChildren: () => import('./components/unregister/unregister-component.module').then(m => m.UnregisterComponentModule)
 			},
 			{
-				path: 'components/:id/connections',
-				loadChildren: () => import('./components/connections/connections-component.module').then(m => m.ConnectionsComponentModule)
-			},
-			{
 				path: 'components',
 				loadChildren: () => import('./components/components.module').then(m => m.ComponentsModule)
 			},

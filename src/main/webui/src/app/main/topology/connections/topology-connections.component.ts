@@ -13,6 +13,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MessagesService } from 'src/app/shared/messages';
 import { MinConnectionPage, MovApiService } from 'src/app/shared/mov-api';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -57,6 +58,15 @@ export class TopologyConnectionsComponent implements OnInit, OnDestroy {
 	 */
 	private formChanged: Subscription | null = null;
 
+	/**
+	 * The component that show its connection.
+	 */
+	public componentId: string | null = null;
+
+	/**
+	 * Subscription for the component identifier changes.
+	 */
+	private componentIdChanged: Subscription | null = null;
 
 	/**
 	 *  Create the component.
@@ -65,7 +75,9 @@ export class TopologyConnectionsComponent implements OnInit, OnDestroy {
 		private header: MainService,
 		private mov: MovApiService,
 		private messages: MessagesService,
-		private fb: FormBuilder) {
+		private fb: FormBuilder,
+		private route: ActivatedRoute
+	) {
 
 	}
 
@@ -81,6 +93,13 @@ export class TopologyConnectionsComponent implements OnInit, OnDestroy {
 				next: () => this.updatePage()
 			}
 		);
+		this.componentIdChanged = this.route.queryParamMap.subscribe({
+			next: (params) => {
+
+				this.componentId = params.get("componentId");
+				this.updatePage();
+			}
+		});
 
 	}
 
@@ -93,6 +112,11 @@ export class TopologyConnectionsComponent implements OnInit, OnDestroy {
 
 			this.formChanged.unsubscribe();
 			this.formChanged = null;
+		}
+		if (this.componentIdChanged != null) {
+
+			this.componentIdChanged.unsubscribe();
+			this.componentIdChanged = null;
 		}
 
 	}
@@ -134,7 +158,7 @@ export class TopologyConnectionsComponent implements OnInit, OnDestroy {
 			orderBy = "-" + orderBy;
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getMinConnectionPage(pattern, null, orderBy, offset, this.pageSize).subscribe(
+		this.mov.getMinConnectionPage(pattern, this.componentId, orderBy, offset, this.pageSize).subscribe(
 			{
 				next: page => this.page = page,
 				error: err => {

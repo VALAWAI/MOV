@@ -1,13 +1,12 @@
-<div class="p-3 gap-7 flex flex-col justify-center content-center"
+<div
+	class="p-3 gap-7 flex flex-col items-center justify-center content-center"
 	[formGroup]="form">
-	<div class="grow flex flex-row justify-center content-center">
-		<mat-form-field class="max-w-96 grow"> <mat-label
+	<div class="max-w-3xl grid grid-cols-2 gap-3">
+		<mat-form-field class="text-left col-span-2"> <mat-label
 			i18n="The label of the field to match the name or desciption of teh compponent@@main_topology_connections_search-label">Name
 		or description</mat-label> <input matInput type="text" formControlName="pattern">
 		</mat-form-field>
-	</div>
-	<div class="flex flex-row justify-center content-center">
-		<mat-form-field> <mat-label
+		<mat-form-field class="text-left"> <mat-label
 			i18n="The label to select the order of the connections@@main_topology_connections_order-by-label">Order
 		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
 			value="source"
@@ -17,11 +16,11 @@
 		<mat-option value="enabled"
 			i18n="The option to order by enabled@@main_topology_connections_order-by-enabled">Enabled</mat-option>
 		</mat-select> </mat-form-field>
-		<mat-checkbox formControlName="reverse"
+		<mat-checkbox class="text-left" formControlName="reverse"
 			i18n="The label of the checkbox to order in reverse order@@main_topology_connections_order-by-reverse-label">In
 		reverse order</mat-checkbox>
 	</div>
-	<div class="flex flex-row justify-center content-center">
+	<div class="gap-3 flex flex-row ">
 		<button
 			i18n="Label of the button to reload the connections@@main_topology_connections_reload-label"
 			(click)="updatePage()" mat-raised-button color="primary"
@@ -29,8 +28,12 @@
 			<mat-icon>refresh</mat-icon>
 			Reload
 		</button>
+		<button *ngIf="componentId!=null" mat-raised-button color="primary"
+			[routerLink]="['/main/components',componentId,'show']"
+			i18n="Label of the button to go back to the component@@main_topology_connections_go-back-to-component-label">
+			Go to the component</button>
 	</div>
-	<div *ngIf="page && page.connections">
+	<div *ngIf="page && page.connections" class="w-full">
 		<table mat-table [dataSource]="page.connections"
 			class="mat-elevation-z8">
 
