@@ -87,7 +87,6 @@ export class TopologyConnectionsComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.header.changeHeaderTitle($localize`:The header title for the connections component@@main_topology_connections_code_page-title:Topology connections`);
-		this.updatePage();
 		this.formChanged = this.form.valueChanges.subscribe(
 			{
 				next: () => this.updatePage()
