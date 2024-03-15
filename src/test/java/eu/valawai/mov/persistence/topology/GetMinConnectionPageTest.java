@@ -160,10 +160,10 @@ public class GetMinConnectionPageTest extends MasterOfValawaiTestCase {
 	}
 
 	/**
-	 * Test get a page that match a patterns.
+	 * Test get a page that match a component.
 	 */
 	@Test
-	public void shouldReturnPageWithComponentId() {
+	public void shouldReturnPageWithComponent() {
 
 		final var expected = new MinConnectionPage();
 		expected.offset = rnd().nextInt(2, 5);
@@ -184,6 +184,10 @@ public class GetMinConnectionPageTest extends MasterOfValawaiTestCase {
 				connection.target.componentId = component.id;
 			}
 			this.assertItemNotNull(connection.update());
+			if (connection.deletedTimestamp != null) {
+
+				i--;
+			}
 		}
 
 		final var filter = Filters.and(
@@ -217,8 +221,80 @@ public class GetMinConnectionPageTest extends MasterOfValawaiTestCase {
 		}
 
 		final var page = this
-				.assertExecutionNotNull(GetMinConnectionPage.fresh().withPattern("/" + component.id.toHexString() + "/")
-						.withOrder("-source").withOffset(expected.offset).withLimit(limit));
+				.assertExecutionNotNull(GetMinConnectionPage.fresh().withComponent(component.id.toHexString())
+						.withOrder("target,-source").withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a pattern and a component.
+	 */
+	@Test
+	public void shouldReturnPageWithPatternAndComponent() {
+
+		final var pattern = ".*_[1|2|3|4|5].*";
+		final var expected = new MinConnectionPage();
+		expected.offset = rnd().nextInt(2, 5);
+
+		final var limit = rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+
+		final var component = ComponentEntities.nextComponent();
+		for (var i = 0; i < max; i++) {
+
+			final var connection = TopologyConnectionEntities.nextTopologyConnection();
+			if (i % 2 == 0) {
+
+				connection.source.componentId = component.id;
+
+			} else {
+
+				connection.target.componentId = component.id;
+			}
+			this.assertItemNotNull(connection.update());
+
+			if (connection.deletedTimestamp != null || !connection.source.channelName.matches(pattern)
+					|| !connection.target.channelName.matches(pattern)) {
+
+				i--;
+			}
+		}
+
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)),
+				Filters.or(Filters.regex("source.channelName", pattern), Filters.regex("target.channelName", pattern)),
+				Filters.or(Filters.eq("source.componentId", component.id),
+						Filters.eq("target.componentId", component.id)));
+		expected.total = TopologyConnectionEntities.nextTopologyConnectionsUntil(filter, max);
+
+		final List<TopologyConnectionEntity> connections = this.assertItemNotNull(TopologyConnectionEntity
+				.mongoCollection().find(filter, TopologyConnectionEntity.class).collect().asList());
+		connections.sort((l1, l2) -> {
+
+			var cmp = Boolean.compare(l2.enabled, l1.enabled);
+			if (cmp == 0) {
+
+				cmp = l2.source.channelName.compareTo(l1.source.channelName);
+				if (cmp == 0) {
+
+					cmp = l1.id.compareTo(l2.id);
+				}
+			}
+
+			return cmp;
+		});
+		expected.connections = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < connections.size(); i++) {
+
+			final var connection = connections.get(i);
+			final var expectedConnection = MinConnectionTest.from(connection);
+			expected.connections.add(expectedConnection);
+		}
+
+		final var page = this.assertExecutionNotNull(
+				GetMinConnectionPage.fresh().withPattern("/" + pattern + "/").withComponent(component.id.toHexString())
+						.withOrder("-enabled,-source").withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
 
 	}

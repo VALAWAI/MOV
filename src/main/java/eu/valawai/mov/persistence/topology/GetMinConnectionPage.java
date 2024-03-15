@@ -35,6 +35,11 @@ import io.smallrye.mutiny.Uni;
 public class GetMinConnectionPage extends AbstractGetPage<MinConnectionPage, GetMinConnectionPage> {
 
 	/**
+	 * The component to match the model has returned.
+	 */
+	protected String component;
+
+	/**
 	 * Create a new operation.
 	 */
 	private GetMinConnectionPage() {
@@ -53,15 +58,36 @@ public class GetMinConnectionPage extends AbstractGetPage<MinConnectionPage, Get
 	}
 
 	/**
+	 * The component to match the page elements.
+	 *
+	 * @param component to match the elements to return.
+	 *
+	 * @return this operator.
+	 */
+	public GetMinConnectionPage withComponent(final String component) {
+
+		this.component = component;
+		return this.operator();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected Uni<MinConnectionPage> getPageWith(List<Bson> pipeline) {
 
 		final var copy = new ArrayList<>(pipeline);
-		copy.add(Aggregates.set(new Field<>("sourceComponentId", new Document("$toString", "$source.componentId")),
-				new Field<>("targetComponentId", new Document("$toString", "$target.componentId")),
-				new Field<>("source", "$source.channelName"), new Field<>("target", "$target.channelName")));
+
+		copy.add(0, Aggregates.set(new Field<>("source", "$source.channelName"),
+				new Field<>("target", "$target.channelName")));
+
+		if (this.component != null) {
+
+			copy.add(0,
+					Aggregates.set(new Field<>("sourceComponentId", new Document("$toString", "$source.componentId")),
+							new Field<>("targetComponentId", new Document("$toString", "$target.componentId"))));
+		}
+
 		return TopologyConnectionEntity.mongoCollection().aggregate(copy, MinConnectionPage.class).collect().first()
 				.onFailure().recoverWithItem(error -> {
 
@@ -78,10 +104,21 @@ public class GetMinConnectionPage extends AbstractGetPage<MinConnectionPage, Get
 	@Override
 	protected Bson createFilter() {
 
-		return Filters.or(Queries.filterByValueOrRegexp("source.channelId", this.pattern),
-				Queries.filterByValueOrRegexp("sourceComponentId", this.pattern),
-				Queries.filterByValueOrRegexp("target.channelId", this.pattern),
-				Queries.filterByValueOrRegexp("targetComponentId", this.pattern));
+		final var filters = new ArrayList<Bson>();
+		filters.add(Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)));
+		if (this.component != null) {
+
+			filters.add(Filters.or(Queries.filterByValueOrRegexp("sourceComponentId", this.component),
+					Queries.filterByValueOrRegexp("targetComponentId", this.component)));
+		}
+
+		if (this.pattern != null) {
+
+			filters.add(Filters.or(Queries.filterByValueOrRegexp("source", this.pattern),
+					Queries.filterByValueOrRegexp("target", this.pattern)));
+
+		}
+		return Filters.and(filters);
 	}
 
 }

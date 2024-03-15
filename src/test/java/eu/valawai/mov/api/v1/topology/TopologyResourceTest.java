@@ -52,7 +52,7 @@ public class TopologyResourceTest extends APITestCase {
 	@Test
 	public void shouldNotGetPageWithBadOrder() {
 
-		given().when().queryParam("order", "undefined").get("/v1/connections").then()
+		given().when().queryParam("order", "undefined").get("/v1/topology/connections").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
@@ -63,7 +63,7 @@ public class TopologyResourceTest extends APITestCase {
 	@Test
 	public void shouldNotGetPageWithBadOffset() {
 
-		given().when().queryParam("offset", "-1").get("/v1/connections").then()
+		given().when().queryParam("offset", "-1").get("/v1/topology/connections").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
@@ -74,7 +74,7 @@ public class TopologyResourceTest extends APITestCase {
 	@Test
 	public void shouldNotGetPageWithBadLimit() {
 
-		given().when().queryParam("limit", "0").get("/v1/connections").then()
+		given().when().queryParam("limit", "0").get("/v1/topology/connections").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
@@ -86,7 +86,7 @@ public class TopologyResourceTest extends APITestCase {
 	public void shouldGetEmptyPage() {
 
 		final var page = given().when().queryParam("pattern", "1").queryParam("limit", "1").queryParam("offset", "3")
-				.get("/v1/connections").then().statusCode(Status.OK.getStatusCode()).extract()
+				.get("/v1/topology/connections").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(MinConnectionPage.class);
 		final var expected = new MinConnectionPage();
 		expected.offset = 3;
@@ -137,7 +137,7 @@ public class TopologyResourceTest extends APITestCase {
 
 		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
 				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "target,-source").get("/v1/connections").then()
+				.queryParam("order", "target,-source").get("/v1/topology/connections").then()
 				.statusCode(Status.OK.getStatusCode()).extract().as(MinConnectionPage.class);
 		assertEquals(expected, page);
 
@@ -168,6 +168,10 @@ public class TopologyResourceTest extends APITestCase {
 				connection.target.componentId = component.id;
 			}
 			this.assertItemNotNull(connection.update());
+			if (connection.deletedTimestamp != null) {
+
+				i--;
+			}
 		}
 
 		final var filter = Filters.and(
@@ -200,9 +204,9 @@ public class TopologyResourceTest extends APITestCase {
 			expected.connections.add(expectedConnection);
 		}
 
-		final var page = given().when().queryParam("pattern", component.id.toHexString())
+		final var page = given().when().queryParam("component", component.id.toHexString())
 				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
-				.queryParam("order", "target,-source").get("/v1/connections").then()
+				.queryParam("order", "target,-source").get("/v1/topology/connections").then()
 				.statusCode(Status.OK.getStatusCode()).extract().as(MinConnectionPage.class);
 		assertEquals(expected, page);
 
