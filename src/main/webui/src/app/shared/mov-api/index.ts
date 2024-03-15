@@ -26,3 +26,4 @@ export { ArrayPayloadSchema } from './components/array-payload-schema.model';
 export { MinConnection } from './topology/min-connection.model';
 export { MinConnectionPage } from './topology/min-connection-page.model';
 export { TopologyConnection } from './topology/topology-connection.model';
+export { TopologyConnectionNode } from './topology/topology-connection-node.model';

@@ -71,5 +71,4 @@ export abstract class AbstractTopologyConnectionComponent implements OnInit {
 		);
 	}
 
-
 }

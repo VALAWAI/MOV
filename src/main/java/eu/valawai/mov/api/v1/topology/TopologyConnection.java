@@ -30,9 +30,9 @@ import io.smallrye.common.constraint.NotNull;
 public class TopologyConnection extends Model {
 
 	/**
-	 * The identifier of the connection.
+	 * The identifier of the topology connection.
 	 */
-	@Schema(title = "The identifier of the connection", readOnly = true, example = "000000000000000000000000", implementation = String.class)
+	@Schema(title = "The identifier of the topology connection", readOnly = true, example = "000000000000000000000000", implementation = String.class)
 	@BsonProperty("_id")
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId id;

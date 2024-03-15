@@ -4,10 +4,63 @@
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
 		<div class="text-left font-bold"
 			i18n="The label of the connection enabled attribute@@main_topology_connections_show_enabled-label">Enabled</div>
-		<div class="text-left">{{connection.enabled}}</div>
+		<div class="text-left">
+			<mat-icon *ngIf="connection.enabled" color="primary">wifi_on</mat-icon>
+			<mat-icon *ngIf="!connection.enabled" color="warn">wifi_off</mat-icon>
+		</div>
+		<div class="text-left font-bold"
+			i18n="The label of the connection created attribute@@main_topology_connections_show_create-timestamp-label">Created
+			at</div>
+		<div class="text-left">{{connection.createTimestamp|timestamp:'short'}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the connection updated attribute@@main_topology_connections_show_update-timestamp-label">Updated
+			at</div>
+		<div class="text-left">{{connection.updateTimestamp|timestamp:'short'}}</div>
+		<div class="text-left font-bold col-span-2"
+			i18n="The label of the connection source attribute@@main_topology_connections_show_source-label">Source</div>
+		<div class="text-left pl-7 font-bold"
+			i18n="The label of the connection source attribute@@main_topology_connections_show_node-component-label">Component</div>
+		<div class="text-left">{{connection.source?.component?.name}}</div>
+		<div class="text-left pl-7 col-span-2"
+			*ngIf="connection.source?.component?.description">{{connection.source?.component?.description}}</div>
+		<div class="text-left pl-7 font-bold"
+			i18n="The label of the connection source node channel@@main_topology_connections_show_node-channel-label">Channel</div>
+		<div class="text-left">{{connection.source?.channel?.name}}</div>
+		<div class="text-left pl-7 col-span-2"
+			*ngIf="connection.source?.channel?.description">{{connection.source?.channel?.description}}</div>
+		<div class="text-left pl-11 font-bold"
+			*ngIf="connection.source?.channel?.publish"
+			i18n="The label of the connection source node channel publish@@main_topology_connections_show_node-channel-publish-label">Publish</div>
+		<ngx-json-viewer *ngIf="connection.source?.channel?.publish"
+			[json]="connection.source?.channel?.publish"></ngx-json-viewer>
+		<div class="text-left font-bold col-span-2"
+			i18n="The label of the connection target attribute@@main_topology_connections_show_target-label">Target</div>
+		<div class="text-left pl-7 font-bold"
+			i18n="The label of the connection target attribute@@main_topology_connections_show_node-component-label">Component</div>
+		<div class="text-left">{{connection.target?.component?.name}}</div>
+		<div class="text-left pl-7 col-span-2"
+			*ngIf="connection.target?.component?.description">{{connection.target?.component?.description}}</div>
+		<div class="text-left pl-7 font-bold"
+			i18n="The label of the connection target node channel@@main_topology_connections_show_node-channel-label">Channel</div>
+		<div class="text-left">{{connection.target?.channel?.name}}</div>
+		<div class="text-left pl-7 col-span-2"
+			*ngIf="connection.target?.channel?.description">{{connection.target?.channel?.description}}</div>
+		<div class="text-left pl-11 font-bold"
+			*ngIf="connection.target?.channel?.subscribe"
+			i18n="The label of the connection target node channel subscribe@@main_topology_connections_show_node-channel-subscribe-label">Subscribe</div>
+		<ngx-json-viewer *ngIf="connection.target?.channel?.subscribe"
+			[json]="connection.target?.channel?.subscribe"></ngx-json-viewer>
 	</div>
-	<button mat-raised-button color="primary" routerLink="/main/topology/connections"
+	<button *ngIf="componentId==null;else backToComponent"
+		mat-raised-button color="primary"
+		routerLink="/main/topology/connections"
 		i18n="The label of the button to go backl to the connections from the show connectionw@@main_topology_connections_show_go-back-label">Go
 		to connections</button>
+	<ng-template #backToComponent>
+	<button mat-raised-button color="primary"
+		[routerLink]="['/main/components',componentId,'connections']"
+		i18n="The label of the button to go backl to the connections from the show connectionw@@main_topology_connections_show_go-back-to-component-connections-label">Go
+		to component connections</button>
+	</ng-template>
 </div>
 <ng-template #loading> <app-loading></app-loading> </ng-template>

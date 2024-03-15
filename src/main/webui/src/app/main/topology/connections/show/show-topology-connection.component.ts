@@ -6,12 +6,13 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { MovApiService } from 'src/app/shared/mov-api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
+import { Subscription } from 'rxjs';
 
 
 
@@ -20,7 +21,17 @@ import { AbstractTopologyConnectionComponent } from '../abstract-topology-connec
 	templateUrl: './show-topology-connection.component.html',
 	styleUrls: ['./show-topology-connection.component.css']
 })
-export class ShowTopologyConnectionComponent extends AbstractTopologyConnectionComponent {
+export class ShowTopologyConnectionComponent extends AbstractTopologyConnectionComponent implements OnDestroy {
+
+	/**
+	 * The component that show its connection.
+	 */
+	public componentId: string | null = null;
+
+	/**
+	 * Subscription for the component identifier changes.
+	 */
+	private componentIdChanged: Subscription | null = null;
 
 	/**
 	 *  Create the component.
@@ -43,7 +54,25 @@ export class ShowTopologyConnectionComponent extends AbstractTopologyConnectionC
 
 		super.ngOnInit();
 		this.header.changeHeaderTitle($localize`:The header title for the show topology connection@@main_topology_connections_show_code_page-title:Show topology conection`);
+
+		this.componentIdChanged = this.route.queryParamMap.subscribe({
+			next: (params) => {
+
+				this.componentId = params.get("componentId");
+			}
+		});
 	}
 
+	/**
+	 * Unsubscribe the component.
+	 */
+	ngOnDestroy(): void {
+
+		if (this.componentIdChanged != null) {
+
+			this.componentIdChanged.unsubscribe();
+			this.componentIdChanged = null;
+		}
+	}
 
 }

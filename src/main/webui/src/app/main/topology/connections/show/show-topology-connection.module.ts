@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { LoadingModule } from 'src/app/shared/loading';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { TimestampModule } from 'src/app/shared/timestamp';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 		MatIconModule,
 		MatButtonModule,
 		LoadingModule,
-		NgxJsonViewerModule
+		NgxJsonViewerModule,
+		TimestampModule
 	],
 	exports: [
 	],
