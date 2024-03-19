@@ -18,6 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import eu.valawai.mov.events.topology.ChangeTopologyPayload;
 import eu.valawai.mov.events.topology.CreateConnectionPayload;
 import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.persistence.topology.GetMinConnectionPage;
@@ -31,6 +32,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -55,6 +57,13 @@ public class TopologyResource {
 	@Inject
 	@Channel("send_create_connection")
 	Emitter<CreateConnectionPayload> create;
+
+	/**
+	 * The component to send the message to create a topology connection.
+	 */
+	@Inject
+	@Channel("send_change_topology")
+	Emitter<ChangeTopologyPayload> change;
 
 	/**
 	 * Get the information of some connections.
@@ -141,6 +150,30 @@ public class TopologyResource {
 		payload.target.channelName = connection.targetChannel;
 		payload.enabled = connection.enabled;
 		this.create.send(payload);
+		return Uni.createFrom().item(Response.noContent().build());
+
+	}
+
+	/**
+	 * Change a topology connection.
+	 *
+	 * @param model with the change to do over the connection.
+	 *
+	 * @return empty response if started to modify the connection or an error that
+	 *         explains why can not be changed.
+	 */
+	@PUT
+	@Path("/connections/change")
+	@Operation(description = "modify a topology connection.")
+	@APIResponse(responseCode = "204", description = "When the topology connection started to be created")
+	@APIResponse(responseCode = "400", description = "When the topology connection is not valid.")
+	public Uni<Response> updateTopologyConnection(
+			@RequestBody(description = "The changes to do over the connection", required = true, content = @Content(schema = @Schema(implementation = ChangeConnection.class))) @Valid ChangeConnection model) {
+
+		final var payload = new ChangeTopologyPayload();
+		payload.connectionId = model.connectionId;
+		payload.action = model.action;
+		this.change.send(payload);
 		return Uni.createFrom().item(Response.noContent().build());
 
 	}

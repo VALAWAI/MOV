@@ -11,12 +11,13 @@ package eu.valawai.mov.api.v1.topology;
 import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.ListenerService;
+import eu.valawai.mov.events.topology.TopologyAction;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.logs.LogEntity;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntities;
@@ -368,6 +370,99 @@ public class TopologyResourceTest extends APITestCase {
 
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+	}
+
+	/**
+	 * Should enable and disable a connection.
+	 */
+	@Test
+	public void shouldEnableAndDisable() {
+
+		var connection = TopologyConnectionEntities.nextTopologyConnection();
+		while (connection.enabled) {
+
+			connection = TopologyConnectionEntities.nextTopologyConnection();
+		}
+
+		final var change = new ChangeConnection();
+		change.action = TopologyAction.ENABLE;
+		change.connectionId = connection.id;
+		var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> given().contentType(ContentType.JSON).body(change).when()
+				.put("/v1/topology/connections/change").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Enabled .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		TopologyConnectionEntity current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertTrue(now <= current.updateTimestamp);
+		assertTrue(current.enabled);
+		assertTrue(this.listener.isOpen(connection.source.channelName));
+
+		change.action = TopologyAction.DISABLE;
+		now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> given().contentType(ContentType.JSON).body(change).when()
+				.put("/v1/topology/connections/change").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Disabled .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertTrue(now <= current.updateTimestamp);
+		assertFalse(current.enabled);
+		assertFalse(this.listener.isOpen(connection.source.channelName));
+
+	}
+
+	/**
+	 * Should enable and remove a connection.
+	 */
+	@Test
+	public void shouldEnableAndRemove() {
+
+		var connection = TopologyConnectionEntities.nextTopologyConnection();
+		while (connection.enabled) {
+
+			connection = TopologyConnectionEntities.nextTopologyConnection();
+		}
+
+		final var change = new ChangeConnection();
+		change.action = TopologyAction.ENABLE;
+		change.connectionId = connection.id;
+		var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> given().contentType(ContentType.JSON).body(change).when()
+				.put("/v1/topology/connections/change").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Enabled .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		TopologyConnectionEntity current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertTrue(now <= current.updateTimestamp);
+		assertTrue(current.enabled);
+		assertTrue(this.listener.isOpen(connection.source.channelName));
+
+		change.action = TopologyAction.REMOVE;
+		now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> given().contentType(ContentType.JSON).body(change).when()
+				.put("/v1/topology/connections/change").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Removed .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertNotNull(current.deletedTimestamp);
+		assertTrue(now <= current.deletedTimestamp);
+		assertFalse(this.listener.isOpen(connection.source.channelName));
 	}
 
 }
