@@ -120,7 +120,8 @@ public class ComponentResource {
 	 *
 	 * @param componentId identifier of the component to unregister.
 	 *
-	 * @return the empty.
+	 * @return empty response if started to unregister or an error that explains why
+	 *         can not be unregistered.
 	 */
 	@DELETE
 	@Path("/{componentId:[0-9a-fA-F]{24}}")

@@ -13,17 +13,24 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import eu.valawai.mov.events.topology.CreateConnectionPayload;
+import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.persistence.topology.GetMinConnectionPage;
 import eu.valawai.mov.persistence.topology.GetTopologyConnection;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -41,6 +48,13 @@ import jakarta.ws.rs.core.Response.Status;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TopologyResource {
+
+	/**
+	 * The component to send the message to create a topology connection.
+	 */
+	@Inject
+	@Channel("send_create_connection")
+	Emitter<CreateConnectionPayload> create;
 
 	/**
 	 * Get the information of some connections.
@@ -101,4 +115,34 @@ public class TopologyResource {
 		});
 
 	}
+
+	/**
+	 * Create a topology connection.
+	 *
+	 * @param connection to be created.
+	 *
+	 * @return empty response if started to create the connection or an error that
+	 *         explains why can not be created.
+	 */
+	@POST
+	@Path("/connections")
+	@Operation(description = "Create a topology connection.")
+	@APIResponse(responseCode = "204", description = "When the topology connection started to be created")
+	@APIResponse(responseCode = "400", description = "When the topology connection is not valid.")
+	public Uni<Response> createTopologyConnection(
+			@RequestBody(description = "The connection to create", required = true, content = @Content(schema = @Schema(implementation = ConnectionToCreate.class))) @Valid ConnectionToCreate connection) {
+
+		final var payload = new CreateConnectionPayload();
+		payload.source = new NodePayload();
+		payload.source.componentId = connection.sourceComponent;
+		payload.source.channelName = connection.sourceChannel;
+		payload.target = new NodePayload();
+		payload.target.componentId = connection.targetComponent;
+		payload.target.channelName = connection.targetChannel;
+		payload.enabled = connection.enabled;
+		this.create.send(payload);
+		return Uni.createFrom().item(Response.noContent().build());
+
+	}
+
 }

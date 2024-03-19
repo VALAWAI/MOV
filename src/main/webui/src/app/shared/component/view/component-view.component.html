@@ -1,0 +1,36 @@
+<div class="max-w-3xl grid grid-cols-2 gap-3" *ngIf="component;else noComponent">
+	<div class="text-2xl font-bold col-span-2">{{component.name}}</div>
+	<div class="col-span-2">{{component.description}}</div>
+	<div class="text-left font-bold"
+		i18n="The label of the component type attribute@@shared_component_view_type-label">Type</div>
+	<div class="text-left">{{component.type}}</div>
+	<div class="text-left font-bold"
+		i18n="The label of the component version attribute@@shared_component_view_version-label">Version</div>
+	<div class="text-left">{{component.version}}</div>
+	<div class="text-left font-bold"
+		i18n="The label of the component API version attribute@@shared_component_view_api-version-label">API
+		version</div>
+	<div class="text-left">{{component.apiVersion}}</div>
+	<div class="text-left font-bold"
+		i18n="The label of the component since attribute@@shared_component_view_since-label">Since</div>
+	<div class="text-left">{{component.since|timestamp:'short'}}</div>
+	<fieldSet class="col-span-2">
+		<legend class="text-left font-bold"
+			i18n="The label of the component channels attribute@@shared_component_view_channels-label">
+			Channels </legend>
+		<div *ngFor="let channel of component.channels"
+			class="pl-11 grid grid-cols-2 gap-3">
+			<div class="text-lg font-bold col-span-2">{{channel.name}}</div>
+			<div class="col-span-2">{{channel.description}}</div>
+			<div *ngIf="channel.subscribe" class="font-bold"
+				i18n="The label of the component channel subscribe@@shared_component_view_component-channel-subscribe-label">Subscribe</div>
+			<ngx-json-viewer *ngIf="channel.subscribe" [json]="channel.subscribe"></ngx-json-viewer>
+			<div *ngIf="channel.publish" class="font-bold"
+				i18n="The label of the component channel publish@@shared_component_view_component-channel-publish-label">Publish</div>
+			<ngx-json-viewer *ngIf="channel.publish" [json]="channel.publish"></ngx-json-viewer>
+		</div>
+	</fieldSet>
+</div>
+<ng-template #noComponent>
+<app-loading></app-loading>
+</ng-template>

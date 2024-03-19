@@ -325,13 +325,6 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.INFO, Json.encodePrettily(payload), now)));
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload != ?2 and timestamp >= ?3",
-				LogLevel.INFO, Json.encodePrettily(payload), now)));
-
-		assertTrue(this.listener.isOpen(payload.source.channelName));
-
 		final TopologyConnectionEntity last = this
 				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
 		assertTrue(now <= last.createTimestamp);
@@ -340,6 +333,14 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		assertEquals(payload.source, NodePayloadTest.from(last.source));
 		assertEquals(payload.target, NodePayloadTest.from(last.target));
 		assertTrue(last.enabled);
+
+		assertTrue(this.listener.isOpen(payload.source.channelName));
+
+		assertEquals(2l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".+" + payload.source.channelName + ".+" + payload.target.channelName + ".+", now)));
+
 	}
 
 	/**
@@ -392,11 +393,6 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.INFO, Json.encodePrettily(payload), now)));
-
-		assertFalse(this.listener.isOpen(payload.source.channelName));
-
 		final TopologyConnectionEntity last = this
 				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
 		assertTrue(now <= last.createTimestamp);
@@ -405,6 +401,12 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		assertEquals(payload.source, NodePayloadTest.from(last.source));
 		assertEquals(payload.target, NodePayloadTest.from(last.target));
 		assertFalse(last.enabled);
+
+		assertFalse(this.listener.isOpen(payload.source.channelName));
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+
 	}
 
 }

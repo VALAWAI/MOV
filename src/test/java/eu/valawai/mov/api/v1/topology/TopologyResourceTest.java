@@ -12,6 +12,10 @@ import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +25,18 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.APITestCase;
+import eu.valawai.mov.api.v1.logs.LogLevel;
+import eu.valawai.mov.events.ListenerService;
 import eu.valawai.mov.persistence.components.ComponentEntities;
+import eu.valawai.mov.persistence.logs.LogEntity;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -37,6 +48,12 @@ import jakarta.ws.rs.core.Response.Status;
  */
 @QuarkusTest
 public class TopologyResourceTest extends APITestCase {
+
+	/**
+	 * The service to listen for events.
+	 */
+	@Inject
+	protected ListenerService listener;
 
 	/**
 	 * Create some connections that can be used.
@@ -237,6 +254,120 @@ public class TopologyResourceTest extends APITestCase {
 				.statusCode(Status.OK.getStatusCode()).extract().as(TopologyConnection.class);
 		assertEquals(expected, result);
 
+	}
+
+	/**
+	 * Should create a connection and enable it.
+	 */
+	@Test
+	public void shouldCreateConnectionAndEnableConnection() {
+
+		final var create = new ConnectionToCreate();
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (create.sourceComponent == null && channel.publish != null && channel.subscribe == null) {
+
+						create.sourceComponent = component.id;
+						create.sourceChannel = channel.name;
+						break;
+
+					} else if (create.targetComponent == null && channel.publish == null && channel.subscribe != null) {
+
+						create.targetComponent = component.id;
+						create.targetChannel = channel.name;
+						break;
+
+					}
+				}
+			}
+
+		} while (create.sourceComponent == null || create.targetComponent == null);
+		create.enabled = true;
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(2, () -> given().contentType(ContentType.JSON).body(create).when()
+				.post("/v1/topology/connections").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+
+		final TopologyConnectionEntity last = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= last.createTimestamp);
+		assertEquals(last.updateTimestamp, last.createTimestamp);
+		assertNull(last.deletedTimestamp);
+		assertNotNull(last.source);
+		assertEquals(create.sourceComponent, last.source.componentId);
+		assertEquals(create.sourceChannel, last.source.channelName);
+		assertNotNull(last.target);
+		assertEquals(create.targetComponent, last.target.componentId);
+		assertEquals(create.targetChannel, last.target.channelName);
+		assertTrue(last.enabled);
+
+		assertTrue(this.listener.isOpen(create.sourceChannel));
+
+		assertEquals(2l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".+" + create.sourceChannel + ".+" + create.targetChannel + ".+", now)));
+	}
+
+	/**
+	 * Should create a connection without enable it.
+	 */
+	@Test
+	public void shouldCreateConnectionAndNotEnableConnection() {
+
+		final var create = new ConnectionToCreate();
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (create.sourceComponent == null && channel.publish != null && channel.subscribe == null) {
+
+						create.sourceComponent = component.id;
+						create.sourceChannel = channel.name;
+						break;
+
+					} else if (create.targetComponent == null && channel.publish == null && channel.subscribe != null) {
+
+						create.targetComponent = component.id;
+						create.targetChannel = channel.name;
+						break;
+
+					}
+				}
+			}
+
+		} while (create.sourceComponent == null || create.targetComponent == null);
+		create.enabled = false;
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> given().contentType(ContentType.JSON).body(create).when()
+				.post("/v1/topology/connections").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+
+		final TopologyConnectionEntity last = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= last.createTimestamp);
+		assertEquals(last.updateTimestamp, last.createTimestamp);
+		assertNull(last.deletedTimestamp);
+		assertNotNull(last.source);
+		assertEquals(create.sourceComponent, last.source.componentId);
+		assertEquals(create.sourceChannel, last.source.channelName);
+		assertNotNull(last.target);
+		assertEquals(create.targetComponent, last.target.componentId);
+		assertEquals(create.targetChannel, last.target.channelName);
+		assertFalse(last.enabled);
+
+		assertFalse(this.listener.isOpen(create.sourceChannel));
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 	}
 
 }

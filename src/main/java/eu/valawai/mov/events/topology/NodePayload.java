@@ -31,15 +31,15 @@ public class NodePayload extends Payload {
 	 * The identifier of the component that the topology connection starts or ends.
 	 */
 	@JsonSerialize(using = ObjectIdSerializer.class)
-	@NotNull
 	@JsonProperty("component_id")
+	@NotNull
 	public ObjectId componentId;
 
 	/**
 	 * The name of the channel of the component that do the connection.
 	 */
-	@NotNull
 	@JsonProperty("channel_name")
+	@NotNull
 	public String channelName;
 
 }
