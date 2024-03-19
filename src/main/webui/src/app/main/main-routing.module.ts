@@ -41,6 +41,10 @@ const routes: Routes = [
 				loadChildren: () => import('./topology/connections/show/show-topology-connection.module').then(m => m.ShowTopologyConnectionModule)
 			},
 			{
+				path: 'topology/connections/:id/change',
+				loadChildren: () => import('./topology/connections/change/change-topology-connection.module').then(m => m.ChangeTopologyConnectionModule)
+			},
+			{
 				path: 'topology/connections',
 				loadChildren: () => import('./topology/connections/topology-connections.module').then(m => m.TopologyConnectionsModule)
 			},

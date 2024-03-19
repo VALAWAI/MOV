@@ -8,13 +8,13 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ChangeTopologyConnectionComponent } from './change-topology-connection.component';
 
-import { UnregisterComponentComponent } from './unregister-component.component';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: UnregisterComponentComponent
+		component: ChangeTopologyConnectionComponent
 	}
 ];
 
@@ -22,4 +22,4 @@ const routes: Routes = [
 	imports: [RouterModule.forChild(routes)],
 	exports: [RouterModule]
 })
-export class UnregisterComponentRoutingModule { }
+export class ChangeTopologyConnectionRoutingModule { }

@@ -9,20 +9,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { UnregisterComponentRoutingModule } from './unregister-component-routing.module';
-import { UnregisterComponentComponent } from './unregister-component.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { LoadingModule } from 'src/app/shared/loading';
+import { ChangeTopologyConnectionComponent } from './change-topology-connection.component';
+import { UnregisterComponentRoutingModule } from 'src/app/main/components/unregister/unregister-component-routing.module';
+import { ChangeTopologyConnectionRoutingModule } from './change-topology-connection-routing.module';
 
 @NgModule({
 	declarations: [
-		UnregisterComponentComponent,
+		ChangeTopologyConnectionComponent,
 	],
 	imports: [
 		CommonModule,
-		UnregisterComponentRoutingModule,
+		ChangeTopologyConnectionRoutingModule,
 		MatIconModule,
 		MatButtonModule,
 		LoadingModule
@@ -31,4 +32,4 @@ import { LoadingModule } from 'src/app/shared/loading';
 	],
 	providers: []
 })
-export class UnregisterComponentModule { }
+export class ChangeTopologyConnectionModule { }

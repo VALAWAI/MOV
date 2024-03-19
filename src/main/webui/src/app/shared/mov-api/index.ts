@@ -27,3 +27,6 @@ export { MinConnection } from './topology/min-connection.model';
 export { MinConnectionPage } from './topology/min-connection-page.model';
 export { TopologyConnection } from './topology/topology-connection.model';
 export { TopologyConnectionNode } from './topology/topology-connection-node.model';
+export { TOPOLOGY_ACTION_NAMES, TopologyAction } from './topology/topology-action.model';
+export { ChangeConnection } from './topology/change-connection.model';
+export { ConnectionToCreate } from './topology/connection-to-create.model';

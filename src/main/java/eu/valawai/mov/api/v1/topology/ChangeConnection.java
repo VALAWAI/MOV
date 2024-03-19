@@ -27,7 +27,7 @@ import jakarta.validation.constraints.NotNull;
 public class ChangeConnection extends Model {
 
 	/**
-	 * he type of action to do on the topology.
+	 * The type of action to do on the topology.
 	 */
 	@Schema(title = "The type of action to do over a topology connection.")
 	@NotNull

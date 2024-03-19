@@ -70,13 +70,16 @@
 					[routerLink]="['/main/topology/connections',element.id,'show']">Show</button>
 				<button mat-menu-item *ngIf="!element.enabled"
 					i18n="The label of the menu to enable a connection@@main_topology_connections_enable-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'enable']">Enable</button>
+					[routerLink]="['/main/topology/connections',element.id,'change']"
+					[queryParams]="{'action':'enable'}">Enable</button>
 				<button mat-menu-item *ngIf="element.enabled"
 					i18n="The label of the menu to disable a connection@@main_topology_connections_disable-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'disable']">Disable</button>
+					[routerLink]="['/main/topology/connections',element.id,'change']"
+					[queryParams]="{'action':'disable'}">Disable</button>
 				<button mat-menu-item
 					i18n="The label of the menu to remove a connection@@main_topology_connections_remove-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'remove']">Remove</button>
+					[routerLink]="['/main/topology/connections',element.id,'change']"
+					[queryParams]="{'action':'remove'}">Remove</button>
 				</mat-menu>
 			</td>
 			</ng-container>
