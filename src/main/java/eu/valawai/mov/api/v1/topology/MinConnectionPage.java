@@ -13,9 +13,13 @@ import java.util.List;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 
 /**
  * A page with some connections.
+ *
+ * @see MinConnection
+ * @see TopologyConnectionEntity
  *
  * @author VALAWAI
  */

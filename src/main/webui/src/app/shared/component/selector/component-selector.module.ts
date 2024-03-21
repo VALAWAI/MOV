@@ -11,6 +11,10 @@ import { CommonModule } from '@angular/common';
 
 import { ComponentSelectorComponent } from './component-selector.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
 	declarations: [
@@ -18,7 +22,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 	],
 	imports: [
 		CommonModule,
-		MatProgressSpinnerModule
+		MatAutocompleteModule,
+		ReactiveFormsModule,
+		MatInputModule,
+		MatFormFieldModule
 	],
 	exports: [
 		ComponentSelectorComponent

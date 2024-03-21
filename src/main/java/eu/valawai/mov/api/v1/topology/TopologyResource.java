@@ -85,7 +85,7 @@ public class TopologyResource {
 	public Uni<Response> getMinConnectionPage(
 			@Parameter(description = "The pattern to match the source or target channel of the connections to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("pattern") @Valid final String pattern,
 			@Parameter(description = "The component to match the source or target of the connections to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("component") @Valid final String component,
-			@Parameter(description = "The order in witch the connections has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.") @QueryParam("order") @DefaultValue("+source") @Valid @Pattern(regexp = "(,?[+|-]?[source|target|enabled])*") final String order,
+			@Parameter(description = "The order in witch the connections has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.") @QueryParam("order") @DefaultValue("+source") @Valid @Pattern(regexp = "(,?[+|-]?[source|target|enabled|createTimestamp|updateTimestamp])*") final String order,
 			@Parameter(description = "The index of the first connection to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of connections to return") @QueryParam("limit") @DefaultValue("20") @Valid @Min(1) final int limit) {
 

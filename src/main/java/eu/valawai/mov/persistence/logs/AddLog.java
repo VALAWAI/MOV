@@ -236,15 +236,6 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 
 		this.execute().subscribe().with(added -> {
 
-			if (added) {
-
-				Log.debugv("Stored {0}", this.log);
-
-			} else {
-
-				Log.errorv("Cannot store {0}", this.log);
-			}
-
 			if (this.log.message != null) {
 
 				switch (this.log.level) {
@@ -263,6 +254,14 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 					break;
 				}
 
+			} else if (added) {
+
+				Log.debugv("Stored {0}", this.log);
+			}
+
+			if (!added) {
+
+				Log.errorv("Cannot store {0}", this.log);
 			}
 
 		});

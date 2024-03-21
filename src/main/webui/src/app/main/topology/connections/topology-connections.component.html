@@ -22,6 +22,13 @@
 	</div>
 	<div class="gap-3 flex flex-row ">
 		<button
+			i18n="Label of the button to create a new connections@@main_topology_connections_create-label"
+			routerLink="/main/topology/connections/create" mat-raised-button
+			color="primary" class="max-w-72">
+			<mat-icon>add</mat-icon>
+			Create a new connection
+		</button>
+		<button
 			i18n="Label of the button to reload the connections@@main_topology_connections_reload-label"
 			(click)="updatePage()" mat-raised-button color="primary"
 			class="max-w-72">

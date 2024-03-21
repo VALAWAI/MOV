@@ -354,7 +354,12 @@ public class TopologyResourceTest extends APITestCase {
 				.post("/v1/topology/connections").then().statusCode(Status.NO_CONTENT.getStatusCode()));
 
 		final TopologyConnectionEntity last = this
-				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+				.assertItemNotNull(TopologyConnectionEntity.find("source.componentId = ?1 and target.componentId = ?2",
+						Sort.descending("_id"), create.sourceComponent, create.targetComponent).firstResult());
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+
 		assertTrue(now <= last.createTimestamp);
 		assertEquals(last.updateTimestamp, last.createTimestamp);
 		assertNull(last.deletedTimestamp);
@@ -368,8 +373,6 @@ public class TopologyResourceTest extends APITestCase {
 
 		assertFalse(this.listener.isOpen(create.sourceChannel));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 	}
 
 	/**

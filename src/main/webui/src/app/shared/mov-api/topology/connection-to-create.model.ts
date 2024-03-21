@@ -34,7 +34,7 @@ export class ConnectionToCreate {
 	 */
 	public targetChannel: string | null = null;
 
-    /**
+	/**
 	 * This is {@code true} if the connection has to be enabled.
 	 */
 	public enabled: boolean | null = null;

@@ -30,4 +30,9 @@ export class LogRecord {
 	 */
 	public message: string | null = null;
 
+	/**
+	 * The payload of the log.
+	 */
+	public payload: string | null = null;
+
 }
