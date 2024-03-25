@@ -263,24 +263,14 @@ export class CreateTopologyConnectionComponent implements OnInit {
 	 */
 	public selectedSource(component: MOVComponent | null) {
 
-		if( this.sourceComponent == null || component == null || )
-		if (component == null) {
-
-			if (this.sourceComponent != null) {
-
-				this.sourceComponent = null;
-				this.form.controls.sourceChannel.setValue(null);
-				this.sourceChannels = [];
-			}
-
-		} else if (this.sourceComponent == null || this.sourceComponent.id != component.id) {
+		if (this.sourceComponent == null || component == null || this.sourceComponent.id != component.id) {
 
 			this.sourceComponent = component;
-			this.sourceChannels = [];
+			this.sourceChannels.splice(0, this.sourceChannels.length);
 			var selectedSchema: ChannelSchema | null = null;
-			if (component.channels != null) {
+			if (this.sourceComponent != null && this.sourceComponent.channels != null) {
 
-				for (var channel of component.channels) {
+				for (var channel of this.sourceComponent.channels) {
 
 					if (channel.publish != null) {
 
@@ -295,7 +285,6 @@ export class CreateTopologyConnectionComponent implements OnInit {
 				}
 			}
 			setTimeout(() => this.form.controls.sourceChannel.setValue(selectedSchema), 5);
-
 		}
 	}
 
@@ -304,25 +293,16 @@ export class CreateTopologyConnectionComponent implements OnInit {
 	 */
 	public selectedTarget(component: MOVComponent | null) {
 
-		if (component == null) {
-
-			if (this.targetComponent != null) {
-
-				this.targetComponent = null;
-				this.form.controls.targetChannel.setValue(null);
-				this.targetChannels = [];
-			}
-
-		} else if (this.targetComponent == null || this.targetComponent.id != component.id) {
+		if (this.targetComponent == null || component == null || this.targetComponent.id != component.id) {
 
 			this.targetComponent = component;
-			this.targetChannels = [];
+			this.targetChannels.splice(0, this.targetChannels.length);
 			var selectedSchema: ChannelSchema | null = null;
-			if (component.channels != null) {
+			if (this.targetComponent != null && this.targetComponent.channels != null) {
 
-				for (var channel of component.channels) {
+				for (var channel of this.targetComponent.channels) {
 
-					if (channel.publish != null) {
+					if (channel.subscribe != null) {
 
 						this.targetChannels.push(channel);
 					}
@@ -335,8 +315,8 @@ export class CreateTopologyConnectionComponent implements OnInit {
 				}
 			}
 			setTimeout(() => this.form.controls.targetChannel.setValue(selectedSchema), 5);
-
 		}
+
 	}
 
 	/**

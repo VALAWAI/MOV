@@ -6,7 +6,8 @@
 			(minComponentSelected)="selectedSource($event)"
 			[minComponent]="sourceComponent"
 			requiredError="You must select a source component for the connection."
-			requiredError-i18n="Error message when no defined the source component for the new connection@@main_topology_connections_create_source-component-required-error"></app-component-selector>
+			requiredError-i18n="Error message when no defined the source component for the new connection@@main_topology_connections_create_source-component-required-error"
+			[hasPublishChannel]="true"></app-component-selector>
 		<mat-form-field class="w-full"> <mat-label
 			i18n="The label of the source channel of the connection to create@@main_topology_connections_create_source-channel-label">Source
 		channel</mat-label> <mat-select formControlName="sourceChannel"> <mat-option
@@ -19,7 +20,8 @@
 			(minComponentSelected)="selectedTarget($event)"
 			[minComponent]="targetComponent"
 			requiredError="You must select a target component for the connection."
-			requiredError-i18n="Error message when no defined the target component for the new connection@@main_topology_connections_create_target-component-required-error"></app-component-selector>
+			requiredError-i18n="Error message when no defined the target component for the new connection@@main_topology_connections_create_target-component-required-error"
+			[hasSubscribeChannel]="true"></app-component-selector>
 		<mat-form-field class="w-full"> <mat-label
 			i18n="The label of the target channel of the connection to create@@main_topology_connections_create_target-channel-label">Target
 		channel</mat-label> <mat-select formControlName="targetChannel"> <mat-option

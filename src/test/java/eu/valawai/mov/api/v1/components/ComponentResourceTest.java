@@ -152,6 +152,109 @@ public class ComponentResourceTest extends APITestCase {
 	}
 
 	/**
+	 * Should get page with pattern and at least one publish channel.
+	 */
+	@Test
+	public void shouldGetPageWithPatternAndWithAPublishChannel() {
+
+		final var pattern = ".*1.*";
+
+		final var expected = new MinComponentPage();
+		expected.offset = rnd().nextInt(2, 5);
+
+		final var limit = rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
+				Filters.and(Filters.exists("channels.publish", true), Filters.ne("channels.publish", null)));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l1.description.compareTo(l2.description);
+			if (cmp == 0) {
+
+				cmp = l2.name.compareTo(l1.name);
+				if (cmp == 0) {
+
+					cmp = l1.id.compareTo(l2.id);
+				}
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = given().when().queryParam("pattern", "/" + pattern + "/").queryParam("hasPublishChannel", true)
+				.queryParam("limit", String.valueOf(limit)).queryParam("offset", String.valueOf(expected.offset))
+				.queryParam("order", "description,-name").get("/v1/components").then()
+				.statusCode(Status.OK.getStatusCode()).extract().as(MinComponentPage.class);
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Should get page with pattern and at least one subscribe channel.
+	 */
+	@Test
+	public void shouldGetPageWithPatternAndWithASubscribeChannel() {
+
+		final var pattern = ".*1.*";
+
+		final var expected = new MinComponentPage();
+		expected.offset = rnd().nextInt(2, 5);
+
+		final var limit = rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
+				Filters.and(Filters.exists("channels.subscribe", true), Filters.ne("channels.subscribe", null)));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l1.description.compareTo(l2.description);
+			if (cmp == 0) {
+
+				cmp = l2.name.compareTo(l1.name);
+				if (cmp == 0) {
+
+					cmp = l1.id.compareTo(l2.id);
+				}
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
+				.queryParam("hasSubscribeChannel", true).queryParam("limit", String.valueOf(limit))
+				.queryParam("offset", String.valueOf(expected.offset)).queryParam("order", "description,-name")
+				.get("/v1/components").then().statusCode(Status.OK.getStatusCode()).extract()
+				.as(MinComponentPage.class);
+		assertEquals(expected, page);
+
+	}
+
+	/**
 	 * Should get page.
 	 */
 	@Test

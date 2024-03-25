@@ -9,6 +9,7 @@
 package eu.valawai.mov.persistence.components;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.conversions.Bson;
 
@@ -63,6 +64,19 @@ public abstract class AbstractGetPageComponents<R, O extends AbstractGetPageComp
 	@Override
 	protected Bson createFilter() {
 
+		final var filters = this.createComponentsFilters();
+		return Filters.and(filters);
+
+	}
+
+	/**
+	 * Create the filters to get the components for the page.
+	 *
+	 * @return the filters to select the component that has not finished and match
+	 *         the pattern and the type.
+	 */
+	protected List<Bson> createComponentsFilters() {
+
 		final var filters = new ArrayList<Bson>();
 		filters.add(Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)));
 		if (this.pattern != null) {
@@ -75,8 +89,7 @@ public abstract class AbstractGetPageComponents<R, O extends AbstractGetPageComp
 
 			filters.add(Queries.filterByValueOrRegexp("type", this.type));
 		}
-		return Filters.and(filters);
-
+		return filters;
 	}
 
 }

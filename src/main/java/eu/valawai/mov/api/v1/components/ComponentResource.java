@@ -59,11 +59,15 @@ public class ComponentResource {
 	/**
 	 * Get the information of some components.
 	 *
-	 * @param pattern to match the components message.
-	 * @param type    to match the components.
-	 * @param order   to return the components.
-	 * @param offset  to the first component to return.
-	 * @param limit   number maximum of components to return.
+	 * @param pattern             to match the components message.
+	 * @param type                to match the components.
+	 * @param hasPublishChannel   is {@code true} if the component must have at
+	 *                            least one publish channel.
+	 * @param hasSubscribeChannel is {@code true} if the component must have at
+	 *                            least one subscribe channel.
+	 * @param order               to return the components.
+	 * @param offset              to the first component to return.
+	 * @param limit               number maximum of components to return.
 	 *
 	 * @return the matching components page.
 	 */
@@ -72,15 +76,18 @@ public class ComponentResource {
 	@APIResponse(responseCode = "200", description = "The page with the matching components", content = {
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinComponentPage.class)) })
 	@APIResponse(responseCode = "404", description = "When a parameter is not valid.")
-	public Uni<Response> getComponentPage(
+	public Uni<Response> getMinComponentPage(
 			@Parameter(description = "The pattern to match the name or description of the components to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("pattern") @Valid final String pattern,
 			@Parameter(description = "The type to match the components to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("type") @Valid final String type,
+			@Parameter(description = "This is true if the component must have at least one publish channel.") @QueryParam("hasPublishChannel") @DefaultValue("false") final boolean hasPublishChannel,
+			@Parameter(description = "This is true if the component must have at least one subscribe channel.") @QueryParam("hasSubscribeChannel") @DefaultValue("false") final boolean hasSubscribeChannel,
 			@Parameter(description = "The order in witch the components has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.") @QueryParam("order") @DefaultValue("+since") @Valid @Pattern(regexp = "(,?[+|-]?[type|name|description|since])*") final String order,
 			@Parameter(description = "The index of the first component to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of components to return") @QueryParam("limit") @DefaultValue("20") @Valid @Min(1) final int limit) {
 
-		return GetMinComponentPage.fresh().withPattern(pattern).withType(type).withOrder(order).withOffset(offset)
-				.withLimit(limit).execute().map(page -> Response.ok(page).build());
+		return GetMinComponentPage.fresh().withPattern(pattern).withType(type)
+				.withAtLeastOnePublishChannel(hasPublishChannel).withAtLeastOneSubscribeChannel(hasSubscribeChannel)
+				.withOrder(order).withOffset(offset).withLimit(limit).execute().map(page -> Response.ok(page).build());
 
 	}
 

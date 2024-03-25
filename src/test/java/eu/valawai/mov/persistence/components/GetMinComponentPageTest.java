@@ -260,4 +260,188 @@ public class GetMinComponentPageTest extends MasterOfValawaiTestCase {
 
 	}
 
+	/**
+	 * Test get a page with component that has a publish channel.
+	 */
+	@Test
+	public void shouldReturnPageWithAPublishChannel() {
+
+		final var expected = new MinComponentPage();
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.and(Filters.exists("channels.publish", true), Filters.ne("channels.publish", null)));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l2.name.compareTo(l1.name);
+			if (cmp == 0) {
+
+				cmp = l1.id.compareTo(l2.id);
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withAtLeastOnePublishChannel(true)
+				.withOrder("-name").withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page with component that has a subscribe channel.
+	 */
+	@Test
+	public void shouldReturnPageWithASubscribeChannel() {
+
+		final var expected = new MinComponentPage();
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.and(Filters.exists("channels.subscribe", true), Filters.ne("channels.subscribe", null)));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l2.description.compareTo(l1.description);
+			if (cmp == 0) {
+
+				cmp = l1.id.compareTo(l2.id);
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = this.assertExecutionNotNull(GetMinComponentPage.fresh().withAtLeastOneSubscribeChannel(true)
+				.withOrder("-description").withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a patterns and at least one publish channel.
+	 */
+	@Test
+	public void shouldReturnPageWithPatternAndWithAPublishChannel() {
+
+		final var pattern = ".*1.*";
+
+		final var expected = new MinComponentPage();
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
+				Filters.and(Filters.exists("channels.publish", true), Filters.ne("channels.publish", null)));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l2.description.compareTo(l1.description);
+			if (cmp == 0) {
+
+				cmp = l1.name.compareTo(l2.name);
+				if (cmp == 0) {
+
+					cmp = l1.id.compareTo(l2.id);
+				}
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = this.assertExecutionNotNull(
+				GetMinComponentPage.fresh().withPattern("/" + pattern + "/").withAtLeastOnePublishChannel(true)
+						.withOrder("-description,+name").withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a patterns and at least one subscribe channel.
+	 */
+	@Test
+	public void shouldReturnPageWithPatternAndWithASubscribeChannel() {
+
+		final var pattern = ".*1.*";
+
+		final var expected = new MinComponentPage();
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = expected.offset + limit + 10;
+		final var filter = Filters.and(
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
+				Filters.and(Filters.exists("channels.subscribe", true), Filters.ne("channels.subscribe", null)));
+		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
+
+		final List<ComponentEntity> components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		components.sort((l1, l2) -> {
+
+			var cmp = l2.description.compareTo(l1.description);
+			if (cmp == 0) {
+
+				cmp = l1.name.compareTo(l2.name);
+				if (cmp == 0) {
+
+					cmp = l1.id.compareTo(l2.id);
+				}
+			}
+
+			return cmp;
+		});
+		expected.components = new ArrayList<>();
+		for (int i = expected.offset; i < expected.offset + limit && i < components.size(); i++) {
+
+			final var component = components.get(i);
+			final var expectedComponent = MinComponentTest.from(component);
+			expected.components.add(expectedComponent);
+		}
+
+		final var page = this.assertExecutionNotNull(
+				GetMinComponentPage.fresh().withPattern("/" + pattern + "/").withAtLeastOneSubscribeChannel(true)
+						.withOrder("-description,+name").withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
 }

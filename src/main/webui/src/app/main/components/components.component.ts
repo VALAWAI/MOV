@@ -155,7 +155,7 @@ export class ComponentsComponent implements OnInit {
 			}
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getMinComponentPage(pattern, type, orderBy, offset, this.pageSize).subscribe(
+		this.mov.getMinComponentPage(pattern, type, orderBy, null, null, offset, this.pageSize).subscribe(
 			{
 				next: page => this.page = page,
 				error: err => {

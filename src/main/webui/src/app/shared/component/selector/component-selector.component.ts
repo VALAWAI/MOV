@@ -58,6 +58,18 @@ export class ComponentSelectorComponent implements OnInit, OnDestroy {
 	public minComponentSelected = new EventEmitter<MOVComponent | null>();
 
 	/**
+	 * This is {@code true} if the component must have at least one subscribe channel.
+	 */
+	@Input()
+	public hasSubscribeChannel: boolean = false;
+
+	/**
+	 * This is {@code true} if the component must have at least one publish channel.
+	 */
+	@Input()
+	public hasPublishChannel: boolean = false;
+
+	/**
 	 * The subscription mof teh changes of the component.
 	 */
 	private nameChanged: Subscription | null = null;
@@ -104,42 +116,47 @@ export class ComponentSelectorComponent implements OnInit, OnDestroy {
 		this.nameChanged = this.name.valueChanges.subscribe(
 			{
 
-				next: (newValue) => {
+				next: (newValue) => this.updatePage(newValue)
+			}
+		);
+		this.updatePage();
 
-					var pattern: string | null = null;
-					if (newValue && typeof newValue == 'object' && newValue.name != null) {
+	}
 
-						this.selectedComponent(newValue as MinComponent);
-						pattern = "/.*" + newValue.name + ".*/i";
+	/**
+	 * Called when has to update the page.
+	 */
+	private updatePage(newValue: MinComponent | string | null = null) {
 
-					} else if (typeof newValue == 'string') {
+		var pattern: string | null = null;
+		if (newValue && typeof newValue == 'object' && newValue.name != null) {
 
-						pattern = "/.*" + newValue + ".*/i";
+			this.selectedComponent(newValue as MinComponent);
+			pattern = "/.*" + newValue.name + ".*/i";
+
+		} else if (typeof newValue == 'string') {
+
+			pattern = "/.*" + newValue + ".*/i";
+		}
+		this.mov.getMinComponentPage(pattern, null, this.hasPublishChannel, this.hasSubscribeChannel, "name", 0, 20).subscribe(
+			{
+				next: page => {
+
+					this.page = page;
+					if (pattern == null && page.total == 1 && page.components != null && page.components.length > 0) {
+
+						var component = page.components[0];
+						this.selectedComponent(component);
+						this.name.setValue(component, { emitEvent: false });
+
+					} else {
+
+						this.selectedComponent(null);
 					}
-					this.mov.getMinComponentPage(pattern, null, "name", 0, 20).subscribe(
-						{
-							next: page => {
-
-								this.page = page;
-								if (pattern == null && page.total == 1 && page.components != null && page.components.length > 0) {
-
-									var component = page.components[0];
-									this.selectedComponent(component);
-									this.name.setValue(component, { emitEvent: false });
-
-								} else {
-
-									this.selectedComponent(null);
-								}
-
-							}
-						}
-					);
 
 				}
 			}
 		);
-
 	}
 
 	/**
@@ -162,7 +179,12 @@ export class ComponentSelectorComponent implements OnInit, OnDestroy {
 
 		if (!this.macthLastSelected(component)) {
 
-			if (component instanceof MOVComponent) {
+			if (component == null) {
+
+				this.lastSelectedComponent = null;
+				this.minComponentSelected.next(null);
+
+			} else if (component instanceof MOVComponent) {
 
 				this.lastSelectedComponent = component;
 				this.minComponentSelected.next(component);

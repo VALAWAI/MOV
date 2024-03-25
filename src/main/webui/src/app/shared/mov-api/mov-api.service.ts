@@ -118,10 +118,17 @@ export class MovApiService {
 	/**
 	 * Get some components.
 	 */
-	public getMinComponentPage(pattern: string | null = null, type: string | null = null, order: string | null = null, offset: number = 0, limit: number = 20): Observable<MinComponentPage> {
+	public getMinComponentPage(pattern: string | null = null, type: string | null = null, hasPublishChannel: boolean | null = null,
+		hasSubscribeChannel: boolean | null = null,
+		order: string | null = null, offset: number = 0, limit: number = 20): Observable<MinComponentPage> {
 
 		var url = this.url('/v1/components');
-		return this.http.get<MinComponentPage>(url, this.optionsWithParams({ pattern: pattern, type: type, order: order, offset: offset, limit: limit }));
+		return this.http.get<MinComponentPage>(url, this.optionsWithParams({
+			pattern: pattern, type: type,
+			hasPublishChannel: hasPublishChannel,
+			hasSubscribeChannel: hasSubscribeChannel,
+			order: order, offset: offset, limit: limit
+		}));
 	}
 
 	/**
