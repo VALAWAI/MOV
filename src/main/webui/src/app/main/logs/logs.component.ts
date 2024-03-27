@@ -6,13 +6,16 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { DialogRef } from '@angular/cdk/dialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder,  FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
-import { LOG_LEVEL_NAMES, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
+import { LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
+import { ShowLogDialog } from './show-log.dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-logs',
@@ -24,7 +27,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 	/**
 	 * The columns to display.
 	 */
-	public displayedColumns: string[] = ['timestamp', 'level', 'message'];
+	public displayedColumns: string[] = ['timestamp', 'level', 'message', 'payload'];
 
 	/**
 	 * The component to manage the messages.
@@ -69,7 +72,8 @@ export class LogsComponent implements OnInit, OnDestroy {
 		private header: MainService,
 		private mov: MovApiService,
 		private messages: MessagesService,
-		private fb: FormBuilder
+		private fb: FormBuilder,
+		private dialog: MatDialog
 	) {
 
 	}
@@ -166,6 +170,17 @@ export class LogsComponent implements OnInit, OnDestroy {
 			}
 		);
 
+
+	}
+
+	/**
+	 * Show the information of a payload.
+	 */
+	public showPayload(log: LogRecord) {
+
+		this.dialog.open(ShowLogDialog, {
+			data: log
+		});
 
 	}
 

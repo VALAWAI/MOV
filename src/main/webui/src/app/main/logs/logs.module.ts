@@ -20,10 +20,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TimestampModule } from 'src/app/shared/timestamp';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ShowLogDialog } from './show-log.dialog';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @NgModule({
 	declarations: [
 		LogsComponent,
+		ShowLogDialog
 	],
 	imports: [
 		CommonModule,
@@ -37,7 +41,9 @@ import { TimestampModule } from 'src/app/shared/timestamp';
 		MatButtonModule,
 		MatSelectModule,
 		MatCheckboxModule,
-		TimestampModule
+		TimestampModule,
+		MatDialogModule,
+		NgxJsonViewerModule
 	],
 	exports: [
 	],
