@@ -33,7 +33,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 		{
 			message: this.fb.control<string | null>(null),
 			orderBy: this.fb.control<string>("timestamp"),
-			reverse: this.fb.control<boolean>(false),
+			reverse: this.fb.control<boolean>(true),
 			levels: this.fb.control<string[]>([]),
 		});
 
