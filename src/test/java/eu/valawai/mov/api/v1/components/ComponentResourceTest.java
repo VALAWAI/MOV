@@ -10,12 +10,16 @@ package eu.valawai.mov.api.v1.components;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextObjectId;
+import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +34,10 @@ import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.LogEntity;
+import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -339,6 +346,162 @@ public class ComponentResourceTest extends APITestCase {
 		final ComponentEntity updated = this.assertItemNotNull(ComponentEntity.findById(component.id));
 		assertNotNull(updated.finishedTime);
 		assertTrue(now <= updated.finishedTime);
+
+	}
+
+	/**
+	 * Should no register a component without type.
+	 */
+	@Test
+	public void shouldNotRegisterWitComponentWithoutType() {
+
+		final var component = new ComponentToRegisterTest().nextModel();
+		component.type = null;
+		given().contentType(ContentType.JSON).body(component).when().post("/v1/components").then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should no register a component without name.
+	 */
+	@Test
+	public void shouldNotRegisterWitComponentWithoutName() {
+
+		final var component = new ComponentToRegisterTest().nextModel();
+		component.name = null;
+		given().contentType(ContentType.JSON).body(component).when().post("/v1/components").then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should no register a component without version.
+	 */
+	@Test
+	public void shouldNotRegisterWitComponentWithoutVersion() {
+
+		final var component = new ComponentToRegisterTest().nextModel();
+		component.version = null;
+		given().contentType(ContentType.JSON).body(component).when().post("/v1/components").then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should no register a component without asyncapi.
+	 */
+	@Test
+	public void shouldNotRegisterWitComponentWithoutAsyncApi() {
+
+		final var component = new ComponentToRegisterTest().nextModel();
+		component.asyncapiYaml = null;
+		given().contentType(ContentType.JSON).body(component).when().post("/v1/components").then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should no register a component without type.
+	 */
+	@Test
+	public void shouldRegisterComponent() {
+
+		final var component = new ComponentToRegisterTest().nextModel();
+		final var apiVersion = nextPattern("{0}.{1}.{2}", 3);
+		final var sourceChannelName = nextPattern("test/register_component_publish_{0}");
+		final var sourceChannelDescription = nextPattern("Description of a channel {0}");
+		final var fieldName = nextPattern("field_to_test_{0}");
+		component.asyncapiYaml = MessageFormat.format("""
+				asyncapi: 2.6.0
+				info:
+				  title: Test description of a publishing
+				  version: {0}
+				  description: API description
+				channels:
+				  {1}:
+				    description: {2}
+				    publish:
+				      message:
+				        payload:
+				          type: object
+				          properties:
+				            {3}:
+				              type: string
+								""", apiVersion, sourceChannelName, sourceChannelDescription, fieldName).trim()
+				.replaceAll("\\t", "");
+
+		// Create the component that will be the target of the connection
+		final var next = new ComponentTest().nextModel();
+		final ComponentEntity target = new ComponentEntity();
+		target.apiVersion = next.apiVersion;
+		target.channels = new ArrayList<ChannelSchema>();
+		target.description = next.description;
+		target.name = next.name;
+		target.since = next.since;
+		target.type = next.type;
+		while (target.type == component.type) {
+
+			target.type = next(ComponentType.values());
+		}
+		target.version = next.version;
+		final var channel = new ChannelSchema();
+		final var targetChannelName = nextPattern("test/register_component_subscribe_{0}");
+
+		channel.name = targetChannelName;
+		final var object = new ObjectPayloadSchema();
+		final var basic = new BasicPayloadSchema();
+		basic.format = BasicPayloadFormat.STRING;
+		object.properties.put(fieldName, basic);
+		channel.subscribe = object;
+		target.channels.add(channel);
+
+		this.assertItemNotNull(target.persist());
+		ComponentEntities.minComponents(100);
+
+		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
+		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(2, () -> given().contentType(ContentType.JSON).body(component).when()
+				.post("/v1/components").then().statusCode(Status.NO_CONTENT.getStatusCode()));
+
+		// check updated the components
+		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
+		assertEquals(countComponentsBefore + 1, countComponentsAfter);
+		// Get last component
+		final ComponentEntity lastComponent = this
+				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= lastComponent.since);
+		assertEquals(component.name, lastComponent.name);
+		assertEquals(component.type, lastComponent.type);
+		assertEquals(component.version, lastComponent.version);
+		assertEquals(apiVersion, lastComponent.apiVersion);
+		assertNull(lastComponent.finishedTime);
+		assertNotNull(lastComponent.channels);
+		assertEquals(1, lastComponent.channels.size());
+		assertEquals(sourceChannelName, lastComponent.channels.get(0).name);
+		assertEquals(sourceChannelDescription, lastComponent.channels.get(0).description);
+		assertNull(lastComponent.channels.get(0).subscribe);
+		assertNotNull(lastComponent.channels.get(0).publish);
+		assertInstanceOf(ObjectPayloadSchema.class, lastComponent.channels.get(0).publish);
+		assertEquals(object, lastComponent.channels.get(0).publish);
+
+		// check updated the connections
+		final var countConnectionsAfter = this.assertItemNotNull(TopologyConnectionEntity.count());
+		assertEquals(countConnectionsBefore + 1, countConnectionsAfter);
+
+		// Get last connection
+		final TopologyConnectionEntity lastConnection = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= lastConnection.createTimestamp);
+		assertTrue(lastConnection.createTimestamp <= lastConnection.updateTimestamp);
+		assertNull(lastConnection.deletedTimestamp);
+		assertNotNull(lastConnection.source);
+		assertEquals(sourceChannelName, lastConnection.source.channelName);
+		assertEquals(lastComponent.id, lastConnection.source.componentId);
+		assertNotNull(lastConnection.target);
+		assertEquals(targetChannelName, lastConnection.target.channelName);
+		assertEquals(target.id, lastConnection.target.componentId);
 
 	}
 

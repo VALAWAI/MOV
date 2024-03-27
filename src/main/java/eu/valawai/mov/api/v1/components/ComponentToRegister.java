@@ -6,36 +6,34 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events.components;
+package eu.valawai.mov.api.v1.components;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-import eu.valawai.mov.api.v1.components.ComponentType;
-import eu.valawai.mov.events.Payload;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import eu.valawai.mov.api.Model;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 /**
- * The information necessary to register a component.
+ * The information of a component to register.
  *
  * @author VALAWAI
  */
-@RegisterForReflection
-@JsonRootName("register_component_payload")
-public class RegisterComponentPayload extends Payload {
+@Schema(title = "The information of a component to register.")
+public class ComponentToRegister extends Model {
 
 	/**
 	 * The type of the component to register.
 	 */
+	@Schema(title = "The type of the component to register.")
 	@NotNull
 	public ComponentType type;
 
 	/**
 	 * The name of the component to register.
 	 */
+	@Schema(title = "The component name.")
 	@Pattern(regexp = "c[0|1|2]_\\w+")
 	@NotNull
 	public String name;
@@ -43,6 +41,7 @@ public class RegisterComponentPayload extends Payload {
 	/**
 	 * The version of the component.
 	 */
+	@Schema(title = "The component version.")
 	@NotNull
 	@Pattern(regexp = "\\d+\\.\\d+\\.\\d+")
 	public String version;
@@ -50,8 +49,8 @@ public class RegisterComponentPayload extends Payload {
 	/**
 	 * The asyncapi specification in yaml.
 	 */
+	@Schema(title = "The asyncapi specification in yaml.")
 	@NotEmpty
-	@JsonProperty("asyncapi_yaml")
 	public String asyncapiYaml;
 
 }

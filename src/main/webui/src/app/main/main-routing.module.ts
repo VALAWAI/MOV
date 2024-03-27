@@ -25,6 +25,10 @@ const routes: Routes = [
 				loadChildren: () => import('./logs/logs.module').then(m => m.LogsModule)
 			},
 			{
+				path: 'components/register',
+				loadChildren: () => import('./components/register/register-component.module').then(m => m.RegisterComponentModule)
+			},
+			{
 				path: 'components/:id/show',
 				loadChildren: () => import('./components/show/show-component.module').then(m => m.ShowComponentModule)
 			},

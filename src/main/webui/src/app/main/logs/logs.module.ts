@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TimestampModule } from 'src/app/shared/timestamp';
 
 @NgModule({
 	declarations: [
@@ -35,7 +36,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 		MatIconModule,
 		MatButtonModule,
 		MatSelectModule,
-		MatCheckboxModule
+		MatCheckboxModule,
+		TimestampModule
 	],
 	exports: [
 	],

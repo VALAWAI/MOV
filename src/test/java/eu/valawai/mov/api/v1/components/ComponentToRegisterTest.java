@@ -6,42 +6,41 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.events.components;
+package eu.valawai.mov.api.v1.components;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 
-import eu.valawai.mov.api.v1.components.ComponentType;
-import eu.valawai.mov.events.PayloadTestCase;
+import eu.valawai.mov.api.ModelTestCase;
 
 /**
- * Test the {@link RegisterComponentPayload}.
+ * Test the {@link ComponentToRegister}.
  *
- * @see RegisterComponentPayload
+ * @see ComponentToRegister
  *
  * @author VALAWAI
  */
-public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterComponentPayload> {
+public class ComponentToRegisterTest extends ModelTestCase<ComponentToRegister> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RegisterComponentPayload createEmptyModel() {
+	public ComponentToRegister createEmptyModel() {
 
-		return new RegisterComponentPayload();
+		return new ComponentToRegister();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void fillIn(RegisterComponentPayload payload) {
+	public void fillIn(ComponentToRegister model) {
 
-		payload.type = next(ComponentType.values());
-		payload.name = payload.type.name().toLowerCase() + nextPattern("_test_{0}");
-		payload.version = nextPattern("{0}.{1}.{2}", 3);
-		payload.asyncapiYaml = nextPattern("""
+		model.type = next(ComponentType.values());
+		model.name = model.type.name().toLowerCase() + nextPattern("_test_{0}");
+		model.version = nextPattern("{0}.{1}.{2}", 3);
+		model.asyncapiYaml = nextPattern("""
 				asyncapi: 2.6.0
 				info:
 				  title: Service {0}
@@ -51,7 +50,7 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 				  valawai/test_in_{4}:
 				    subscribe:
 				      message:
-				        payload:
+				        model:
 				          type: object
 				          properties:
 				            field_{4}:
@@ -59,7 +58,7 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 				  valawai/test_out_54}:
 				    publish:
 				      message:
-				        payload:
+				        model:
 				          type: object
 				          properties:
 				            field_{5}:

@@ -13,10 +13,12 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import eu.valawai.mov.events.components.RegisterComponentPayload;
 import eu.valawai.mov.events.components.UnregisterComponentPayload;
 import eu.valawai.mov.persistence.components.GetComponent;
 import eu.valawai.mov.persistence.components.GetMinComponentPage;
@@ -29,6 +31,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -55,6 +58,13 @@ public class ComponentResource {
 	@Inject
 	@Channel("send_unregister_component")
 	Emitter<UnregisterComponentPayload> unregister;
+
+	/**
+	 * The component to send the message to register a component.
+	 */
+	@Inject
+	@Channel("send_register_component")
+	Emitter<RegisterComponentPayload> register;
 
 	/**
 	 * Get the information of some components.
@@ -141,6 +151,31 @@ public class ComponentResource {
 		final var payload = new UnregisterComponentPayload();
 		payload.componentId = componentId;
 		this.unregister.send(payload);
+		return Uni.createFrom().item(Response.noContent().build());
+
+	}
+
+	/**
+	 * Register a component.
+	 *
+	 * @param component to register.
+	 *
+	 * @return empty response if started to register or an error that explains why
+	 *         can not be registered.
+	 */
+	@POST
+	@Operation(description = "Register a component.")
+	@APIResponse(responseCode = "204", description = "When the component started to be registered")
+	@APIResponse(responseCode = "400", description = "When the component is not valid.")
+	public Uni<Response> registerComponent(
+			@RequestBody(description = "The component to register", required = true, content = @Content(schema = @Schema(implementation = ComponentToRegister.class))) @Valid ComponentToRegister component) {
+
+		final var payload = new RegisterComponentPayload();
+		payload.type = component.type;
+		payload.name = component.name;
+		payload.version = component.version;
+		payload.asyncapiYaml = component.asyncapiYaml;
+		this.register.send(payload);
 		return Uni.createFrom().item(Response.noContent().build());
 
 	}

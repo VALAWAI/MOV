@@ -16,6 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { LoadingModule } from 'src/app/shared/loading';
 import { ComponentViewModule } from 'src/app/shared/component/view';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 
 @NgModule({
@@ -28,7 +33,12 @@ import { ComponentViewModule } from 'src/app/shared/component/view';
 		MatIconModule,
 		MatButtonModule,
 		LoadingModule,
-		ComponentViewModule
+		ComponentViewModule,
+		MatSelectModule,
+		ReactiveFormsModule,
+		MatInputModule,
+		MatFormFieldModule,
+		TextFieldModule
 	],
 	exports: [
 	],

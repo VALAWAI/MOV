@@ -26,7 +26,14 @@
 			*ngFor="let type of componentNames" [value]="type">{{type}}</mat-option>
 		</mat-select> </mat-form-field>
 	</div>
-	<div class="flex flex-row justify-center content-center">
+	<div class="gap-3 flex flex-row justify-center content-center">
+		<button
+			i18n="Label of the button to register a components@@main_components_register-label"
+			routerLink="/main/components/register" mat-raised-button
+			color="primary" class="max-w-72">
+			<mat-icon>add</mat-icon>
+			Register a new component
+		</button>
 		<button
 			i18n="Label of the button to reload the components@@main_components_reload-label"
 			(click)="updatePage()" mat-raised-button color="primary"
@@ -74,8 +81,7 @@
 				<button mat-menu-item
 					i18n="The label of the menu to show the connection to a component@@main_components_show-connections-label"
 					routerLink="/main/topology/connections"
-					[queryParams]="{'componentId':element.id}"
-					>Show
+					[queryParams]="{'componentId':element.id}">Show
 					connections</button>
 				</mat-menu>
 			</td>

@@ -18,6 +18,7 @@ import { MinConnectionPage } from './topology/min-connection-page.model';
 import { TopologyConnection } from './topology/topology-connection.model';
 import { ConnectionToCreate } from './topology/connection-to-create.model';
 import { ChangeConnection } from './topology/change-connection.model';
+import { ComponentToRegister } from './components/component-to-register.model';
 
 
 /**
@@ -183,6 +184,15 @@ export class MovApiService {
 
 		var url = this.url('/v1/topology/connections/change');
 		return this.http.put<void>(url, change);
+	}
+
+	/**
+	 * Register a component.
+	 */
+	public registerComponent(component: ComponentToRegister): Observable<void> {
+
+		var url = this.url('/v1/components');
+		return this.http.post<void>(url, component);
 	}
 
 

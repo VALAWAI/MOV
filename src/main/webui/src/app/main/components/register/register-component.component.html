@@ -1,5 +1,47 @@
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center">
-	<div>
-	</div>
-	register component</div>
+<div *ngIf="!registering; else processing"
+	class="p-3 gap-7 flex flex-col items-center justify-center
+content-center">
+	<form class="max-w-3xl w-full" [formGroup]="form">
+		<mat-form-field class="w-full"> <mat-label for="type"
+			i18n="Label to the field to select the type of the component to register@@main_components_register_type-label">
+		Type </mat-label> <mat-select formControlName="type"> <mat-option
+			value="C0">C0</mat-option> <mat-option value="C1">C1</mat-option> <mat-option
+			value="C2">C2</mat-option> </mat-select> <mat-error
+			*ngIf="form.controls.type.hasError('required')"
+			i18n="Required error message for the type of the component to register@@main_components_register_type-required-error">
+		You must select the type of component. </mat-error> </mat-form-field>
+		<mat-form-field class="w-full"> <mat-label
+			i18n="Label to the field to write the component name to register@@main_components_register_name-label">
+		Name</mat-label> <input matInput formControlName="name"
+			placeholder="Ex. c0_hello_world"
+			i18n-placeholder="The placeholder for the field to write the component name@@main_components_register_name-placeholder">
+		<mat-error *ngIf="form.controls.name.hasError('required')"
+			i18n="Required error message for the name of the component to register@@main_components_register_name-required-error">
+		You must write the name of component. </mat-error> <mat-error
+			*ngIf="form.controls.name.hasError('pattern')"
+			i18n="Pattern error message for the name of the component to register@@main_components_register_name-pattern-error">
+		The name must follow the pattern <b>c[0|1|2]_\w+</b>. </mat-error> </mat-form-field>
+		<mat-form-field class="w-full"> <mat-label
+			i18n="Label to the field to write the component version to register@@main_components_register_version-label">
+		Version</mat-label> <input matInput formControlName="version"
+			placeholder="Ex. c0_hello_world"
+			i18n-placeholder="The placeholder for the field to write the component version@@main_components_register_version-placeholder">
+		<mat-error *ngIf="form.controls.version.hasError('required')"
+			i18n="Required error message for the version of the component to register@@main_components_register_version-required-error">
+		You must write the version of component. </mat-error> <mat-error
+			*ngIf="form.controls.version.hasError('pattern')"
+			i18n="Pattern error message for the version of the component to register@@main_components_register_version-pattern-error">
+		The version must follow the pattern <b>\d+.\d+.\d+</b>. </mat-error> </mat-form-field>
+		<mat-form-field class="w-full"> <mat-label>Async
+		api</mat-label> <textarea matInput cdkTextareaAutosize
+			#autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+			formControlName="asyncapiYaml"></textarea> <mat-error
+			*ngIf="form.controls.version.hasError('required')"
+			i18n="Required error message for the version of the component to register@@main_components_register_version-required-error">
+		You must write the aync of component. </mat-error> </mat-form-field>
+	</form>
+	<button mat-raised-button color="primary" (click)="register()"
+		i18n="Label of the button to register a component@@main_components_register_register-action-label">
+		Register</button>
+</div>
+<ng-template #processing> <app-loading></app-loading> </ng-template>
