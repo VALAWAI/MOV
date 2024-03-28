@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   mq:
-    image: rabbitmq:management
+    image: rabbitmq:{RABBITMQ_TAG:-management}
     container_name: mov_mq
     restart: unless-stopped
     ports:
@@ -13,7 +13,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${MQ_USER:-mov}
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD:-password}
   mongo:
-    image: mongo:latest
+    image: mongo:{MONGODB_TAG:-latest}
     container_name: mov_db
     restart: unless-stopped
     ports:
@@ -28,7 +28,7 @@ services:
       - ./initialize-movDB.js:/docker-entrypoint-initdb.d/init-mongo.js
       - ${MONGO_LOCAL_DATA:-~/mongo_data/movDB}:/data/db
   mov:
-    image: valawai/mov:latest
+    image: valawai/mov:{MOV_TAG:-latest}
     container_name: mov
     restart: unless-stopped
     depends_on:
@@ -40,9 +40,9 @@ services:
       - mov
     environment:
       RABBITMQ_HOST: mq
-      RABBITMQ-USERNAME: ${MQ_USER:-mov}
-      RABBITMQ-PASSWORD: ${MQ_PASSWORD:-password}
-      QUARKUS_MONGODB_CONNECTION_STRING: mongodb://mov:password@mongo:27017/${MONGO_DATABASE:-movDB}
+      RABBITMQ_USERNAME: ${MQ_USER:-mov}
+      RABBITMQ_PASSWORD: ${MQ_PASSWORD:-password}
+      QUARKUS_MONGODB_CONNECTION_STRING: mongodb://${MQ_USER:-mov}:${MQ_PASSWORD:-password}@mongo:27017/${MONGO_DATABASE:-movDB}
 
 networks:
   mov:

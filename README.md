@@ -6,10 +6,10 @@ and routing the messages between the components of the RGNW toolbox.
 
 # Summary
 
-- Version: 0.1.0 (October 26,2023)
-- API: [0.1.0 (October 26, 2023)](./asyncapi.yml)
+- Version: 1.0.0 (March 28, 2024)
+- API: [1.0.0 (March 28, 2024)](./asyncapi.yml)
 - Developed by: IIIA-CSIC
-- License: [MIT](LICENSE)
+- License: [GPL3](LICENSE)
 
 # Introduction
 
@@ -22,31 +22,31 @@ You can start the development environment with the script:
 ./startDevelopmentEnvironment.sh
 ```
 
-After that you have a bash shell where you can interact with
-the quarkus development environment. You can start the development
+After that, you have a bash shell where you can interact with
+the Quarkus development environment. You can start the development
 server with the command:
 
 ```shell script
 startServer
 ```
 
-Alternative to run the test using the started quarkus client, you can use maven.
+Alternatively, to run the test using the started Quarkus client, you can use Maven.
 
  * __mvn test__  to run all the tests
  * __mvnd test__  to run all the tests on debugging mode.
  * __mvn -DuseDevDatabase=true test__  to run all the tests using the started database,
- 	intead an independent container.
+ 	instead of an independent container.
 
 Also, this starts the tools:
 
  * __RabbitMQ__  the server to manage the messages to interchange with the components.
- The management web interface can be open at **http://localhost:8081** with the credential
+ The management web interface can be opened at **http://localhost:8081** with the credential
  **mov**:**password**.
  * __MongoDB__  the database to store the data used by the MOV. The database is named as **movDB** and the user credentials **mov:password**.
- The management web interface can be open at **http://localhost:8081** with the credential
+ The management web interface can be opened at **http://localhost:8081** with the credential
  **mov**:**password**.
- * __Mongo express__  the web interface to interact with the mongoDB. The web interface
-  can be open at **http://localhost:8082**.
+ * __Mongo express__  the web interface to interact with the MongoDB. The web interface
+  can be opened at **http://localhost:8082**.
 
 
 # Deploy
@@ -57,5 +57,5 @@ You can build the docker image to deploy this component with the script:
 ./buildDockerImages.sh
 ```
 
-As a parameter you can pass the name for the tag. If not it use the current version.
+As a parameter, you can pass the name for the tag. If not use the current version.
 
