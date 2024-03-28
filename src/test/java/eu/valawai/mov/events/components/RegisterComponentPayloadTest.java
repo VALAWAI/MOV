@@ -56,7 +56,7 @@ public class RegisterComponentPayloadTest extends PayloadTestCase<RegisterCompon
 				          properties:
 				            field_{4}:
 				              type: string
-				  valawai/test_out_54}:
+				  valawai/test_out_{5}:
 				    publish:
 				      message:
 				        payload:
