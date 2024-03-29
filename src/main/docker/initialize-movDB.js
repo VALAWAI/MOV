@@ -1,8 +1,8 @@
 db.createUser({
-	user: 'mov',
-	pwd: 'password',
+	user: process.env.DB_USER_NAME,
+	pwd: process.env.DB_USER_PASSWORD,
 	roles: [{
 		role: 'readWrite',
-		db: 'movDB'
+		db: process.env.DB_NAME
 	}]
 })

@@ -1,4 +1,4 @@
-#!/bin/bash
+stop #!/bin/bash
 if [ -f /.dockerenv ]; then
    echo "You can not start the Master Of VALAWAI inside a docker container"
 else
