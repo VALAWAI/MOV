@@ -209,7 +209,7 @@ components:
         query_id:
           description: The identifier of the query that this is the answer.
           type: string
-          example:
+          examples:
             - '1elkjfg289'
         total:
           description: The number of components that satisfy the query.
@@ -414,7 +414,7 @@ components:
         id:
           description: The identifier of the query.
           type: string
-          example:
+          examples:
             - '1elkjfg289'
         source_channel_name:
           description: The name to match the source channel of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
@@ -471,7 +471,7 @@ components:
         query_id:
           description: The identifier of the query that this is the answer.
           type: string
-          example:
+          examples:
             - '1elkjfg289'
         total:
           description: The number of topology connections that satisfy the query.
