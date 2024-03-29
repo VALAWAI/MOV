@@ -164,7 +164,7 @@ components:
         id:
           description: The identifier of the query.
           type: string
-          example:
+          examples:
             - '1elkjfg289'
         pattern:
           description: The pattern to match the name or description of the components to return. If it is defined between / it is considered a PCRE regular expression.
@@ -176,8 +176,8 @@ components:
           description: The type to match the components to return. If it is defined between / it is considered a PCRE regular expression.
           type: string
           examples: 
-            - 'c0'
-            - '/c[1|2]/'
+            - 'C0'
+            - '/C[1|2]/'
         order:
           description: The order in witch the components has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.
           type: string
