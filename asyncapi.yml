@@ -18,13 +18,6 @@ channels:
       summary: Used by the components to inform that it is present on the infratructure.
       message:
         $ref: '#/components/messages/register_component'
-
-  valawai/topology/change:
-    subscribe:
-      summary: Used by the components to inform of the changes that has to be done to the topology.
-      message:
-        $ref: '#/components/messages/change_topology'
-
   valawai/component/query:
     subscribe:
       summary: Used to obtain information about some components defined on VALAWAI.
@@ -43,11 +36,11 @@ channels:
       message:
         $ref: '#/components/messages/unregister_component'
 
-  valawai/log/add:
+  valawai/topology/create:
     subscribe:
-      summary: Add a new log message to be stored.
+      summary: Used to create a connection between two components of the VALAWAI infrastructure.
       message:
-        $ref: '#/components/messages/add_log'
+        $ref: '#/components/messages/create_connection'
 
   valawai/topology/query:
     subscribe:
@@ -61,11 +54,19 @@ channels:
       message:
         $ref: '#/components/messages/connections_page'
 
-  valawai/topology/create:
+  valawai/topology/change:
     subscribe:
-      summary: Used to create a connection between two components of the VALAWAI infrastructure.
+      summary: Used by the components to inform of the changes that has to be done to the topology.
       message:
-        $ref: '#/components/messages/create_connection'
+        $ref: '#/components/messages/change_topology'
+
+  valawai/log/add:
+    subscribe:
+      summary: Add a new log message to be stored.
+      message:
+        $ref: '#/components/messages/add_log'
+
+
 
 components:
   messages:
@@ -73,11 +74,6 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/register_component_payload'
-
-    change_topology:
-      contentType: application/json
-      payload:
-        $ref: '#/components/schemas/change_topology_payload'
 
     query_components:
       contentType: application/json
@@ -94,25 +90,31 @@ components:
       payload:
         $ref: '#/components/schemas/unregister_component_payload'
 
-    add_log:
+    create_connection:
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/sdd_log_payload'
+        $ref: '#/components/schemas/create_connection_payload'
+
+    change_topology:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/change_topology_payload'
 
     query_connections:
       contentType: application/json
       payload:
-        $ref: '#/connections/schemas/query_connections_payload'
+        $ref: '#/components/schemas/query_connections_payload'
 
     connections_page:
       contentType: application/json
       payload:
-        $ref: '#/connections/schemas/connections_page_payload'
+        $ref: '#/components/schemas/connections_page_payload'
 
-    create_connection:
+    add_log:
       contentType: application/json
       payload:
-        $ref: '#/connections/schemas/create_connection_payload'
+        $ref: '#/components/schemas/add_log_payload'
+
 
   schemas:
     register_component_payload:
@@ -242,7 +244,7 @@ components:
           description: The description of the component.
           type: string
           examples: 
-            - 'Generate text from the ambinetal audio'
+            - 'Generate text from the ambient audio'
         version:
           description: The component version.
           type: string
@@ -484,7 +486,7 @@ components:
           description: The topology connections that satisfy the query.
           type: array
           items: 
-            - $ref: '#/connections/schemas/connection_payload'
+            - $ref: '#/components/schemas/connection_payload'
 
     connection_payload:
       type: object
