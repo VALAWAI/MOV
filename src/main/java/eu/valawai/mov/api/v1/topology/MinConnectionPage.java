@@ -23,25 +23,25 @@ import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
  *
  * @author VALAWAI
  */
-@Schema(title = "A page with some connections.")
+@Schema(description = "A page with some connections.")
 public class MinConnectionPage extends Model {
 
 	/**
 	 * The number of connections that satisfy the query.
 	 */
-	@Schema(title = "The total number of connections that satisfy the query.")
+	@Schema(description = "The total number of connections that satisfy the query.")
 	public long total = 0;
 
 	/**
 	 * The offset of the first returned log.
 	 */
-	@Schema(title = "The index of the first returned log.")
+	@Schema(description = "The index of the first returned log.")
 	public int offset = 0;
 
 	/**
 	 * The connections that match the query.
 	 */
-	@Schema(title = "The connections that satisfy the query")
+	@Schema(description = "The connections that satisfy the query")
 	public List<MinConnection> connections;
 
 }

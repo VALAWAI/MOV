@@ -15,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -50,6 +51,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/v1/components")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Components", description = "The services to manage the VALAWAI components")
 public class ComponentResource {
 
 	/**
@@ -112,7 +114,7 @@ public class ComponentResource {
 	@Path("/{componentId:[0-9a-fA-F]{24}}")
 	@Operation(description = "Obtain a component.")
 	@APIResponse(responseCode = "200", description = "The component with the identifier", content = {
-			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinComponentPage.class)) })
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Component.class)) })
 	@APIResponse(responseCode = "404", description = "When the component is not found.")
 	public Uni<Response> getComponent(
 			@Parameter(description = "Identifier of the component to get.", example = "000000000000000000000000", schema = @Schema(implementation = String.class)) @PathParam("componentId") final ObjectId componentId) {

@@ -20,31 +20,31 @@ import jakarta.validation.constraints.NotEmpty;
  *
  * @author VALAWAI
  */
-@Schema(title = "A schema that define the messages that a channel can receive or send.")
+@Schema(description = "A schema that define the messages that a channel can receive or send.")
 public class ChannelSchema extends Model {
 
 	/**
 	 * The identifier of the channel.
 	 */
 	@NotEmpty
-	@Schema(title = "The name that identify the channel.")
+	@Schema(description = "The name that identify the channel.")
 	public String name;
 
 	/**
 	 * The description of the channel.
 	 */
-	@Schema(title = "The channel description.")
+	@Schema(description = "The channel description.")
 	public String description;
 
 	/**
 	 * The type of payload that the channel can receive.
 	 */
-	@Schema(title = "The content of the messages that the component can receive form this channel.")
+	@Schema(description = "The content of the messages that the component can receive form this channel.")
 	public PayloadSchema subscribe;
 
 	/**
 	 * The type of payload that the channel can send.
 	 */
-	@Schema(title = "The content of the messages that the component can send thought this channel.")
+	@Schema(description = "The content of the messages that the component can send thought this channel.")
 	public PayloadSchema publish;
 }

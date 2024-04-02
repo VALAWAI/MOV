@@ -30,7 +30,7 @@ import eu.valawai.mov.api.Model;
  *
  * @author VALAWAI
  */
-@Schema(title = "A schema that define the possible payload.")
+@Schema(description = "A schema that define the possible payload.")
 @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = BasicPayloadSchema.class, name = "BASIC"),
 		@Type(value = EnumPayloadSchema.class, name = "ENUM"),
@@ -41,7 +41,7 @@ public abstract class PayloadSchema extends Model {
 	/**
 	 * The payload type.
 	 */
-	@Schema(title = "The type of payload.")
+	@Schema(description = "The type of payload.")
 	public PayloadType type;
 
 	/**

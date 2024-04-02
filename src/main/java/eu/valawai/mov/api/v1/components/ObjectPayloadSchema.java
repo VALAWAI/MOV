@@ -19,13 +19,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author VALAWAI
  */
-@Schema(title = "A description of an object payload.")
+@Schema(description = "A description of an object payload.")
 public class ObjectPayloadSchema extends PayloadSchema {
 
 	/**
 	 * The properties that define the object.
 	 */
-	@Schema(title = "The properties that define the object attributes.")
+	@Schema(description = "The properties that define the object attributes.")
 	public TreeMap<String, PayloadSchema> properties;
 
 	/**

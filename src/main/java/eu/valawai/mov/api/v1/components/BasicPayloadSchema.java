@@ -17,13 +17,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author VALAWAI
  */
-@Schema(title = "The basic type of the payload.")
+@Schema(description = "The basic type of the payload.")
 public class BasicPayloadSchema extends PayloadSchema {
 
 	/**
 	 * The format of the basic type.
 	 */
-	@Schema(title = "The format of the basic type.")
+	@Schema(description = "The format of the basic type.")
 	public BasicPayloadFormat format;
 
 	/**

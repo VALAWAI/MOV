@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import eu.valawai.mov.persistence.logs.GetLogRecordPage;
 import io.quarkus.logging.Log;
@@ -39,6 +40,7 @@ import jakarta.ws.rs.core.Response;
 @Path("/v1/logs")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Log", description = "The services to manage the log messages")
 public class LogResource {
 
 	/**

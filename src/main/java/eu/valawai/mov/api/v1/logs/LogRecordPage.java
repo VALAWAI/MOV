@@ -21,25 +21,25 @@ import eu.valawai.mov.api.Model;
  *
  * @author VALAWAI
  */
-@Schema(title = "A page with some logs.")
+@Schema(description = "A page with some logs.")
 public class LogRecordPage extends Model {
 
 	/**
 	 * The number of logs that satisfy the query.
 	 */
-	@Schema(title = "The total number of logs that satisfy the query.")
+	@Schema(description = "The total number of logs that satisfy the query.")
 	public long total = 0;
 
 	/**
 	 * The offset of the first returned log.
 	 */
-	@Schema(title = "The index of the first returned log.")
+	@Schema(description = "The index of the first returned log.")
 	public int offset = 0;
 
 	/**
 	 * The logs that match the query.
 	 */
-	@Schema(title = "The logs that satisfy the query")
+	@Schema(description = "The logs that satisfy the query")
 	public List<LogRecord> logs;
 
 }

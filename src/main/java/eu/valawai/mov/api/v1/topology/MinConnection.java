@@ -24,13 +24,13 @@ import jakarta.validation.constraints.NotEmpty;
  *
  * @author VALAWAI
  */
-@Schema(title = "The minimal information of a connection.")
+@Schema(description = "The minimal information of a connection.")
 public class MinConnection extends Model {
 
 	/**
 	 * The identifier of the connection.
 	 */
-	@Schema(title = "The identifier of the connection", readOnly = true, example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The identifier of the connection", readOnly = true, example = "000000000000000000000000", implementation = String.class)
 	@BsonProperty("_id")
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId id;
@@ -38,21 +38,21 @@ public class MinConnection extends Model {
 	/**
 	 * The source channel name of the connection.
 	 */
-	@Schema(title = "The source channel name of the connection.")
+	@Schema(description = "The source channel name of the connection.")
 	@NotEmpty
 	public String source;
 
 	/**
 	 * The target channel name of the connection.
 	 */
-	@Schema(title = "The target channel name of the connection.")
+	@Schema(description = "The target channel name of the connection.")
 	@NotEmpty
 	public String target;
 
 	/**
 	 * This is true if the connection is enabled.
 	 */
-	@Schema(title = "This is true if the connection is enabled.")
+	@Schema(description = "This is true if the connection is enabled.")
 	@NotNull
 	public boolean enabled;
 

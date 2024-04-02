@@ -20,20 +20,20 @@ import jakarta.validation.constraints.Pattern;
  *
  * @author VALAWAI
  */
-@Schema(title = "The information of a component to register.")
+@Schema(description = "The information of a component to register.")
 public class ComponentToRegister extends Model {
 
 	/**
 	 * The type of the component to register.
 	 */
-	@Schema(title = "The type of the component to register.")
+	@Schema(description = "The type of the component to register.")
 	@NotNull
 	public ComponentType type;
 
 	/**
 	 * The name of the component to register.
 	 */
-	@Schema(title = "The component name.")
+	@Schema(description = "The component name.")
 	@Pattern(regexp = "c[0|1|2]_\\w+")
 	@NotNull
 	public String name;
@@ -41,7 +41,7 @@ public class ComponentToRegister extends Model {
 	/**
 	 * The version of the component.
 	 */
-	@Schema(title = "The component version.")
+	@Schema(description = "The component version.")
 	@NotNull
 	@Pattern(regexp = "\\d+\\.\\d+\\.\\d+")
 	public String version;
@@ -49,7 +49,7 @@ public class ComponentToRegister extends Model {
 	/**
 	 * The asyncapi specification in yaml.
 	 */
-	@Schema(title = "The asyncapi specification in yaml.")
+	@Schema(description = "The asyncapi specification in yaml.")
 	@NotEmpty
 	public String asyncapiYaml;
 

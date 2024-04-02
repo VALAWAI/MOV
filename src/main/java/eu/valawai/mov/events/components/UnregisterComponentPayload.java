@@ -9,7 +9,6 @@
 package eu.valawai.mov.events.components;
 
 import org.bson.types.ObjectId;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -27,14 +26,11 @@ import jakarta.validation.constraints.NotNull;
  */
 @RegisterForReflection
 @JsonRootName("unregister_component_payload")
-@Schema(title = "The information necessary to unregister a component.")
 public class UnregisterComponentPayload extends Payload {
 
 	/**
 	 * The identifier of the component to unregister.
 	 */
-	@NotNull
-	@Schema(title = "The identifier of the component to unregister.")
 	@NotNull
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@JsonProperty("component_id")

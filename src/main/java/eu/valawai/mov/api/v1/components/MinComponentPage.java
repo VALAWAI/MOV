@@ -22,25 +22,25 @@ import eu.valawai.mov.persistence.components.ComponentEntity;
  *
  * @author VALAWAI
  */
-@Schema(title = "A page with some components.")
+@Schema(description = "A page with some components.")
 public class MinComponentPage extends Model {
 
 	/**
 	 * The number of components that satisfy the query.
 	 */
-	@Schema(title = "The total number of components that satisfy the query.")
+	@Schema(description = "The total number of components that satisfy the query.")
 	public long total = 0;
 
 	/**
 	 * The offset of the first returned log.
 	 */
-	@Schema(title = "The index of the first returned log.")
+	@Schema(description = "The index of the first returned log.")
 	public int offset = 0;
 
 	/**
 	 * The components that match the query.
 	 */
-	@Schema(title = "The components that satisfy the query")
+	@Schema(description = "The components that satisfy the query")
 	public List<MinComponent> components;
 
 }

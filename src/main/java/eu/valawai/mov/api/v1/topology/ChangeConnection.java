@@ -23,20 +23,20 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author VALAWAI
  */
-@Schema(title = "The information necessary to change a topology connection.")
+@Schema(description = "The information necessary to change a topology connection.")
 public class ChangeConnection extends Model {
 
 	/**
 	 * The type of action to do on the topology.
 	 */
-	@Schema(title = "The type of action to do over a topology connection.")
+	@Schema(description = "The type of action to do over a topology connection.")
 	@NotNull
 	public TopologyAction action;
 
 	/**
 	 * The identifier of the topology connection to change.
 	 */
-	@Schema(title = "The identifier of the topology connection to change.")
+	@Schema(description = "The identifier of the topology connection to change.", example = "000000000000000000000000", implementation = String.class)
 	@NotNull
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId connectionId;

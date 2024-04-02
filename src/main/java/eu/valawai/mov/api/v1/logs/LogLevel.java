@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.logs;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 /**
  * The level of a {@link LogRecord}.
  *
@@ -15,6 +17,7 @@ package eu.valawai.mov.api.v1.logs;
  *
  * @author VALAWAI
  */
+@Schema(description = "A possible levels of a log.")
 public enum LogLevel {
 
 	/**

@@ -23,13 +23,13 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author VALAWAI
  */
-@Schema(title = "The information necessary to create a topology connection.")
+@Schema(description = "The information necessary to create a topology connection.")
 public class ConnectionToCreate extends Model {
 
 	/**
 	 * The component that is the source of the topology connection.
 	 */
-	@Schema(title = "The component that is the source of the topology connection.")
+	@Schema(description = "The component that is the source of the topology connection.", example = "000000000000000000000000", implementation = String.class)
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@NotNull
 	public ObjectId sourceComponent;
@@ -37,14 +37,14 @@ public class ConnectionToCreate extends Model {
 	/**
 	 * The name of the channel that is the source of the topology connection.
 	 */
-	@Schema(title = "The name of the channel that is the source of the topology connection.")
+	@Schema(description = "The name of the channel that is the source of the topology connection.")
 	@NotEmpty
 	public String sourceChannel;
 
 	/**
 	 * The component that is the target of the topology connection.
 	 */
-	@Schema(title = "The component that is the target of the topology connection.")
+	@Schema(description = "The component that is the target of the topology connection.", example = "000000000000000000000000", implementation = String.class)
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@NotNull
 	public ObjectId targetComponent;
@@ -52,14 +52,14 @@ public class ConnectionToCreate extends Model {
 	/**
 	 * The name of the channel that is the target of the topology connection.
 	 */
-	@Schema(title = "The name of the channel that is the target of the topology connection.")
+	@Schema(description = "The name of the channel that is the target of the topology connection.")
 	@NotEmpty
 	public String targetChannel;
 
 	/**
 	 * This is {@code true} if the connection has to be enabled.
 	 */
-	@Schema(title = "When it is true, the connection will be started after it has been created.")
+	@Schema(description = "When it is true, the connection will be started after it has been created.")
 	@NotNull
 	public boolean enabled;
 

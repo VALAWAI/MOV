@@ -17,31 +17,31 @@ import eu.valawai.mov.api.Model;
  *
  * @author VALAWAI
  */
-@Schema(title = "A log message that happened on VALAWAI.")
+@Schema(description = "A log message that happened on VALAWAI.")
 public class LogRecord extends Model {
 
 	/**
 	 * The level of the log.
 	 */
-	@Schema(title = "The level of the log.")
+	@Schema(description = "The level of the log.")
 	public LogLevel level;
 
 	/**
 	 * The message of the log.
 	 */
-	@Schema(title = "The log message.")
+	@Schema(description = "The log message.")
 	public String message;
 
 	/**
 	 * The payload of the log.
 	 */
-	@Schema(title = "The payload associated to the log.")
+	@Schema(description = "The payload associated to the log. It is a JSON encoded as a string")
 	public String payload;
 
 	/**
 	 * The timestamp when the log has added.
 	 */
-	@Schema(title = "The timestamp when the .")
+	@Schema(description = "The epoch time, in seconds, when the log happened.")
 	public long timestamp;
 
 }

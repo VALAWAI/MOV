@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 /**
  * The possible formats for the {@link BasicPayloadSchema}.
  *
@@ -15,6 +17,7 @@ package eu.valawai.mov.api.v1.components;
  *
  * @author VALAWAI
  */
+@Schema(description = "The possible formats of a basic schema.")
 public enum BasicPayloadFormat {
 
 	/**

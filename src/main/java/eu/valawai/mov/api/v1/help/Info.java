@@ -16,19 +16,19 @@ import eu.valawai.mov.api.Model;
  *
  * @author VALAWAI
  */
-@Schema(title = "Information about the web service.")
+@Schema(description = "Information about the web service.")
 public class Info extends Model {
 
 	/**
 	 * The version of the api.
 	 */
-	@Schema(title = "Version of the web services.", example = "1.0.0")
+	@Schema(description = "Version of the web services.", example = "1.0.0")
 	public String version;
 
 	/**
 	 * The profile of the quarkus platform.
 	 */
-	@Schema(title = "Profile that start the quarkus", example = "production")
+	@Schema(description = "Profile that start the quarkus", example = "production")
 	public String profile;
 
 }

@@ -26,13 +26,13 @@ import io.smallrye.common.constraint.NotNull;
  *
  * @author VALAWAI
  */
-@Schema(title = "The information of a topology connection.")
+@Schema(description = "The information of a topology connection.")
 public class TopologyConnection extends Model {
 
 	/**
 	 * The identifier of the topology connection.
 	 */
-	@Schema(title = "The identifier of the topology connection", readOnly = true, example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The identifier of the topology connection", readOnly = true, example = "000000000000000000000000", implementation = String.class)
 	@BsonProperty("_id")
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId id;
@@ -40,35 +40,35 @@ public class TopologyConnection extends Model {
 	/**
 	 * This is true if the connection is enabled.
 	 */
-	@Schema(title = "This is true if the connection is enabled.")
+	@Schema(description = "This is true if the connection is enabled.")
 	@NotNull
 	public boolean enabled;
 
 	/**
 	 * The epoch time, in seconds, when the connection has been created.
 	 */
-	@Schema(title = "The epoch time, in seconds, when the connection has been created.")
+	@Schema(description = "The epoch time, in seconds, when the connection has been created.")
 	@NotNull
 	public long createTimestamp;
 
 	/**
 	 * The epoch time, in seconds, when the connection has been updated.
 	 */
-	@Schema(title = "The epoch time, in seconds, when the connection has been updated.")
+	@Schema(description = "The epoch time, in seconds, when the connection has been updated.")
 	@NotNull
 	public long updateTimestamp;
 
 	/**
 	 * The source of the connection.
 	 */
-	@Schema(title = "The source of the connection.")
+	@Schema(description = "The source of the connection.")
 	@NotNull
 	public TopologyConnectionNode source;
 
 	/**
 	 * The target of the connection.
 	 */
-	@Schema(title = "The target of the connection.")
+	@Schema(description = "The target of the connection.")
 	@NotNull
 	public TopologyConnectionNode target;
 

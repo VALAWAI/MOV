@@ -29,7 +29,7 @@ public class MinComponent extends Model {
 	/**
 	 * The identifier of the component.
 	 */
-	@Schema(title = "The identifier of the component", readOnly = true, example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The identifier of the component", readOnly = true, example = "000000000000000000000000", implementation = String.class)
 	@BsonProperty("_id")
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId id;
@@ -37,20 +37,20 @@ public class MinComponent extends Model {
 	/**
 	 * The name of the component.
 	 */
-	@Schema(title = "The component name.")
+	@Schema(description = "The component name.")
 	@NotEmpty
 	public String name;
 
 	/**
 	 * The description of the component.
 	 */
-	@Schema(title = "The component description.")
+	@Schema(description = "The component description.")
 	public String description;
 
 	/**
 	 * The type of component.
 	 */
-	@Schema(title = "The component type.")
+	@Schema(description = "The component type.")
 	@NotNull
 	public ComponentType type;
 

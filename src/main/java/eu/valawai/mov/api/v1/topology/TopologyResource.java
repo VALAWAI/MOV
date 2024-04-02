@@ -15,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -49,6 +50,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/v1/topology")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Topology", description = "The services to manage the topology connections between the VALAWAI components")
 public class TopologyResource {
 
 	/**

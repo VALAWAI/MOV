@@ -12,6 +12,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.GET;
@@ -25,6 +26,7 @@ import jakarta.ws.rs.core.Response;
  * @author VALAWAI
  */
 @Path("/env.js")
+@Tag(name = "Extra", description = "The services to provide extra information")
 public class EnvironmentResource {
 
 	/**

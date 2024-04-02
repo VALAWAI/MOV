@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 /**
  * A payload that is defined of one value of a set.
  *
@@ -19,13 +21,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author VALAWAI
  */
-@Schema(title = "A payload that can be one of the values defined on a set,")
+@JsonRootName("enum")
+@Schema(description = "A payload that can be one of the values defined on a set,")
 public class EnumPayloadSchema extends PayloadSchema {
 
 	/**
 	 * The possible enum values.
 	 */
-	@Schema(title = "The possible values.")
+	@Schema(description = "The possible values.")
 	public TreeSet<String> values;
 
 	/**

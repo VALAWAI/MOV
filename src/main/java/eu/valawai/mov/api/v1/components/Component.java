@@ -20,13 +20,13 @@ import jakarta.validation.constraints.Pattern;
  *
  * @author VALAWAI
  */
-@Schema(title = "A VALAWAI component.")
+@Schema(description = "A VALAWAI component.")
 public class Component extends MinComponent {
 
 	/**
 	 * The version of the components.
 	 */
-	@Schema(title = "The component version.")
+	@Schema(description = "The component version.")
 	@NotEmpty
 	@Pattern(regexp = "\\d+\\.\\d+\\.\\d+")
 	public String version;
@@ -34,7 +34,7 @@ public class Component extends MinComponent {
 	/**
 	 * The version of the API.
 	 */
-	@Schema(title = "The component API version.")
+	@Schema(description = "The component API version.")
 	@NotEmpty
 	@Pattern(regexp = "\\d+\\.\\d+\\.\\d+")
 	public String apiVersion;
@@ -42,13 +42,13 @@ public class Component extends MinComponent {
 	/**
 	 * The epoch time in seconds when the component is registered.
 	 */
-	@Schema(title = "The time when the component is registered. The epoch time in seconds when the component is registered", readOnly = true)
+	@Schema(description = "The time when the component is registered. The epoch time in seconds when the component is registered", readOnly = true)
 	public long since;
 
 	/**
 	 * The channels defined on the component.
 	 */
-	@Schema(title = "The channel associated to the component.")
+	@Schema(description = "The channel associated to the component.")
 	public List<ChannelSchema> channels;
 
 }

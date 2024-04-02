@@ -23,20 +23,20 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author VALAWAI
  */
-@Schema(title = "The information of the node defined in a topology connection.")
+@Schema(description = "The information of the node defined in a topology connection.")
 public class TopologyConnectionNode extends Model {
 
 	/**
 	 * The component that is the node of the connection.
 	 */
-	@Schema(title = "The component that is the source/target of the connection.")
+	@Schema(description = "The component that is the source/target of the connection.")
 	@NotNull
 	public MinComponent component;
 
 	/**
 	 * The channel thought the events are sent/received in the connection.
 	 */
-	@Schema(title = "The channel thought the events are sent/received in the connection.")
+	@Schema(description = "The channel thought the events are sent/received in the connection.")
 	@NotNull
 	public ChannelSchema channel;
 

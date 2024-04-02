@@ -19,13 +19,13 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author VALAWAI
  */
-@Schema(title = "A schema for a payload that contains an array of values.")
+@Schema(description = "A schema for a payload that contains an array of values.")
 public class ArrayPayloadSchema extends PayloadSchema {
 
 	/**
 	 * The type for the elements on the array.
 	 */
-	@Schema(title = "The type for the array elements.")
+	@Schema(description = "The type for the array elements.")
 	@NotNull
 	public PayloadSchema items;
 
