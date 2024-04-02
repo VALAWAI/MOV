@@ -1,7 +1,7 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.0.0 (March 29,2024)
+## Version 1.0.0 (April 2,2024)
 
  - Provide the event listeners to manage the VALAWAI topology.
  - Synchronize with the documentation.

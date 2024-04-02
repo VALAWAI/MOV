@@ -174,7 +174,7 @@ public class ComponentResourceTest extends APITestCase {
 		final var filter = Filters.and(
 				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
-				Filters.and(Filters.exists("channels.publish", true), Filters.ne("channels.publish", null)));
+				Filters.elemMatch("channels", Filters.ne("publish", null)));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(
@@ -225,7 +225,7 @@ public class ComponentResourceTest extends APITestCase {
 		final var filter = Filters.and(
 				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
 				Filters.or(Filters.regex("name", pattern), Filters.regex("description", pattern)),
-				Filters.and(Filters.exists("channels.subscribe", true), Filters.ne("channels.subscribe", null)));
+				Filters.elemMatch("channels", Filters.ne("subscribe", null)));
 		expected.total = ComponentEntities.nextComponentsUntil(filter, max);
 
 		final List<ComponentEntity> components = this.assertItemNotNull(

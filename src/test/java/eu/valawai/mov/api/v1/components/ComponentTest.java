@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v1.components;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 import eu.valawai.mov.ValueGenerator;
@@ -44,7 +45,7 @@ public class ComponentTest extends AbstractMinComponentTestCase<Component> {
 
 		super.fillIn(model);
 		model.version = nextPattern("{0}.{1}.{2}", 3);
-		model.since = rnd().nextLong();
+		model.since = rnd().nextLong(0, Instant.now().getEpochSecond());
 		model.apiVersion = nextPattern("{0}.{1}.{2}", 3);
 
 		final var max = ValueGenerator.rnd().nextInt(0, 5);

@@ -109,12 +109,11 @@ public class GetMinComponentPage extends AbstractGetPageComponents<MinComponentP
 		final var filters = super.createComponentsFilters();
 		if (this.atLeastOnePublishChannel) {
 
-			filters.add(Filters.and(Filters.exists("channels.publish", true), Filters.ne("channels.publish", null)));
+			filters.add(Filters.elemMatch("channels", Filters.ne("publish", null)));
 		}
 		if (this.atLeastOneSubscribeChannel) {
 
-			filters.add(
-					Filters.and(Filters.exists("channels.subscribe", true), Filters.ne("channels.subscribe", null)));
+			filters.add(Filters.elemMatch("channels", Filters.ne("subscribe", null)));
 		}
 
 		return filters;
