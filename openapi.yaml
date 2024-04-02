@@ -1,0 +1,752 @@
+---
+openapi: 3.0.3
+info:
+  title: Master Of VALAWAI API
+  description: The services to interact with the MOV by HTTP requests
+  license:
+    name: GPL 3
+    url: https://opensource.org/license/gpl-3-0/
+  version: 1.0.0
+tags:
+- name: Components
+  description: The services to manage the VALAWAI components
+- name: Extra
+  description: The services to provide extra information
+- name: Log
+  description: The services to manage the log messages
+- name: Topology
+  description: The services to manage the topology connections between the VALAWAI
+    components
+paths:
+  /env.js:
+    get:
+      tags:
+      - Extra
+      description: Provide information about the running API.
+      responses:
+        "200":
+          description: OK
+          content:
+            text/javascript: {}
+  /v1/components:
+    get:
+      tags:
+      - Components
+      description: Obtain some components.
+      parameters:
+      - name: hasPublishChannel
+        in: query
+        description: This is true if the component must have at least one publish
+          channel.
+        schema:
+          default: false
+          type: boolean
+      - name: hasSubscribeChannel
+        in: query
+        description: This is true if the component must have at least one subscribe
+          channel.
+        schema:
+          default: false
+          type: boolean
+      - name: limit
+        in: query
+        description: The maximum number of components to return
+        schema:
+          format: int32
+          default: 20
+          minimum: 1
+          type: integer
+      - name: offset
+        in: query
+        description: The index of the first component to return
+        schema:
+          format: int32
+          default: 0
+          minimum: 0
+          type: integer
+      - name: order
+        in: query
+        description: "The order in witch the components has to be returned. It is\
+          \ form by the field names, separated by a comma, and each of it with the\
+          \ - prefix for descending order or + for ascending."
+        schema:
+          default: +since
+          pattern: "(,?[+|-]?[type|name|description|since])*"
+          type: string
+      - name: pattern
+        in: query
+        description: The pattern to match the name or description of the components
+          to return. If it is defined between / it is considered a PCRE regular expression.
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: The type to match the components to return. If it is defined
+          between / it is considered a PCRE regular expression.
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The page with the matching components
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinComponentPage'
+        "404":
+          description: When a parameter is not valid.
+    post:
+      tags:
+      - Components
+      description: Register a component.
+      requestBody:
+        description: The component to register
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComponentToRegister'
+        required: true
+      responses:
+        "204":
+          description: When the component started to be registered
+        "400":
+          description: When the component is not valid.
+  /v1/components/{componentId}:
+    get:
+      tags:
+      - Components
+      description: Obtain a component.
+      parameters:
+      - name: componentId
+        in: path
+        description: Identifier of the component to get.
+        required: true
+        schema:
+          pattern: "[0-9a-fA-F]{24}"
+          type: string
+        example: "000000000000000000000000"
+      responses:
+        "200":
+          description: The component with the identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+        "404":
+          description: When the component is not found.
+    delete:
+      tags:
+      - Components
+      description: Unregister a component.
+      parameters:
+      - name: componentId
+        in: path
+        description: Identifier of the component to unregister.
+        required: true
+        schema:
+          pattern: "[0-9a-fA-F]{24}"
+          type: string
+        example: "000000000000000000000000"
+      responses:
+        "204":
+          description: When the component started to unregister
+        "404":
+          description: When the component is not found.
+  /v1/help/info:
+    get:
+      tags:
+      - Extra
+      description: Provide information about the running API.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+  /v1/logs:
+    get:
+      tags:
+      - Log
+      description: Obtain some logs.
+      parameters:
+      - name: level
+        in: query
+        description: The level to match the logs to return. If it is defined between
+          / it is considered a PCRE regular expression.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The maximum number of logs to return
+        schema:
+          format: int32
+          default: 20
+          minimum: 1
+          type: integer
+      - name: offset
+        in: query
+        description: The index of the first log to return
+        schema:
+          format: int32
+          default: 0
+          minimum: 0
+          type: integer
+      - name: order
+        in: query
+        description: "The order in witch the logs has to be returned. It is form by\
+          \ the field names, separated by a comma, and each of it with the - prefix\
+          \ for descending order or + for ascending."
+        schema:
+          default: +timestamp
+          pattern: "(,?[+|-]?[level|message|timestamp])*"
+          type: string
+      - name: pattern
+        in: query
+        description: The pattern to match the message of the logs to return. If it
+          is defined between / it is considered a PCRE regular expression.
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The page with the matching logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogRecordPage'
+        "404":
+          description: When a parameter is not valid.
+  /v1/topology/connections:
+    get:
+      tags:
+      - Topology
+      description: Obtain some connections.
+      parameters:
+      - name: component
+        in: query
+        description: The component to match the source or target of the connections
+          to return. If it is defined between / it is considered a PCRE regular expression.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The maximum number of connections to return
+        schema:
+          format: int32
+          default: 20
+          minimum: 1
+          type: integer
+      - name: offset
+        in: query
+        description: The index of the first connection to return
+        schema:
+          format: int32
+          default: 0
+          minimum: 0
+          type: integer
+      - name: order
+        in: query
+        description: "The order in witch the connections has to be returned. It is\
+          \ form by the field names, separated by a comma, and each of it with the\
+          \ - prefix for descending order or + for ascending."
+        schema:
+          default: +source
+          pattern: "(,?[+|-]?[source|target|enabled|createTimestamp|updateTimestamp])*"
+          type: string
+      - name: pattern
+        in: query
+        description: The pattern to match the source or target channel of the connections
+          to return. If it is defined between / it is considered a PCRE regular expression.
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The page with the matching connections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinConnectionPage'
+        "404":
+          description: When a parameter is not valid.
+    post:
+      tags:
+      - Topology
+      description: Create a topology connection.
+      requestBody:
+        description: The connection to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionToCreate'
+        required: true
+      responses:
+        "204":
+          description: When the topology connection started to be created
+        "400":
+          description: When the topology connection is not valid.
+  /v1/topology/connections/change:
+    put:
+      tags:
+      - Topology
+      description: modify a topology connection.
+      requestBody:
+        description: The changes to do over the connection
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeConnection'
+        required: true
+      responses:
+        "204":
+          description: When the topology connection started to be created
+        "400":
+          description: When the topology connection is not valid.
+  /v1/topology/connections/{connectionId}:
+    get:
+      tags:
+      - Topology
+      description: Obtain a topology connection.
+      parameters:
+      - name: connectionId
+        in: path
+        description: Identifier of the topology connection to get.
+        required: true
+        schema:
+          pattern: "[0-9a-fA-F]{24}"
+          type: string
+        example: "000000000000000000000000"
+      responses:
+        "200":
+          description: The topology connection with the identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopologyConnection'
+        "404":
+          description: When the topology connection is not found.
+components:
+  schemas:
+    ArrayPayloadSchema:
+      description: A schema for a payload that contains an array of values.
+      required:
+      - items
+      type: object
+      properties:
+        type:
+          description: The type of payload.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/PayloadType'
+        items:
+          description: The type for the array elements.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/PayloadSchema'
+    BasicPayloadFormat:
+      description: The possible formats of a basic schema.
+      enum:
+      - INTEGER
+      - NUMBER
+      - BOOLEAN
+      - STRING
+      type: string
+    BasicPayloadSchema:
+      description: The basic type of the payload.
+      type: object
+      properties:
+        type:
+          description: The type of payload.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/PayloadType'
+        format:
+          description: The format of the basic type.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/BasicPayloadFormat'
+    ChangeConnection:
+      description: The information necessary to change a topology connection.
+      required:
+      - action
+      - connectionId
+      type: object
+      properties:
+        action:
+          description: The type of action to do over a topology connection.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/TopologyAction'
+        connectionId:
+          description: The identifier of the topology connection to change.
+          type: string
+          example: "000000000000000000000000"
+    ChannelSchema:
+      description: A schema that define the messages that a channel can receive or
+        send.
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          description: The name that identify the channel.
+          minLength: 1
+          type: string
+        description:
+          description: The channel description.
+          type: string
+        subscribe:
+          description: The content of the messages that the component can receive
+            form this channel.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/PayloadSchema'
+        publish:
+          description: The content of the messages that the component can send thought
+            this channel.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/PayloadSchema'
+    Component:
+      description: A VALAWAI component.
+      required:
+      - name
+      - version
+      - apiVersion
+      type: object
+      properties:
+        id:
+          description: The identifier of the component
+          type: string
+          readOnly: true
+          example: "000000000000000000000000"
+        name:
+          description: The component name.
+          minLength: 1
+          type: string
+        description:
+          description: The component description.
+          type: string
+        type:
+          description: The component type.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/ComponentType'
+        version:
+          description: The component version.
+          minLength: 1
+          pattern: \d+\.\d+\.\d+
+          type: string
+        apiVersion:
+          description: The component API version.
+          minLength: 1
+          pattern: \d+\.\d+\.\d+
+          type: string
+        since:
+          format: int64
+          description: The time when the component is registered. The epoch time in
+            seconds when the component is registered
+          type: integer
+          readOnly: true
+        channels:
+          description: The channel associated to the component.
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelSchema'
+    ComponentToRegister:
+      description: The information of a component to register.
+      required:
+      - type
+      - name
+      - version
+      - asyncapiYaml
+      type: object
+      properties:
+        type:
+          description: The type of the component to register.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/ComponentType'
+        name:
+          description: The component name.
+          pattern: "c[0|1|2]_\\w+"
+          type: string
+        version:
+          description: The component version.
+          pattern: \d+\.\d+\.\d+
+          type: string
+        asyncapiYaml:
+          description: The asyncapi specification in yaml.
+          minLength: 1
+          type: string
+    ComponentType:
+      description: The possible types of a VALAWAI component.
+      enum:
+      - C0
+      - C1
+      - C2
+      type: string
+    ConnectionToCreate:
+      description: The information necessary to create a topology connection.
+      required:
+      - sourceComponent
+      - sourceChannel
+      - targetComponent
+      - targetChannel
+      - enabled
+      type: object
+      properties:
+        sourceComponent:
+          description: The component that is the source of the topology connection.
+          type: string
+          example: "000000000000000000000000"
+        sourceChannel:
+          description: The name of the channel that is the source of the topology
+            connection.
+          minLength: 1
+          type: string
+        targetComponent:
+          description: The component that is the target of the topology connection.
+          type: string
+          example: "000000000000000000000000"
+        targetChannel:
+          description: The name of the channel that is the target of the topology
+            connection.
+          minLength: 1
+          type: string
+        enabled:
+          description: "When it is true, the connection will be started after it has\
+            \ been created."
+          type: boolean
+    EnumPayloadSchema:
+      description: "A payload that can be one of the values defined on a set,"
+      type: object
+      properties:
+        type:
+          description: The type of payload.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/PayloadType'
+        values:
+          description: The possible values.
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    Info:
+      description: Information about the web service.
+      type: object
+      properties:
+        version:
+          description: Version of the web services.
+          type: string
+          example: 1.0.0
+        profile:
+          description: Profile that start the quarkus
+          type: string
+          example: production
+    LogLevel:
+      description: A possible levels of a log.
+      enum:
+      - ERROR
+      - WARN
+      - INFO
+      - DEBUG
+      type: string
+    LogRecord:
+      description: A log message that happened on VALAWAI.
+      type: object
+      properties:
+        level:
+          description: The level of the log.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LogLevel'
+        message:
+          description: The log message.
+          type: string
+        payload:
+          description: The payload associated to the log. It is a JSON encoded as
+            a string
+          type: string
+        timestamp:
+          format: int64
+          description: "The epoch time, in seconds, when the log happened."
+          type: integer
+    LogRecordPage:
+      description: A page with some logs.
+      type: object
+      properties:
+        total:
+          format: int64
+          description: The total number of logs that satisfy the query.
+          type: integer
+        offset:
+          format: int32
+          description: The index of the first returned log.
+          type: integer
+        logs:
+          description: The logs that satisfy the query
+          type: array
+          items:
+            $ref: '#/components/schemas/LogRecord'
+    MinComponent:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          description: The identifier of the component
+          type: string
+          readOnly: true
+          example: "000000000000000000000000"
+        name:
+          description: The component name.
+          minLength: 1
+          type: string
+        description:
+          description: The component description.
+          type: string
+        type:
+          description: The component type.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/ComponentType'
+    MinComponentPage:
+      description: A page with some components.
+      type: object
+      properties:
+        total:
+          format: int64
+          description: The total number of components that satisfy the query.
+          type: integer
+        offset:
+          format: int32
+          description: The index of the first returned log.
+          type: integer
+        components:
+          description: The components that satisfy the query
+          type: array
+          items:
+            $ref: '#/components/schemas/MinComponent'
+    MinConnection:
+      description: The minimal information of a connection.
+      required:
+      - source
+      - target
+      type: object
+      properties:
+        id:
+          description: The identifier of the connection
+          type: string
+          readOnly: true
+          example: "000000000000000000000000"
+        source:
+          description: The source channel name of the connection.
+          minLength: 1
+          type: string
+        target:
+          description: The target channel name of the connection.
+          minLength: 1
+          type: string
+        enabled:
+          description: This is true if the connection is enabled.
+          type: boolean
+    MinConnectionPage:
+      description: A page with some connections.
+      type: object
+      properties:
+        total:
+          format: int64
+          description: The total number of connections that satisfy the query.
+          type: integer
+        offset:
+          format: int32
+          description: The index of the first returned log.
+          type: integer
+        connections:
+          description: The connections that satisfy the query
+          type: array
+          items:
+            $ref: '#/components/schemas/MinConnection'
+    ObjectPayloadSchema:
+      description: A description of an object payload.
+      type: object
+      properties:
+        type:
+          description: The type of payload.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/PayloadType'
+        properties:
+          description: The properties that define the object attributes.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/PayloadSchema'
+    PayloadSchema:
+      description: A schema that define the possible payload.
+      type: object
+      properties:
+        type:
+          description: The type of payload.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/PayloadType'
+    PayloadType:
+      enum:
+      - BASIC
+      - ENUM
+      - OBJECT
+      - ARRAY
+      type: string
+    TopologyAction:
+      enum:
+      - ENABLE
+      - DISABLE
+      - REMOVE
+      type: string
+    TopologyConnection:
+      description: The information of a topology connection.
+      type: object
+      properties:
+        id:
+          description: The identifier of the topology connection
+          type: string
+          readOnly: true
+          example: "000000000000000000000000"
+        enabled:
+          description: This is true if the connection is enabled.
+          type: boolean
+        createTimestamp:
+          format: int64
+          description: "The epoch time, in seconds, when the connection has been created."
+          type: integer
+        updateTimestamp:
+          format: int64
+          description: "The epoch time, in seconds, when the connection has been updated."
+          type: integer
+        source:
+          description: The source of the connection.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TopologyConnectionNode'
+        target:
+          description: The target of the connection.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TopologyConnectionNode'
+    TopologyConnectionNode:
+      description: The information of the node defined in a topology connection.
+      required:
+      - component
+      - channel
+      type: object
+      properties:
+        component:
+          description: The component that is the source/target of the connection.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/MinComponent'
+        channel:
+          description: The channel thought the events are sent/received in the connection.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/ChannelSchema'
