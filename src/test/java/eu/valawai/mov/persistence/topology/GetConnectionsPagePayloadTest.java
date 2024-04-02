@@ -102,7 +102,7 @@ public class GetConnectionsPagePayloadTest extends MasterOfValawaiTestCase {
 				.mongoCollection().find(filter, TopologyConnectionEntity.class).collect().asList());
 		connections.sort((l1, l2) -> {
 
-			var cmp = Long.compare(l1.createTimestamp, l2.createTimestamp);
+			var cmp = Long.compare(l2.updateTimestamp, l1.updateTimestamp);
 			if (cmp == 0) {
 
 				cmp = l1.id.compareTo(l2.id);

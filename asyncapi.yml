@@ -149,10 +149,12 @@ components:
       type: object
       properties:
         action:
-          description: The type of action to do on the topology
+          description: The type of action to do on the topology connection.
+          type: string
           enum:
             - 'ENABLE'
             - 'DISABLE'
+            - 'REMOVE'
         connection_id:
           description: The identifier of the topology connection that has changed.
           type: string
@@ -181,9 +183,8 @@ components:
             - 'C0'
             - '/C[1|2]/'
         order:
-          description: The order in witch the components has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.
+          description: The order in witch the components has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending. By default is +since.
           type: string
-          default: '+since'
           pattern: (,?[+|-]?[type|name|description|since])*
           examples: 
             - 'type'
@@ -191,19 +192,17 @@ components:
         offset:
           description: The index of the first component to return.
           type: integer
-          default: 0
           minimum: 0
           examples: 
-            - '1'
-            - '7'
+            - 1
+            - 7
         limit:
           description: The maximum number of components to return.
           type: integer
-          default: 20
           minimum: 1
           examples: 
-            - '5'
-            - '10'
+            - 5
+            - 10
 
     components_page_payload:
       type: object
@@ -218,8 +217,8 @@ components:
           type: integer
           minimum: 0
           examples: 
-            - '5'
-            - '10'
+            - 5
+            - 10
         components:
           description: The components that satisfy the query.
           type: array
@@ -443,29 +442,26 @@ components:
             - '65c1f59ea4cb169f42f5edc4'
             - '/.+59ea.+/i'
         order:
-          description: The order in witch the topology connections has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.
+          description: The order in witch the topology connections has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.By default is -updateTimestamp.
           type: string
-          default: '+since'
           pattern: (,?[+|-]?[createTimestamp|updateTimestamp|enabled|source.componentId|source.channelName|target.componentId|target.channelName])*
           examples: 
-            - 'type'
-            - '-message,+type'
+            - 'enabled'
+            - '-createTimestamp,+enabled'
         offset:
           description: The index of the first topology connection to return.
           type: integer
-          default: 0
           minimum: 0
           examples: 
-            - '1'
-            - '7'
+            - 1
+            - 7
         limit:
           description: The maximum number of topology connections to return.
           type: integer
-          default: 20
           minimum: 1
           examples: 
-            - '5'
-            - '10'
+            - 5
+            - 10
 
     connections_page_payload:
       type: object
@@ -480,8 +476,8 @@ components:
           type: integer
           minimum: 0
           examples: 
-            - '5'
-            - '10'
+            - 5
+            - 10
         connections:
           description: The topology connections that satisfy the query.
           type: array
@@ -492,7 +488,7 @@ components:
       type: object
       properties:
         id:
-          description: The identifier of the topology component.
+          description: The identifier of the topology connection.
           type: string
           pattern: '[0-9a-fA-F]{24}'
           examples: 

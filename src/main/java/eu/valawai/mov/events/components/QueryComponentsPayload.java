@@ -64,9 +64,4 @@ public class QueryComponentsPayload extends Payload {
 	@Min(1)
 	public int limit;
 
-	/**
-	 * The default limit.
-	 */
-	public static int DEFAULT_LIMIT = 20;
-
 }

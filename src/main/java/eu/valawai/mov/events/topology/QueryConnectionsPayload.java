@@ -62,12 +62,7 @@ public class QueryConnectionsPayload extends Payload {
 	 * descending order or + for ascending.
 	 */
 	@Pattern(regexp = "(,?[+|-]?[createTimestamp|updateTimestamp|enabled|source.componentId|source.channelName|target.componentId|target.channelName])*")
-	public String order = DEFAULT_ORDER;
-
-	/**
-	 * The default order.
-	 */
-	public static String DEFAULT_ORDER = "+createTimestamp";
+	public String order = "-updateTimestamp";
 
 	/**
 	 * The index of the first connection to return.
@@ -79,11 +74,6 @@ public class QueryConnectionsPayload extends Payload {
 	 * The maximum number of connections to return.
 	 */
 	@Min(1)
-	public int limit = DEFAULT_LIMIT;
-
-	/**
-	 * The default limit.
-	 */
-	public static int DEFAULT_LIMIT = 20;
+	public int limit = 20;
 
 }

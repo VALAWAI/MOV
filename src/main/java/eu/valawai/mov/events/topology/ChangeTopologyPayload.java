@@ -30,7 +30,7 @@ import jakarta.validation.constraints.NotNull;
 public class ChangeTopologyPayload extends Payload {
 
 	/**
-	 * he type of action to do on the topology.
+	 * The type of action to do on the topology.
 	 */
 	@NotNull
 	public TopologyAction action;

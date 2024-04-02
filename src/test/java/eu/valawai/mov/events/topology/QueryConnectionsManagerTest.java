@@ -121,7 +121,7 @@ public class QueryConnectionsManagerTest extends MovEventTestCase {
 				.mongoCollection().find(filter, TopologyConnectionEntity.class).collect().asList());
 		connections.sort((l1, l2) -> {
 
-			var cmp = Long.compare(l1.createTimestamp, l2.createTimestamp);
+			var cmp = Long.compare(l2.updateTimestamp, l1.updateTimestamp);
 			if (cmp == 0) {
 
 				cmp = l1.id.compareTo(l2.id);
@@ -161,7 +161,7 @@ public class QueryConnectionsManagerTest extends MovEventTestCase {
 		query.limit = rnd().nextInt(5, 11);
 		final var channelSourceNamePattern = ".+c1_.+";
 		query.sourceChannelName = "/" + channelSourceNamePattern + "/";
-		query.order = "-updateTimestamp";
+		query.order = "-createTimestamp";
 
 		final var expected = new ConnectionsPagePayload();
 		expected.queryId = query.id;
@@ -174,7 +174,7 @@ public class QueryConnectionsManagerTest extends MovEventTestCase {
 				.mongoCollection().find(filter, TopologyConnectionEntity.class).collect().asList());
 		connections.sort((l1, l2) -> {
 
-			var cmp = Long.compare(l2.updateTimestamp, l1.updateTimestamp);
+			var cmp = Long.compare(l2.createTimestamp, l1.createTimestamp);
 			if (cmp == 0) {
 
 				cmp = l1.id.compareTo(l2.id);
