@@ -1,23 +1,22 @@
-<?xml version="1.0"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.valawai</groupId>
 	<artifactId>master-of-valawai</artifactId>
 	<version>1.0.0</version>
 	<properties>
 		<compiler-plugin.version>3.12.1</compiler-plugin.version>
-		<jacoco.version>0.8.10</jacoco.version>
 		<maven.compiler.release>17</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.9.1</quarkus.platform.version>
+		<quarkus.platform.version>3.9.2</quarkus.platform.version>
 		<skipITs>true</skipITs>
-		<surefire-plugin.version>3.2.3</surefire-plugin.version>
+		<surefire-plugin.version>3.2.5</surefire-plugin.version>
+		<jacoco.version>0.8.12</jacoco.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -50,6 +49,7 @@
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-jacoco</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -129,7 +129,8 @@
 				<configuration>
 					<systemPropertyVariables>
 						<java.util.logging.manager>
-							org.jboss.logmanager.LogManager</java.util.logging.manager>
+							org.jboss.logmanager.LogManager
+						</java.util.logging.manager>
 						<maven.home>${maven.home}</maven.home>
 					</systemPropertyVariables>
 				</configuration>
@@ -148,7 +149,8 @@
 								<native.image.path>
 									${project.build.directory}/${project.build.finalName}-runner</native.image.path>
 								<java.util.logging.manager>
-									org.jboss.logmanager.LogManager</java.util.logging.manager>
+									org.jboss.logmanager.LogManager
+								</java.util.logging.manager>
 								<maven.home>${maven.home}</maven.home>
 							</systemPropertyVariables>
 						</configuration>
@@ -168,7 +170,8 @@
 						<configuration>
 							<exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
 							<destFile>
-								${project.build.directory}/jacoco-quarkus.exec</destFile>
+								${project.build.directory}/jacoco-quarkus.exec
+							</destFile>
 							<append>true</append>
 						</configuration>
 					</execution>
