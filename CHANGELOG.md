@@ -1,6 +1,11 @@
 # Master Of Valawai (MOV)
 
 
+## Version 1.1.0 (April 10,2024)
+
+ - Notify component when is registered if has the channel to do it.
+ 
+
 ## Version 1.0.1 (April 5,2024)
 
  - Improve README.

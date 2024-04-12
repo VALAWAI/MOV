@@ -42,11 +42,11 @@ public class ChannelSchemaTest extends ModelTestCase<ChannelSchema> {
 		model.description = nextPattern("Description of the channel {0}");
 		if (flipCoin()) {
 
-			model.subscribe = nextPayloadSchema();
+			model.subscribe = nextPayloadSchema(3);
 
 		} else {
 
-			model.publish = nextPayloadSchema();
+			model.publish = nextPayloadSchema(3);
 
 		}
 	}

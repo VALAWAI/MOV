@@ -31,21 +31,37 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 	/**
 	 * Generate a next payload schema.
 	 *
+	 * @param max depth level.
+	 *
 	 * @return the next payload schema.
 	 */
-	public static PayloadSchema nextPayloadSchema() {
+	public static PayloadSchema nextPayloadSchema(int max) {
 
-		var option = 0;
-		if (rnd().nextInt() % 3 == 0) {
-			// only do 33% of times otherwise it create too big types
-			option = rnd().nextInt(0, 4);
+		if (max <= 0) {
+
+			final var option = rnd().nextInt(4);
+			return switch (option) {
+			case 0 -> new BasicPayloadSchemaTest().nextModel();
+			case 1 -> new ConstantPayloadSchemaTest().nextModel();
+			case 2 -> new ReferencePayloadSchemaTest().nextModel();
+			default -> new EnumPayloadSchemaTest().nextModel();
+			};
+
+		} else {
+
+			final var option = rnd().nextInt(0, 9);
+			return switch (option) {
+			case 0 -> new BasicPayloadSchemaTest().nextModel();
+			case 1 -> new ConstantPayloadSchemaTest().nextModel();
+			case 2 -> new ReferencePayloadSchemaTest().nextModel();
+			case 3 -> new EnumPayloadSchemaTest().nextModel();
+			case 4 -> new ObjectPayloadSchemaTest().nextModel(max - 1);
+			case 5 -> new ArrayPayloadSchemaTest().nextModel(max - 1);
+			case 6 -> new OneOfPayloadSchemaTest().nextModel(max - 1);
+			case 7 -> new AnyOfPayloadSchemaTest().nextModel(max - 1);
+			default -> new AllOfPayloadSchemaTest().nextModel(max - 1);
+			};
 		}
-		return switch (option) {
-		case 0 -> new BasicPayloadSchemaTest().nextModel();
-		case 1 -> new EnumPayloadSchemaTest().nextModel();
-		case 2 -> new ObjectPayloadSchemaTest().nextModel();
-		default -> new ArrayPayloadSchemaTest().nextModel();
-		};
 	}
 
 	/**

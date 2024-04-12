@@ -35,7 +35,12 @@ import eu.valawai.mov.api.Model;
 @JsonSubTypes({ @Type(value = BasicPayloadSchema.class, name = "BASIC"),
 		@Type(value = EnumPayloadSchema.class, name = "ENUM"),
 		@Type(value = ObjectPayloadSchema.class, name = "OBJECT"),
-		@Type(value = ArrayPayloadSchema.class, name = "ARRAY") })
+		@Type(value = ArrayPayloadSchema.class, name = "ARRAY"),
+		@Type(value = ConstantPayloadSchema.class, name = "CONST"),
+		@Type(value = ReferencePayloadSchema.class, name = "REF"),
+		@Type(value = OneOfPayloadSchema.class, name = "ONE_OF"),
+		@Type(value = AnyOfPayloadSchema.class, name = "ANY_OF"),
+		@Type(value = AllOfPayloadSchema.class, name = "ALL_OF") })
 public abstract class PayloadSchema extends Model {
 
 	/**

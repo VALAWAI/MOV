@@ -1,7 +1,7 @@
 asyncapi: '2.6.0'
 info:
  title: Value-Aware Artificial Intelligence API
- version: '1.0.0'
+ version: '1.1.0'
  description: |
   This api provide the messages that the VALAWAI infrastructure cna manage.
   This messages are used to start/stop the infrastructure and for
@@ -66,6 +66,26 @@ channels:
       message:
         $ref: '#/components/messages/add_log'
 
+  valawai/c{type}/{name}/control/registered:
+    parameters:
+      type:
+        description: The identifeier of the component type.
+        schema:
+          type: string
+          enum:
+            - '0' 
+            - '1' 
+            - '2' 
+      name:
+        description: The name of the component.
+        schema:
+          type: string
+          pattern: '\w+'
+    publish:
+      summary: Notify a component that it has been registered.
+      message:
+        $ref: '#/components/messages/registered_component'
+
 
 
 components:
@@ -115,6 +135,11 @@ components:
       payload:
         $ref: '#/components/schemas/add_log_payload'
 
+    registered_component:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/component_payload'
+
 
   schemas:
     register_component_payload:
@@ -135,7 +160,7 @@ components:
         version:
           description: the component version.
           type: string
-          pattern: '\\d+\\.\\d+\\.\\d+'
+          pattern: '\d+\.\d+\.\d+'
           examples: 
             - 1.0.0
             - 1.7.2
@@ -247,13 +272,13 @@ components:
         version:
           description: The component version.
           type: string
-          pattern: '\\d+\\.\\d+\\.\\d+'
+          pattern: '\d+\.\d+\.\d+'
           examples: 
             - '1.0.5'
         api_version:
           description: The version of the component API.
           type: string
-          pattern: '\\d+\\.\\d+\\.\\d+'
+          pattern: '\d+\.\d+\.\d+'
           examples: 
             - '2.3.0'
         type:
@@ -305,7 +330,6 @@ components:
     payload_schema:
       type: object
       discriminator: type
-      
       properties:
         type:
           type: string
@@ -314,6 +338,8 @@ components:
             - 'ENUM'
             - 'OBJECT'
             - 'ARRAY'
+            - 'CONST'
+            - 'REF'
       required:
         - type
 
@@ -356,6 +382,9 @@ components:
           properties:
             type:
               const: 'OBJECT'
+            id:
+              type: integer
+              description: The identifier used whne this schme is refer by other components.
             properties:
               description: The properties that define the object.
               additionalProperties:
@@ -373,6 +402,30 @@ components:
               description: The type for the elements on the array.
               oneOf:
                 - $ref: '#/components/schemas/payload_schema'
+
+    constant_payload_schema:
+      description: A payload that is a consatnt value.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'CONST'
+            value:
+              type: string
+              description: The constant of the schema.
+
+    reference_payload_schema:
+      description: A payload that is a reference to another schema.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'REF'
+            value:
+              type: integer
+              description: The identifier of the schema that this a reference.
                 
     unregister_component_payload:
       description: The information necessary to unregister a component.

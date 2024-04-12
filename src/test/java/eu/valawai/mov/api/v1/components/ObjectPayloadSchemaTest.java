@@ -35,11 +35,36 @@ public class ObjectPayloadSchemaTest extends PayloadSchemaTestCase<ObjectPayload
 	@Override
 	public void fillIn(ObjectPayloadSchema model) {
 
+		this.fillIn(model, 3);
+	}
+
+	/**
+	 * Create a new model.
+	 *
+	 * @param level max depth level to reach.
+	 *
+	 * @return the created model.
+	 */
+	public ObjectPayloadSchema nextModel(int level) {
+
+		final var model = this.createEmptyModel();
+		this.fillIn(model, level);
+		return model;
+	}
+
+	/**
+	 * Fill in a model with some random values.
+	 *
+	 * @param model to fill in.
+	 * @param level max depth level to reach.
+	 */
+	public void fillIn(ObjectPayloadSchema model, int level) {
+
 		final var max = rnd().nextInt(1, 7);
 		for (var i = 0; i < max; i++) {
 
 			final var name = nextPattern("property_name_{0}");
-			final var type = nextPayloadSchema();
+			final var type = nextPayloadSchema(level - 1);
 			model.properties.put(name, type);
 		}
 

@@ -1,0 +1,106 @@
+asyncapi: 2.6.0
+info:
+  title: Test object loop references
+  version: "9.0.0"
+  description: API description
+channels:
+  valawai/c0/test_component/data/action_1:
+    description: Action 1
+    subscribe:
+      message:
+        $ref: "#/components/messages/action_1_message"
+
+  valawai/c0/test_component/data/action_2:
+    description: Action 2
+    subscribe:
+      message:
+        $ref: "#/components/messages/action_2_message"
+
+  valawai/c0/test_component/data/action_3:
+    description: Action 3
+    subscribe:
+      message:
+        $ref: "#/components/messages/action_3_message"
+
+  valawai/c0/test_component/data/action_4:
+    description: Action 4
+    subscribe:
+      message:
+        $ref: "#/components/messages/action_4_message"
+
+components:
+  messages:
+    action_1_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/action_1_payload"
+
+    action_2_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/action_2_payload"
+
+    action_3_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/action_3_payload"
+
+    action_4_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/action_4_payload"
+        
+  schemas:
+    action_1_payload:
+      $ref: "#/components/schemas/object_type"
+    action_2_payload:
+      type: object
+      properties:
+        index:
+          oneOf:
+            - $ref: '#/components/schemas/enum_type'
+        child:
+          oneOf:
+            - $ref: "#/components/schemas/object_type"
+    action_3_payload:
+      type: object
+      properties:
+        index:
+          oneOf:
+            - $ref: '#/components/schemas/enum_type'
+        child:
+          type: object
+          properties:
+            index:
+              oneOf:
+                - $ref: '#/components/schemas/enum_type'
+            child:
+              anyOf:
+                - $ref: "#/components/schemas/enum_type"
+                
+    action_4_payload:
+      allOf:
+        - $ref: "#/components/schemas/object_type"
+
+    enum_type:
+      type: string
+      enum:
+        - "1"
+        - "2"
+        - "3"
+
+    object_type:
+      type: object
+      properties:
+        index:
+          oneOf:
+            - $ref: '#/components/schemas/enum_type'
+        child:
+          type: object
+          properties:
+            index:
+              oneOf:
+                - $ref: '#/components/schemas/enum_type'
+            child:
+              anyOf:
+                - $ref: "#/components/schemas/object_type"

@@ -1,0 +1,68 @@
+asyncapi: 2.6.0
+
+info:
+  title: Test types
+  version: 4.0.0
+  description: API test
+
+channels:
+  valawai/c0/test/control/parameters:
+    subscribe:
+      message:
+        $ref: '#/components/messages/parameters_message'
+
+components:
+  messages:
+    parameters_message:
+      payload:
+        $ref: '#/components/schemas/parameters_payload'
+
+  schemas:
+    parameters_payload:
+      type: object
+      properties:
+        basic_type_integer:
+          type: integer
+        basic_type_number:
+          type: number
+        basic_type_boolean:
+          type: boolean
+        basic_type_string:
+          type: string
+        enum_type:
+          type: string
+          enum:
+            - A
+            - B
+            - C
+        array_type__with_integer:
+          type: array
+          items:
+           - type: integer
+        array_type__with_number:
+          type: array
+          items:
+           - type: number
+        array_type__with_boolean:
+          type: array
+          items:
+           - type: boolean
+        array_type__with_string:
+          type: array
+          items:
+           - type: string
+        array_type__with_enum:
+          type: array
+          items:
+           - type: string
+             enum:
+               - "1"
+               - "2"
+               - "3"
+        array_type__with_object:
+          type: array
+          items:
+           - type: object
+             properties:
+               field1:
+                 type: integer

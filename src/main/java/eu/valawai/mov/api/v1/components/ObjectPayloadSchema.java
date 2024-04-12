@@ -23,6 +23,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 public class ObjectPayloadSchema extends PayloadSchema {
 
 	/**
+	 * The identifier of the object when it is a referenced.
+	 */
+	@Schema(description = "The identifier of the object if it is references.")
+	public Integer id;
+
+	/**
 	 * The properties that define the object.
 	 */
 	@Schema(description = "The properties that define the object attributes.")

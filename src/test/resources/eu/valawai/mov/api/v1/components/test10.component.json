@@ -1,0 +1,122 @@
+{
+	"name": "C0 E-mail sensor API",
+	"version": "10.0.0",
+	"apiVersion": "10.0.0",
+	"description": "API description",
+	"channels": [
+		{
+			"name": "valawai/c0/email_sensor/data/e_mail",
+			"description": "Notify about the received e-mails.",
+			"publish": {
+				"type": "OBJECT",
+				"properties": {
+					"subject": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"mime": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"content": {
+						"type": "BASIC",
+						"format": "STRING"
+					}
+				}
+			}
+		},
+		{
+			"name": "valawai/c0/email_sensor/control/change_parameters",
+			"description": "The action to change the parameters taht configure the component.",
+			"subscribe": {
+				"type": "OBJECT",
+				"properties": {
+					"check_duration": {
+						"type": "BASIC",
+						"format": "INTEGER"
+					}
+				}
+			}
+		},
+		{
+			"name": "valawai/c0/email_sensor/control/registered",
+			"description": "The message to notify when the component has been registered.",
+			"subscribe": {
+				"type": "OBJECT",
+				"properties": {
+					"id": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"name": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"description": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"version": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"api_version": {
+						"type": "BASIC",
+						"format": "STRING"
+					},
+					"since": {
+						"type": "BASIC",
+						"format": "INTEGER"
+					},
+					"type": {
+						"type": "ENUM",
+						"values": [
+							"C0",
+							"C1",
+							"C2"
+						]
+					},
+					"channels": {
+						"type": "ARRAY",
+						"items": [
+						{
+							"type": "OBJECT",
+							"properties": {
+								"id": {
+									"type": "BASIC",
+									"format": "STRING"
+								},
+								"description": {
+									"type": "BASIC",
+									"format": "STRING"
+								},
+								"subscribe": {
+									"type": "OBJECT",
+									"id": 2,
+									"properties":{
+										"type":{
+											"type": "ENUM",
+											"values":[
+                                               "BASIC",
+                                               "ENUM",
+                                               "OBJECT",
+                                               "ARRAY",
+                                               "CONST",
+                                               "REF"
+											]
+										}
+									}
+								},
+								"publish": {
+									"type": "REF",
+									"value": 2
+								}
+							}
+						}
+					  ]
+					}
+				}
+			}
+		}
+	]
+}

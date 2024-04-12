@@ -1,0 +1,96 @@
+{
+	"name": "Test object loop references",
+	"version": "9.0.0",
+	"apiVersion": "9.0.0",
+	"description": "API description",
+	"channels": [
+		{
+			"name": "valawai/c0/test_component/data/action_1",
+			"description": "Action 1",
+			"subscribe": {
+				"id": 1,
+				"type": "OBJECT",
+				"properties": {
+					"index": {
+						"type": "ENUM",
+						"values": [
+							"1",
+							"2",
+							"3"
+						]
+					},
+					"child":{
+						"type": "REF",
+						"value": 1
+					}
+				}
+			}
+		},
+		{
+			"name": "valawai/c0/test_component/data/action_2",
+			"description": "Action 2",
+			"subscribe": {
+				"id": 1,
+				"type": "OBJECT",
+				"properties": {
+					"index": {
+						"type": "ENUM",
+						"values": [
+							"1",
+							"2",
+							"3"
+						]
+					},
+					"child":{
+						"type": "REF",
+						"value": 1
+					}
+				}
+			}
+		},
+		{
+			"name": "valawai/c0/test_component/data/action_3",
+			"description": "Action 3",
+			"subscribe": {
+				"id": 1,
+				"type": "OBJECT",
+				"properties": {
+					"index": {
+						"type": "ENUM",
+						"values": [
+							"1",
+							"2",
+							"3"
+						]
+					},
+					"child":{
+						"type": "REF",
+						"value": 1
+					}
+				}
+			}
+		},
+		{
+			"name": "valawai/c0/test_component/data/action_4",
+			"description": "Action 4",
+			"subscribe": {
+				"id": 1,
+				"type": "OBJECT",
+				"properties": {
+					"index": {
+						"type": "ENUM",
+						"values": [
+							"1",
+							"2",
+							"3"
+						]
+					},
+					"child":{
+						"type": "REF",
+						"value": 1
+					}
+				}
+			}
+		}
+	]
+}

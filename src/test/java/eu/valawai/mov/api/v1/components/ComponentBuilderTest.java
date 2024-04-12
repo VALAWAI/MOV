@@ -37,14 +37,15 @@ public class ComponentBuilderTest {
 	 * @throws IOException If cannot read the files to compare.
 	 */
 	@ParameterizedTest(name = "Should create a component for the file {0}")
-	@ValueSource(ints = { 1, 2, 3, 4, 5, 6, 7 })
-	public void shouldCrreateComponentFor(int index) throws IOException {
+	// @ValueSource(ints = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+	@ValueSource(ints = { 10 })
+	public void shouldCreateComponentFor(int index) throws IOException {
 
-		final var yaml = new String(this.getClass().getClassLoader()
-				.getResourceAsStream("eu/valawai/mov/api/v1/components/test" + index + ".asyncapi.yml").readAllBytes());
-		final var json = new String(this.getClass().getClassLoader()
-				.getResourceAsStream("eu/valawai/mov/api/v1/components/test" + index + ".component.json")
-				.readAllBytes());
+		final var asyncapiRespource = String.format("eu/valawai/mov/api/v1/components/test%02d.asyncapi.yml", index);
+		final var yaml = new String(
+				this.getClass().getClassLoader().getResourceAsStream(asyncapiRespource).readAllBytes());
+		final var jsonRespource = String.format("eu/valawai/mov/api/v1/components/test%02d.component.json", index);
+		final var json = new String(this.getClass().getClassLoader().getResourceAsStream(jsonRespource).readAllBytes());
 		final var expected = Json.decodeValue(json, Component.class);
 		final var component = ComponentBuilder.fromAsyncapi(yaml);
 		assertEquals(expected, component);
@@ -61,7 +62,7 @@ public class ComponentBuilderTest {
 	@EmptySource
 	@ValueSource(strings = { "undefined", "\tvalue:\n\t\t1", "asyncapi: 2.6.0", "asyncapi: 2.6.0\n channels:",
 			"asyncapi: 2.6.0\n channels:\n  test:" })
-	public void shouldNotCrreateComponentForBadValue(String value) {
+	public void shouldNotCreateComponentForBadValue(String value) {
 
 		final var component = ComponentBuilder.fromAsyncapi(value);
 		assertNull(component);

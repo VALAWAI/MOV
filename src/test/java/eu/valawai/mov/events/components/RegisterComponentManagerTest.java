@@ -10,13 +10,16 @@ package eu.valawai.mov.events.components;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.BasicPayloadFormat;
 import eu.valawai.mov.api.v1.components.BasicPayloadSchema;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
+import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
@@ -128,6 +132,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var apiVersion = nextPattern("{0}.{1}.{2}", 3);
 		final var sourceChannelName = nextPattern("test/register_component_publish_{0}");
 		final var sourceChannelDescription = nextPattern("Description of a channel {0}");
+
 		final var fieldName = nextPattern("field_to_test_{0}");
 		payload.asyncapiYaml = MessageFormat.format("""
 				asyncapi: 2.6.0
@@ -327,6 +332,163 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		// Check that the connection is not working
 		assertFalse(this.listener.isOpen(sourceChannelName));
+	}
+
+	/**
+	 * Check that a component is registered and it is notified when is done.
+	 */
+	@Test
+	public void shouldRegisterComponentAndNotifyWhenIsDone() {
+
+		// Guarantee that exist some components
+		ComponentEntities.minComponents(100);
+
+		// The message to register the target component of the connection
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		// Create the component that will be the source of the connection
+		final var sourceNext = new ComponentTest().nextModel();
+		final ComponentEntity source = new ComponentEntity();
+		source.apiVersion = sourceNext.apiVersion;
+		source.channels = new ArrayList<ChannelSchema>();
+		source.description = sourceNext.description;
+		source.name = sourceNext.name;
+		source.since = sourceNext.since;
+		source.type = payload.type;
+		source.version = sourceNext.version;
+		final var sourceChannel = new ChannelSchema();
+		final var sourceChannelName = nextPattern("test/register_component_subscribe_{0}");
+
+		sourceChannel.name = sourceChannelName;
+		final var sourceObject = new ObjectPayloadSchema();
+		final var basic = new BasicPayloadSchema();
+		basic.format = BasicPayloadFormat.STRING;
+		sourceObject.properties.put(inFieldName, basic);
+		sourceChannel.publish = sourceObject;
+		source.channels.add(sourceChannel);
+		this.assertItemNotNull(source.persist());
+
+		// Create the component that will be the target of the connection
+		final var targetNext = new ComponentTest().nextModel();
+		final ComponentEntity target = new ComponentEntity();
+		target.apiVersion = targetNext.apiVersion;
+		target.channels = new ArrayList<ChannelSchema>();
+		target.description = targetNext.description;
+		target.name = targetNext.name;
+		target.since = targetNext.since;
+		target.type = payload.type;
+		target.version = targetNext.version;
+		final var targetChannel = new ChannelSchema();
+		final var targetChannelName = nextPattern("test/register_component_subscribe_{0}");
+
+		targetChannel.name = targetChannelName;
+		final var targetObject = new ObjectPayloadSchema();
+		targetObject.properties.put(outFieldName, basic);
+		targetChannel.publish = targetObject;
+		target.channels.add(targetChannel);
+		this.assertItemNotNull(target.persist());
+
+		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
+		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
+		final var queue = this.waitOpenQueue(
+				MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex, componentName));
+
+		// register the component
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// wait notify the component is registered
+		final var registered = queue.waitReceiveMessage(ComponentPayload.class);
+		assertEquals(payload.name, registered.name);
+		final var expectedComponent = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+		assertEquals(expectedComponent.description, registered.description);
+		assertEquals(payload.version, registered.version);
+		assertEquals(expectedComponent.apiVersion, registered.apiVersion);
+		assertEquals(payload.type, registered.type);
+		assertTrue(now <= registered.since);
+		assertEquals(expectedComponent.channels, registered.channels);
+
+		// check updated the components
+		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
+		assertEquals(countComponentsBefore + 1, countComponentsAfter);
+		// Get last component
+		final ComponentEntity lastComponent = this
+				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
+		assertEquals(registered.id, lastComponent.id);
+		assertTrue(now <= lastComponent.since);
+		assertEquals(payload.name, lastComponent.name);
+		assertEquals(payload.type, lastComponent.type);
+		assertEquals(payload.version, lastComponent.version);
+		assertEquals(expectedComponent.apiVersion, lastComponent.apiVersion);
+		assertEquals(expectedComponent.channels, lastComponent.channels);
+
+		// check updated the connections
+		final var countConnectionsAfter = this.assertItemNotNull(TopologyConnectionEntity.count());
+		assertEquals(countConnectionsBefore + 2, countConnectionsAfter);
+
+		// Get last connection
+		final TopologyConnectionEntity lastConnectionWithComponentAsTarget = this
+				.assertItemNotNull(TopologyConnectionEntity
+						.find("target.componentId = ?1", Sort.descending("_id"), lastComponent.id).firstResult());
+		assertTrue(now <= lastConnectionWithComponentAsTarget.createTimestamp);
+		assertEquals(lastConnectionWithComponentAsTarget.createTimestamp,
+				lastConnectionWithComponentAsTarget.updateTimestamp);
+		assertNull(lastConnectionWithComponentAsTarget.deletedTimestamp);
+		assertNotNull(lastConnectionWithComponentAsTarget.target);
+		assertEquals(targetChannelName, lastConnectionWithComponentAsTarget.target.channelName);
+		assertEquals(lastComponent.id, lastConnectionWithComponentAsTarget.target.componentId);
+		assertNotNull(lastConnectionWithComponentAsTarget.source);
+		assertEquals(sourceChannelName, lastConnectionWithComponentAsTarget.source.channelName);
+		assertEquals(source.id, lastConnectionWithComponentAsTarget.source.componentId);
+
+		// Check that the connection is not working
+		assertFalse(this.listener.isOpen(sourceChannelName));
+
+		// Get last connection
+		final TopologyConnectionEntity lastConnectionWithComponentAsSource = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= lastConnectionWithComponentAsSource.createTimestamp);
+		assertTrue(
+				lastConnectionWithComponentAsSource.createTimestamp <= lastConnectionWithComponentAsSource.updateTimestamp);
+		assertNull(lastConnectionWithComponentAsSource.deletedTimestamp);
+		assertNotNull(lastConnectionWithComponentAsSource.source);
+		assertEquals(sourceChannelName, lastConnectionWithComponentAsSource.source.channelName);
+		assertEquals(lastComponent.id, lastConnectionWithComponentAsSource.source.componentId);
+		assertNotNull(lastConnectionWithComponentAsSource.target);
+		assertEquals(targetChannelName, lastConnectionWithComponentAsSource.target.channelName);
+		assertEquals(target.id, lastConnectionWithComponentAsSource.target.componentId);
+
+		// Check that the connection is working
+		assertTrue(this.listener.isOpen(targetChannelName));
+
+	}
+
+	/**
+	 *
+	 */
+	private String loadAsyncapiResourceTemplate(String name) {
+
+		try {
+
+			final var loader = RegisterComponentPayloadTest.class.getClassLoader();
+			final var stream = loader.getResourceAsStream("eu/valawai/mov/events/components/" + name);
+			final var bytes = stream.readAllBytes();
+			return new String(bytes, StandardCharsets.UTF_8);
+
+		} catch (final Throwable error) {
+
+			fail("");
+			return null;
+		}
+
 	}
 
 }

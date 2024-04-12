@@ -9,20 +9,20 @@
 import { AbstractPayloadSchema } from "./abstract-payload-schema.model";
 
 /**
- *  A payload that is defined of one value of a set.
+ * A payload that is defined as a constant value.
  *
  * @author VALAWAI
  */
-export class EnumPayloadSchema extends AbstractPayloadSchema {
+export class ConstantPayloadSchema extends AbstractPayloadSchema {
 
 	/**
 	 * The type of the payload.
 	 */
-	public override readonly type = "ENUM";
+	public override readonly type = "CONST";
 
 	/**
-	 * The possible enum values.
+	 * The constant value.
 	 */
-	public values: string[] | null = null;
+	public value: string | null = null;
 
 }

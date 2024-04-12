@@ -11,30 +11,21 @@ package eu.valawai.mov.api.v1.components;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
- * A payload that is represented by an array of values.
+ * A payload that is any of the possible schemas.
  *
  * @see PayloadSchema
  *
  * @author VALAWAI
  */
-@Schema(description = "A schema for a payload that contains an array of values.")
-public class ArrayPayloadSchema extends DiversePayloadSchema {
+@Schema(description = "A payload that is any of the possible schemas.")
+public class AnyOfPayloadSchema extends CombinePayloadSchema {
 
 	/**
 	 * Create a new array payload schema.
 	 */
-	public ArrayPayloadSchema() {
+	public AnyOfPayloadSchema() {
 
-		this.type = PayloadType.ARRAY;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean match(PayloadSchema other) {
-
-		return other instanceof ArrayPayloadSchema && super.match(other);
+		this.type = PayloadType.ANY_OF;
 	}
 
 }

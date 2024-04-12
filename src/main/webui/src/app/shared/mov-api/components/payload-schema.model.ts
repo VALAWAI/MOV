@@ -8,6 +8,7 @@
 
 import { ArrayPayloadSchema } from "./array-payload-schema.model";
 import { BasicPayloadSchema } from "./basic-payload-schema.model";
+import { ConstantPayloadSchema } from "./constant-payload-schema.model";
 import { EnumPayloadSchema } from "./enum-payload-schema.model";
 import { ObjectPayloadSchema } from "./object-payload-schema.model";
 
@@ -21,6 +22,7 @@ export type PayloadSchema = BasicPayloadSchema
 	| EnumPayloadSchema
 	| ObjectPayloadSchema
 	| ArrayPayloadSchema
+	| ConstantPayloadSchema
 	;
 
 
@@ -29,4 +31,4 @@ export type PayloadSchema = BasicPayloadSchema
  *
  * @author VALAWAI
  */
-export type PayloadType = 'BASIC' | 'ENUM' | 'OBJECT' | 'ARRAY';
+export type PayloadType = 'BASIC' | 'ENUM' | 'OBJECT' | 'ARRAY' | 'CONST';

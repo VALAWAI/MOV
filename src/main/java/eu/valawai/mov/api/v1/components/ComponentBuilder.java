@@ -10,7 +10,7 @@ package eu.valawai.mov.api.v1.components;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
@@ -51,7 +51,6 @@ public interface ComponentBuilder {
 				component.apiVersion = component.version;
 				component.channels = new ArrayList<>();
 
-				final Map<String, PayloadSchema> schemas = new HashMap<>();
 				for (final var channelId : channels.keySet()) {
 
 					@SuppressWarnings("unchecked")
@@ -62,10 +61,10 @@ public interface ComponentBuilder {
 					channel.description = stringProperty("description", channelDef);
 					final var subscribe = section("subscribe", channelDef);
 					var message = section("message", subscribe);
-					channel.subscribe = messagePayload(message, asyncapi, schemas);
+					channel.subscribe = messagePayload(message, asyncapi);
 					final var publish = section("publish", channelDef);
 					message = section("message", publish);
-					channel.publish = messagePayload(message, asyncapi, schemas);
+					channel.publish = messagePayload(message, asyncapi);
 				}
 
 				return component;
@@ -84,12 +83,10 @@ public interface ComponentBuilder {
 	 *
 	 * @param message  to get the payload.
 	 * @param document where are the references.
-	 * @param schemas  the schemas that has already defined.
 	 *
 	 * @return the payload associated to the message.
 	 */
-	private static PayloadSchema messagePayload(Map<String, Object> message, Map<String, Object> document,
-			Map<String, PayloadSchema> schemas) {
+	private static PayloadSchema messagePayload(Map<String, Object> message, Map<String, Object> document) {
 
 		var msg = referenceSection(message, document);
 		if (msg == null) {
@@ -97,7 +94,7 @@ public interface ComponentBuilder {
 			msg = message;
 		}
 		final var payload = section("payload", msg);
-		return payload(payload, document, schemas);
+		return payload(payload, document, new ArrayList<>());
 	}
 
 	/**
@@ -128,47 +125,16 @@ public interface ComponentBuilder {
 	}
 
 	/**
-	 * Obtain the reference defined in a section.
-	 *
-	 * @param section  to obtain the reference.
-	 * @param document where are the references.
-	 * @param schemas  the schemas that has already defined.
-	 *
-	 * @return the reference section or {@code null} if not refers to anything.
-	 */
-	private static PayloadSchema referencePayload(Map<String, Object> section, Map<String, Object> document,
-			Map<String, PayloadSchema> schemas) {
-
-		PayloadSchema payload = null;
-		final var value = section.get("$ref");
-		if (value instanceof final String ref) {
-
-			final var defined = schemas.get(ref);
-			if (defined instanceof PayloadSchema) {
-
-				payload = defined;
-
-			} else {
-
-				final var referenceSection = referenceSection(section, document);
-				payload = payload(referenceSection, document, schemas);
-				schemas.put(ref, payload);
-			}
-		}
-		return payload;
-	}
-
-	/**
 	 * Obtain the payload schema defined.
 	 *
 	 * @param section  with the payload definition.
 	 * @param document where are the references.
-	 * @param schemas  the schemas that has already defined.
+	 * @param objects  the objects schemas that has already defined.
 	 *
 	 * @return the payload schema or {@code null} if cannot obtain it.
 	 */
 	private static PayloadSchema payload(Map<String, Object> section, Map<String, Object> document,
-			Map<String, PayloadSchema> schemas) {
+			List<ObjectPayloadSchema> objects) {
 
 		if (section == null) {
 
@@ -176,16 +142,20 @@ public interface ComponentBuilder {
 
 		} else {
 
-			final var ref = referencePayload(section, document, schemas);
-			if (ref != null) {
+			final var referenceSection = referenceSection(section, document);
+			if (referenceSection != null) {
 
-				return ref;
+				return payload(referenceSection, document, objects);
+
+			} else if (section.containsKey("const")) {
+
+				return constantPayload(section, document);
 
 			} else if (section.containsKey("enum")) {
 
-				return enumPayload(section, document, schemas);
+				return enumPayload(section, document);
 
-			} else {
+			} else if (section.containsKey("type")) {
 
 				final var type = stringProperty("type", section);
 				return switch (type) {
@@ -193,9 +163,13 @@ public interface ComponentBuilder {
 				case "number" -> BasicPayloadSchema.with(BasicPayloadFormat.NUMBER);
 				case "string" -> BasicPayloadSchema.with(BasicPayloadFormat.STRING);
 				case "boolean" -> BasicPayloadSchema.with(BasicPayloadFormat.BOOLEAN);
-				case "array" -> arrayPayload(section, document, schemas);
-				default -> objectPayload(section, document, schemas);
+				case "object" -> objectPayload(section, document, objects);
+				default -> diversePayload(section, document, objects);
 				};
+
+			} else {
+
+				return diversePayload(section, document, objects);
 			}
 		}
 	}
@@ -205,12 +179,10 @@ public interface ComponentBuilder {
 	 *
 	 * @param section  with the payload definition.
 	 * @param document where are the references.
-	 * @param schemas  the schemas that has already defined.
 	 *
 	 * @return the enumeration payload schema or {@code null} if cannot obtain it.
 	 */
-	private static EnumPayloadSchema enumPayload(Map<String, Object> section, Map<String, Object> document,
-			Map<String, PayloadSchema> schemas) {
+	private static EnumPayloadSchema enumPayload(Map<String, Object> section, Map<String, Object> document) {
 
 		final var values = section.get("enum");
 		final var payload = new EnumPayloadSchema();
@@ -225,22 +197,99 @@ public interface ComponentBuilder {
 	}
 
 	/**
-	 * Obtain the array payload schema defined.
+	 * Obtain the constant payload schema defined.
 	 *
 	 * @param section  with the payload definition.
 	 * @param document where are the references.
-	 * @param schemas  the schemas that has already defined.
 	 *
-	 * @return the array payload schema or {@code null} if cannot obtain it.
+	 * @return the constant payload schema or {@code null} if cannot obtain it.
 	 */
-	private static ArrayPayloadSchema arrayPayload(Map<String, Object> section, Map<String, Object> document,
-			Map<String, PayloadSchema> schemas) {
+	private static ConstantPayloadSchema constantPayload(Map<String, Object> section, Map<String, Object> document) {
 
-		final var itemsSection = section("items", section);
-		final var items = payload(itemsSection, document, schemas);
-		final var array = new ArrayPayloadSchema();
-		array.items = items;
-		return array;
+		final var payload = new ConstantPayloadSchema();
+		payload.value = (String) section.get("const");
+		return payload;
+
+	}
+
+	/**
+	 * Obtain the diverse payload schema defined.
+	 *
+	 * @param section  with the diverse references are defined.
+	 * @param document where are the references.
+	 * @param objects  the objects schemas that has already defined.
+	 *
+	 * @return the diverse payload schema or {@code null} if cannot obtain it.
+	 */
+	private static PayloadSchema diversePayload(Map<String, Object> section, Map<String, Object> document,
+			List<ObjectPayloadSchema> objects) {
+
+		DiversePayloadSchema schema = null;
+		Object values = null;
+		if ("array".equals(section.get("type"))) {
+
+			values = section.get("items");
+			schema = new ArrayPayloadSchema();
+
+		} else if (section.containsKey("oneOf")) {
+
+			values = section.get("oneOf");
+			schema = new OneOfPayloadSchema();
+
+		} else if (section.containsKey("anyOf")) {
+
+			values = section.get("anyOf");
+			schema = new AnyOfPayloadSchema();
+
+		} else if (section.containsKey("allOf")) {
+
+			values = section.get("allOf");
+			schema = new AllOfPayloadSchema();
+
+		} else {
+			// it may be an object
+			return objectPayload(section, document, objects);
+		}
+
+		if (values instanceof final List references) {
+
+			final var iter = references.iterator();
+			schema.items = new ArrayList<>();
+			while (iter.hasNext()) {
+
+				final var ref = iter.next();
+				if (ref instanceof Map) {
+
+					@SuppressWarnings("unchecked")
+					final var item = payload((Map<String, Object>) ref, document, objects);
+					if (item != null) {
+
+						schema.items.add(item);
+					}
+				}
+			}
+
+		} else if (values instanceof final Map ref) {
+
+			@SuppressWarnings("unchecked")
+			final var item = payload(ref, document, objects);
+			if (item != null) {
+
+				schema.items = new ArrayList<>();
+				schema.items.add(item);
+			}
+
+		} // else unexpected references definition
+
+		if (schema != null && !(schema instanceof ArrayPayloadSchema)) {
+
+			if (schema.items.size() == 1) {
+
+				return schema.items.get(0);
+			}
+		}
+
+		return schema;
 	}
 
 	/**
@@ -248,22 +297,41 @@ public interface ComponentBuilder {
 	 *
 	 * @param section  with the payload definition.
 	 * @param document where are the references.
-	 * @param schemas  the schemas that has already defined.
+	 * @param objects  the objects schemas that has already defined.
 	 *
 	 * @return the object payload schema or {@code null} if cannot obtain it.
 	 */
-	private static ObjectPayloadSchema objectPayload(Map<String, Object> section, Map<String, Object> document,
-			Map<String, PayloadSchema> schemas) {
+	private static PayloadSchema objectPayload(Map<String, Object> section, Map<String, Object> document,
+			List<ObjectPayloadSchema> objects) {
 
 		final var properties = section("properties", section);
-		final var objPayload = new ObjectPayloadSchema();
-		for (final var name : properties.keySet()) {
+		final var propertNames = properties.keySet();
+		final var max = objects.size();
+		for (var i = 0; i < max; i++) {
 
-			final var payloadSection = section(name, properties);
-			final var payload = payload(payloadSection, document, schemas);
-			objPayload.properties.put(name, payload);
+			final var object = objects.get(i);
+			if (object.properties.keySet().equals(propertNames)) {
+
+				object.id = i;
+				final var ref = new ReferencePayloadSchema();
+				ref.value = i;
+				return ref;
+			}
 		}
 
+		final var objPayload = new ObjectPayloadSchema();
+		for (final var name : propertNames) {
+
+			objPayload.properties.put(name, null);
+		}
+		objects.add(objPayload);
+
+		for (final var name : propertNames) {
+
+			final var payloadSection = section(name, properties);
+			final var payload = payload(payloadSection, document, objects);
+			objPayload.properties.put(name, payload);
+		}
 		return objPayload;
 	}
 

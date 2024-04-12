@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.events.components;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.CompletionStage;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -16,6 +18,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
+import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.events.topology.ChangeTopologyPayload;
@@ -98,9 +101,12 @@ public class RegisterComponentManager {
 
 						AddLog.fresh().withInfo().withMessage("Added the component {0}.", source).withPayload(payload)
 								.store();
+						final var channelsToIgnore = new HashSet<String>();
+						this.notifyComponentRegistered(source, channelsToIgnore);
+
 						final var paginator = ComponentEntity.find("channels != null", Sort.ascending("_id"))
 								.page(Page.ofSize(10));
-						this.createConnections(source, paginator);
+						this.createConnections(source, paginator, channelsToIgnore);
 						return null;
 
 					} else {
@@ -134,13 +140,54 @@ public class RegisterComponentManager {
 	}
 
 	/**
+	 * Notify the component that it is has been registered.
+	 *
+	 * @param entity           of the component that has been registered.
+	 * @param channelsToIgnore collection to add the channels to ignore.
+	 */
+	private void notifyComponentRegistered(ComponentEntity entity, Collection<String> channelsToIgnore) {
+
+		if (entity.channels != null) {
+			final var expectedChannelNameStart = "valaway/" + entity.type.name().toLowerCase() + "/";
+
+			for (final var channel : entity.channels) {
+
+				if (channel.subscribe instanceof final ObjectPayloadSchema schema
+						&& channel.name.startsWith(expectedChannelNameStart)
+						&& channel.name.endsWith("/control/registered") && schema.properties.containsKey("id")
+						&& schema.properties.containsKey("name") && schema.properties.containsKey("description")
+						&& schema.properties.containsKey("version") && schema.properties.containsKey("apiVersion")
+						&& schema.properties.containsKey("type") && schema.properties.containsKey("since")
+						&& schema.properties.containsKey("channels")) {
+					// found channel to notify the registered component.
+					final var payload = new ComponentPayload();
+					payload.id = entity.id;
+					payload.name = entity.name;
+					payload.description = entity.description;
+					payload.version = entity.version;
+					payload.apiVersion = entity.apiVersion;
+					payload.type = entity.type;
+					payload.since = entity.since;
+					payload.channels = entity.channels;
+					this.publish.send(channel.name, payload);
+					channelsToIgnore.add(channel.name);
+					return;
+				}
+
+			}
+		}
+
+	}
+
+	/**
 	 * Create the connection with the source and the components of a page.
 	 *
-	 * @param source    component to check to create the connection.
-	 * @param paginator function that paginate the components.
+	 * @param source           component to check to create the connection.
+	 * @param paginator        function that paginate the components.
+	 * @param channelsToIgnore collection to add the channels to ignore.
 	 */
 	private void createConnections(ComponentEntity source,
-			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
+			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator, Collection<String> channelsToIgnore) {
 
 		final Multi<ComponentEntity> getter = paginator.stream();
 		getter.onCompletion().invoke(() -> {
@@ -149,7 +196,7 @@ public class RegisterComponentManager {
 
 				if (hasNext) {
 
-					this.createConnections(source, paginator.nextPage());
+					this.createConnections(source, paginator.nextPage(), channelsToIgnore);
 
 				}
 				// else finished nothing to do
@@ -162,7 +209,7 @@ public class RegisterComponentManager {
 
 		}).subscribe().with(target -> {
 
-			this.createConnections(source, target);
+			this.createConnections(source, target, channelsToIgnore);
 
 		}, error -> {
 
@@ -175,19 +222,28 @@ public class RegisterComponentManager {
 	/**
 	 * Create the connection between two components.
 	 *
-	 * @param source node of the connection.
-	 * @param target node of the connection.
+	 * @param source           node of the connection.
+	 * @param target           node of the connection.
+	 * @param channelsToIgnore collection to add the channels to ignore.
 	 */
-	private void createConnections(ComponentEntity source, ComponentEntity target) {
+	private void createConnections(ComponentEntity source, ComponentEntity target,
+			Collection<String> channelsToIgnore) {
 
 		if (source.channels != null && target.channels != null) {
 
 			for (final var sourceChannel : source.channels) {
 
-				for (final var targetChannel : target.channels) {
+				if (!channelsToIgnore.contains(sourceChannel.name)) {
 
-					this.createConnections(source, sourceChannel, target, targetChannel);
-					this.createConnections(target, targetChannel, source, sourceChannel);
+					for (final var targetChannel : target.channels) {
+
+						if (!channelsToIgnore.contains(targetChannel.name)) {
+
+							this.createConnections(source, sourceChannel, target, targetChannel);
+							this.createConnections(target, targetChannel, source, sourceChannel);
+						}
+
+					}
 
 				}
 			}

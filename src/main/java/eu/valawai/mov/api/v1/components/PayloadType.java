@@ -43,5 +43,40 @@ public enum PayloadType {
 	 *
 	 * @see ArrayPayloadSchema
 	 */
-	ARRAY;
+	ARRAY,
+
+	/**
+	 * The constant payload schema.
+	 *
+	 * @see ConstantPayloadSchema
+	 */
+	CONST,
+
+	/**
+	 * The reference payload schema.
+	 *
+	 * @see ReferencePayloadSchema
+	 */
+	REF,
+
+	/**
+	 * The payload schema to select one schema from a list.
+	 *
+	 * @see OneOfPayloadSchema
+	 */
+	ONE_OF,
+
+	/**
+	 * The reference payload to select any schema from a list.
+	 *
+	 * @see AnyOfPayloadSchema
+	 */
+	ANY_OF,
+
+	/**
+	 * The reference payload schema formed by a list of schemas.
+	 *
+	 * @see AllOfPayloadSchema
+	 */
+	ALL_OF;
 }

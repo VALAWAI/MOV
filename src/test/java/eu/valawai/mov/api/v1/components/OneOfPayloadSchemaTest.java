@@ -9,21 +9,21 @@
 package eu.valawai.mov.api.v1.components;
 
 /**
- * Test the {@link ArrayPayloadSchema}.
+ * Test the {@link OneOfPayloadSchema}.
  *
- * @see ArrayPayloadSchema
+ * @see OneOfPayloadSchema
  *
  * @author VALAWAI
  */
-public class ArrayPayloadSchemaTest extends DiversePayloadSchemaTestCase<ArrayPayloadSchema> {
+public class OneOfPayloadSchemaTest extends DiversePayloadSchemaTestCase<OneOfPayloadSchema> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ArrayPayloadSchema createEmptyModel() {
+	public OneOfPayloadSchema createEmptyModel() {
 
-		return new ArrayPayloadSchema();
+		return new OneOfPayloadSchema();
 	}
 
 }

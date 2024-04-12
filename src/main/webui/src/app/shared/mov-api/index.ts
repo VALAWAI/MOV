@@ -30,3 +30,4 @@ export { TopologyConnectionNode } from './topology/topology-connection-node.mode
 export { TOPOLOGY_ACTION_NAMES, TopologyAction } from './topology/topology-action.model';
 export { ChangeConnection } from './topology/change-connection.model';
 export { ConnectionToCreate } from './topology/connection-to-create.model';
+export { ConstantPayloadSchema } from './components/constant-payload-schema.model';

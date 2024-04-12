@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  * @author VALAWAI
  */
 @JsonRootName("enum")
-@Schema(description = "A payload that can be one of the values defined on a set,")
+@Schema(description = "A payload that can be one of the values defined on a set.")
 public class EnumPayloadSchema extends PayloadSchema {
 
 	/**

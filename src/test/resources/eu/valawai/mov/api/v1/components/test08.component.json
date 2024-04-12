@@ -1,0 +1,56 @@
+{
+   "name":"Test reference enum",
+   "version":"8.0.0",
+   "apiVersion":"8.0.0",
+   "description":"API description",
+   "channels":[
+      {
+         "name":"valawai/c0/test_component/data/action_1",
+         "description":"Action 1",
+         "subscribe":{
+            "type":"ENUM",
+            "values":[
+               "1",
+               "2",
+               "3"
+            ]
+         }
+      },
+      {
+         "name":"valawai/c0/test_component/data/action_2",
+         "description":"Action 2",
+         "subscribe":{
+            "type":"ENUM",
+            "values":[
+               "1",
+               "2",
+               "3"
+            ]
+         }
+      },
+      {
+         "name":"valawai/c0/test_component/data/action_3",
+         "description":"Action 3",
+         "subscribe":{
+            "type":"ENUM",
+            "values":[
+               "1",
+               "2",
+               "3"
+            ]
+         }
+      },
+      {
+         "name":"valawai/c0/test_component/data/action_4",
+         "description":"Action 4",
+         "subscribe":{
+            "type":"ENUM",
+            "values":[
+               "1",
+               "2",
+               "3"
+            ]
+         }
+      }
+   ]
+}

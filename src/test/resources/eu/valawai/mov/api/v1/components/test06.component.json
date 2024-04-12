@@ -51,10 +51,12 @@
 					},
 					"names": {
 						"type": "ARRAY",
-						"items": {
-							"type": "BASIC",
-							"format": "STRING"
-						}
+						"items": [
+							{
+								"type": "BASIC",
+								"format": "STRING"
+							}
+						]
 					},
 					"content": {
 						"type": "OBJECT",
