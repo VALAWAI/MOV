@@ -23,6 +23,10 @@ export type PayloadSchema = BasicPayloadSchema
 	| ObjectPayloadSchema
 	| ArrayPayloadSchema
 	| ConstantPayloadSchema
+	| ReferencePayloadSchema
+	| OneOfPayloadSchema
+	| AnyOfPayloadSchema
+	| AllOfPayloadSchema
 	;
 
 
@@ -31,4 +35,4 @@ export type PayloadSchema = BasicPayloadSchema
  *
  * @author VALAWAI
  */
-export type PayloadType = 'BASIC' | 'ENUM' | 'OBJECT' | 'ARRAY' | 'CONST';
+export type PayloadType = 'BASIC' | 'ENUM' | 'OBJECT' | 'ARRAY' | 'CONST' | 'REF' | 'ONE_OF' | 'ANY_OF' | 'ALL_OF';

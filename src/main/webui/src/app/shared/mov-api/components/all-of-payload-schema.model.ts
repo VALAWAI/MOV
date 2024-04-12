@@ -6,18 +6,19 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { DiversePayloadSchema } from "./diverse-payload-schema.model";
+import { CombinePayloadSchema } from "./combine-payload-schema.model";
+import { PayloadSchema } from "./payload-schema.model";
 
 /**
- *  A payload that is represented by an array of values.
+ *  A payload that is a set of schemas.
  *
  * @author VALAWAI
  */
-export class ArrayPayloadSchema extends DiversePayloadSchema {
+export class AllOfPayloadSchema extends CombinePayloadSchema {
 
 	/**
 	 * The type of the payload.
 	 */
-	public override readonly type = "ARRAY";
+	public override readonly type = "ALL_OF";
 
 }

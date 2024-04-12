@@ -31,3 +31,8 @@ export { TOPOLOGY_ACTION_NAMES, TopologyAction } from './topology/topology-actio
 export { ChangeConnection } from './topology/change-connection.model';
 export { ConnectionToCreate } from './topology/connection-to-create.model';
 export { ConstantPayloadSchema } from './components/constant-payload-schema.model';
+export { ReferencePayloadSchema } from './components/reference-payload-schema.model';
+export { OneOfPayloadSchema } from './components/one-of-payload-schema.model';
+export { AnyOfPayloadSchema } from './components/any-of-payload-schema.model';
+export { AllOfPayloadSchema } from './components/all-of-payload-schema.model';
+

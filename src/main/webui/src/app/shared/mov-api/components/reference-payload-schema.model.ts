@@ -6,18 +6,24 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { DiversePayloadSchema } from "./diverse-payload-schema.model";
+import { AbstractPayloadSchema } from "./abstract-payload-schema.model";
+import { PayloadSchema } from "./payload-schema.model";
 
 /**
  *  A payload that is represented by an array of values.
  *
  * @author VALAWAI
  */
-export class ArrayPayloadSchema extends DiversePayloadSchema {
+export class ReferencePayloadSchema extends AbstractPayloadSchema {
 
 	/**
 	 * The type of the payload.
 	 */
-	public override readonly type = "ARRAY";
+	public override readonly type = "REF";
+
+	/**
+	 * The identifier of the schema that it refers.
+	 */
+	public identifier: number | null = null;
 
 }

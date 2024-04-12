@@ -30,7 +30,7 @@ public class ReferencePayloadSchema extends PayloadSchema {
 	public int identifier;
 
 	/**
-	 * Create a new enum payload schema.
+	 * Create a new reference payload schema.
 	 */
 	public ReferencePayloadSchema() {
 

@@ -26,7 +26,7 @@ import jakarta.validation.constraints.NotEmpty;
 public abstract class DiversePayloadSchema extends PayloadSchema {
 
 	/**
-	 * The type for the elements on the array.
+	 * The possible types that can be used on the schema.
 	 */
 	@Schema(description = "The possible types that can be used on this schema.")
 	@NotEmpty

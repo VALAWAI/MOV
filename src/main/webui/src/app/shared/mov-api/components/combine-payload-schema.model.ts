@@ -9,15 +9,10 @@
 import { DiversePayloadSchema } from "./diverse-payload-schema.model";
 
 /**
- *  A payload that is represented by an array of values.
+ *  A schema that is formed by a combination of other schemas.
  *
  * @author VALAWAI
  */
-export class ArrayPayloadSchema extends DiversePayloadSchema {
-
-	/**
-	 * The type of the payload.
-	 */
-	public override readonly type = "ARRAY";
+export abstract class CombinePayloadSchema extends DiversePayloadSchema {
 
 }
