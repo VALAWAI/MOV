@@ -37,8 +37,7 @@ public class ComponentBuilderTest {
 	 * @throws IOException If cannot read the files to compare.
 	 */
 	@ParameterizedTest(name = "Should create a component for the file {0}")
-	// @ValueSource(ints = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
-	@ValueSource(ints = { 10 })
+	@ValueSource(ints = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 })
 	public void shouldCreateComponentFor(int index) throws IOException {
 
 		final var asyncapiRespource = String.format("eu/valawai/mov/api/v1/components/test%02d.asyncapi.yml", index);

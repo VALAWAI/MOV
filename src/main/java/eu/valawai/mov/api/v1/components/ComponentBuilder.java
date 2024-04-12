@@ -314,7 +314,7 @@ public interface ComponentBuilder {
 
 				object.id = i;
 				final var ref = new ReferencePayloadSchema();
-				ref.value = i;
+				ref.identifier = i;
 				return ref;
 			}
 		}

@@ -109,7 +109,7 @@
 								},
 								"publish": {
 									"type": "REF",
-									"value": 2
+									"identifier": 2
 								}
 							}
 						}

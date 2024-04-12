@@ -8,7 +8,7 @@
 			"name": "valawai/c0/test_component/data/action_1",
 			"description": "Action 1",
 			"subscribe": {
-				"id": 1,
+				"id": 0,
 				"type": "OBJECT",
 				"properties": {
 					"index": {
@@ -21,7 +21,7 @@
 					},
 					"child":{
 						"type": "REF",
-						"value": 1
+						"identifier": 0
 					}
 				}
 			}
@@ -30,7 +30,7 @@
 			"name": "valawai/c0/test_component/data/action_2",
 			"description": "Action 2",
 			"subscribe": {
-				"id": 1,
+				"id": 0,
 				"type": "OBJECT",
 				"properties": {
 					"index": {
@@ -43,7 +43,7 @@
 					},
 					"child":{
 						"type": "REF",
-						"value": 1
+						"identifier": 0
 					}
 				}
 			}
@@ -52,7 +52,7 @@
 			"name": "valawai/c0/test_component/data/action_3",
 			"description": "Action 3",
 			"subscribe": {
-				"id": 1,
+				"id": 0,
 				"type": "OBJECT",
 				"properties": {
 					"index": {
@@ -65,7 +65,7 @@
 					},
 					"child":{
 						"type": "REF",
-						"value": 1
+						"identifier": 0
 					}
 				}
 			}
@@ -74,7 +74,7 @@
 			"name": "valawai/c0/test_component/data/action_4",
 			"description": "Action 4",
 			"subscribe": {
-				"id": 1,
+				"id": 0,
 				"type": "OBJECT",
 				"properties": {
 					"index": {
@@ -87,7 +87,7 @@
 					},
 					"child":{
 						"type": "REF",
-						"value": 1
+						"identifier": 0
 					}
 				}
 			}

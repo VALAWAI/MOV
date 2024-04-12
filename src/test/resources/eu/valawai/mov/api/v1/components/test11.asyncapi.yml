@@ -1,0 +1,69 @@
+asyncapi: '2.6.0'
+info:
+ title: Specification with references
+ version: '11.0.0'
+ description: API description
+ license:
+  name: GNU General Public License version 3
+  url: https://opensource.org/license/gpl-3-0/
+ contact:
+  name: VALAWAI
+  url: https://valawai.eu/
+
+channels:
+  valawai/test/action:
+    description: Test action.
+    publish:
+      message:
+        $ref: '#/components/messages/test_message'
+
+components:
+  messages:
+    test_message:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/test_payload'
+
+  schemas:
+    test_payload:
+      description: The payload of the test message.
+      type: object
+      properties:
+        person:
+          $ref: '#/components/schemas/person_payload'
+        timestamp:
+          type: integer
+        people:
+          type: array
+          items: 
+            - $ref: '#/components/schemas/child_payload'
+            - $ref: '#/components/schemas/parent_payload'
+          
+    person_payload:
+      description: The payload that describe a person.
+      type: object
+      properties:
+        name:
+          type: string
+          description: The person name.
+        age:
+          type: integer
+          description: The person age.
+
+    child_payload:
+      description: Achild payload.
+      type: object
+      properties:
+        person:
+          $ref: '#/components/schemas/person_payload'
+        parent:
+          $ref: '#/components/schemas/parent_payload'
+
+    parent_payload:
+      description: Achild payload.
+      type: object
+      properties:
+        person:
+          $ref: '#/components/schemas/person_payload'
+        grand_parent:
+          $ref: '#/components/schemas/parent_payload'

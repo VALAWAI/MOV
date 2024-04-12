@@ -1,0 +1,67 @@
+{
+   "name":"Specification with references",
+   "version":"11.0.0",
+   "apiVersion":"11.0.0",
+   "description":"API description",
+   "channels":[
+      {
+         "name":"valawai/test/action",
+         "description":"Test action.",
+         "publish":{
+            "type":"OBJECT",
+            "properties":{
+               "person":{
+                  "type":"OBJECT",
+                  "id":1,
+                  "properties":{
+                     "name":{
+                        "type":"BASIC",
+                        "format":"STRING"
+                     },
+                     "age":{
+                         "type":"BASIC",
+                         "format":"INTEGER"
+                     }
+                  }
+               },
+               "timestamp":{
+                  "type":"BASIC",
+                  "format":"INTEGER"
+               },
+               "people":{
+                  "type":"ARRAY",
+                  "items":[
+                     {
+                        "type":"OBJECT",
+                        "properties":{
+                           "person":{
+                              "type":"REF",
+                              "identifier": 1
+                           },
+                           "parent":{
+                              "type":"OBJECT",
+                              "id": 3,
+                              "properties":{
+                                 "person":{
+                                    "type":"REF",
+                                    "identifier": 1
+                                 },
+                                 "grand_parent":{
+                                    "type":"REF",
+                                    "identifier": 3
+                                 }
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "type":"REF",
+                        "identifier": 3
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   ]
+}

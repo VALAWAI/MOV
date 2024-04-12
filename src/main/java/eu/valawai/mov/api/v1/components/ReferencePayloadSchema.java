@@ -26,8 +26,8 @@ public class ReferencePayloadSchema extends PayloadSchema {
 	/**
 	 * The identifier of the schema that it refers.
 	 */
-	@Schema(description = "TThe identifier of the schema that it refers.")
-	public int value;
+	@Schema(description = "The identifier of the schema that it refers.")
+	public int identifier;
 
 	/**
 	 * Create a new enum payload schema.
@@ -43,7 +43,7 @@ public class ReferencePayloadSchema extends PayloadSchema {
 	@Override
 	public boolean match(PayloadSchema other) {
 
-		return other instanceof final ReferencePayloadSchema schema && this.value == schema.value;
+		return other instanceof final ReferencePayloadSchema schema && this.identifier == schema.identifier;
 	}
 
 }

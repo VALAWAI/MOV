@@ -34,7 +34,7 @@ public class ReferencePayloadSchemaTest extends PayloadSchemaTestCase<ReferenceP
 	@Override
 	public void fillIn(ReferencePayloadSchema model) {
 
-		model.value = rnd().nextInt(0, 10000000);
+		model.identifier = rnd().nextInt(0, 10000000);
 	}
 
 }
