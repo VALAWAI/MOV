@@ -6,11 +6,15 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { AllOfPayloadSchema } from "./all-of-payload-schema.model";
+import { AnyOfPayloadSchema } from "./any-of-payload-schema.model";
 import { ArrayPayloadSchema } from "./array-payload-schema.model";
 import { BasicPayloadSchema } from "./basic-payload-schema.model";
 import { ConstantPayloadSchema } from "./constant-payload-schema.model";
 import { EnumPayloadSchema } from "./enum-payload-schema.model";
 import { ObjectPayloadSchema } from "./object-payload-schema.model";
+import { OneOfPayloadSchema } from "./one-of-payload-schema.model";
+import { ReferencePayloadSchema } from "./reference-payload-schema.model";
 
 /**
  * The description of a payload of a message send or received from

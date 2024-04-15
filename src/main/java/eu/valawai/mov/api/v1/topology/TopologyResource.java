@@ -24,6 +24,7 @@ import eu.valawai.mov.events.topology.CreateConnectionPayload;
 import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.persistence.topology.GetMinConnectionPage;
 import eu.valawai.mov.persistence.topology.GetTopologyConnection;
+import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -151,7 +152,19 @@ public class TopologyResource {
 		payload.target.componentId = connection.targetComponent;
 		payload.target.channelName = connection.targetChannel;
 		payload.enabled = connection.enabled;
-		this.create.send(payload);
+		this.create.send(payload).handle((success, error) -> {
+
+			if (error == null) {
+
+				Log.debugv("Sent message to create the topology connection {0}", connection);
+
+			} else {
+
+				Log.errorv(error, "Cannot create the topology connection {0}", connection);
+
+			}
+			return null;
+		});
 		return Uni.createFrom().item(Response.noContent().build());
 
 	}
@@ -175,7 +188,19 @@ public class TopologyResource {
 		final var payload = new ChangeTopologyPayload();
 		payload.connectionId = model.connectionId;
 		payload.action = model.action;
-		this.change.send(payload);
+		this.change.send(payload).handle((success, error) -> {
+
+			if (error == null) {
+
+				Log.debugv("Sent message to change the topology connection {0}", model);
+
+			} else {
+
+				Log.errorv(error, "Cannot change the topology connection {0}", model);
+
+			}
+			return null;
+		});
 		return Uni.createFrom().item(Response.noContent().build());
 
 	}

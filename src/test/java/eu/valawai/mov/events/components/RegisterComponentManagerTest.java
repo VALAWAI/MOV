@@ -350,6 +350,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var inFieldName = nextPattern("field_to_test_{0}");
 
 		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
 				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
@@ -362,10 +363,14 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		source.description = sourceNext.description;
 		source.name = sourceNext.name;
 		source.since = sourceNext.since;
-		source.type = payload.type;
+		source.type = sourceNext.type;
+		while (payload.type == source.type) {
+
+			source.type = next(ComponentType.values());
+		}
 		source.version = sourceNext.version;
 		final var sourceChannel = new ChannelSchema();
-		final var sourceChannelName = nextPattern("test/register_component_subscribe_{0}");
+		final var sourceChannelName = nextPattern("test/publish_{0}");
 
 		sourceChannel.name = sourceChannelName;
 		final var sourceObject = new ObjectPayloadSchema();
@@ -384,26 +389,31 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		target.description = targetNext.description;
 		target.name = targetNext.name;
 		target.since = targetNext.since;
-		target.type = payload.type;
+		target.type = targetNext.type;
+		while (payload.type == target.type) {
+
+			target.type = next(ComponentType.values());
+		}
 		target.version = targetNext.version;
 		final var targetChannel = new ChannelSchema();
-		final var targetChannelName = nextPattern("test/register_component_subscribe_{0}");
+		final var targetChannelName = nextPattern("test/subscribe_{0}");
 
 		targetChannel.name = targetChannelName;
 		final var targetObject = new ObjectPayloadSchema();
 		targetObject.properties.put(outFieldName, basic);
-		targetChannel.publish = targetObject;
+		targetChannel.subscribe = targetObject;
 		target.channels.add(targetChannel);
 		this.assertItemNotNull(target.persist());
 
 		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
 		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
-		final var queue = this.waitOpenQueue(
-				MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex, componentName));
+		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
+				componentName);
+		final var queue = this.waitOpenQueue(queueName);
 
 		// register the component
 		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.registerComponentQueueName, payload));
+		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		// wait notify the component is registered
 		final var registered = queue.waitReceiveMessage(ComponentPayload.class);
@@ -415,6 +425,12 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(payload.type, registered.type);
 		assertTrue(now <= registered.since);
 		assertEquals(expectedComponent.channels, registered.channels);
+		final var expectedTargetChannelName = MessageFormat.format("valawai/c{0}/{1}/data/input", componentTypeIndex,
+				componentName);
+		;
+		final var expectedSourceChannelName = MessageFormat.format("valawai/c{0}/{1}/data/output", componentTypeIndex,
+				componentName);
+		;
 
 		// check updated the components
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
@@ -443,14 +459,14 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 				lastConnectionWithComponentAsTarget.updateTimestamp);
 		assertNull(lastConnectionWithComponentAsTarget.deletedTimestamp);
 		assertNotNull(lastConnectionWithComponentAsTarget.target);
-		assertEquals(targetChannelName, lastConnectionWithComponentAsTarget.target.channelName);
+		assertEquals(expectedTargetChannelName, lastConnectionWithComponentAsTarget.target.channelName);
 		assertEquals(lastComponent.id, lastConnectionWithComponentAsTarget.target.componentId);
 		assertNotNull(lastConnectionWithComponentAsTarget.source);
 		assertEquals(sourceChannelName, lastConnectionWithComponentAsTarget.source.channelName);
 		assertEquals(source.id, lastConnectionWithComponentAsTarget.source.componentId);
 
-		// Check that the connection is not working
-		assertFalse(this.listener.isOpen(sourceChannelName));
+		// Check that the connection is working
+		assertTrue(this.listener.isOpen(lastConnectionWithComponentAsTarget.source.channelName));
 
 		// Get last connection
 		final TopologyConnectionEntity lastConnectionWithComponentAsSource = this
@@ -460,19 +476,23 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 				lastConnectionWithComponentAsSource.createTimestamp <= lastConnectionWithComponentAsSource.updateTimestamp);
 		assertNull(lastConnectionWithComponentAsSource.deletedTimestamp);
 		assertNotNull(lastConnectionWithComponentAsSource.source);
-		assertEquals(sourceChannelName, lastConnectionWithComponentAsSource.source.channelName);
+		assertEquals(expectedSourceChannelName, lastConnectionWithComponentAsSource.source.channelName);
 		assertEquals(lastComponent.id, lastConnectionWithComponentAsSource.source.componentId);
 		assertNotNull(lastConnectionWithComponentAsSource.target);
 		assertEquals(targetChannelName, lastConnectionWithComponentAsSource.target.channelName);
 		assertEquals(target.id, lastConnectionWithComponentAsSource.target.componentId);
 
 		// Check that the connection is working
-		assertTrue(this.listener.isOpen(targetChannelName));
+		assertTrue(this.listener.isOpen(lastConnectionWithComponentAsSource.source.channelName));
 
 	}
 
 	/**
+	 * Check that is load an specification resource.
 	 *
+	 * @param name of the resource to load.
+	 *
+	 * @return the string of the loaded resource template.
 	 */
 	private String loadAsyncapiResourceTemplate(String name) {
 

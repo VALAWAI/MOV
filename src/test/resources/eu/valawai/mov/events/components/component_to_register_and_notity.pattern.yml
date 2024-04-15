@@ -19,7 +19,7 @@ channels:
 
   valawai/c{0}/{1}/data/input:
     subscribe:
-      summary: The action to change the parameters taht configure the component.
+      summary: The action to change the parameters that configure the component.
       message:
         $ref: "#/components/messages/input_message"
 

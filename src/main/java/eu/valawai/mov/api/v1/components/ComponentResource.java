@@ -23,6 +23,7 @@ import eu.valawai.mov.events.components.RegisterComponentPayload;
 import eu.valawai.mov.events.components.UnregisterComponentPayload;
 import eu.valawai.mov.persistence.components.GetComponent;
 import eu.valawai.mov.persistence.components.GetMinComponentPage;
+import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -152,7 +153,19 @@ public class ComponentResource {
 
 		final var payload = new UnregisterComponentPayload();
 		payload.componentId = componentId;
-		this.unregister.send(payload);
+		this.unregister.send(payload).handle((success, error) -> {
+
+			if (error == null) {
+
+				Log.debugv("Sent unregister component {0}", componentId);
+
+			} else {
+
+				Log.errorv(error, "Cannot unregister component {0}", componentId);
+
+			}
+			return null;
+		});
 		return Uni.createFrom().item(Response.noContent().build());
 
 	}
@@ -177,7 +190,19 @@ public class ComponentResource {
 		payload.name = component.name;
 		payload.version = component.version;
 		payload.asyncapiYaml = component.asyncapiYaml;
-		this.register.send(payload);
+		this.register.send(payload).handle((success, error) -> {
+
+			if (error == null) {
+
+				Log.debugv("Sent register component {0}", component);
+
+			} else {
+
+				Log.errorv(error, "Cannot register component {0}", component);
+
+			}
+			return null;
+		});
 		return Uni.createFrom().item(Response.noContent().build());
 
 	}

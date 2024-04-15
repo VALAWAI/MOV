@@ -12,7 +12,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.CompletionStage;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
@@ -21,12 +22,11 @@ import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
-import eu.valawai.mov.events.topology.ChangeTopologyPayload;
-import eu.valawai.mov.events.topology.TopologyAction;
+import eu.valawai.mov.events.topology.CreateConnectionPayload;
+import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.persistence.components.AddComponent;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.AddLog;
-import eu.valawai.mov.persistence.topology.AddTopologyConnection;
 import io.quarkus.logging.Log;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
@@ -53,10 +53,11 @@ public class RegisterComponentManager {
 	protected PayloadService service;
 
 	/**
-	 * Notify that a new connection is created.
+	 * The component to send the message to create a topology connection.
 	 */
-	@ConfigProperty(name = "mp.messaging.incoming.change_topology.queue.name", defaultValue = "valawai/topology/change")
-	String changeTopologyQueueName;
+	@Inject
+	@Channel("send_create_connection")
+	Emitter<CreateConnectionPayload> create;
 
 	/**
 	 * The service to send messages.
@@ -148,15 +149,15 @@ public class RegisterComponentManager {
 	private void notifyComponentRegistered(ComponentEntity entity, Collection<String> channelsToIgnore) {
 
 		if (entity.channels != null) {
-			final var expectedChannelNameStart = "valaway/" + entity.type.name().toLowerCase() + "/";
+
+			final var expectedNamePattern = "valawai/" + entity.type.name().toLowerCase() + "/\\w+/control/registered";
 
 			for (final var channel : entity.channels) {
 
 				if (channel.subscribe instanceof final ObjectPayloadSchema schema
-						&& channel.name.startsWith(expectedChannelNameStart)
-						&& channel.name.endsWith("/control/registered") && schema.properties.containsKey("id")
+						&& channel.name.matches(expectedNamePattern) && schema.properties.containsKey("id")
 						&& schema.properties.containsKey("name") && schema.properties.containsKey("description")
-						&& schema.properties.containsKey("version") && schema.properties.containsKey("apiVersion")
+						&& schema.properties.containsKey("version") && schema.properties.containsKey("api_version")
 						&& schema.properties.containsKey("type") && schema.properties.containsKey("since")
 						&& schema.properties.containsKey("channels")) {
 					// found channel to notify the registered component.
@@ -169,7 +170,20 @@ public class RegisterComponentManager {
 					payload.type = entity.type;
 					payload.since = entity.since;
 					payload.channels = entity.channels;
-					this.publish.send(channel.name, payload);
+					this.publish.send(channel.name, payload).subscribe().with(done -> {
+
+						AddLog.fresh().withInfo()
+								.withMessage("Notified to the component {0} at {1} that it has been registered.",
+										entity.id, channel.name)
+								.withPayload(payload).store();
+
+					}, error -> {
+
+						AddLog.fresh().withError(error)
+								.withMessage("Cannot notify to the component {0} at {1} that it has been registered.",
+										entity.id, channel.name)
+								.withPayload(payload).store();
+					});
 					channelsToIgnore.add(channel.name);
 					return;
 				}
@@ -264,39 +278,29 @@ public class RegisterComponentManager {
 
 		if (sourceChannel.publish != null && sourceChannel.publish.match(targetChannel.subscribe)) {
 
-			final var enable = source.type != target.type;
-			AddTopologyConnection.fresh().withSourceComponent(source.id).withSourceChannel(sourceChannel.name)
-					.withTargetComponent(target.id).withTargetChannel(targetChannel.name).withEnabled(enable).execute()
-					.subscribe().with(connectionId -> {
+			final var payload = new CreateConnectionPayload();
+			payload.enabled = source.type != target.type;
+			payload.source = new NodePayload();
+			payload.source.componentId = source.id;
+			payload.source.channelName = sourceChannel.name;
+			payload.target = new NodePayload();
+			payload.target.componentId = target.id;
+			payload.target.channelName = targetChannel.name;
+			this.create.send(payload).handle((success, error) -> {
 
-						if (connectionId != null) {
+				if (error == null) {
 
-							AddLog.fresh().withInfo().withMessage("Added connection between {0} and {1}",
-									sourceChannel.name, targetChannel.name).store();
-							if (enable) {
+					Log.debugv("Sent create the connection between {0} and {1}", sourceChannel.name,
+							targetChannel.name);
 
-								final var msg = new ChangeTopologyPayload();
-								msg.action = TopologyAction.ENABLE;
-								msg.connectionId = connectionId;
-								this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
+				} else {
 
-									Log.debugv("Sent enable the connection between {0} and {1}", sourceChannel.name,
-											targetChannel.name);
+					Log.errorv(error, "Cannot create the connection between {0} and {1}", sourceChannel.name,
+							targetChannel.name);
 
-								}, error -> {
-
-									Log.errorv(error, "Cannot enable the connection between {0} and {1}",
-											sourceChannel.name, targetChannel.name);
-								});
-							}
-
-						} else {
-
-							Log.errorv("Cannot create connection between {0} and {1}", sourceChannel.name,
-									targetChannel.name);
-						}
-
-					});
+				}
+				return null;
+			});
 		}
 
 	}

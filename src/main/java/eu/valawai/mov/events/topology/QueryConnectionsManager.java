@@ -18,6 +18,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.persistence.logs.AddLog;
 import eu.valawai.mov.persistence.topology.GetConnectionsPagePayload;
+import io.quarkus.logging.Log;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -66,7 +67,19 @@ public class QueryConnectionsManager {
 
 							AddLog.fresh().withInfo().withMessage("Found the page for the query {0}.", payload.id)
 									.withPayload(page).store();
-							this.emitter.send(page);
+							this.emitter.send(page).handle((success, error) -> {
+
+								if (error == null) {
+
+									Log.debugv("Sent found topology connections page {0}", page);
+
+								} else {
+
+									Log.errorv(error, "Cannot notify of the topology connections page {0}", page);
+
+								}
+								return null;
+							});
 							return msg.ack();
 
 						} else {
