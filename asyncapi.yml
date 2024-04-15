@@ -1,7 +1,7 @@
 asyncapi: '2.6.0'
 info:
  title: Value-Aware Artificial Intelligence API
- version: '1.1.0'
+ version: '1.1.1'
  description: |
   This api provide the messages that the VALAWAI infrastructure cna manage.
   This messages are used to start/stop the infrastructure and for
@@ -334,12 +334,15 @@ components:
         type:
           type: string
           enum:
-            - 'BASIC'
-            - 'ENUM'
-            - 'OBJECT'
-            - 'ARRAY'
-            - 'CONST'
-            - 'REF'
+            - BASIC
+            - ENUM
+            - OBJECT
+            - ARRAY
+            - CONST
+            - REF
+            - ONE_OF
+            - ANY_OF
+            - ALL_OF
       required:
         - type
 
@@ -400,7 +403,8 @@ components:
               const: 'ARRAY'
             items:
               description: The type for the elements on the array.
-              oneOf:
+              type: array
+              items:
                 - $ref: '#/components/schemas/payload_schema'
 
     constant_payload_schema:
@@ -426,7 +430,49 @@ components:
             value:
               type: integer
               description: The identifier of the schema that this a reference.
-                
+
+    one_of_payload_schema:
+      description: A payload that is one of the possible schemas.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ONE_OF'
+            items:
+              description: The possible schemas.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+
+    any_of_payload_schema:
+      description: A payload that is any of the possible schemas.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ANY_OF'
+            items:
+              description: The possible schemas.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+
+    all_of_payload_schema:
+      description: A payload that is a set of schemas.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ALL_OF'
+            items:
+              description: The schemas that has to match.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+             
     unregister_component_payload:
       description: The information necessary to unregister a component.
       type: object
