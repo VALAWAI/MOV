@@ -50,7 +50,7 @@ public class AddLogManager {
 
 			final var payload = this.service.decodeAndVerify(content, AddLogPayload.class);
 			return AddLog.fresh().withLevel(payload.level).withMessage(payload.message).withPayload(payload.payload)
-					.execute().subscribeAsCompletionStage().thenCompose(done -> {
+					.withComponent(payload.componentId).execute().subscribeAsCompletionStage().thenCompose(done -> {
 
 						if (done != null && done) {
 

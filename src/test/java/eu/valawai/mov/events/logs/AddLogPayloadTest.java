@@ -10,6 +10,7 @@ package eu.valawai.mov.events.logs;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextJsonPretty;
+import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 
 import eu.valawai.mov.api.v1.logs.LogLevel;
@@ -42,6 +43,7 @@ public class AddLogPayloadTest extends PayloadTestCase<AddLogPayload> {
 		payload.level = next(LogLevel.values());
 		payload.message = nextPattern("Log message {0}");
 		payload.payload = nextJsonPretty();
+		payload.componentId = nextObjectId();
 	}
 
 }

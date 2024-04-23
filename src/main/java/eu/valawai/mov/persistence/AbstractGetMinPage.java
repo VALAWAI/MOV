@@ -107,12 +107,7 @@ public abstract class AbstractGetMinPage<T, O extends AbstractGetMinPage<T, O>> 
 	@Override
 	public Uni<T> execute() {
 
-		final var pipeline = new ArrayList<Bson>();
-		final var filter = this.createFilter();
-		if (filter != null) {
-
-			pipeline.add(Aggregates.match(filter));
-		}
+		final var pipeline = this.createPipelineBeforeFacet();
 		final var total = new Facet("total", Aggregates.count());
 		final var logs = new Facet(this.fieldName, Aggregates.sort(Orders.orderBy(this.order)),
 				Aggregates.skip(this.offset), Aggregates.limit(this.limit));
@@ -125,6 +120,23 @@ public abstract class AbstractGetMinPage<T, O extends AbstractGetMinPage<T, O>> 
 		final var offsetField = new Field<>("offset", this.offset);
 		pipeline.add(Aggregates.addFields(offsetField));
 		return this.getPageWith(pipeline);
+	}
+
+	/**
+	 * Create the pipeline before the facet.
+	 *
+	 * @return the pipeline with the required filters.
+	 */
+	protected List<Bson> createPipelineBeforeFacet() {
+
+		final var pipeline = new ArrayList<Bson>();
+		final var filter = this.createFilter();
+		if (filter != null) {
+
+			pipeline.add(Aggregates.match(filter));
+		}
+
+		return pipeline;
 	}
 
 	/**

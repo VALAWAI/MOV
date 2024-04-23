@@ -7,6 +7,7 @@
 */
 
 import { LogLevel } from "./log-level.model";
+import { MinComponent } from "../components/min-component.model";
 
 /**
  * A log message that has been done in VALAWAI.
@@ -34,5 +35,10 @@ export class LogRecord {
 	 * The payload of the log.
 	 */
 	public payload: string | null = null;
+
+	/**
+	 * The component that has generated teh log.
+	 */
+	public component: MinComponent | null = null;
 
 }

@@ -1,6 +1,11 @@
 # Master Of Valawai (MOV)
 
 
+## Version 1.2.0 (April 21,2024)
+
+ - Modify logs to contains information of the component that has generated it.
+ 
+
 ## Version 1.1.1 (April 15,2024)
 
  - Fix the asyncapi specification.

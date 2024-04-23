@@ -8,10 +8,15 @@
 
 package eu.valawai.mov.events.logs;
 
+import org.bson.types.ObjectId;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.Payload;
+import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -39,4 +44,10 @@ public class AddLogPayload extends Payload {
 	 */
 	public String payload;
 
+	/**
+	 * The identifier of the component that has generated the log message.
+	 */
+	@JsonSerialize(using = ObjectIdSerializer.class)
+	@JsonProperty("component_id")
+	public ObjectId componentId;
 }

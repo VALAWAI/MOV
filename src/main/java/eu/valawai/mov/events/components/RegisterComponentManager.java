@@ -100,8 +100,8 @@ public class RegisterComponentManager {
 
 					if (source != null) {
 
-						AddLog.fresh().withInfo().withMessage("Added the component {0}.", source).withPayload(payload)
-								.store();
+						AddLog.fresh().withInfo().withMessage("Added the component {0}.", source.id)
+								.withPayload(payload).store();
 						final var channelsToIgnore = new HashSet<String>();
 						this.notifyComponentRegistered(source, channelsToIgnore);
 

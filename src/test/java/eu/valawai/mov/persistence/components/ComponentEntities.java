@@ -18,6 +18,8 @@ import org.bson.conversions.Bson;
 
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import io.quarkus.logging.Log;
+import io.quarkus.panache.common.Sort;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Methods used when test over ComponentEntity that has been stored.
@@ -32,14 +34,19 @@ public interface ComponentEntities {
 	 * Check exist the minimum components.
 	 *
 	 * @param min number of components.
+	 *
+	 * @return the min components.
 	 */
-	public static void minComponents(int min) {
+	public static List<ComponentEntity> minComponents(int min) {
 
 		final var total = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
 		if (total < min) {
 
 			nextComponents(min - total);
 		}
+
+		final Uni<List<ComponentEntity>> find = ComponentEntity.findAll(Sort.descending("_id")).range(0, min).list();
+		return find.await().atMost(Duration.ofSeconds(30));
 	}
 
 	/**

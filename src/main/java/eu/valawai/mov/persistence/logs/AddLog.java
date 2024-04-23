@@ -10,6 +10,8 @@ package eu.valawai.mov.persistence.logs;
 
 import java.text.MessageFormat;
 
+import org.bson.types.ObjectId;
+
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecord;
 import eu.valawai.mov.persistence.AbstractEntityOperator;
@@ -198,6 +200,19 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	}
 
 	/**
+	 *
+	 *
+	 * @param componentId identifier of teh component that has generated the
+	 *
+	 * @return the operation to store a log record.
+	 */
+	public AddLog withComponent(ObjectId componentId) {
+
+		this.log.componentId = componentId;
+		return this;
+	}
+
+	/**
 	 * Set record for the log.
 	 *
 	 * @param record to be stored as log.
@@ -210,6 +225,10 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 		this.log.message = record.message;
 		this.log.timestamp = record.timestamp;
 		this.log.payload = record.payload;
+		if (record.component != null) {
+
+			this.log.componentId = record.component.id;
+		}
 		return this;
 	}
 

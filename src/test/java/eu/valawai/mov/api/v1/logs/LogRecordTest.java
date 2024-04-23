@@ -14,10 +14,14 @@ import static eu.valawai.mov.ValueGenerator.nextPastTime;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
 
+import java.time.Duration;
 import java.util.HashMap;
 
 import eu.valawai.mov.api.ModelTestCase;
+import eu.valawai.mov.api.v1.components.MinComponentTest;
+import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.LogEntity;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -79,6 +83,12 @@ public class LogRecordTest extends ModelTestCase<LogRecord> {
 			model.message = entity.message;
 			model.payload = entity.payload;
 			model.timestamp = entity.timestamp;
+			if (entity.componentId != null) {
+
+				final Uni<ComponentEntity> find = ComponentEntity.findById(entity.componentId);
+				final ComponentEntity component = find.await().atMost(Duration.ofSeconds(30));
+				model.component = MinComponentTest.from(component);
+			}
 
 			return model;
 

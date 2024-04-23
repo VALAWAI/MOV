@@ -25,12 +25,12 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 public class RabbitMQTestResource implements QuarkusTestResourceLifecycleManager {
 
 	/**
-	 * The name of the rabbit mq docker container to use.
+	 * The name of the rabbit mq docker image to use.
 	 */
 	public static final String RABBITMQ_DOCKER_NAME = "rabbitmq:latest";
 
 	/**
-	 * The mongo service container.
+	 * The RabbitMQ service container.
 	 */
 	static GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(RABBITMQ_DOCKER_NAME))
 			.withStartupAttempts(1).withEnv("RABBITMQ_DEFAULT_USER", "mov").withEnv("RABBITMQ_DEFAULT_PASS", "password")

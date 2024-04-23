@@ -10,10 +10,15 @@ package eu.valawai.mov.persistence.logs;
 
 import java.io.Serializable;
 
+import org.bson.types.ObjectId;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecord;
 import io.quarkus.mongodb.panache.common.MongoEntity;
+import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 
 /**
@@ -55,6 +60,12 @@ public class LogEntity extends ReactivePanacheMongoEntity implements Serializabl
 	 * The timestamp when the log has added.
 	 */
 	public long timestamp;
+
+	/**
+	 * The identifier of the component that has generated this log message.
+	 */
+	@JsonSerialize(using = ObjectIdSerializer.class)
+	public ObjectId componentId;
 
 	/**
 	 * Create a new log entity.

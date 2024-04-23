@@ -17,6 +17,8 @@ import java.util.List;
 import org.bson.conversions.Bson;
 
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
+import eu.valawai.mov.persistence.components.ComponentEntities;
+import eu.valawai.mov.persistence.components.ComponentEntity;
 import io.quarkus.logging.Log;
 
 /**
@@ -51,8 +53,24 @@ public interface LogEntities {
 	 */
 	public static List<LogEntity> nextLogs(long num) {
 
+		final var components = ComponentEntities.minComponents(5);
+		return nextLogs(num, components);
+
+	}
+
+	/**
+	 * Create some log entities.
+	 *
+	 * @param num        number of logs to create.
+	 * @param components to use on the logs.
+	 *
+	 * @return the created logs.
+	 */
+	public static List<LogEntity> nextLogs(long num, List<ComponentEntity> components) {
+
 		final var logs = new ArrayList<LogEntity>();
 		final var builder = new LogRecordTest();
+		final var maxComponents = components.size();
 		for (var i = 0; i < num; i++) {
 
 			final var next = builder.nextModel();
@@ -61,6 +79,11 @@ public interface LogEntities {
 			entity.message = next.message;
 			entity.payload = next.payload;
 			entity.timestamp = next.timestamp;
+			final var index = i % (maxComponents + 1);
+			if (index < maxComponents) {
+
+				entity.componentId = components.get(index).id;
+			}
 			final var stored = entity.persist().onFailure().recoverWithItem(error -> {
 
 				Log.errorv(error, "Cannot persist {}", entity);

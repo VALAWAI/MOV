@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v1.logs;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import eu.valawai.mov.api.v1.components.MinComponent;
 
 /**
  * A log message that has been done in VALAWAI.
@@ -37,6 +38,12 @@ public class LogRecord extends Model {
 	 */
 	@Schema(description = "The payload associated to the log. It is a JSON encoded as a string")
 	public String payload;
+
+	/**
+	 * The component that has generated this log.
+	 */
+	@Schema(description = "The component that has generated this log.")
+	public MinComponent component;
 
 	/**
 	 * The timestamp when the log has added.

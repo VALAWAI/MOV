@@ -10,6 +10,7 @@ package eu.valawai.mov.persistence.logs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,10 +22,12 @@ import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.MasterOfValawaiTestCase;
 import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecordPage;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Test the operation to get some logs.
@@ -62,7 +65,7 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 	 * Test get an empty page because the offset is too large.
 	 */
 	@Test
-	public void shouldReturnEmptyPageBecauseOffsettooLarge() {
+	public void shouldReturnEmptyPageBecauseOffsetTooLarge() {
 
 		final var offset = Integer.MAX_VALUE;
 		final var total = this.assertItemNotNull(LogEntity.count());
@@ -235,6 +238,238 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 
 		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withPattern("/" + pattern + "/")
 				.withLevel(level.name()).withOrder("-message").withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a component pattern.
+	 */
+	@Test
+	public void shouldReturnPageWithComponentPattern() {
+
+		final var pattern = ".*1.*";
+		LogEntities.minLogs(100);
+		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
+		final var logs = find.await().atMost(Duration.ofSeconds(30));
+		final var expected = new LogRecordPage();
+		expected.total = 0;
+		expected.logs = new ArrayList<>();
+		for (final var log : logs) {
+
+			final var expectedLog = LogRecordTest.from(log);
+			if (expectedLog.component != null
+					&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
+							|| expectedLog.component.description != null
+									&& expectedLog.component.description.matches(pattern))) {
+				expected.total++;
+				expected.logs.add(expectedLog);
+
+			}
+		}
+
+		expected.logs.sort((l1, l2) -> {
+
+			var cmp = l1.component.type.name().compareTo(l2.component.type.name());
+			if (cmp == 0) {
+
+				cmp = l2.component.name.compareTo(l1.component.name);
+				if (cmp == 0) {
+
+					cmp = l1.component.description.compareTo(l2.component.description);
+					if (cmp == 0) {
+
+						cmp = Long.compare(l1.timestamp, l2.timestamp);
+					}
+				}
+			}
+			return cmp;
+		});
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = Math.min(expected.offset + limit, expected.logs.size());
+
+		expected.logs = expected.logs.subList(expected.offset, max);
+
+		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withComponnetPattern("/" + pattern + "/")
+				.withOrder("component.type,-component.name,component.description,timestamp").withOffset(expected.offset)
+				.withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a component type.
+	 */
+	@Test
+	public void shouldReturnPageWithComponentType() {
+
+		final var type = "C1";
+		LogEntities.minLogs(100);
+		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
+		final var logs = find.await().atMost(Duration.ofSeconds(30));
+		final var expected = new LogRecordPage();
+		expected.total = 0;
+		expected.logs = new ArrayList<>();
+		for (final var log : logs) {
+
+			final var expectedLog = LogRecordTest.from(log);
+			if (expectedLog.component != null && expectedLog.component.type == ComponentType.C1) {
+				expected.total++;
+				expected.logs.add(expectedLog);
+			}
+		}
+
+		expected.logs.sort((l1, l2) -> {
+
+			var cmp = l2.component.name.compareTo(l1.component.name);
+			if (cmp == 0) {
+
+				cmp = l1.component.description.compareTo(l2.component.description);
+				if (cmp == 0) {
+
+					cmp = Long.compare(l1.timestamp, l2.timestamp);
+				}
+			}
+			return cmp;
+		});
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = Math.min(expected.offset + limit, expected.logs.size());
+
+		expected.logs = expected.logs.subList(expected.offset, max);
+
+		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withComponnetType(type)
+				.withOrder("-component.name,component.description,timestamp").withOffset(expected.offset)
+				.withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a component pattern.
+	 */
+	@Test
+	public void shouldReturnPageWithComponentPatternAndType() {
+
+		final var pattern = ".*1.*";
+		final var type = "C1";
+		LogEntities.minLogs(100);
+		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
+		final var logs = find.await().atMost(Duration.ofSeconds(30));
+		final var expected = new LogRecordPage();
+		expected.total = 0;
+		expected.logs = new ArrayList<>();
+		for (final var log : logs) {
+
+			final var expectedLog = LogRecordTest.from(log);
+			if (expectedLog.component != null && expectedLog.component.type == ComponentType.C1
+					&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
+							|| expectedLog.component.description != null
+									&& expectedLog.component.description.matches(pattern))) {
+				expected.total++;
+				expected.logs.add(expectedLog);
+
+			}
+		}
+
+		expected.logs.sort((l1, l2) -> {
+
+			var cmp = l1.component.type.name().compareTo(l2.component.type.name());
+			if (cmp == 0) {
+
+				cmp = l2.component.name.compareTo(l1.component.name);
+				if (cmp == 0) {
+
+					cmp = l1.component.description.compareTo(l2.component.description);
+					if (cmp == 0) {
+
+						cmp = Long.compare(l1.timestamp, l2.timestamp);
+					}
+				}
+			}
+			return cmp;
+		});
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = Math.min(expected.offset + limit, expected.logs.size());
+
+		expected.logs = expected.logs.subList(expected.offset, max);
+
+		final var page = this.assertExecutionNotNull(
+				GetLogRecordPage.fresh().withComponnetType(type).withComponnetPattern("/" + pattern + "/")
+						.withOrder("component.type,-component.name,component.description,timestamp")
+						.withOffset(expected.offset).withLimit(limit));
+		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Test get a page that match a patterns¡ and a level.
+	 */
+	@Test
+	public void shouldReturnPageWithPatternAndLevelAndComponentPatternAndType() {
+
+		final var pattern = ".*1.*";
+		final var level = ValueGenerator.next(LogLevel.values());
+		final var type = "C1";
+		LogEntities.minLogs(100);
+		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
+		final var logs = find.await().atMost(Duration.ofSeconds(30));
+		final var expected = new LogRecordPage();
+		expected.total = 0;
+		expected.logs = new ArrayList<>();
+
+		for (final var log : logs) {
+
+			if (log.level == level && log.message.matches(pattern)) {
+
+				final var expectedLog = LogRecordTest.from(log);
+				if (expectedLog.component != null && expectedLog.component.type == ComponentType.C1
+						&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
+								|| expectedLog.component.description != null
+										&& expectedLog.component.description.matches(pattern))) {
+					expected.total++;
+					expected.logs.add(expectedLog);
+
+				}
+			}
+		}
+
+		expected.logs.sort((l1, l2) -> {
+
+			var cmp = l2.message.compareTo(l1.message);
+			if (cmp == 0) {
+				cmp = l1.component.type.name().compareTo(l2.component.type.name());
+				if (cmp == 0) {
+
+					cmp = l2.component.name.compareTo(l1.component.name);
+					if (cmp == 0) {
+
+						cmp = l1.component.description.compareTo(l2.component.description);
+						if (cmp == 0) {
+
+							cmp = Long.compare(l1.timestamp, l2.timestamp);
+						}
+					}
+				}
+			}
+			return cmp;
+		});
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var max = Math.min(expected.offset + limit, expected.logs.size());
+
+		expected.logs = expected.logs.subList(expected.offset, max);
+
+		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withPattern("/" + pattern + "/")
+				.withLevel(level.name()).withComponnetType(type).withComponnetPattern("/" + pattern + "/")
+				.withOrder("-message,component.type,-component.name,component.description,timestamp")
+				.withOffset(expected.offset).withLimit(limit));
 		assertEquals(expected, page);
 
 	}

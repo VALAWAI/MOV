@@ -1,7 +1,7 @@
 asyncapi: '2.6.0'
 info:
  title: Value-Aware Artificial Intelligence API
- version: '1.1.1'
+ version: '1.2.0'
  description: |
   This api provide the messages that the VALAWAI infrastructure cna manage.
   This messages are used to start/stop the infrastructure and for
@@ -507,6 +507,12 @@ components:
           description: The payload of the log.
           examples: 
             - '{"pattern:"p1"}'
+        component_id:
+          type: string
+          description: The identifeir of the component that has generated the log.
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
 
     query_connections_payload:
       type: object
