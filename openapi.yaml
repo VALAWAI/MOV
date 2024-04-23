@@ -6,7 +6,7 @@ info:
   license:
     name: GPL 3
     url: https://opensource.org/license/gpl-3-0/
-  version: 1.1.0
+  version: 1.2.0
 tags:
 - name: Components
   description: The services to manage the VALAWAI components
@@ -169,6 +169,19 @@ paths:
       - Log
       description: Obtain some logs.
       parameters:
+      - name: componentPattern
+        in: query
+        description: The pattern to match the component name or description of the
+          logs to return. If it is defined between / it is considered a PCRE regular
+          expression.
+        schema:
+          type: string
+      - name: componentType
+        in: query
+        description: The type to match the component associated to the logs to return.
+          If it is defined between / it is considered a PCRE regular expression.
+        schema:
+          type: string
       - name: level
         in: query
         description: The level to match the logs to return. If it is defined between
@@ -198,7 +211,7 @@ paths:
           \ for descending order or + for ascending."
         schema:
           default: +timestamp
-          pattern: "(,?[+|-]?[level|message|timestamp])*"
+          pattern: "(,?[+|-]?[level|message|timestamp|component.name|component.description|component.type])*"
           type: string
       - name: pattern
         in: query
@@ -648,6 +661,11 @@ components:
           description: The payload associated to the log. It is a JSON encoded as
             a string
           type: string
+        component:
+          description: The component that has generated this log.
+          type: object
+          allOf:
+          - $ref: "#/components/schemas/MinComponent"
         timestamp:
           format: int64
           description: "The epoch time, in seconds, when the log happened."
