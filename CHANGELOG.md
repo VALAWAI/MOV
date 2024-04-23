@@ -1,10 +1,12 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.2.0 (April 21,2024)
+## Version 1.2.0 (April 23,2024)
 
  - Modify logs to contains information of the component that has generated it.
- 
+ - Add C2 subscription to the notified when a messsage pass throught
+  a topology connection.
+
 
 ## Version 1.1.1 (April 15,2024)
 
