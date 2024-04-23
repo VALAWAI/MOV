@@ -46,11 +46,15 @@ public class LogResource {
 	/**
 	 * Get the information of some logs.
 	 *
-	 * @param pattern to match the logs message.
-	 * @param level   to match the logs.
-	 * @param order   to return the logs.
-	 * @param offset  to the first log to return.
-	 * @param limit   number maximum of logs to return.
+	 * @param pattern          to match the logs message.
+	 * @param level            to match the logs.
+	 * @param componentPattern to match the name or description of the components
+	 *                         associated to the logs message.
+	 * @param componentType    to match the component type of the components
+	 *                         associated to the logs message.
+	 * @param order            to return the logs.
+	 * @param offset           to the first log to return.
+	 * @param limit            number maximum of logs to return.
 	 *
 	 * @return the matching logs page.
 	 */
@@ -62,12 +66,15 @@ public class LogResource {
 	public Uni<Response> getLogRecordPage(
 			@Parameter(description = "The pattern to match the message of the logs to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("pattern") @Valid final String pattern,
 			@Parameter(description = "The level to match the logs to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("level") @Valid final String level,
-			@Parameter(description = "The order in witch the logs has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.") @QueryParam("order") @DefaultValue("+timestamp") @Valid @Pattern(regexp = "(,?[+|-]?[level|message|timestamp])*") final String order,
+			@Parameter(description = "The pattern to match the component name or description of the logs to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("componentPattern") @Valid final String componentPattern,
+			@Parameter(description = "The type to match the component associated to the logs to return. If it is defined between / it is considered a PCRE regular expression.") @QueryParam("componentType") @Valid final String componentType,
+			@Parameter(description = "The order in witch the logs has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.") @QueryParam("order") @DefaultValue("+timestamp") @Valid @Pattern(regexp = "(,?[+|-]?[level|message|timestamp|component.name|component.description|component.type])*") final String order,
 			@Parameter(description = "The index of the first log to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of logs to return") @QueryParam("limit") @DefaultValue("20") @Valid @Min(1) final int limit) {
 
-		return GetLogRecordPage.fresh().withPattern(pattern).withLevel(level).withOrder(order).withOffset(offset)
-				.withLimit(limit).execute().map(page -> Response.ok(page).build());
+		return GetLogRecordPage.fresh().withPattern(pattern).withLevel(level).withComponnetPattern(componentPattern)
+				.withComponnetType(componentType).withOrder(order).withOffset(offset).withLimit(limit).execute()
+				.map(page -> Response.ok(page).build());
 
 	}
 
