@@ -5,6 +5,11 @@
 			i18n="The label of the field to match the messages@@main_logs_search-label">Message</mat-label>
 		<input matInput type="text" formControlName="message"> </mat-form-field>
 	</div>
+	<div class="grow flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label of the field to match the components@@main_logs_search-label">Component</mat-label>
+		<input matInput type="text" formControlName="component"> </mat-form-field>
+	</div>
 	<div class="flex flex-row justify-center content-center">
 		<mat-form-field> <mat-label
 			i18n="The label to select the order of teh logs@@main_logs_order-by-label">Order
@@ -15,6 +20,10 @@
 			i18n="The option to order by level@@main_logs_order-by-level">Level</mat-option>
 		<mat-option value="message"
 			i18n="The option to order by message@@main_logs_order-by-message">Message</mat-option>
+		<mat-option value="component.type"
+			i18n="The option to order by component type@@main_logs_order-by-component-type">Component type</mat-option>
+		<mat-option value="component.name"
+			i18n="The option to order by component name@@main_logs_order-by-component-name">Component name</mat-option>
 		</mat-select> </mat-form-field>
 		<mat-checkbox formControlName="reverse"
 			i18n="The label of the checkbox to order in reverse order@@main_logs_order-by-reverse-label">In
@@ -27,6 +36,14 @@
 			multiple> <mat-option *ngFor="let level of logNames"
 			[value]="level">{{level}}</mat-option> </mat-select> </mat-form-field>
 
+	</div>
+	<div class="grow flex flex-row justify-center content-center">
+		<mat-form-field class="max-w-96 grow"> <mat-label
+			i18n="The label to select the type of the component of the log messages@@main_logs_component-types-label">
+		Filter log messages by component type: </mat-label> <mat-select formControlName="types"
+			multiple> <mat-option
+			*ngFor="let type of componentTypeNames" [value]="type">{{type}}</mat-option>
+		</mat-select> </mat-form-field>
 	</div>
 	<div class="flex flex-row justify-center content-center">
 		<button
@@ -41,27 +58,37 @@
 		<table mat-table [dataSource]="page.logs" class="mat-elevation-z8">
 
 			<ng-container matColumnDef=timestamp>
-			<th mat-header-cell *matHeaderCellDef>Time</th>
+			<th mat-header-cell *matHeaderCellDef i18n="The label of the column timestamp@@main_logs_timestamp-column-label">Time</th>
 			<td mat-cell *matCellDef="let element">{{element.timestamp|timestamp:'short'}}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="level">
-			<th mat-header-cell *matHeaderCellDef>Level</th>
+			<th mat-header-cell *matHeaderCellDef i18n="The label of the column level@@main_logs_level-column-label">Level</th>
 			<td mat-cell *matCellDef="let element">{{element.level}}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="message">
-			<th mat-header-cell *matHeaderCellDef>Message</th>
+			<th mat-header-cell *matHeaderCellDef i18n="The label of the column message@@main_logs_message-column-label">Message</th>
 			<td mat-cell *matCellDef="let element">{{element.message}}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="payload">
-			<th mat-header-cell *matHeaderCellDef>Payload</th>
+			<th mat-header-cell *matHeaderCellDef i18n="The label of the column payload@@main_logs_payload-column-label">Payload</th>
 			<td mat-cell *matCellDef="let element"><button mat-icon-button
 					color="primary" *ngIf="element.payload != null"
 					(click)="showPayload(element)">
 					<mat-icon>visibility </mat-icon>
 				</button></td>
+			</ng-container>
+
+			<ng-container matColumnDef="componentType">
+			<th mat-header-cell *matHeaderCellDef i18n="The label of the column component type@@main_logs_component-type-column-label">Component type</th>
+			<td mat-cell *matCellDef="let element">{{element.component?.type}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="componentName">
+			<th mat-header-cell *matHeaderCellDef i18n="The label of the column component name@@main_logs_component-name-column-label">Component name</th>
+			<td mat-cell *matCellDef="let element">{{element.component|componentNameBeautifier}}</td>
 			</ng-container>
 
 			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -13,10 +13,12 @@ import { ComponentViewComponent } from './component-view.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { TimestampModule } from 'src/app/shared/timestamp';
 import { LoadingModule } from 'src/app/shared/loading';
+import {ComponentNameBeautifier} from './component-name-beautifierr.pipe';
 
 @NgModule({
 	declarations: [
-		ComponentViewComponent
+		ComponentViewComponent,
+		ComponentNameBeautifier
 	],
 	imports: [
 		CommonModule,
@@ -25,7 +27,8 @@ import { LoadingModule } from 'src/app/shared/loading';
 		LoadingModule
 	],
 	exports: [
-		ComponentViewComponent
+		ComponentViewComponent,
+		ComponentNameBeautifier
 	]
 })
 export class ComponentViewModule { }

@@ -23,6 +23,7 @@ import { TimestampModule } from 'src/app/shared/timestamp';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ShowLogDialog } from './show-log.dialog';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { ComponentViewModule } from 'src/app/shared/component/view';
 
 @NgModule({
 	declarations: [
@@ -43,7 +44,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 		MatCheckboxModule,
 		TimestampModule,
 		MatDialogModule,
-		NgxJsonViewerModule
+		NgxJsonViewerModule,
+		ComponentViewModule
 	],
 	exports: [
 	],

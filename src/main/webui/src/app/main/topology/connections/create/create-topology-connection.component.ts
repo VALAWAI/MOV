@@ -91,7 +91,7 @@ export class CreateTopologyConnectionComponent implements OnInit {
 		if (this.form.valid && this.sourceComponent != null && this.targetComponent != null) {
 
 			this.adding = true;
-			this.mov.getLogRecordPage(null, null, "-timestamp", 0, 1).subscribe(
+			this.mov.getLogRecordPage(null, null, null, null, "-timestamp", 0, 1).subscribe(
 				{
 					next: page => {
 
@@ -153,7 +153,7 @@ export class CreateTopologyConnectionComponent implements OnInit {
 	 */
 	private checkAddedConnection(connection: ConnectionToCreate, times: number = 100) {
 
-		this.mov.getLogRecordPage(null, null, "-timestamp", 0, 100).subscribe(
+		this.mov.getLogRecordPage(null, null, null, null, "-timestamp", 0, 100).subscribe(
 			{
 				next: page => {
 

@@ -60,7 +60,7 @@ export class ComponentsComponent implements OnInit {
 	/**
 	 * The names of the component types.
 	 */
-	public componentNames = COMPONENT_TYPE_NAMES;
+	public componentTypeNames = COMPONENT_TYPE_NAMES;
 
 	/**
 	 *  Create the component.

@@ -23,7 +23,7 @@
 			i18n="The label to select the type of the component messages@@main_components_types-label">
 		Filter components by type: </mat-label> <mat-select formControlName="types"
 			multiple> <mat-option
-			*ngFor="let type of componentNames" [value]="type">{{type}}</mat-option>
+			*ngFor="let type of componentTypeNames" [value]="type">{{type}}</mat-option>
 		</mat-select> </mat-form-field>
 	</div>
 	<div class="gap-3 flex flex-row justify-center content-center">

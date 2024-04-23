@@ -13,7 +13,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
-import { LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
+import { COMPONENT_TYPE_NAMES, LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
 import { ShowLogDialog } from './show-log.dialog';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -27,7 +27,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 	/**
 	 * The columns to display.
 	 */
-	public displayedColumns: string[] = ['timestamp', 'level', 'message', 'payload'];
+	public displayedColumns: string[] = ['timestamp', 'level', 'message', 'payload', 'componentType','componentName'];
 
 	/**
 	 * The component to manage the messages.
@@ -35,9 +35,11 @@ export class LogsComponent implements OnInit, OnDestroy {
 	public form: FormGroup = this.fb.group(
 		{
 			message: this.fb.control<string | null>(null),
+			component: this.fb.control<string | null>(null),
 			orderBy: this.fb.control<string>("timestamp"),
 			reverse: this.fb.control<boolean>(true),
 			levels: this.fb.control<string[]>([]),
+			types: this.fb.control<string[]>([]),
 		});
 
 	/**
@@ -64,6 +66,11 @@ export class LogsComponent implements OnInit, OnDestroy {
 	 * The names of the log levels.
 	 */
 	public logNames = LOG_LEVEL_NAMES;
+
+	/**
+	 * The names of the component types.
+	 */
+	public componentTypeNames = COMPONENT_TYPE_NAMES;
 
 	/**
 	 *  Create the component.
@@ -137,6 +144,38 @@ export class LogsComponent implements OnInit, OnDestroy {
 			}
 
 		}
+
+		var component = value.component;
+		if (component != null) {
+
+			component = component.trim();
+			if (component.length == 0) {
+
+				component = null;
+
+			} else {
+
+				component = component.replace(/\*/, ".*");
+				component = "/.*" + component + ".*/i";
+			}
+
+		}
+		var type = null;
+		if (value.types != null && value.types.length > 0) {
+
+			type = value.types[0];
+			if (value.types.length > 1) {
+
+				type = "/" + type;
+				for (var i = 1; i < value.types.length; i++) {
+
+					type += "|" + value.types[i];
+				}
+
+				type += "/";
+
+			}
+		}
 		var orderBy = value.orderBy;
 		if (value.reverse) {
 
@@ -159,7 +198,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 			}
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getLogRecordPage(pattern, level, orderBy, offset, this.pageSize).subscribe(
+		this.mov.getLogRecordPage(pattern, level, component, type,orderBy, offset, this.pageSize).subscribe(
 			{
 				next: page => this.page = page,
 				error: err => {

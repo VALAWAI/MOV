@@ -110,10 +110,21 @@ export class MovApiService {
 	/**
 	 * Get some logs.
 	 */
-	public getLogRecordPage(pattern: string | null = null, level: string | null = null, order: string | null = null, offset: number = 0, limit: number = 20): Observable<LogRecordPage> {
+	public getLogRecordPage(pattern: string | null = null, level: string | null = null,
+	componentPattern: string | null = null, componentType: string | null = null,
+	 order: string | null = null, offset: number = 0, limit: number = 20): Observable<LogRecordPage> {
 
 		var url = this.url('/v1/logs');
-		return this.http.get<LogRecordPage>(url, this.optionsWithParams({ pattern: pattern, level: level, order: order, offset: offset, limit: limit }));
+		return this.http.get<LogRecordPage>(url, this.optionsWithParams(
+		  {
+		    pattern: pattern,
+		    level: level,
+		    componentPattern: componentPattern,
+		    componentType: componentType,
+		    order: order,
+		    offset: offset,
+		    limit: limit
+		  }));
 	}
 
 	/**

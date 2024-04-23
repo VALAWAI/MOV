@@ -12,6 +12,17 @@
 	<div *ngIf="data.payload" class="font-bold"
 		i18n="The label of the payload of the log@@main_logs_dialog-payload-label">Payload</div>
 	<ngx-json-viewer class="col-span-2" *ngIf="payload" [json]="payload"></ngx-json-viewer>
+	<div *ngIf="data.component" class="font-bold col-span-3"
+		i18n="The label of the payload of the compoennt@@main_logs_dialog-component-label">Component</div>
+	<div *ngIf="data.component && data.component.type" class="font-bold col-start-2"
+		i18n="The label of the payload of the compoennt type@@main_logs_dialog-component-type-label">Type</div>
+	<div *ngIf="data.component && data.component.type">{{data.component.type}}</div>
+	<div *ngIf="data.component && data.component.name" class="font-bold col-start-2"
+		i18n="The label of the payload of the compoennt name@@main_logs_dialog-component-name-label">Name</div>
+	<div *ngIf="data.component &&data.component.name">{{data.component.name}}</div>
+	<div *ngIf="data.component && data.component.description" class="font-bold col-start-2"
+		i18n="The label of the payload of the compoennt description@@main_logs_dialog-component-description-label">Description</div>
+	<div *ngIf="data.component &&data.component.description">{{data.component.description}}</div>
 </div>
 </mat-dialog-content>
 <mat-dialog-actions>

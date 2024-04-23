@@ -77,7 +77,7 @@ export class RegisterComponentComponent implements OnInit {
 		if (this.form.valid) {
 
 			this.registering = true;
-			this.mov.getLogRecordPage(null, null, "-timestamp", 0, 1).subscribe(
+			this.mov.getLogRecordPage(null, null,null, null, "-timestamp", 0, 1).subscribe(
 				{
 					next: page => {
 
@@ -139,7 +139,7 @@ export class RegisterComponentComponent implements OnInit {
 	 */
 	private checkRegisteredComponent(component: ComponentToRegister, times: number = 100) {
 
-		this.mov.getLogRecordPage(null, null, "-timestamp", 0, 100).subscribe(
+		this.mov.getLogRecordPage(null, null, null, null, "-timestamp", 0, 100).subscribe(
 			{
 				next: page => {
 
