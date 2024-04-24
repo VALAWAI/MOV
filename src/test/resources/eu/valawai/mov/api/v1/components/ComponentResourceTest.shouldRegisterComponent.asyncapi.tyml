@@ -1,0 +1,15 @@
+asyncapi: 2.6.0
+info:
+  title: Test description of a publishing
+  version: {0}
+  description: API description
+channels:
+  {1}:
+    description: {2}
+    publish:
+      message:
+        payload:
+          type: object
+          properties:
+            {3}:
+              type: string

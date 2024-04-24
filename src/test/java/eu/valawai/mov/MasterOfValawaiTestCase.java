@@ -367,4 +367,29 @@ public class MasterOfValawaiTestCase {
 
 		this.assertItemIsNull(uni, Duration.ofSeconds(30));
 	}
+
+	/**
+	 * Load a resource as string.
+	 *
+	 * @param resource to load.
+	 *
+	 * @retuen the string value of the resource.
+	 */
+	protected String loadResourceAsString(String resource) {
+
+		try {
+
+			final var loader = this.getClass().getClassLoader();
+			final var stream = loader.getResourceAsStream(resource);
+			final var bytes = stream.readAllBytes();
+			return new String(bytes);
+
+		} catch (final Throwable error) {
+
+			error.printStackTrace();
+			fail("Cannot load the resource " + resource);
+			return null;
+		}
+
+	}
 }

@@ -412,24 +412,10 @@ public class ComponentResourceTest extends APITestCase {
 		final var sourceChannelName = nextPattern("test/register_component_publish_{0}");
 		final var sourceChannelDescription = nextPattern("Description of a channel {0}");
 		final var fieldName = nextPattern("field_to_test_{0}");
-		component.asyncapiYaml = MessageFormat.format("""
-				asyncapi: 2.6.0
-				info:
-				  title: Test description of a publishing
-				  version: {0}
-				  description: API description
-				channels:
-				  {1}:
-				    description: {2}
-				    publish:
-				      message:
-				        payload:
-				          type: object
-				          properties:
-				            {3}:
-				              type: string
-								""", apiVersion, sourceChannelName, sourceChannelDescription, fieldName).trim()
-				.replaceAll("\\t", "");
+		final var yaml = this.loadResourceAsString(
+				"eu/valawai/mov/api/v1/components/ComponentResourceTest.shouldRegisterComponent.asyncapi.tyml");
+		component.asyncapiYaml = MessageFormat.format(yaml, apiVersion, sourceChannelName, sourceChannelDescription,
+				fieldName);
 
 		// Create the component that will be the target of the connection
 		final var next = new ComponentTest().nextModel();

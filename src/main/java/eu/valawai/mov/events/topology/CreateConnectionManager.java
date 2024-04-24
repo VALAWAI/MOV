@@ -99,7 +99,7 @@ public class CreateConnectionManager {
 											.withPayload(content).store();
 									context.connectionId = connectionId;
 									final var paginator = ComponentEntity
-											.find("type == ?1 and channels.subscribe != null and channels.name like ?2",
+											.find("type = ?1 and channels.subscribe != null and channels.name like ?2",
 													Sort.ascending("_id"), ComponentType.C2,
 													C2_SUBSCRIBER_CHANNEL_NAME_PATTERN)
 											.page(Page.ofSize(10));
