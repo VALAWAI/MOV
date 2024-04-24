@@ -129,7 +129,6 @@ public class CreateConnectionManager {
 
 					AddLog.fresh().withError(error).withMessage("Received invalid change topology payload.")
 							.withPayload(content).store();
-
 					return msg.nack(error);
 				}
 			});
@@ -385,14 +384,15 @@ public class CreateConnectionManager {
 
 							if (success) {
 
-								Log.debugv("Subscribed the channel {0} of the component {1} into the connection {2}.",
-										channel.name, target.id, context.connectionId);
+								AddLog.fresh().withDebug().withMessage(
+										"Subscribed the channel {0} of the component {1} into the connection {2}.",
+										channel.name, target.id, context.connectionId).store();
 
 							} else {
 
-								Log.errorv(
+								AddLog.fresh().withError().withMessage(
 										"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
-										channel.name, target.id, context.connectionId);
+										channel.name, target.id, context.connectionId).store();
 							}
 						});
 
