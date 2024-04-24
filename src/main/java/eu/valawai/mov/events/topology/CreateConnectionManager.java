@@ -10,16 +10,25 @@ package eu.valawai.mov.events.topology;
 
 import java.util.concurrent.CompletionStage;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
+import eu.valawai.mov.api.v1.components.ChannelSchema;
+import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.AddLog;
+import eu.valawai.mov.persistence.topology.AddC2SubscriptionToTopologyConnection;
 import eu.valawai.mov.persistence.topology.AddTopologyConnection;
 import io.quarkus.logging.Log;
+import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
+import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -36,7 +45,8 @@ import jakarta.inject.Inject;
 public class CreateConnectionManager {
 
 	/**
-	 * The component to manage the messages.
+	 * The component to extract the information of a receive a messages from a
+	 * broker.
 	 */
 	@Inject
 	PayloadService service;
@@ -54,6 +64,11 @@ public class CreateConnectionManager {
 	PublishService publish;
 
 	/**
+	 * The pattern that has to match a channel name to be used as subscriber.
+	 */
+	private static final String C2_SUBSCRIBER_CHANNEL_NAME_PATTERN = "valawai/c2/\\w+/control/\\w+";
+
+	/**
 	 * Called when has to create a connection.
 	 *
 	 * @param msg message to consume.
@@ -66,44 +81,37 @@ public class CreateConnectionManager {
 		final var content = msg.getPayload();
 		try {
 
-			final var payload = this.service.decodeAndVerify(content, CreateConnectionPayload.class);
-			return this.validate(payload).chain(invalid -> {
+			final var context = new ManagerContext();
+			context.payload = this.service.decodeAndVerify(content, CreateConnectionPayload.class);
+			return this.validate(context).chain(invalid -> {
 
 				if (invalid == null) {
 
-					return AddTopologyConnection.fresh().withSourceChannel(payload.source.channelName)
-							.withSourceComponent(payload.source.componentId)
-							.withTargetChannel(payload.target.channelName)
-							.withTargetComponent(payload.target.componentId).withEnabled(false).execute()
-							.map(connectionId -> {
+					return AddTopologyConnection.fresh().withSourceChannel(context.payload.source.channelName)
+							.withSourceComponent(context.payload.source.componentId)
+							.withTargetChannel(context.payload.target.channelName)
+							.withTargetComponent(context.payload.target.componentId).withEnabled(false).execute()
+							.chain(connectionId -> {
 
 								if (connectionId != null) {
 
-									if (payload.enabled) {
-
-										final var change = new ChangeTopologyPayload();
-										change.action = TopologyAction.ENABLE;
-										change.connectionId = connectionId;
-										this.publish.send(this.changeTopologyQueueName, change).subscribe()
-												.with(done -> {
-
-													Log.debugv("Sent enable the connection {0}", connectionId);
-
-												}, error -> {
-
-													Log.errorv(error, "Cannot enable the connection {0}", connectionId);
-												});
-
-									}
 									AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
 											.withPayload(content).store();
-
-									return null;
+									context.connectionId = connectionId;
+									final var paginator = ComponentEntity
+											.find("type == ?1 and channels.subscribe != null and channels.name like ?2",
+													Sort.ascending("_id"), ComponentType.C2,
+													C2_SUBSCRIBER_CHANNEL_NAME_PATTERN)
+											.page(Page.ofSize(10));
+									this.checkSubscriptionAndEnable(context, paginator);
+									return Uni.createFrom().nullItem();
 
 								} else {
 
-									return new IllegalArgumentException("Cannot store the connection");
+									return Uni.createFrom()
+											.item(new IllegalArgumentException("Cannot store the connection"));
 								}
+
 							});
 
 				} else {
@@ -111,7 +119,7 @@ public class CreateConnectionManager {
 					return Uni.createFrom().item(invalid);
 				}
 
-			}).subscribeAsCompletionStage().thenCompose(error -> {
+			}).onFailure().recoverWithItem(error -> error).subscribeAsCompletionStage().thenCompose(error -> {
 
 				if (error == null) {
 
@@ -138,21 +146,39 @@ public class CreateConnectionManager {
 	/**
 	 * Check that the connection is valid.
 	 *
-	 * @param payload with the connection to validate.
+	 * @param context with the payload to validate.
 	 *
 	 * @return null of the connection is valid or the error that explains why is not
 	 *         valid.
 	 *
-	 * @see #validateSource(CreateConnectionPayload)
-	 * @see #validateTarget(CreateConnectionPayload)
+	 * @see #validateSource(ManagerContext)
+	 * @see #validateTarget(ManagerContext)
 	 */
-	private Uni<Throwable> validate(CreateConnectionPayload payload) {
+	private Uni<Throwable> validate(ManagerContext context) {
 
-		return this.validateSource(payload).chain(error -> {
+		return this.validateSource(context).chain(error -> {
 
 			if (error == null) {
 
-				return this.validateTarget(payload);
+				return this.validateTarget(context).chain(error2 -> {
+
+					if (error2 == null) {
+
+						if (context.sourceChannel.publish.match(context.targetChannel.subscribe)) {
+
+							return Uni.createFrom().nullItem();
+
+						} else {
+
+							return Uni.createFrom().failure(new IllegalArgumentException(
+									"The source payload does not match the target payload."));
+						}
+
+					} else {
+
+						return Uni.createFrom().item(error2);
+					}
+				});
 
 			} else {
 
@@ -164,40 +190,40 @@ public class CreateConnectionManager {
 	/**
 	 * Check that the source of the connection is valid.
 	 *
-	 * @param payload with the connection to validate.
+	 * @param context with the payload to validate.
 	 *
 	 * @return null of the connection source is valid or the error that explains why
 	 *         is not valid.
 	 */
-	private Uni<Throwable> validateSource(CreateConnectionPayload payload) {
+	private Uni<Throwable> validateSource(ManagerContext context) {
 
-		final Uni<ComponentEntity> findSource = ComponentEntity.findById(payload.source.componentId);
+		final Uni<ComponentEntity> findSource = ComponentEntity.findById(context.payload.source.componentId);
 		return findSource.onFailure().recoverWithItem(error -> {
 
 			Log.errorv(error, "Cannot obtain the source component.");
 			return null;
 
-		}).map(value -> {
+		}).map(source -> {
 
-			if (value == null) {
+			if (source == null) {
 
 				return new IllegalArgumentException("The source component is not defined");
 
 			} else {
 
-				final var source = value;
 				if (source.channels != null) {
 
 					for (final var sourceChannel : source.channels) {
 
-						if (sourceChannel.name.equals(payload.source.channelName) && sourceChannel.publish != null) {
+						if (sourceChannel.name.equals(context.payload.source.channelName)
+								&& sourceChannel.publish != null) {
 
+							context.sourceChannel = sourceChannel;
 							return null;
 						}
 					}
 				}
 				return new IllegalArgumentException("The source component does not publish on the channel name");
-
 			}
 
 		});
@@ -206,34 +232,35 @@ public class CreateConnectionManager {
 	/**
 	 * Check that the target of the connection is valid.
 	 *
-	 * @param payload with the connection to validate.
+	 * @param context with the payload to validate.
 	 *
 	 * @return null of the connection target is valid or the error that explains why
 	 *         is not valid.
 	 */
-	private Uni<Throwable> validateTarget(CreateConnectionPayload payload) {
+	private Uni<Throwable> validateTarget(ManagerContext context) {
 
-		final Uni<ComponentEntity> findTarget = ComponentEntity.findById(payload.target.componentId);
+		final Uni<ComponentEntity> findTarget = ComponentEntity.findById(context.payload.target.componentId);
 		return findTarget.onFailure().recoverWithItem(error -> {
 
 			Log.errorv(error, "Cannot obtain the target component.");
 			return null;
 
-		}).map(value -> {
+		}).map(target -> {
 
-			if (value == null) {
+			if (target == null) {
 
 				return new IllegalArgumentException("The target component is not defined");
 
 			} else {
 
-				final var target = value;
 				if (target.channels != null) {
 
 					for (final var targetChannel : target.channels) {
 
-						if (targetChannel.name.equals(payload.target.channelName) && targetChannel.subscribe != null) {
+						if (targetChannel.name.equals(context.payload.target.channelName)
+								&& targetChannel.subscribe != null) {
 
+							context.targetChannel = targetChannel;
 							return null;
 						}
 					}
@@ -243,6 +270,135 @@ public class CreateConnectionManager {
 			}
 
 		});
+	}
+
+	/**
+	 * Context used by this manager.
+	 */
+	private class ManagerContext {
+
+		/**
+		 * The received payload.
+		 */
+		public CreateConnectionPayload payload;
+
+		/**
+		 * The source channel of the source component.
+		 */
+		public ChannelSchema sourceChannel;
+
+		/**
+		 * The target channel of the target component.
+		 */
+		public ChannelSchema targetChannel;
+
+		/**
+		 * The identifier of the added connection.
+		 */
+		public ObjectId connectionId;
+
+	}
+
+	/**
+	 * Check for the necessary subscription to the
+	 */
+	private void checkSubscriptionAndEnable(ManagerContext context,
+			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
+
+		final Multi<ComponentEntity> getter = paginator.stream();
+		getter.onCompletion().invoke(() -> {
+
+			paginator.hasNextPage().subscribe().with(hasNext -> {
+
+				if (hasNext) {
+
+					this.checkSubscriptionAndEnable(context, paginator.nextPage());
+
+				} else {
+
+					this.enableConnectionIfNecessary(context);
+
+				}
+
+			}, error -> {
+
+				Log.errorv(error,
+						"Error when paginate the components to check if has to be subscribed into a connection.");
+				this.enableConnectionIfNecessary(context);
+
+			});
+
+		}).subscribe().with(target -> {
+
+			this.checkSubscription(context, target);
+
+		}, error -> {
+
+			Log.errorv(error, "Error when checking witch component may be subscribed to the connection messages.");
+			this.enableConnectionIfNecessary(context);
+
+		});
+
+	}
+
+	/**
+	 * Enable the created connection if it is necessary.
+	 *
+	 * @param context with the created connection.
+	 */
+	private void enableConnectionIfNecessary(ManagerContext context) {
+
+		if (context.payload.enabled) {
+
+			final var change = new ChangeTopologyPayload();
+			change.action = TopologyAction.ENABLE;
+			change.connectionId = context.connectionId;
+			this.publish.send(this.changeTopologyQueueName, change).subscribe().with(done -> {
+
+				Log.debugv("Sent enable the connection {0}", context.connectionId);
+
+			}, error -> {
+
+				Log.errorv(error, "Cannot enable the connection {0}", context.connectionId);
+			});
+
+		}
+
+	}
+
+	/**
+	 * Check if a component must be subscribed to the created connection.
+	 *
+	 * @param context with the created connection.
+	 * @param target  component to check it it has to be subscribed into the
+	 *                connection.
+	 */
+	private void checkSubscription(ManagerContext context, ComponentEntity target) {
+
+		for (final var channel : target.channels) {
+
+			if (channel.name.matches(C2_SUBSCRIBER_CHANNEL_NAME_PATTERN) && channel.subscribe != null
+					&& channel.subscribe.match(context.sourceChannel.publish)) {
+				// the component must be subscribed into the connection
+				AddC2SubscriptionToTopologyConnection.fresh().withConnection(context.connectionId)
+						.withComponent(target.id).withChannel(channel.name).execute().subscribe().with(success -> {
+
+							if (success) {
+
+								Log.debugv("Subscribed the channel {0} of the component {1} into the connection {2}.",
+										channel.name, target.id, context.connectionId);
+
+							} else {
+
+								Log.errorv(
+										"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
+										channel.name, target.id, context.connectionId);
+							}
+						});
+
+			}
+		}
+
 	}
 
 }

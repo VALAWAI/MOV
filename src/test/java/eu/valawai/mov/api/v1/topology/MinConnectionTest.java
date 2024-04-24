@@ -42,8 +42,8 @@ public class MinConnectionTest extends ModelTestCase<MinConnection> {
 	public void fillIn(MinConnection model) {
 
 		model.id = ValueGenerator.nextObjectId();
-		model.source = "valaway/" + next(ComponentType.values()).name().toLowerCase() + nextPattern("_component_{0}");
-		model.target = "valaway/" + next(ComponentType.values()).name().toLowerCase() + nextPattern("_component_{0}");
+		model.source = "valawai/" + next(ComponentType.values()).name().toLowerCase() + nextPattern("_component_{0}");
+		model.target = "valawai/" + next(ComponentType.values()).name().toLowerCase() + nextPattern("_component_{0}");
 		model.enabled = flipCoin();
 
 	}

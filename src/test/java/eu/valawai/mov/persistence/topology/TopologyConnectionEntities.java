@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.bson.conversions.Bson;
 
+import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import io.quarkus.logging.Log;
 
@@ -44,6 +45,7 @@ public interface TopologyConnectionEntities {
 		entity.source = new TopologyNode();
 		entity.target = new TopologyNode();
 
+		PayloadSchema publish = null;
 		while (entity.source.componentId == null) {
 
 			final var component = ComponentEntities.nextComponent();
@@ -55,6 +57,7 @@ public interface TopologyConnectionEntities {
 
 						entity.source.componentId = component.id;
 						entity.source.channelName = channel.name;
+						publish = channel.publish;
 						break;
 					}
 				}
@@ -73,6 +76,8 @@ public interface TopologyConnectionEntities {
 
 						entity.target.componentId = component.id;
 						entity.target.channelName = channel.name;
+						channel.subscribe = publish;
+						component.update().await().atMost(Duration.ofSeconds(30));
 						break;
 					}
 				}

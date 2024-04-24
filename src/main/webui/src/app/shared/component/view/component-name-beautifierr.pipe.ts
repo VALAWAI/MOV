@@ -1,5 +1,5 @@
 /*
-  Copyright 2022-2026 VALAWAY
+  Copyright 2022-2026 VALAWAI
 
   Use of this source code is governed by GNU General Public License version 3
   license that can be found in the LICENSE file or at
@@ -30,7 +30,7 @@ export class ComponentNameBeautifier implements PipeTransform {
 		if (value != null && value.name != null) {
 
 			var name = value.name.trim();
-			if( name.startsWith("valaway/") ){
+			if( name.startsWith("valawai/") ){
 				
 				name = name.substring(8);
 			}

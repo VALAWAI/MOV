@@ -9,6 +9,7 @@
 package eu.valawai.mov.persistence.topology;
 
 import java.io.Serializable;
+import java.util.List;
 
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
@@ -63,4 +64,9 @@ public class TopologyConnectionEntity extends ReactivePanacheMongoEntity impleme
 	 */
 	public boolean enabled;
 
+	/**
+	 * The list of C2 components that will be notified when a message is send
+	 * between the source and the target.
+	 */
+	public List<TopologyNode> c2Subscriptions;
 }

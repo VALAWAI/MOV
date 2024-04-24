@@ -8,8 +8,15 @@
 
 package eu.valawai.mov.events.topology;
 
+import org.bson.types.ObjectId;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import eu.valawai.mov.events.Payload;
+import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import io.vertx.core.json.JsonObject;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * The content of the message to notify a C2 component that a message is
@@ -18,6 +25,15 @@ import io.vertx.core.json.JsonObject;
  * @author VALAWAI
  */
 public class SentMessagePayload extends Payload {
+
+	/**
+	 * The identifier of the topology connection that allows the message
+	 * interchanging.
+	 */
+	@NotNull
+	@JsonSerialize(using = ObjectIdSerializer.class)
+	@JsonProperty("connection_id")
+	public ObjectId connectionId;
 
 	/**
 	 * The source component that has sent the message.

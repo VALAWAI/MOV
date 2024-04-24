@@ -28,6 +28,7 @@ import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.APITestCase;
+import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.ListenerService;
 import eu.valawai.mov.events.topology.TopologyAction;
@@ -264,31 +265,7 @@ public class TopologyResourceTest extends APITestCase {
 	@Test
 	public void shouldCreateConnectionAndEnableConnection() {
 
-		final var create = new ConnectionToCreate();
-		do {
-
-			final var component = ComponentEntities.nextComponent();
-			if (component.channels != null) {
-
-				for (final var channel : component.channels) {
-
-					if (create.sourceComponent == null && channel.publish != null && channel.subscribe == null) {
-
-						create.sourceComponent = component.id;
-						create.sourceChannel = channel.name;
-						break;
-
-					} else if (create.targetComponent == null && channel.publish == null && channel.subscribe != null) {
-
-						create.targetComponent = component.id;
-						create.targetChannel = channel.name;
-						break;
-
-					}
-				}
-			}
-
-		} while (create.sourceComponent == null || create.targetComponent == null);
+		final var create = this.createValidConnectionToCreate();
 		create.enabled = true;
 
 		final var now = TimeManager.now();
@@ -317,12 +294,14 @@ public class TopologyResourceTest extends APITestCase {
 	}
 
 	/**
-	 * Should create a connection without enable it.
+	 * Create a valid {2link ConnectionToCreate}.
+	 *
+	 * @return the valid connection to create.
 	 */
-	@Test
-	public void shouldCreateConnectionAndNotEnableConnection() {
+	private ConnectionToCreate createValidConnectionToCreate() {
 
 		final var create = new ConnectionToCreate();
+		PayloadSchema schema = null;
 		do {
 
 			final var component = ComponentEntities.nextComponent();
@@ -334,12 +313,30 @@ public class TopologyResourceTest extends APITestCase {
 
 						create.sourceComponent = component.id;
 						create.sourceChannel = channel.name;
+						if (schema != null) {
+
+							channel.publish = schema;
+							this.assertItemNotNull(component.update());
+
+						} else {
+
+							schema = channel.publish;
+						}
 						break;
 
 					} else if (create.targetComponent == null && channel.publish == null && channel.subscribe != null) {
 
 						create.targetComponent = component.id;
 						create.targetChannel = channel.name;
+						if (schema != null) {
+
+							channel.subscribe = schema;
+							this.assertItemNotNull(component.update());
+
+						} else {
+
+							schema = channel.subscribe;
+						}
 						break;
 
 					}
@@ -347,6 +344,16 @@ public class TopologyResourceTest extends APITestCase {
 			}
 
 		} while (create.sourceComponent == null || create.targetComponent == null);
+		return create;
+	}
+
+	/**
+	 * Should create a connection without enable it.
+	 */
+	@Test
+	public void shouldCreateConnectionAndNotEnableConnection() {
+
+		final var create = this.createValidConnectionToCreate();
 		create.enabled = false;
 
 		final var now = TimeManager.now();

@@ -674,6 +674,12 @@ components:
     sent_message_payload:
       type: object
       properties:
+        connection_id:
+          description: The identifier of the topology connection that allows the message intechanging.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
         source:
           description: The source component that has sent the message.
           oneOf:

@@ -33,7 +33,7 @@ public abstract class AbstractMinComponentTestCase<T extends MinComponent> exten
 
 		model.id = nextObjectId();
 		model.type = next(ComponentType.values());
-		model.name = nextPattern("valaway/" + model.type.name().toLowerCase() + "_component_{0}");
+		model.name = nextPattern("valawai/" + model.type.name().toLowerCase() + "_component_{0}");
 		model.description = nextPattern("Description of component {0}");
 
 	}
