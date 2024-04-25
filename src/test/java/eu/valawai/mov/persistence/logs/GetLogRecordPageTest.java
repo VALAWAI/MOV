@@ -416,28 +416,40 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 		final var pattern = ".*1.*";
 		final var level = ValueGenerator.next(LogLevel.values());
 		final var type = "C1";
-		LogEntities.minLogs(100);
-		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
-		final var logs = find.await().atMost(Duration.ofSeconds(30));
 		final var expected = new LogRecordPage();
 		expected.total = 0;
-		expected.logs = new ArrayList<>();
+		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		var max = 0;
+		var min = 100;
 
-		for (final var log : logs) {
+		do {
 
-			if (log.level == level && log.message.matches(pattern)) {
+			expected.logs = new ArrayList<>();
+			LogEntities.minLogs(min);
+			final Uni<List<LogEntity>> find = LogEntity.findAll().list();
+			final var logs = find.await().atMost(Duration.ofSeconds(30));
 
-				final var expectedLog = LogRecordTest.from(log);
-				if (expectedLog.component != null && expectedLog.component.type == ComponentType.C1
-						&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
-								|| expectedLog.component.description != null
-										&& expectedLog.component.description.matches(pattern))) {
-					expected.total++;
-					expected.logs.add(expectedLog);
+			for (final var log : logs) {
 
+				if (log.level == level && log.message.matches(pattern)) {
+
+					final var expectedLog = LogRecordTest.from(log);
+					if (expectedLog.component != null && expectedLog.component.type == ComponentType.C1
+							&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
+									|| expectedLog.component.description != null
+											&& expectedLog.component.description.matches(pattern))) {
+						expected.total++;
+						expected.logs.add(expectedLog);
+
+					}
 				}
 			}
-		}
+
+			max = Math.min(expected.offset + limit, expected.logs.size());
+			min += 100;
+
+		} while (max < expected.offset);
 
 		expected.logs.sort((l1, l2) -> {
 
@@ -459,10 +471,6 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 			}
 			return cmp;
 		});
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
-
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		final var max = Math.min(expected.offset + limit, expected.logs.size());
 
 		expected.logs = expected.logs.subList(expected.offset, max);
 

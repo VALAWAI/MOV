@@ -384,7 +384,7 @@ public class CreateConnectionManager {
 
 							if (success) {
 
-								AddLog.fresh().withDebug().withMessage(
+								AddLog.fresh().withInfo().withMessage(
 										"Subscribed the channel {0} of the component {1} into the connection {2}.",
 										channel.name, target.id, context.connectionId).store();
 

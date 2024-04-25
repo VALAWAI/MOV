@@ -298,12 +298,7 @@ public class MasterOfValawaiTestCase {
 			error.printStackTrace();
 			fail("Cannot execute the action");
 		}
-		this.waitUntilNotNull(() -> LogEntity.count(), c -> {
-
-			System.err.println(c + " <=? " + expectedCount);
-			return c >= expectedCount;
-
-		}, Duration.ofSeconds(1), deadline);
+		this.waitUntilNotNull(() -> LogEntity.count(), c -> c >= expectedCount, Duration.ofSeconds(1), deadline);
 
 	}
 

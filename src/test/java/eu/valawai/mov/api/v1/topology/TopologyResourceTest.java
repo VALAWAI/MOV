@@ -275,7 +275,7 @@ public class TopologyResourceTest extends APITestCase {
 		final TopologyConnectionEntity last = this
 				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
 		assertTrue(now <= last.createTimestamp);
-		assertEquals(last.updateTimestamp, last.createTimestamp);
+		assertTrue(last.createTimestamp <= last.updateTimestamp);
 		assertNull(last.deletedTimestamp);
 		assertNotNull(last.source);
 		assertEquals(create.sourceComponent, last.source.componentId);

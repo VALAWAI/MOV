@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
@@ -453,7 +454,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that create a connection and enable it.
+	 * Check that create a connection where is subscribed a C2component and it is
+	 * enabled.
 	 */
 	@Test
 	public void shouldCreateConnectionAddC2SubscriptionsAndEnableConnection() {
@@ -521,11 +523,74 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		component.version = "1.0.0";
 		component.channels = new ArrayList<ChannelSchema>();
 		final var channel = new ChannelSchema();
-		channel.name = nextPattern("valawai/" + type.name().toLowerCase() + "/" + name + "/control/action_{1}", 2);
+		channel.name = nextPattern("valawai/" + type.name().toLowerCase() + "/" + name + "/control/action_{0}");
 		channel.description = "channel of " + name;
 		component.channels.add(channel);
 		this.assertItemNotNull(component.persist());
 		return component;
+	}
+
+	/**
+	 * Check that create a connection where are subscribed some C2 components and it
+	 * is not enabled.
+	 */
+	@Test
+	public void shouldCreateConnectionAddMultipleC2SubscriptionsAndNotEnableConnection() {
+
+		final var c0 = this.createComponent(ComponentType.C0);
+		final var c1 = this.createComponent(ComponentType.C1);
+		final var schema = PayloadSchemaTestCase.nextPayloadSchema(2);
+		c0.channels.get(0).publish = schema;
+		this.assertItemNotNull(c0.update());
+		c1.channels.get(0).subscribe = schema;
+		this.assertItemNotNull(c1.update());
+
+		final List<ComponentEntity> c2s = new ArrayList<>();
+		for (var i = 0; i < 43; i++) {
+
+			final var c2 = this.createComponent(ComponentType.C2);
+			c2.channels.get(0).subscribe = schema;
+			this.assertItemNotNull(c2.update());
+			c2s.add(c2);
+		}
+
+		final var payload = new CreateConnectionPayload();
+		payload.source = new NodePayload();
+		payload.source.componentId = c0.id;
+		payload.source.channelName = c0.channels.get(0).name;
+		payload.target = new NodePayload();
+		payload.target.componentId = c1.id;
+		payload.target.channelName = c1.channels.get(0).name;
+		payload.enabled = false;
+
+		final var now = TimeManager.now();
+		final var expectedLogsCount = 1 + c2s.size();
+		this.executeAndWaitUntilNewLogs(expectedLogsCount,
+				() -> this.assertPublish(this.createConnectionQueueName, payload));
+
+		final TopologyConnectionEntity last = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= last.createTimestamp);
+		assertTrue(last.createTimestamp <= last.updateTimestamp);
+		assertNull(last.deletedTimestamp);
+		assertEquals(payload.source, NodePayloadTest.from(last.source));
+		assertEquals(payload.target, NodePayloadTest.from(last.target));
+		assertFalse(last.enabled);
+		assertNotNull(last.c2Subscriptions);
+		for (final var c2 : c2s) {
+
+			final var expected = new TopologyNode();
+			expected.componentId = c2.id;
+			expected.channelName = c2.channels.get(0).name;
+			assertTrue(last.c2Subscriptions.contains(expected));
+		}
+
+		assertFalse(this.listener.isOpen(payload.source.channelName));
+
+		assertEquals(expectedLogsCount,
+				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+
 	}
 
 }
