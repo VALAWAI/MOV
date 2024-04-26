@@ -21,11 +21,11 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
-import eu.valawai.mov.MasterOfValawaiTestCase;
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.topology.MinConnectionPage;
 import eu.valawai.mov.api.v1.topology.MinConnectionTest;
+import eu.valawai.mov.persistence.MovPersistenceTestCase;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -37,7 +37,7 @@ import io.quarkus.test.junit.QuarkusTest;
  * @author VALAWAI
  */
 @QuarkusTest
-public class GetMinConnectionPageTest extends MasterOfValawaiTestCase {
+public class GetMinConnectionPageTest extends MovPersistenceTestCase {
 
 	/**
 	 * Create some connections that can be used.

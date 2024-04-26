@@ -18,9 +18,9 @@ import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.events.topology.ChangeTopologyPayload;
 import eu.valawai.mov.events.topology.TopologyAction;
-import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.components.FinishComponent;
 import eu.valawai.mov.persistence.logs.AddLog;
+import eu.valawai.mov.persistence.topology.RemoveAllC2SubscriptionByComponent;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
@@ -72,20 +72,32 @@ public class UnregisterComponentManager {
 		try {
 
 			final var payload = this.service.decodeAndVerify(content, UnregisterComponentPayload.class);
-			final Uni<ComponentEntity> find = ComponentEntity.findById(payload.componentId);
-			return find.onFailure().recoverWithItem(error -> {
+			return FinishComponent.fresh().withComponent(payload.componentId).execute().chain(finished -> {
 
-				Log.errorv("Cannot obtain the component {0}", payload.componentId);
-				return null;
+				if (finished) {
 
-			}).subscribeAsCompletionStage().thenCompose(component -> {
+					return RemoveAllC2SubscriptionByComponent.fresh().withComponent(payload.componentId).execute()
+							.map(removed -> {
+								Log.debugv("Unsubscribed {0} from {1} connections.", payload.componentId, finished);
+								return true;
+							});
 
-				if (component != null && component.finishedTime == null) {
+				} else {
+
+					return Uni.createFrom().item(false);
+
+				}
+
+			}).subscribeAsCompletionStage().thenCompose(finished -> {
+
+				if (finished) {
 
 					final var paginator = TopologyConnectionEntity
-							.find("source.componentId = ?1 or target.componentId = ?1", component.id)
+							.find("source.componentId = ?1 or target.componentId = ?1", payload.componentId)
 							.page(Page.ofSize(10));
-					this.closeConnectionsOf(payload, paginator);
+					this.closeConnectionsOf(paginator);
+					AddLog.fresh().withInfo().withMessage("Unregistered the component {0}.", payload.componentId)
+							.withPayload(payload).store();
 					return msg.ack();
 
 				} else {
@@ -109,11 +121,9 @@ public class UnregisterComponentManager {
 	/**
 	 * Close the connections of the paginator.
 	 *
-	 * @param payload   with the component to close the connections.
 	 * @param paginator function that paginate the connections to close.
 	 */
-	private void closeConnectionsOf(UnregisterComponentPayload payload,
-			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
+	private void closeConnectionsOf(ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
 
 		final Multi<TopologyConnectionEntity> getter = paginator.stream();
 		getter.onCompletion().invoke(() -> {
@@ -122,16 +132,15 @@ public class UnregisterComponentManager {
 
 				if (hasNext) {
 
-					this.closeConnectionsOf(payload, paginator.nextPage());
+					this.closeConnectionsOf(paginator.nextPage());
 
 				} else {
 
-					this.finishedComponent(payload);
+					Log.debugv("Finished Close connections associated to {0}", paginator);
 				}
 
 			}, error -> {
 
-				this.finishedComponent(payload);
 				Log.errorv(error, "Error when paginate the components to close.");
 
 			});
@@ -152,33 +161,10 @@ public class UnregisterComponentManager {
 
 		}, error -> {
 
-			this.finishedComponent(payload);
 			Log.errorv(error, "Error when get the connections to close.");
 
 		});
 
-	}
-
-	/**
-	 * Mark as finished the component.
-	 *
-	 * @param payload with the component to mark as finished.
-	 */
-	private void finishedComponent(UnregisterComponentPayload payload) {
-
-		FinishComponent.fresh().withComponent(payload.componentId).execute().subscribe().with(done -> {
-
-			if (done) {
-
-				AddLog.fresh().withInfo().withMessage("Unregistered the component {0}.", payload.componentId)
-						.withPayload(payload).store();
-
-			} else {
-				AddLog.fresh().withError().withMessage("Cannot unregister the component {0}.", payload.componentId)
-						.withPayload(payload).store();
-
-			}
-		});
 	}
 
 }
