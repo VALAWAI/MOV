@@ -11,6 +11,8 @@ package eu.valawai.mov.api.v1.topology;
 import static eu.valawai.mov.ValueGenerator.flipCoin;
 import static eu.valawai.mov.ValueGenerator.nextPastTime;
 
+import java.util.ArrayList;
+
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
@@ -75,6 +77,17 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 			if (entity.target != null) {
 
 				model.target = TopologyConnectionNodeTest.from(entity.target);
+			}
+			if (entity.c2Subscriptions != null) {
+
+				model.subscriptions = new ArrayList<>();
+				for (final var subscription : entity.c2Subscriptions) {
+
+					final var node = TopologyConnectionNodeTest.from(subscription);
+					model.subscriptions.add(node);
+
+				}
+
 			}
 
 			return model;

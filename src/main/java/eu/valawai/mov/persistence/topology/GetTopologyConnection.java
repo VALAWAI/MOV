@@ -10,11 +10,13 @@ package eu.valawai.mov.persistence.topology;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Facet;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 
@@ -27,6 +29,7 @@ import io.smallrye.mutiny.Uni;
  * Operator to obtain a {@link TopologyConnection} from the database.
  *
  * @see TopologyConnection
+ * @see TopologyConnectionEntity
  *
  * @author VALAWAI
  */
@@ -58,13 +61,29 @@ public class GetTopologyConnection
 		final var pipeline = new ArrayList<Bson>();
 		pipeline.add(Aggregates.match(Filters.and(Filters.eq("_id", this.connectionId), Filters
 				.or(Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null))))));
+		final var subscriptionsPipeline = this.pipelineForTopologyConnectionNode("c2Subscriptions");
+		subscriptionsPipeline.add(0, Aggregates.unwind("$c2Subscriptions"));
 		pipeline.add(
-				Aggregates.lookup(ComponentEntity.COLLECTION_NAME, "source.componentId", "_id", "source.component"));
-		pipeline.add(
-				Aggregates.lookup(ComponentEntity.COLLECTION_NAME, "target.componentId", "_id", "target.component"));
-		pipeline.add(Aggregates
-				.project(Projections.fields(Projections.include("_id", "enabled", "createTimestamp", "updateTimestamp"),
-						this.projectTopologyConnectionNode("source"), this.projectTopologyConnectionNode("target"))));
+				Aggregates.facet(
+						new Facet("basic",
+								Arrays.asList(Aggregates.project(
+										Projections.include("_id", "enabled", "createTimestamp", "updateTimestamp")))),
+						new Facet("source", this.pipelineForTopologyConnectionNode("source")),
+						new Facet("target", this.pipelineForTopologyConnectionNode("target")),
+						new Facet("subscriptions", subscriptionsPipeline))
+
+		);
+
+		pipeline.add(Aggregates.project(Document.parse("""
+				{
+				    "_id": { "$first": "$basic._id" },
+				    "enabled": { "$first": "$basic.enabled" },
+				    "createTimestamp": { "$first": "$basic.createTimestamp" },
+				    "updateTimestamp": { "$first": "$basic.updateTimestamp" },
+				    "source": { "$first": "$source" },
+				    "target": { "$first": "$target" },
+				    "subscriptions": 1
+				}""")));
 
 		return TopologyConnectionEntity.mongoCollection().aggregate(pipeline, TopologyConnection.class).collect()
 				.first().onFailure().recoverWithItem(error -> {
@@ -81,16 +100,50 @@ public class GetTopologyConnection
 	 *
 	 * @return the code to project the node filed.
 	 */
-	private Bson projectTopologyConnectionNode(String field) {
+	private List<Bson> pipelineForTopologyConnectionNode(String field) {
+
+		final List<Bson> pipeline = new ArrayList<>();
+		pipeline.add(Aggregates.lookup(ComponentEntity.COLLECTION_NAME, field + ".componentId", "_id", "component"));
+		pipeline.add(Aggregates.project(Projections.computed("component", new Document("$first", "$component"))));
+		pipeline.add(Aggregates.project(Document.parse("""
+				{
+				    "component": {
+				        "_id": 1,
+				        "type": 1,
+				        "name": 1,
+				        "description": 1
+				    },
+				    "channel": {
+				        "$first": {
+				            "$filter": {
+				                "input": "$component.channels",
+				                "cond":
+				                    {
+				                        "name": "$channleName"
+				                    }
+				            }
+				        }
+				    }
+				}""")));
+		return pipeline;
+	}
+
+	/**
+	 * Return the code to project the connection c2 subscriptions.
+	 *
+	 * @return the code to project the connection subscriptions.
+	 */
+	private Bson projectTopologyConnectionSubscriptions() {
 
 		final var filter = new Document("$filter",
-				new Document().append("input", new Document("$first", "$" + field + ".component.channels"))
+				new Document().append("input", new Document("$first", "$c2Subscriptions.component.channels"))
 						.append("as", "item").append("cond",
-								new Document("$eq", Arrays.asList("$" + field + ".channelName", "$$item.name"))));
+								new Document("$eq", Arrays.asList("$c2Subscriptions.channelName", "$$item.name"))));
 		final var channelProjection = new Document("$first", filter);
-		return Projections.computed(field,
-				new Document().append("component", new Document("$first", "$" + field + ".component")).append("channel",
-						channelProjection));
+		return Projections.computed("subscriptions",
+				new Document().append("c2Subscriptions", new Document("$first", "$c2Subscriptions.component"))
+						.append("channel", channelProjection));
 
 	}
+
 }

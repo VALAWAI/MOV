@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.topology;
 
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -71,5 +73,11 @@ public class TopologyConnection extends Model {
 	@Schema(description = "The target of the connection.")
 	@NotNull
 	public TopologyConnectionNode target;
+
+	/**
+	 * The components to notify when a message pass thought this connection
+	 */
+	@Schema(description = "The components to notify when a message pass thought this connection.")
+	public List<TopologyConnectionNode> subscriptions;
 
 }
