@@ -45,4 +45,9 @@ export class TopologyConnection {
 	 */
 	public target: TopologyConnectionNode | null = null;
 
+	/**
+	 * The components that are subscribed to receive shat happens on this connection.
+	 */
+	public subscriptions: TopologyConnectionNode[] | null = null;
+
 }
