@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -57,5 +59,34 @@ public abstract class PayloadSchema extends Model {
 	 * @return {@code true} if this schema is equivalent to the other schema.
 	 */
 	public abstract boolean match(PayloadSchema other);
+
+	/**
+	 * Check if this schema match another schema.
+	 *
+	 * @param other      to check.
+	 * @param references to other schemas.
+	 *
+	 * @return {@code true} if this schema is equivalent to the other schema.
+	 */
+	public boolean match(PayloadSchema other, Map<Integer, PayloadSchema> references) {
+
+		if (other instanceof final ReferencePayloadSchema ref) {
+
+			final var reference = references.get(ref.identifier);
+			if (reference == null) {
+				// reference not found.
+				return false;
+
+			} else {
+
+				return this.match(reference);
+			}
+
+		} else {
+
+			return this.match(other);
+		}
+
+	}
 
 }

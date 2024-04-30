@@ -9,6 +9,7 @@
 package eu.valawai.mov.events.topology;
 
 import static eu.valawai.mov.ValueGenerator.nextPattern;
+import static eu.valawai.mov.events.topology.SentMessagePayload.createSentMessagePayloadSchemaFor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,6 +39,7 @@ import eu.valawai.mov.persistence.topology.TopologyNode;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
 /**
  * Test the {@link CreateConnectionManager}.
@@ -462,14 +464,21 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		final var c0 = this.createComponent(ComponentType.C0);
 		final var c1 = this.createComponent(ComponentType.C1);
-		final var c2 = this.createComponent(ComponentType.C2);
 		final var schema = PayloadSchemaTestCase.nextPayloadSchema(2);
 		c0.channels.get(0).publish = schema;
 		this.assertItemNotNull(c0.update());
 		c1.channels.get(0).subscribe = schema;
 		this.assertItemNotNull(c1.update());
-		c2.channels.get(0).subscribe = schema;
-		this.assertItemNotNull(c2.update());
+
+		final List<ComponentEntity> c2s = new ArrayList<>();
+		final var sentMessagePayloadSchema = createSentMessagePayloadSchemaFor(schema);
+		for (var i = 0; i < 43; i++) {
+
+			final var c2 = this.createComponent(ComponentType.C2);
+			c2.channels.get(0).subscribe = sentMessagePayloadSchema;
+			this.assertItemNotNull(c2.update());
+			c2s.add(c2);
+		}
 
 		final var payload = new CreateConnectionPayload();
 		payload.source = new NodePayload();
@@ -480,8 +489,10 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		payload.target.channelName = c1.channels.get(0).name;
 		payload.enabled = true;
 
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(3, () -> this.assertPublish(this.createConnectionQueueName, payload));
+		var now = TimeManager.now();
+		final var expectedLogsCount = 1 + c2s.size();
+		this.executeAndWaitUntilNewLogs(expectedLogsCount,
+				() -> this.assertPublish(this.createConnectionQueueName, payload));
 
 		final TopologyConnectionEntity last = this
 				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
@@ -492,18 +503,46 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		assertEquals(payload.target, NodePayloadTest.from(last.target));
 		assertTrue(last.enabled);
 		assertNotNull(last.c2Subscriptions);
-		final var expected = new TopologyNode();
-		expected.componentId = c2.id;
-		expected.channelName = c2.channels.get(0).name;
-		assertTrue(last.c2Subscriptions.contains(expected));
+		for (final var c2 : c2s) {
+
+			final var expected = new TopologyNode();
+			expected.componentId = c2.id;
+			expected.channelName = c2.channels.get(0).name;
+			assertTrue(last.c2Subscriptions.contains(expected));
+		}
 
 		assertTrue(this.listener.isOpen(payload.source.channelName));
-
-		assertEquals(3l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		assertEquals(2 + last.c2Subscriptions.size(),
+				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 				LogLevel.INFO, ".+" + payload.source.channelName + ".+" + payload.target.channelName + ".+", now)));
 
+		final var queues = new ArrayList<TestMQQueue>();
+		for (final var c2 : c2s) {
+			final var queue = this.waitOpenQueue(c2.channels.get(0).name);
+
+			queues.add(queue);
+		}
+		final var msg = new JsonObject();
+		now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(1 + queues.size(), () -> this.assertPublish(c0.channels.get(0).name, msg));
+
+		for (final var queue : queues) {
+
+			final var received = queue.waitReceiveMessage(SentMessagePayload.class);
+			assertEquals(last.id, received.connectionId);
+			assertNotNull(received.source);
+			assertEquals(c0.id, received.source.id);
+			assertEquals(c0.name, received.source.name);
+			assertEquals(c0.type, received.source.type);
+			assertEquals(c1.id, received.target.id);
+			assertEquals(c1.name, received.target.name);
+			assertEquals(c1.type, received.target.type);
+			assertTrue(now <= received.timestamp);
+			assertEquals(msg, received.content);
+
+		}
 	}
 
 	/**
@@ -546,10 +585,11 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		this.assertItemNotNull(c1.update());
 
 		final List<ComponentEntity> c2s = new ArrayList<>();
+		final var sentMessagePayloadSchema = createSentMessagePayloadSchemaFor(schema);
 		for (var i = 0; i < 43; i++) {
 
 			final var c2 = this.createComponent(ComponentType.C2);
-			c2.channels.get(0).subscribe = schema;
+			c2.channels.get(0).subscribe = sentMessagePayloadSchema;
 			this.assertItemNotNull(c2.update());
 			c2s.add(c2);
 		}
@@ -586,8 +626,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		}
 
 		assertFalse(this.listener.isOpen(payload.source.channelName));
-
-		assertEquals(expectedLogsCount,
+		assertEquals(last.c2Subscriptions.size() + 1,
 				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 

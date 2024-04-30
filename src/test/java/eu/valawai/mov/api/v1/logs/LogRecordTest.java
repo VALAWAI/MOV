@@ -59,6 +59,10 @@ public class LogRecordTest extends ModelTestCase<LogRecord> {
 			model.payload = new JsonObject(values).encodePrettily();
 
 		}
+		if (flipCoin()) {
+
+			model.component = new MinComponentTest().nextModel();
+		}
 		model.timestamp = nextPastTime();
 
 	}

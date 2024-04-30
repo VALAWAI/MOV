@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -49,9 +50,43 @@ public class ObjectPayloadSchema extends PayloadSchema {
 	@Override
 	public boolean match(PayloadSchema other) {
 
-		return other instanceof final ObjectPayloadSchema object && (this.properties == object.properties
-				|| this.properties != null && this.properties.equals(object.properties));
+		if (other instanceof final ObjectPayloadSchema object) {
 
+			for (final var key : this.properties.keySet()) {
+
+				if (!object.properties.containsKey(key)) {
+
+					return false;
+
+				} else {
+
+					final var source = this.properties.get(key);
+					final var target = object.properties.get(key);
+					if (!source.match(target)) {
+
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+		return false;
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean match(PayloadSchema other, Map<Integer, PayloadSchema> references) {
+
+		if (this.id != null && !references.containsKey(this.id)) {
+
+			references.put(this.id, this);
+
+		}
+		return super.match(other, references);
 	}
 
 }

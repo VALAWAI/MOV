@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.events.topology;
 
+import java.util.HashMap;
 import java.util.concurrent.CompletionStage;
 
 import org.bson.types.ObjectId;
@@ -163,7 +164,7 @@ public class CreateConnectionManager {
 
 					if (error2 == null) {
 
-						if (context.sourceChannel.publish.match(context.targetChannel.subscribe)) {
+						if (context.sourceChannel.publish.match(context.targetChannel.subscribe, new HashMap<>())) {
 
 							return Uni.createFrom().nullItem();
 
@@ -374,10 +375,11 @@ public class CreateConnectionManager {
 	 */
 	private void checkSubscription(ManagerContext context, ComponentEntity target) {
 
+		final var setSchema = SentMessagePayload.createSentMessagePayloadSchemaFor(context.sourceChannel.publish);
 		for (final var channel : target.channels) {
 
 			if (channel.name.matches(C2_SUBSCRIBER_CHANNEL_NAME_PATTERN) && channel.subscribe != null
-					&& channel.subscribe.match(context.sourceChannel.publish)) {
+					&& setSchema.match(channel.subscribe, new HashMap<>())) {
 				// the component must be subscribed into the connection
 				AddC2SubscriptionToTopologyConnection.fresh().withConnection(context.connectionId)
 						.withComponent(target.id).withChannel(channel.name).execute().subscribe().with(success -> {
