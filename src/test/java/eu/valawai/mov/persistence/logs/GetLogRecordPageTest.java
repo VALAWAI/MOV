@@ -420,16 +420,16 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 		expected.total = 0;
 		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		var max = 0;
 		var min = 100;
+		final var minTotal = expected.offset + limit + 10;
 
 		do {
 
+			expected.total = 0;
 			expected.logs = new ArrayList<>();
 			LogEntities.minLogs(min);
 			final Uni<List<LogEntity>> find = LogEntity.findAll().list();
 			final var logs = find.await().atMost(Duration.ofSeconds(30));
-
 			for (final var log : logs) {
 
 				if (log.level == level && log.message.matches(pattern)) {
@@ -445,11 +445,9 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 					}
 				}
 			}
-
-			max = Math.min(expected.offset + limit, expected.logs.size());
 			min += 100;
 
-		} while (max < expected.offset);
+		} while (expected.total < minTotal);
 
 		expected.logs.sort((l1, l2) -> {
 
@@ -472,7 +470,7 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 			return cmp;
 		});
 
-		expected.logs = expected.logs.subList(expected.offset, max);
+		expected.logs = expected.logs.subList(expected.offset, expected.offset + limit);
 
 		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withPattern("/" + pattern + "/")
 				.withLevel(level.name()).withComponnetType(type).withComponnetPattern("/" + pattern + "/")
