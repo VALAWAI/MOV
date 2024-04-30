@@ -53,7 +53,7 @@ public interface TopologyConnectionEntities {
 
 				for (final var channel : component.channels) {
 
-					if (channel.publish != null) {
+					if (channel.publish != null && channel.subscribe == null) {
 
 						entity.source.componentId = component.id;
 						entity.source.channelName = channel.name;
@@ -72,7 +72,7 @@ public interface TopologyConnectionEntities {
 
 				for (final var channel : component.channels) {
 
-					if (channel.subscribe != null) {
+					if (channel.subscribe != null && channel.publish == null) {
 
 						entity.target.componentId = component.id;
 						entity.target.channelName = channel.name;

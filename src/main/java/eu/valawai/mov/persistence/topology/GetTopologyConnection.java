@@ -73,7 +73,8 @@ public class GetTopologyConnection
 						new Facet("subscriptions", subscriptionsPipeline))
 
 		);
-
+		pipeline.add(Aggregates
+				.match(Filters.and(Filters.size("basic", 1), Filters.size("source", 1), Filters.size("target", 1))));
 		pipeline.add(Aggregates.project(Document.parse("""
 				{
 				    "_id": { "$first": "$basic._id" },
@@ -82,7 +83,15 @@ public class GetTopologyConnection
 				    "updateTimestamp": { "$first": "$basic.updateTimestamp" },
 				    "source": { "$first": "$source" },
 				    "target": { "$first": "$target" },
-				    "subscriptions": 1
+				    "subscriptions":
+				    {
+				    	"$cond":
+				    	{
+				    		"if": {"$eq":[{"$size":"$subscriptions"},0]},
+				    		"then": null,
+				    		"else": "$subscriptions"
+				    	}
+				    }
 				}""")));
 
 		return TopologyConnectionEntity.mongoCollection().aggregate(pipeline, TopologyConnection.class).collect()
@@ -126,24 +135,6 @@ public class GetTopologyConnection
 				    }
 				}""")));
 		return pipeline;
-	}
-
-	/**
-	 * Return the code to project the connection c2 subscriptions.
-	 *
-	 * @return the code to project the connection subscriptions.
-	 */
-	private Bson projectTopologyConnectionSubscriptions() {
-
-		final var filter = new Document("$filter",
-				new Document().append("input", new Document("$first", "$c2Subscriptions.component.channels"))
-						.append("as", "item").append("cond",
-								new Document("$eq", Arrays.asList("$c2Subscriptions.channelName", "$$item.name"))));
-		final var channelProjection = new Document("$first", filter);
-		return Projections.computed("subscriptions",
-				new Document().append("c2Subscriptions", new Document("$first", "$c2Subscriptions.component"))
-						.append("channel", channelProjection));
-
 	}
 
 }
