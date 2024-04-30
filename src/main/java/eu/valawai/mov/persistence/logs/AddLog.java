@@ -68,8 +68,7 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	 */
 	public AddLog withError(Throwable error) {
 
-		this.error = error;
-		return this.withError();
+		return this.withException(error).withError();
 	}
 
 	/**
@@ -91,8 +90,27 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	 */
 	public AddLog withWarning(Throwable error) {
 
+		return this.withException(error).withWarning();
+	}
+
+	/**
+	 * Set the exception associated to the log message.
+	 *
+	 * @param error that has generated this log message.
+	 *
+	 * @return the operation to store a log record.
+	 */
+	public AddLog withException(Throwable error) {
+
 		this.error = error;
-		return this.withWarning();
+		if (this.log.message == null) {
+
+			return this.withMessage(error.getMessage());
+
+		} else {
+
+			return this;
+		}
 	}
 
 	/**
@@ -200,9 +218,9 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	}
 
 	/**
+	 * Specify the component associated to the log message.
 	 *
-	 *
-	 * @param componentId identifier of teh component that has generated the
+	 * @param componentId identifier of the component that has generated the
 	 *
 	 * @return the operation to store a log record.
 	 */
@@ -276,9 +294,8 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 			} else if (added) {
 
 				Log.debugv("Stored {0}", this.log);
-			}
 
-			if (!added) {
+			} else {
 
 				Log.errorv("Cannot store {0}", this.log);
 			}

@@ -11,6 +11,8 @@ package eu.valawai.mov.persistence.logs;
 import static eu.valawai.mov.ValueGenerator.flipCoin;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import eu.valawai.mov.MasterOfValawaiTestCase;
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
@@ -42,7 +45,27 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	 * Should add a record.
 	 */
 	@Test
-	public void shouldAddRecord() {
+	public void shouldStoreEmptyLog() {
+
+		final var now = TimeManager.now();
+		final var result = this.assertExecutionNotNull(AddLog.fresh());
+		assertTrue(result);
+
+		final LogEntity stored = this.assertItemNotNull(LogEntity.findAll(Sort.descending("_id")).firstResult());
+		assertNotNull(stored.id);
+		assertNull(stored.componentId);
+		assertNull(stored.level);
+		assertNull(stored.message);
+		assertNull(stored.payload);
+		assertTrue(now <= stored.timestamp);
+
+	}
+
+	/**
+	 * Should add a record.
+	 */
+	@Test
+	public void shouldRandomLog() {
 
 		final var log = new LogRecordTest().nextModel();
 		final var result = this.assertExecutionNotNull(AddLog.fresh().withLog(log));
@@ -101,6 +124,26 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 	}
 
 	/**
+	 * Should store an error with an exception log message.
+	 */
+	@Test
+	public void shouldStoreErrorWithExceptionLog() {
+
+		final var count = this.assertItemNotNull(LogEntity.count());
+		final var message = ValueGenerator.nextPattern("Message of the log {0}");
+		final var exception = new Throwable(message);
+		AddLog.fresh().withError(exception).store();
+		this.waitUntil(() -> this.assertItemNotNull(LogEntity.count()), newCount -> newCount != count);
+
+		final Uni<LogEntity> find = LogEntity.findAll(Sort.descending("_id")).firstResult();
+		final var last = this.assertItemNotNull(find);
+		assertEquals(LogLevel.ERROR, last.level);
+		assertEquals(message, last.message);
+		assertNull(last.payload);
+
+	}
+
+	/**
 	 * Should store an warn log message.
 	 */
 	@Test
@@ -119,6 +162,25 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 		assertEquals(LogLevel.WARN, last.level);
 		assertEquals(message, last.message);
 		assertEquals(json.encodePrettily(), last.payload);
+
+	}
+
+	/**
+	 * Should store an warning with an exception log message.
+	 */
+	@Test
+	public void shouldStoreWarningWithExceptionLog() {
+
+		final var count = this.assertItemNotNull(LogEntity.count());
+		final var exception = new Throwable(ValueGenerator.nextPattern("Message of the log {0}"));
+		AddLog.fresh().withWarning(exception).store();
+		this.waitUntil(() -> this.assertItemNotNull(LogEntity.count()), newCount -> newCount != count);
+
+		final Uni<LogEntity> find = LogEntity.findAll(Sort.descending("_id")).firstResult();
+		final var last = this.assertItemNotNull(find);
+		assertEquals(LogLevel.WARN, last.level);
+		assertEquals(exception.getMessage(), last.message);
+		assertNull(last.payload);
 
 	}
 
