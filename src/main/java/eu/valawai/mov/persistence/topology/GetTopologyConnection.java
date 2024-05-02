@@ -113,7 +113,11 @@ public class GetTopologyConnection
 
 		final List<Bson> pipeline = new ArrayList<>();
 		pipeline.add(Aggregates.lookup(ComponentEntity.COLLECTION_NAME, field + ".componentId", "_id", "component"));
-		pipeline.add(Aggregates.project(Projections.computed("component", new Document("$first", "$component"))));
+		pipeline.add(Aggregates.project(Projections.fields(
+				Projections.computed("component", new Document("$first", "$component")), Projections.include(field))));
+		pipeline.add(Aggregates.unwind("$component.channels"));
+		pipeline.add(Aggregates.match(
+				Document.parse("{\"$expr\":{\"$eq\":[\"$" + field + ".channelName\",\"$component.channels.name\"]}}")));
 		pipeline.add(Aggregates.project(Document.parse("""
 				{
 				    "component": {
@@ -122,17 +126,7 @@ public class GetTopologyConnection
 				        "name": 1,
 				        "description": 1
 				    },
-				    "channel": {
-				        "$first": {
-				            "$filter": {
-				                "input": "$component.channels",
-				                "cond":
-				                    {
-				                        "name": "$channleName"
-				                    }
-				            }
-				        }
-				    }
+				    "channel": "$component.channels"
 				}""")));
 		return pipeline;
 	}

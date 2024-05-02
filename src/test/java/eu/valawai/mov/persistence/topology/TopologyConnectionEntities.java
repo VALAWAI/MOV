@@ -10,6 +10,7 @@ package eu.valawai.mov.persistence.topology;
 
 import static eu.valawai.mov.ValueGenerator.flipCoin;
 import static eu.valawai.mov.ValueGenerator.nextPastTime;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
@@ -18,6 +19,8 @@ import java.util.List;
 
 import org.bson.conversions.Bson;
 
+import eu.valawai.mov.api.v1.components.ChannelSchemaTest;
+import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import io.quarkus.logging.Log;
@@ -32,11 +35,24 @@ import io.quarkus.logging.Log;
 public interface TopologyConnectionEntities {
 
 	/**
-	 * Create a new component.
+	 * Create a new topology connection.
 	 *
-	 * @return the created component.
+	 * @return the created connection.
 	 */
 	public static TopologyConnectionEntity nextTopologyConnection() {
+
+		final var subsriptionsCount = rnd().nextInt(0, 4);
+		return nextTopologyConnection(subsriptionsCount);
+	}
+
+	/**
+	 * Create a new topology connection.
+	 *
+	 * @param subsriptionsCount the number of subscriptions for the connection.
+	 *
+	 * @return the created connection.
+	 */
+	public static TopologyConnectionEntity nextTopologyConnection(int subsriptionsCount) {
 
 		final TopologyConnectionEntity entity = new TopologyConnectionEntity();
 		entity.createTimestamp = nextPastTime();
@@ -85,9 +101,46 @@ public interface TopologyConnectionEntities {
 
 		}
 
+		if (subsriptionsCount > 0) {
+
+			entity.c2Subscriptions = new ArrayList<>();
+			do {
+
+				final var component = ComponentEntities.nextComponent();
+				if (component.type == ComponentType.C2) {
+
+					if (component.channels == null) {
+
+						component.channels = new ArrayList<>();
+					}
+
+					final var channel = new ChannelSchemaTest().nextModel();
+					channel.subscribe = null;
+					channel.publish = publish;
+					component.channels.add(channel);
+					final var stored = component.update().onFailure().recoverWithItem(error -> {
+
+						Log.errorv(error, "Cannot update {0}", component);
+						return null;
+
+					}).await().atMost(Duration.ofSeconds(30));
+					if (stored == null) {
+
+						fail("Cannot persist a component subscription.");
+					}
+
+					final var subscription = new TopologyNode();
+					subscription.componentId = component.id;
+					subscription.channelName = channel.name;
+					entity.c2Subscriptions.add(subscription);
+				}
+
+			} while (entity.c2Subscriptions.size() < subsriptionsCount);
+		}
+
 		final var stored = entity.persist().onFailure().recoverWithItem(error -> {
 
-			Log.errorv(error, "Cannot persist {}", entity);
+			Log.errorv(error, "Cannot persist {0}", entity);
 			return null;
 
 		}).await().atMost(Duration.ofSeconds(30));
