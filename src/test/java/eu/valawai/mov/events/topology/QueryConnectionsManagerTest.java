@@ -104,9 +104,9 @@ public class QueryConnectionsManagerTest extends MovEventTestCase {
 		query.id = nextUUID().toString();
 		query.offset = rnd().nextInt(2, 5);
 		query.limit = rnd().nextInt(5, 11);
-		final var channelSourceNamePattern = ".+c1_.+";
+		final var channelSourceNamePattern = ".+c1.+";
 		query.sourceChannelName = "/" + channelSourceNamePattern + "/";
-		final var channelTargetNamePattern = ".+c[0|2]_.+";
+		final var channelTargetNamePattern = ".+c[0|2].+";
 		query.targetChannelName = "/" + channelTargetNamePattern + "/";
 
 		final var expected = new ConnectionsPagePayload();
@@ -159,7 +159,7 @@ public class QueryConnectionsManagerTest extends MovEventTestCase {
 		query.id = nextUUID().toString();
 		query.offset = rnd().nextInt(2, 5);
 		query.limit = rnd().nextInt(5, 11);
-		final var channelSourceNamePattern = ".+c1_.+";
+		final var channelSourceNamePattern = ".+c1.+";
 		query.sourceChannelName = "/" + channelSourceNamePattern + "/";
 		query.order = "-createTimestamp";
 
@@ -212,7 +212,7 @@ public class QueryConnectionsManagerTest extends MovEventTestCase {
 		query.id = nextUUID().toString();
 		query.offset = rnd().nextInt(2, 5);
 		query.limit = rnd().nextInt(5, 11);
-		final var channelTargetNamePattern = ".+c1_.+";
+		final var channelTargetNamePattern = ".+c1.+";
 		query.targetChannelName = "/" + channelTargetNamePattern + "/";
 		query.order = "-enabled";
 

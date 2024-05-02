@@ -36,13 +36,8 @@ public class AddC2SubscriptionToTopologyConnectionTest extends MovPersistenceTes
 	@Test
 	public void shouldNotAddDuplicatedSubscription() {
 
-		final var connection = TopologyConnectionEntities.nextTopologyConnection();
-		connection.c2Subscriptions = new ArrayList<>();
-		final var node = new TopologyNodeTest().nextModel();
-		connection.c2Subscriptions.add(node);
-		this.assertItemNotNull(connection.update());
-
-		for (var i = 0; i < 10; i++) {
+		final var connection = TopologyConnectionEntities.nextTopologyConnection(3);
+		for (final var node : connection.c2Subscriptions) {
 
 			final var result = this.assertExecutionNotNull(AddC2SubscriptionToTopologyConnection.fresh()
 					.withConnection(connection.id).withComponent(node.componentId).withChannel(node.channelName));
@@ -51,6 +46,7 @@ public class AddC2SubscriptionToTopologyConnectionTest extends MovPersistenceTes
 			final TopologyConnectionEntity updated = this
 					.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
 			assertEquals(connection.c2Subscriptions, updated.c2Subscriptions);
+
 		}
 	}
 
@@ -60,12 +56,13 @@ public class AddC2SubscriptionToTopologyConnectionTest extends MovPersistenceTes
 	@Test
 	public void shouldAddSubscription() {
 
-		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		final var connection = TopologyConnectionEntities.nextTopologyConnection(10);
+		final var nodes = connection.c2Subscriptions;
 		connection.c2Subscriptions = new ArrayList<>();
+		this.assertItemNotNull(connection.update());
 
-		for (var i = 0; i < 10; i++) {
+		for (final var node : nodes) {
 
-			final var node = new TopologyNodeTest().nextModel();
 			final var now = TimeManager.now();
 			final var result = this.assertExecutionNotNull(AddC2SubscriptionToTopologyConnection.fresh()
 					.withConnection(connection.id).withComponent(node.componentId).withChannel(node.channelName));

@@ -335,13 +335,12 @@ public class ComponentResourceTest extends APITestCase {
 
 		final var component = ComponentEntities.nextComponent();
 		final var id = component.id.toHexString();
-		given().when().delete("/v1/components/" + id).then().statusCode(Status.NO_CONTENT.getStatusCode());
 
 		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLog(() -> {
-			// Nothing to do
+			given().when().delete("/v1/components/" + id).then().statusCode(Status.NO_CONTENT.getStatusCode());
 		});
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and timestamp >= ?2", LogLevel.INFO, now)));
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and timestamp > ?2", LogLevel.INFO, now)));
 
 		final ComponentEntity updated = this.assertItemNotNull(ComponentEntity.findById(component.id));
 		assertNotNull(updated.finishedTime);

@@ -128,7 +128,9 @@ public class CreateConnectionManager {
 
 				} else {
 
-					AddLog.fresh().withError(error).withMessage("Received invalid change topology payload.")
+					AddLog.fresh().withError(error)
+							.withMessage("Received invalid create topology connection payload, because {0}.",
+									error.getMessage())
 							.withPayload(content).store();
 					return msg.nack(error);
 				}
@@ -136,8 +138,8 @@ public class CreateConnectionManager {
 
 		} catch (final Throwable error) {
 
-			AddLog.fresh().withError().withMessage("Received invalid change topology payload.").withPayload(content)
-					.store();
+			AddLog.fresh().withError().withMessage("Received invalid create topology connection payload.")
+					.withPayload(content).store();
 			return msg.nack(error);
 		}
 

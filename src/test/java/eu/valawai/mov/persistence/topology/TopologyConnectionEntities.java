@@ -60,46 +60,70 @@ public interface TopologyConnectionEntities {
 		entity.enabled = flipCoin();
 		entity.source = new TopologyNode();
 		entity.target = new TopologyNode();
-
 		PayloadSchema publish = null;
-		while (entity.source.componentId == null) {
+		do {
 
 			final var component = ComponentEntities.nextComponent();
 			if (component.channels != null) {
 
 				for (final var channel : component.channels) {
 
-					if (channel.publish != null && channel.subscribe == null) {
+					TopologyNode node = null;
+					if (entity.source.componentId == null && channel.publish != null && channel.subscribe == null) {
 
-						entity.source.componentId = component.id;
-						entity.source.channelName = channel.name;
-						publish = channel.publish;
-						break;
+						node = entity.source;
+
+					} else if (entity.target.componentId == null && channel.publish == null
+							&& channel.subscribe != null) {
+
+						node = entity.target;
 					}
+
+					if (node != null) {
+
+						node.componentId = component.id;
+						node.channelName = channel.name;
+
+						if (publish == null) {
+
+							if (channel.publish != null) {
+
+								publish = channel.publish;
+
+							} else {
+
+								publish = channel.subscribe;
+							}
+
+						} else {
+
+							if (channel.publish != null) {
+
+								channel.publish = publish;
+
+							} else {
+
+								channel.subscribe = publish;
+							}
+							final var stored = component.update().onFailure().recoverWithItem(error -> {
+
+								Log.errorv(error, "Cannot update {0}", component);
+								return null;
+
+							}).await().atMost(Duration.ofSeconds(30));
+							if (stored == null) {
+
+								fail("Cannot persist a component subscription.");
+							}
+						}
+						break;
+
+					}
+
 				}
 			}
 
-		}
-
-		while (entity.target.componentId == null) {
-
-			final var component = ComponentEntities.nextComponent();
-			if (component.channels != null) {
-
-				for (final var channel : component.channels) {
-
-					if (channel.subscribe != null && channel.publish == null) {
-
-						entity.target.componentId = component.id;
-						entity.target.channelName = channel.name;
-						channel.subscribe = publish;
-						component.update().await().atMost(Duration.ofSeconds(30));
-						break;
-					}
-				}
-			}
-
-		}
+		} while (entity.source.componentId == null || entity.target.componentId == null);
 
 		if (subsriptionsCount > 0) {
 

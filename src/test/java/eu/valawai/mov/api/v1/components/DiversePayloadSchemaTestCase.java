@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,36 +35,38 @@ public abstract class DiversePayloadSchemaTestCase<T extends DiversePayloadSchem
 	@Override
 	public void fillIn(T model) {
 
-		this.fillIn(model, 3);
+		this.fillIn(model, 3, new HashMap<>());
 	}
 
 	/**
 	 * Create a new model.
 	 *
-	 * @param level max depth level to reach.
+	 * @param level      max depth level to reach.
+	 * @param references that can be used.
 	 *
 	 * @return the created model.
 	 */
-	public T nextModel(int level) {
+	public T nextModel(int level, Map<Integer, ObjectPayloadSchema> references) {
 
 		final var model = this.createEmptyModel();
-		this.fillIn(model, level);
+		this.fillIn(model, level, references);
 		return model;
 	}
 
 	/**
 	 * Fill in a model with some random values.
 	 *
-	 * @param model to fill in.
-	 * @param level max depth level to reach.
+	 * @param model      to fill in.
+	 * @param level      max depth level to reach.
+	 * @param references that can be used.
 	 */
-	public void fillIn(T model, int level) {
+	public void fillIn(T model, int level, Map<Integer, ObjectPayloadSchema> references) {
 
 		final var max = rnd().nextInt(1, 5);
 		model.items = new ArrayList<>();
 		for (var i = 0; i < max; i++) {
 
-			final var item = nextPayloadSchema(level - 1);
+			final var item = nextPayloadSchema(level - 1, references);
 			model.items.add(item);
 		}
 	}

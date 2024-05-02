@@ -137,7 +137,7 @@ public class GetConnectionsPagePayloadTest extends MasterOfValawaiTestCase {
 		query.offset = rnd().nextInt(2, 5);
 		query.limit = rnd().nextInt(5, 11);
 		query.order = "-source.channelName";
-		final var channelNamePattern = ".+c1_.+";
+		final var channelNamePattern = ".+c1.+";
 		query.sourceChannelName = "/" + channelNamePattern + "/";
 
 		final var expected = new ConnectionsPagePayload();
@@ -185,7 +185,7 @@ public class GetConnectionsPagePayloadTest extends MasterOfValawaiTestCase {
 		query.offset = rnd().nextInt(2, 5);
 		query.limit = rnd().nextInt(5, 11);
 		query.order = "-target.channelName";
-		final var channelNamePattern = ".+c1_.+";
+		final var channelNamePattern = ".+c1.+";
 		query.targetChannelName = "/" + channelNamePattern + "/";
 
 		final var expected = new ConnectionsPagePayload();

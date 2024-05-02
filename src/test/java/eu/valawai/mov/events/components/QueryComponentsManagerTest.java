@@ -29,6 +29,7 @@ import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.LogEntity;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
 
@@ -65,8 +66,10 @@ public class QueryComponentsManagerTest extends MovEventTestCase {
 
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.queryComponentstQueueName, payload));
 
-		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
-				.await().atMost(Duration.ofSeconds(30)));
+		final LogEntity log = this.assertItemNotNull(LogEntity.findAll(Sort.descending("_id")).firstResult());
+		assertEquals(LogLevel.ERROR, log.level);
+		final var logPayload = Json.decodeValue(log.payload, QueryComponentsPayload.class);
+		assertEquals(payload, logPayload);
 	}
 
 	/**

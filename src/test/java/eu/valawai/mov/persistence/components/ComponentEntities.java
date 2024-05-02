@@ -8,15 +8,24 @@
 
 package eu.valawai.mov.persistence.components;
 
+import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.nextPattern;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bson.conversions.Bson;
 
-import eu.valawai.mov.api.v1.components.ComponentTest;
+import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.v1.components.ChannelSchema;
+import eu.valawai.mov.api.v1.components.ComponentType;
+import eu.valawai.mov.api.v1.components.PayloadSchema;
+import eu.valawai.mov.api.v1.components.PayloadSchemaTestCase;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
@@ -56,16 +65,36 @@ public interface ComponentEntities {
 	 */
 	public static ComponentEntity nextComponent() {
 
-		final var next = new ComponentTest().nextModel();
 		final ComponentEntity entity = new ComponentEntity();
-		entity.apiVersion = next.apiVersion;
-		entity.channels = next.channels;
-		entity.description = next.description;
-		entity.name = next.name;
-		entity.since = next.since;
-		entity.type = next.type;
-		entity.version = next.version;
-		entity.finishedTime = null;
+		entity.type = next(ComponentType.values());
+		final var name = nextPattern("component_{0}");
+		entity.name = "valawai/" + entity.type.name().toLowerCase() + "/" + name;
+		entity.description = "Description of " + name;
+		entity.version = nextPattern("{0}.{1}.{2}", 3);
+		entity.apiVersion = nextPattern("{0}.{1}.{2}", 3);
+		entity.since = rnd().nextLong(0, Instant.now().getEpochSecond());
+		final var max = ValueGenerator.rnd().nextInt(0, 5);
+		if (max > 0) {
+
+			entity.channels = new ArrayList<>();
+			for (var i = 0; i < max; i++) {
+
+				final var channel = new ChannelSchema();
+				final var action = nextPattern("action_{0}");
+				channel.name = entity.name + "/" + next(Arrays.asList("control", "data")) + "/" + action;
+				channel.description = "Description of " + action;
+				final PayloadSchema schema = PayloadSchemaTestCase.nextPayloadSchema(3);
+				if (rnd().nextBoolean()) {
+
+					channel.publish = schema;
+
+				} else {
+
+					channel.subscribe = schema;
+				}
+				entity.channels.add(channel);
+			}
+		}
 		final var stored = entity.persist().onFailure().recoverWithItem(error -> {
 
 			Log.errorv(error, "Cannot persist {}", entity);

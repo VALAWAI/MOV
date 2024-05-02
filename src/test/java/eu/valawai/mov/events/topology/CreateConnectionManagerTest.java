@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -352,7 +351,6 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		final var payload = this.createValidCreateConnectionPayload();
 		payload.enabled = true;
-
 		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.createConnectionQueueName, payload));
 
@@ -411,6 +409,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		final var payload = new CreateConnectionPayload();
 		payload.source = new NodePayload();
+		payload.target = new NodePayload();
 		PayloadSchema publish = null;
 		do {
 
@@ -419,39 +418,55 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 				for (final var channel : component.channels) {
 
-					if (channel.publish != null && channel.subscribe == null) {
+					NodePayload node = null;
+					if (payload.source.componentId == null && channel.publish != null && channel.subscribe == null) {
 
-						payload.source.componentId = component.id;
-						payload.source.channelName = channel.name;
-						publish = channel.publish;
+						node = payload.source;
+
+					} else if (payload.target.componentId == null && channel.publish == null
+							&& channel.subscribe != null) {
+
+						node = payload.target;
+					}
+
+					if (node != null) {
+
+						node.componentId = component.id;
+						node.channelName = channel.name;
+
+						if (publish == null) {
+
+							if (channel.publish != null) {
+
+								publish = channel.publish;
+
+							} else {
+
+								publish = channel.subscribe;
+							}
+
+						} else {
+
+							if (channel.publish != null) {
+
+								channel.publish = publish;
+
+							} else {
+
+								channel.subscribe = publish;
+							}
+							this.assertItemNotNull(component.update());
+
+						}
 						break;
 
 					}
+
 				}
 			}
 
-		} while (payload.source.componentId == null);
-		payload.target = new NodePayload();
-		do {
+		} while (payload.source.componentId == null || payload.target.componentId == null);
 
-			final var component = ComponentEntities.nextComponent();
-			if (component.channels != null) {
-
-				for (final var channel : component.channels) {
-
-					if (channel.publish == null && channel.subscribe != null) {
-
-						payload.target.componentId = component.id;
-						payload.target.channelName = channel.name;
-						channel.subscribe = publish;
-						component.update().await().atMost(Duration.ofSeconds(30));
-						break;
-
-					}
-				}
-			}
-
-		} while (payload.target.componentId == null);
 		return payload;
 	}
 

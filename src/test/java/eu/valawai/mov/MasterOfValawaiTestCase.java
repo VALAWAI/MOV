@@ -284,9 +284,11 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected void executeAndWaitUntilNewLogs(int num, Runnable action, Duration deadline) {
 
-		final var expectedCount = LogEntity.count().await().atMost(Duration.ofSeconds(30)) + num;
+		final var now = TimeManager.now();
+		final var second = Duration.ofSeconds(1);
 		try {
 
+			Thread.sleep(second.toMillis());
 			action.run();
 
 		} catch (final AssertionError cause) {
@@ -298,7 +300,7 @@ public class MasterOfValawaiTestCase {
 			error.printStackTrace();
 			fail("Cannot execute the action");
 		}
-		this.waitUntilNotNull(() -> LogEntity.count(), c -> c >= expectedCount, Duration.ofSeconds(1), deadline);
+		this.waitUntilNotNull(() -> LogEntity.count("timestamp > ?1", now), c -> c >= num, second, deadline);
 
 	}
 

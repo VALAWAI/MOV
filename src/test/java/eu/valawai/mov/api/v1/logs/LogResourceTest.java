@@ -8,8 +8,11 @@
 
 package eu.valawai.mov.api.v1.logs;
 
+import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -20,7 +23,6 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
-import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.persistence.logs.LogEntities;
@@ -98,11 +100,11 @@ public class LogResourceTest extends APITestCase {
 	@Test
 	public void shouldGetPageWithPattern() {
 
-		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
+		final var pattern = ".*" + rnd().nextInt(0, 10) + ".*";
 		final var expected = new LogRecordPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		expected.offset = rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var limit = rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.regex("message", pattern);
 		expected.total = LogEntities.nextLogsUntil(filter, max);
@@ -140,17 +142,17 @@ public class LogResourceTest extends APITestCase {
 	@Test
 	public void shouldGetPageWithLevel() {
 
-		final var level1 = ValueGenerator.next(LogLevel.values());
-		var level2 = ValueGenerator.next(LogLevel.values());
+		final var level1 = next(LogLevel.values());
+		var level2 = next(LogLevel.values());
 		while (level1 == level2) {
 
-			level2 = ValueGenerator.next(LogLevel.values());
+			level2 = next(LogLevel.values());
 		}
 
 		final var expected = new LogRecordPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		expected.offset = rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var limit = rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.or(Filters.eq("level", level1), Filters.eq("level", level2));
 		expected.total = LogEntities.nextLogsUntil(filter, max);
@@ -188,11 +190,11 @@ public class LogResourceTest extends APITestCase {
 	@Test
 	public void shouldGetPageWithComponentType() {
 
-		final var type1 = ValueGenerator.next(ComponentType.values());
-		var type2 = ValueGenerator.next(ComponentType.values());
+		final var type1 = next(ComponentType.values());
+		var type2 = next(ComponentType.values());
 		while (type1 == type2) {
 
-			type2 = ValueGenerator.next(ComponentType.values());
+			type2 = next(ComponentType.values());
 		}
 
 		LogEntities.minLogs(100);
@@ -225,9 +227,9 @@ public class LogResourceTest extends APITestCase {
 
 			return cmp;
 		});
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		expected.offset = rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var limit = rnd().nextInt(5, 11);
 		final var max = Math.min(expected.offset + limit, expected.logs.size());
 
 		expected.logs = expected.logs.subList(expected.offset, max);
@@ -245,7 +247,7 @@ public class LogResourceTest extends APITestCase {
 	@Test
 	public void shouldGetPageWithComponentPattern() {
 
-		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
+		final var pattern = ".*" + rnd().nextInt(0, 10) + ".*";
 		LogEntities.minLogs(100);
 		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
 		final var logs = find.await().atMost(Duration.ofSeconds(30));
@@ -278,9 +280,9 @@ public class LogResourceTest extends APITestCase {
 
 			return cmp;
 		});
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		expected.offset = rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var limit = rnd().nextInt(5, 11);
 		final var max = Math.min(expected.offset + limit, expected.logs.size());
 
 		expected.logs = expected.logs.subList(expected.offset, max);
@@ -298,13 +300,13 @@ public class LogResourceTest extends APITestCase {
 	@Test
 	public void shouldGetPageWithPatternAndLevel() {
 
-		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
-		final var level = ValueGenerator.next(LogLevel.values());
+		final var pattern = ".*" + rnd().nextInt(0, 10) + ".*";
+		final var level = next(LogLevel.values());
 
 		final var expected = new LogRecordPage();
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		expected.offset = rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
+		final var limit = rnd().nextInt(5, 11);
 		final var max = expected.offset + limit + 10;
 		final var filter = Filters.and(Filters.regex("message", pattern), Filters.eq("level", level));
 		expected.total = LogEntities.nextLogsUntil(filter, max);
@@ -342,27 +344,38 @@ public class LogResourceTest extends APITestCase {
 	@Test
 	public void shouldGetPageWithPatternLevelAndComponent() {
 
-		final var pattern = ".*" + ValueGenerator.rnd().nextInt(0, 10) + ".*";
-		final var level = ValueGenerator.next(LogLevel.values());
-		final var type = ValueGenerator.next(ComponentType.values());
+		final var pattern = ".*" + rnd().nextInt(0, 10) + ".*";
+		final var level = next(LogLevel.values());
+		ComponentType type = null;
+		String componentPattern = null;
 
-		LogEntities.minLogs(100);
 		final Uni<List<LogEntity>> find = LogEntity.findAll().list();
 		final var logs = find.await().atMost(Duration.ofSeconds(30));
 		final var expected = new LogRecordPage();
+		LogEntities.minLogs(100);
 		expected.total = 0;
 		expected.logs = new ArrayList<>();
+
 		for (final var log : logs) {
 
 			if (log.level == level && log.message.matches(pattern)) {
 
 				final var expectedLog = LogRecordTest.from(log);
+				if (type == null && expectedLog.component != null) {
+
+					type = expectedLog.component.type;
+				}
+				if (componentPattern == null && expectedLog.component != null) {
+
+					componentPattern = ".*" + expectedLog.component.name.replaceAll("\\D", "").substring(0, 1) + ".*";
+				}
 				if (expectedLog.component != null && expectedLog.component.type == type
-						&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
+						&& (expectedLog.component.name != null && expectedLog.component.name.matches(componentPattern)
 								|| expectedLog.component.description != null
 										&& expectedLog.component.description.matches(pattern))) {
 					expected.total++;
 					expected.logs.add(expectedLog);
+
 				}
 			}
 		}
@@ -384,15 +397,23 @@ public class LogResourceTest extends APITestCase {
 
 			return cmp;
 		});
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
 
-		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		final var max = Math.min(expected.offset + limit, expected.logs.size());
+		final var limit = Math.min(1, expected.logs.size());
+		if (limit > 2) {
 
-		expected.logs = expected.logs.subList(expected.offset, max);
+			expected.offset = rnd().nextInt(1, limit - 1);
+
+		}
+
+		if (expected.logs.isEmpty()) {
+
+			fail("No found logs");
+		}
+
+		expected.logs = expected.logs.subList(expected.offset, expected.offset + limit);
 
 		final var page = given().when().queryParam("pattern", "/" + pattern + "/")
-				.queryParam("level", "/" + level + "/").queryParam("componentPattern", "/" + pattern + "/")
+				.queryParam("level", "/" + level + "/").queryParam("componentPattern", "/" + componentPattern + "/")
 				.queryParam("componentType", type.name()).queryParam("limit", String.valueOf(limit))
 				.queryParam("offset", String.valueOf(expected.offset))
 				.queryParam("order", "-message,level,compoennt.name,-timestamp").get("/v1/logs").then()

@@ -29,6 +29,7 @@ import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.LogEntity;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
 
@@ -76,8 +77,10 @@ public class UnregisterComponentManagerTest extends MovEventTestCase {
 
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.unregisterComponentQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(
-				LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))));
+		final LogEntity log = this.assertItemNotNull(LogEntity.findAll(Sort.descending("_id")).firstResult());
+		assertEquals(LogLevel.ERROR, log.level);
+		final var logPayload = Json.decodeValue(log.payload, UnregisterComponentPayload.class);
+		assertEquals(payload, logPayload);
 		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
 	}
 

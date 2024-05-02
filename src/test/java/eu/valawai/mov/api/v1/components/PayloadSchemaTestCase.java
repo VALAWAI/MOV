@@ -12,6 +12,9 @@ import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.api.ModelTestCase;
@@ -37,13 +40,26 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 	 */
 	public static PayloadSchema nextPayloadSchema(int max) {
 
+		return nextPayloadSchema(max, new HashMap<>());
+	}
+
+	/**
+	 * Generate a next payload schema.
+	 *
+	 * @param max        depth level.
+	 * @param references that can be used.
+	 *
+	 * @return the next payload schema.
+	 */
+	public static PayloadSchema nextPayloadSchema(int max, Map<Integer, ObjectPayloadSchema> references) {
+
 		if (max <= 0) {
 
 			final var option = rnd().nextInt(4);
 			return switch (option) {
 			case 0 -> new BasicPayloadSchemaTest().nextModel();
 			case 1 -> new ConstantPayloadSchemaTest().nextModel();
-			case 2 -> new ReferencePayloadSchemaTest().nextModel();
+			case 2 -> ReferencePayloadSchemaTest.nextPayloadSchema(references);
 			default -> new EnumPayloadSchemaTest().nextModel();
 			};
 
@@ -53,15 +69,32 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 			return switch (option) {
 			case 0 -> new BasicPayloadSchemaTest().nextModel();
 			case 1 -> new ConstantPayloadSchemaTest().nextModel();
-			case 2 -> new ReferencePayloadSchemaTest().nextModel();
+			case 2 -> ReferencePayloadSchemaTest.nextPayloadSchema(references);
 			case 3 -> new EnumPayloadSchemaTest().nextModel();
-			case 4 -> new ObjectPayloadSchemaTest().nextModel(max - 1);
-			case 5 -> new ArrayPayloadSchemaTest().nextModel(max - 1);
-			case 6 -> new OneOfPayloadSchemaTest().nextModel(max - 1);
-			case 7 -> new AnyOfPayloadSchemaTest().nextModel(max - 1);
-			default -> new AllOfPayloadSchemaTest().nextModel(max - 1);
+			case 4 -> nextObjectPayloadSchema(max - 1, references);
+			case 5 -> new ArrayPayloadSchemaTest().nextModel(max - 1, references);
+			case 6 -> new OneOfPayloadSchemaTest().nextModel(max - 1, references);
+			case 7 -> new AnyOfPayloadSchemaTest().nextModel(max - 1, references);
+			default -> new AllOfPayloadSchemaTest().nextModel(max - 1, references);
 			};
 		}
+	}
+
+	/**
+	 * Create an object schema.
+	 *
+	 * @param max        depth level.
+	 * @param references that can be used.
+	 *
+	 * @return the next object schema.
+	 */
+	private static ObjectPayloadSchema nextObjectPayloadSchema(int max, Map<Integer, ObjectPayloadSchema> references) {
+
+		final var object = new ObjectPayloadSchemaTest().nextModel(max, references);
+		object.id = references.size() + 1;
+		references.put(object.id, object);
+		return object;
+
 	}
 
 	/**
