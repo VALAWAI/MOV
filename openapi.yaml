@@ -871,6 +871,11 @@ components:
           type: object
           allOf:
           - $ref: "#/components/schemas/TopologyConnectionNode"
+        subscriptions:
+          description: The components to notify when a message pass thought this connection.
+          type: array
+          items:
+            $ref: "#/components/schemas/TopologyConnectionNode"
     TopologyConnectionNode:
       description: The information of the node defined in a topology connection.
       required:
