@@ -9,6 +9,7 @@
 package eu.valawai.mov.persistence.topology;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,7 +77,7 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		assertTrue(now <= entity.createTimestamp);
 		assertTrue(now <= entity.updateTimestamp);
 		assertNull(entity.deletedTimestamp);
-		assertTrue(entity.enabled);
+		assertFalse(entity.enabled);
 		assertEquals(source, entity.source);
 		assertEquals(target, entity.target);
 
@@ -111,7 +112,7 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		assertTrue(now <= entity.createTimestamp);
 		assertTrue(now <= entity.updateTimestamp);
 		assertNull(entity.deletedTimestamp);
-		assertTrue(entity.enabled);
+		assertFalse(entity.enabled);
 		assertEquals(source, entity.source);
 		assertEquals(target, entity.target);
 
