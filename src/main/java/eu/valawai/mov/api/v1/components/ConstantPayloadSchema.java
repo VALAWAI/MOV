@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -41,7 +43,7 @@ public class ConstantPayloadSchema extends PayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
 		return other instanceof final ConstantPayloadSchema schema
 				&& (this.value == schema.value || this.value != null && this.value.equals(schema.value));

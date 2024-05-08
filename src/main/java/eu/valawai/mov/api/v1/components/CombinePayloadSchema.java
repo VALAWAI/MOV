@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
@@ -24,16 +26,16 @@ public abstract class CombinePayloadSchema extends DiversePayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
 		if (this.items != null && this.items.size() == 1 && other instanceof final CombinePayloadSchema combine
 				&& combine.items != null && combine.items.size() == 1) {
 
-			return this.items.get(0).match(combine.items.get(0));
+			return this.items.get(0).match(combine.items.get(0), references);
 
 		} else if (other != null && other.getClass() == this.getClass()) {
 
-			return super.match(other);
+			return super.matchPayload(other, references);
 
 		} else {
 

@@ -34,9 +34,9 @@ the topology inside the MOV that decides the route that a message has to follow.
 ## Summary
 
 - Name: Master Of VALAWAI (MOV)
-- Version: 1.2.0 (May 2, 2024)
-- ASYNCAPI: [1.2.0 (May 2, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/ASYNCAPI_1.2.0/asyncapi.yml)
-- OPENAPI: [1.2.0 (May 2, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/API_1.2.0/openapi.yml)
+- Version: 1.2.0 (May 7, 2024)
+- ASYNCAPI: [1.2.0 (May 7, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/ASYNCAPI_1.2.0/asyncapi.yml)
+- OPENAPI: [1.2.0 (May 7, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/API_1.2.0/openapi.yml)
 - Developed by: [IIIA-CSIC](https://www.iiia.csic.es)
 - License: [GPL3](LICENSE)
 

@@ -40,18 +40,12 @@ public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddT
 	protected TopologyNode target;
 
 	/**
-	 * This is {@code true} if the connection is enabled.
-	 */
-	protected boolean enabled;
-
-	/**
 	 * Create the operator with the default values.
 	 */
 	private AddTopologyConnection() {
 
 		this.source = new TopologyNode();
 		this.target = new TopologyNode();
-		this.enabled = true;
 	}
 
 	/**
@@ -117,19 +111,6 @@ public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddT
 	}
 
 	/**
-	 * Specify the channel has to be enabled or not.
-	 *
-	 * @param enabled of the connection.
-	 *
-	 * @return this operator.
-	 */
-	public AddTopologyConnection withEnabled(boolean enabled) {
-
-		this.enabled = enabled;
-		return this;
-	}
-
-	/**
 	 * Add the connection.
 	 *
 	 * @return the identifier of the added connection or {@code null} if the
@@ -146,7 +127,7 @@ public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddT
 		final var now = TimeManager.now();
 		final var update = Updates.setOnInsert(new Document().append("createTimestamp", now)
 				.append("updateTimestamp", now).append("source", this.toDocument(this.source))
-				.append("target", this.toDocument(this.target)).append("enabled", this.enabled));
+				.append("target", this.toDocument(this.target)).append("enabled", false));
 		final var options = new UpdateOptions();
 		options.upsert(true);
 		return TopologyConnectionEntity.mongoCollection().updateOne(filter, update, options).onFailure()

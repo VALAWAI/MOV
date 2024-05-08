@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -41,9 +43,40 @@ public class ReferencePayloadSchema extends PayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
-		return other instanceof final ReferencePayloadSchema schema && this.identifier == schema.identifier;
+		if (other instanceof final ReferencePayloadSchema ref) {
+
+			return this.identifier == ref.identifier;
+
+		} else {
+
+			final var reference = references.get(this.identifier);
+			if (reference == null) {
+				// reference not found.
+				return false;
+
+			} else {
+
+				return reference.match(other, references);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean match(PayloadSchema other, Map<Integer, PayloadSchema> references) {
+
+		if (other instanceof final ReferencePayloadSchema ref) {
+
+			return this.identifier == ref.identifier;
+
+		} else {
+
+			return super.match(other, references);
+		}
 	}
 
 }

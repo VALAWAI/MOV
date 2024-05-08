@@ -40,7 +40,7 @@ public class SentMessagePayloadTest extends PayloadTestCase<SentMessagePayload> 
 		final var builder = new MinComponentPayloadTest();
 		model.source = builder.nextModel();
 		model.target = builder.nextModel();
-		model.content = nextJsonObject();
+		model.messagePayload = nextJsonObject();
 		model.timestamp = nextPastTime();
 	}
 

@@ -1,0 +1,105 @@
+asyncapi: "2.6.0"
+info:
+ title: C2 {0} API
+ version: "1.0.0"
+ description: This VALAWAI component for testing that when is registered is committed.
+ license:
+  name: GNU General Public License version 3
+  url: https://opensource.org/license/gpl-3-0/
+ contact:
+  name: VALAWAI
+  url: https://valawai.eu/
+
+channels:
+  valawai/c2/{0}/data/input:
+    subscribe:
+      summary: The channel to receive data.
+      message:
+        $ref: "#/components/messages/input_message"
+
+  valawai/c2/{0}/data/output:
+    publish:
+      summary: The channel to send data.
+      message:
+        $ref: "#/components/messages/output_message"
+
+  valawai/c2/{0}/control/{1}:
+    subscribe:
+      summary: The channle to capture the messages of the specified data.
+      message:
+        $ref: "#/components/messages/sent_message"
+
+components:
+  messages:
+    input_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/data_payload"
+        
+    output_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/data_payload"
+
+    sent_message:
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/sent_message_payload"
+
+
+  schemas:
+    data_payload:
+      description: The information that is manipulated by this component.
+      type: object
+      properties:
+        {2}:
+          type: string
+          description: The content of the field.
+
+    sent_message_payload:
+      type: object
+      properties:
+        connection_id:
+          description: The identifier of the topology connection that allows the message interchanging.
+          type: string
+          examples: 
+            - "65c1f59ea4cb169f42f5edc4"
+        source:
+          description: The source component that has sent the message.
+          oneOf:
+            - $ref: "#/components/schemas/min_component_payload"
+        target:
+          description: The target component that has received the message.
+          oneOf:
+            - $ref: "#/components/schemas/min_component_payload"
+        message_payload:
+          description: The payload of the message that has been through the connection.
+          oneOf:
+            - $ref: "#/components/schemas/data_payload"
+        timestamp:
+          description: The epoch time, in seconds, when the message was sent.
+          type: integer
+          examples:
+            - "1709902001"
+
+    min_component_payload:
+      type: object
+      description: The information of a component that is involved in a message.
+      properties:
+        id:
+          description: The identifier of the component.
+          type: string
+        name:
+          description: The name of the component.
+          type: string
+        type:
+          description: The type level of the component in the VALAWAI.
+          oneOf:
+            - $ref: "#/components/schemas/component_type"
+
+    component_type:
+      type: string
+      enum:
+        - "C0"
+        - "C1"
+        - "C2"

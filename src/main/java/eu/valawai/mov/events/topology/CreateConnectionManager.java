@@ -91,8 +91,7 @@ public class CreateConnectionManager {
 					return AddTopologyConnection.fresh().withSourceChannel(context.payload.source.channelName)
 							.withSourceComponent(context.payload.source.componentId)
 							.withTargetChannel(context.payload.target.channelName)
-							.withTargetComponent(context.payload.target.componentId).withEnabled(false).execute()
-							.chain(connectionId -> {
+							.withTargetComponent(context.payload.target.componentId).execute().chain(connectionId -> {
 
 								if (connectionId != null) {
 
@@ -377,11 +376,11 @@ public class CreateConnectionManager {
 	 */
 	private void checkSubscription(ManagerContext context, ComponentEntity target) {
 
-		final var setSchema = SentMessagePayload.createSentMessagePayloadSchemaFor(context.sourceChannel.publish);
+		final var sentSchema = SentMessagePayload.createSentMessagePayloadSchemaFor(context.sourceChannel.publish);
 		for (final var channel : target.channels) {
 
 			if (channel.name.matches(C2_SUBSCRIBER_CHANNEL_NAME_PATTERN) && channel.subscribe != null
-					&& setSchema.match(channel.subscribe, new HashMap<>())) {
+					&& sentSchema.match(channel.subscribe, new HashMap<>())) {
 				// the component must be subscribed into the connection
 				AddC2SubscriptionToTopologyConnection.fresh().withConnection(context.connectionId)
 						.withComponent(target.id).withChannel(channel.name).execute().subscribe().with(success -> {

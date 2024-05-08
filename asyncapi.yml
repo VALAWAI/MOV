@@ -333,7 +333,7 @@ components:
           description: The identifier of the channel.
           type: string
           examples: 
-            - 'valawai/c0_voice_to_text/audio'
+            - 'valawai/c0/voice_to_text/data/audio'
         description:
           description: The description of the channel.
           type: string
@@ -547,7 +547,7 @@ components:
           description: The name to match the source channel of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
           type: string
           examples: 
-            - 'c0_voice_to_text'
+            - 'voice_to_text'
             - '/.+voice.+/i'
         source_component_id:
           description: The identifier to match the source component of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
@@ -559,7 +559,7 @@ components:
           description: The name to match the target channel of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
           type: string
           examples: 
-            - 'c0_voice_to_text'
+            - 'voice_to_text'
             - '/.+voice.+/i'
         target_component_id:
           description: The identifier to match the target component of the topology connections to return. If it is defined between / it is considered a PCRE regular expression.
@@ -654,7 +654,7 @@ components:
           description: The name of the channel of the component that do the connection.
           type: string
           examples: 
-            - 'valawai/C0_voice_to_text/audio'
+            - 'valawai/c0/voice_to_text/data/audio'
           
     create_connection_payload:
       type: object
@@ -675,7 +675,7 @@ components:
       type: object
       properties:
         connection_id:
-          description: The identifier of the topology connection that allows the message intechanging.
+          description: The identifier of the topology connection that allows the message interchanging.
           type: string
           pattern: '[0-9a-fA-F]{24}'
           examples: 
@@ -688,8 +688,8 @@ components:
           description: The target component that has received the message.
           oneOf:
             - $ref: '#/components/schemas/min_component_payload'
-        payload:
-          description: The payload of the message that they has sent.
+        message_payload:
+          description: The payload of the message that has been through the connection.
           type: object
         timestamp:
           description: The epoch time, in seconds, when the message was sent.

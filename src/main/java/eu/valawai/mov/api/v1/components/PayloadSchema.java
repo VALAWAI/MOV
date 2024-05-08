@@ -54,15 +54,6 @@ public abstract class PayloadSchema extends Model {
 	/**
 	 * Check if this schema match another schema.
 	 *
-	 * @param other to check.
-	 *
-	 * @return {@code true} if this schema is equivalent to the other schema.
-	 */
-	public abstract boolean match(PayloadSchema other);
-
-	/**
-	 * Check if this schema match another schema.
-	 *
 	 * @param other      to check.
 	 * @param references to other schemas.
 	 *
@@ -79,14 +70,36 @@ public abstract class PayloadSchema extends Model {
 
 			} else {
 
-				return this.match(reference);
+				return this.match(reference, references);
 			}
 
 		} else {
 
-			return this.match(other);
+			if (other instanceof final ObjectPayloadSchema object && object.id != null) {
+
+				if (!references.containsKey(object.id)) {
+
+					references.put(object.id, object);
+
+				} else if (!references.get(object.id).matchPayload(other, references)) {
+
+					return false;
+				}
+			}
+
+			return this.matchPayload(other, references);
 		}
 
 	}
+
+	/**
+	 * Check if this schema match another schema.
+	 *
+	 * @param other      to check.
+	 * @param references to other schemas.
+	 *
+	 * @return {@code true} if this schema is equivalent to the other schema.
+	 */
+	protected abstract boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references);
 
 }

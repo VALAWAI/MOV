@@ -80,16 +80,16 @@ public abstract class DiversePayloadSchemaTestCase<T extends DiversePayloadSchem
 		final var source = this.createEmptyModel();
 		final var target = this.createEmptyModel();
 
-		assertTrue(source.match(target));
-		assertTrue(target.match(source));
+		assertTrue(source.match(target, new HashMap<>()));
+		assertTrue(target.match(source, new HashMap<>()));
 
 		source.items = new ArrayList<>();
-		assertTrue(source.match(target));
-		assertTrue(target.match(source));
+		assertTrue(source.match(target, new HashMap<>()));
+		assertTrue(target.match(source, new HashMap<>()));
 
 		target.items = new ArrayList<>();
-		assertTrue(source.match(target));
-		assertTrue(target.match(source));
+		assertTrue(source.match(target, new HashMap<>()));
+		assertTrue(target.match(source, new HashMap<>()));
 
 	}
 
@@ -103,8 +103,8 @@ public abstract class DiversePayloadSchemaTestCase<T extends DiversePayloadSchem
 		final var json = Json.encode(model1);
 		final var model2 = Json.decodeValue(json, model1.getClass());
 		Collections.shuffle(model2.items, rnd());
-		assertTrue(model1.match(model2));
-		assertTrue(model2.match(model1));
+		assertTrue(model1.match(model2, new HashMap<>()));
+		assertTrue(model2.match(model1, new HashMap<>()));
 	}
 
 }

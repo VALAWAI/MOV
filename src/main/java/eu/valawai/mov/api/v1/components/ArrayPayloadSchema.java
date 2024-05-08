@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
@@ -32,9 +34,9 @@ public class ArrayPayloadSchema extends DiversePayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
-		return other instanceof ArrayPayloadSchema && super.match(other);
+		return other instanceof ArrayPayloadSchema && super.matchPayload(other, references);
 	}
 
 }

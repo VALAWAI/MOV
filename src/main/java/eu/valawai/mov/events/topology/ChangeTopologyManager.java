@@ -236,7 +236,7 @@ public class ChangeTopologyManager {
 				final var payload = new SentMessagePayload();
 				payload.source = new MinComponentPayload();
 				payload.target = new MinComponentPayload();
-				payload.content = received;
+				payload.messagePayload = received;
 				payload.timestamp = TimeManager.now();
 				payload.connectionId = connection.id;
 

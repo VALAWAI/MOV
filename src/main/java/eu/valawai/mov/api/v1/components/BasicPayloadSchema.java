@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
@@ -52,7 +54,7 @@ public class BasicPayloadSchema extends PayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
 		return other instanceof final BasicPayloadSchema basic && this.format == basic.format;
 	}

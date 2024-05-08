@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -306,7 +307,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 				for (final var channel : component.channels) {
 
-					if (channel.subscribe != null && !publish.match(channel.subscribe)) {
+					if (channel.subscribe != null && !publish.match(channel.subscribe, new HashMap<>())) {
 
 						payload.target.componentId = component.id;
 						payload.target.channelName = channel.name;
@@ -555,7 +556,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			assertEquals(c1.name, received.target.name);
 			assertEquals(c1.type, received.target.type);
 			assertTrue(now <= received.timestamp);
-			assertEquals(msg, received.content);
+			assertEquals(msg, received.messagePayload);
 
 		}
 	}

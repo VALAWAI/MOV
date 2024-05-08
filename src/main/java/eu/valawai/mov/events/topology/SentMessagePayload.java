@@ -57,7 +57,8 @@ public class SentMessagePayload extends Payload {
 	 * The content of the message.
 	 */
 	@JsonDeserialize(using = JsonObjectDeserializer.class)
-	public JsonObject content;
+	@JsonProperty("message_payload")
+	public JsonObject messagePayload;
 
 	/**
 	 * The epoch time, in seconds, when the message was sent.
@@ -91,7 +92,7 @@ public class SentMessagePayload extends Payload {
 		sentSchema.properties.put("source", address);
 		sentSchema.properties.put("target", address);
 
-		sentSchema.properties.put("content", content);
+		sentSchema.properties.put("message_payload", content);
 		final var timestamp = new BasicPayloadSchema();
 		timestamp.format = BasicPayloadFormat.INTEGER;
 		sentSchema.properties.put("timestamp", timestamp);

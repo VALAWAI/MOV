@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,9 @@ import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.persistence.components.ComponentEntities;
 import eu.valawai.mov.persistence.components.ComponentEntity;
 import eu.valawai.mov.persistence.logs.LogEntity;
+import eu.valawai.mov.persistence.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.topology.TopologyNode;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
@@ -427,10 +430,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(expectedComponent.channels, registered.channels);
 		final var expectedTargetChannelName = MessageFormat.format("valawai/c{0}/{1}/data/input", componentTypeIndex,
 				componentName);
-		;
 		final var expectedSourceChannelName = MessageFormat.format("valawai/c{0}/{1}/data/output", componentTypeIndex,
 				componentName);
-		;
 
 		// check updated the components
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
@@ -511,4 +512,88 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 	}
 
+	/**
+	 * Check that a component is registered and is subscribed to come connections
+	 * that it may be notified.
+	 */
+	@Test
+	public void shouldRegisterComponentAndSubscribedToConnecions() {
+
+		// The message to register the target component of the connection
+		final var componentName = nextPattern("component_{0}");
+		final var actionName = nextPattern("action_{0}");
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		final var fieldName = nextPattern("subscribe_into_connection_field_to_test_{0}");
+		payload.type = ComponentType.C2;
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_subscribe.yml"), componentName, actionName,
+				fieldName);
+
+		// create the connections where the component must be subscribed
+		final var connectionSchema = new ObjectPayloadSchema();
+		connectionSchema.properties.put(fieldName, BasicPayloadSchema.with(BasicPayloadFormat.STRING));
+		final List<TopologyConnectionEntity> connections = new ArrayList<>();
+		for (var i = 0; i < 1; i++) {
+
+			final var connection = TopologyConnectionEntities.nextTopologyConnection();
+			connections.add(connection);
+			final ComponentEntity source = this
+					.assertItemNotNull(ComponentEntity.findById(connection.source.componentId));
+			for (final var channel : source.channels) {
+
+				if (channel.name.equals(connection.source.channelName)) {
+
+					channel.publish = connectionSchema;
+					this.assertItemNotNull(source.update());
+					break;
+				}
+			}
+			final ComponentEntity target = this
+					.assertItemNotNull(ComponentEntity.findById(connection.target.componentId));
+			for (final var channel : target.channels) {
+
+				if (channel.name.equals(connection.target.channelName)) {
+
+					channel.subscribe = connectionSchema;
+					this.assertItemNotNull(target.update());
+					break;
+				}
+			}
+
+		}
+
+		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(1 + connections.size(),
+				() -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// check updated the components
+		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
+		assertEquals(countComponentsBefore + 1, countComponentsAfter);
+		// Get last component
+		final ComponentEntity lastComponent = this
+				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= lastComponent.since);
+		assertEquals(payload.name, lastComponent.name);
+		assertEquals(payload.type, lastComponent.type);
+		assertEquals(payload.version, lastComponent.version);
+		assertEquals("1.0.0", lastComponent.apiVersion);
+		assertNull(lastComponent.finishedTime);
+		assertNotNull(lastComponent.channels);
+		assertEquals(3, lastComponent.channels.size());
+
+		// check updated the connections
+		final var expectedSubscriptionNode = new TopologyNode();
+		expectedSubscriptionNode.componentId = lastComponent.id;
+		expectedSubscriptionNode.channelName = "valawai/c2/" + componentName + "/control/" + actionName;
+		for (final var connection : connections) {
+
+			final TopologyConnectionEntity updated = this
+					.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+			assertNotNull(updated.c2Subscriptions, "New component is not subscribed into the connection");
+			assertTrue(updated.c2Subscriptions.contains(expectedSubscriptionNode),
+					"New component is not subscribed into the connection");
+			assertTrue(now <= updated.updateTimestamp, "The connection is not updated");
+		}
+	}
 }

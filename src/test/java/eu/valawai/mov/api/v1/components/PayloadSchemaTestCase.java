@@ -104,7 +104,7 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 	public void shouldNotMatchWithNullValue() {
 
 		final var model = this.nextModel();
-		assertFalse(model.match(null));
+		assertFalse(model.match(null, new HashMap<>()));
 
 	}
 
@@ -120,8 +120,8 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 
 			model2 = new BasicPayloadSchemaTest().nextModel();
 		}
-		assertFalse(model1.match(model2));
-		assertFalse(model2.match(model1));
+		assertFalse(model1.match(model2, new HashMap<>()));
+		assertFalse(model2.match(model1, new HashMap<>()));
 
 	}
 
@@ -137,8 +137,8 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 
 			model2 = new EnumPayloadSchemaTest().nextModel();
 		}
-		assertFalse(model1.match(model2));
-		assertFalse(model2.match(model1));
+		assertFalse(model1.match(model2, new HashMap<>()));
+		assertFalse(model2.match(model1, new HashMap<>()));
 
 	}
 
@@ -154,8 +154,8 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 
 			model2 = new ObjectPayloadSchemaTest().nextModel();
 		}
-		assertFalse(model1.match(model2));
-		assertFalse(model2.match(model1));
+		assertFalse(model1.match(model2, new HashMap<>()));
+		assertFalse(model2.match(model1, new HashMap<>()));
 
 	}
 
@@ -171,8 +171,8 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 
 			model2 = new ArrayPayloadSchemaTest().nextModel();
 		}
-		assertFalse(model1.match(model2));
-		assertFalse(model2.match(model1));
+		assertFalse(model1.match(model2, new HashMap<>()));
+		assertFalse(model2.match(model1, new HashMap<>()));
 
 	}
 
@@ -183,7 +183,7 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 	public void shouldMatchSameInstance() {
 
 		final var model = this.nextModel();
-		assertTrue(model.match(model));
+		assertTrue(model.match(model, new HashMap<>()));
 
 	}
 
@@ -196,8 +196,8 @@ public abstract class PayloadSchemaTestCase<T extends PayloadSchema> extends Mod
 		final var model1 = this.nextModel();
 		final var json = Json.encode(model1);
 		final var model2 = Json.decodeValue(json, model1.getClass());
-		assertTrue(model1.match(model2));
-		assertTrue(model2.match(model1));
+		assertTrue(model1.match(model2, new HashMap<>()));
+		assertTrue(model2.match(model1, new HashMap<>()));
 
 	}
 

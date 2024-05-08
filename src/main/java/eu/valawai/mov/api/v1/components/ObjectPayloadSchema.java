@@ -48,7 +48,7 @@ public class ObjectPayloadSchema extends PayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
 		if (other instanceof final ObjectPayloadSchema object) {
 
@@ -62,7 +62,7 @@ public class ObjectPayloadSchema extends PayloadSchema {
 
 					final var source = this.properties.get(key);
 					final var target = object.properties.get(key);
-					if (!source.match(target)) {
+					if (!source.match(target, references)) {
 
 						return false;
 					}

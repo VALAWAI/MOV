@@ -10,6 +10,7 @@ package eu.valawai.mov.api.v1.components;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -36,7 +37,7 @@ public abstract class DiversePayloadSchema extends PayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
 		if (other instanceof final DiversePayloadSchema diverse) {
 
@@ -47,9 +48,26 @@ public abstract class DiversePayloadSchema extends PayloadSchema {
 
 			} else if (this.items != null && diverse.items != null && this.items.size() == diverse.items.size()) {
 				// check without take the order
-				final var copy = new ArrayList<>(this.items);
-				copy.removeAll(diverse.items);
-				return copy.isEmpty();
+				final var sourceCopy = new ArrayList<>(this.items);
+				final var targetCopy = new ArrayList<>(diverse.items);
+				final var sourceIter = sourceCopy.iterator();
+				while (sourceIter.hasNext()) {
+
+					final var source = sourceIter.next();
+					final var targetIter = targetCopy.iterator();
+					while (targetIter.hasNext()) {
+
+						final var target = targetIter.next();
+						if (source.match(target, references)) {
+
+							sourceIter.remove();
+							targetIter.remove();
+							break;
+						}
+
+					}
+				}
+				return sourceCopy.isEmpty() || targetCopy.isEmpty();
 			}
 		}
 

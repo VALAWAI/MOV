@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -44,7 +45,7 @@ public class EnumPayloadSchema extends PayloadSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(PayloadSchema other) {
+	protected boolean matchPayload(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
 		return other instanceof final EnumPayloadSchema schema
 				&& (this.values == schema.values || this.values != null && this.values.equals(schema.values));
