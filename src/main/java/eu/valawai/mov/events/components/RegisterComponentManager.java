@@ -129,7 +129,7 @@ public class RegisterComponentManager {
 						if (source.channels != null && !source.channels.isEmpty()) {
 
 							final var paginator = ComponentEntity
-									.find("channels != null and _id != ?1", Sort.ascending("_id"), source.id)
+									.find("channels is not null and _id != ?1", Sort.ascending("_id"), source.id)
 									.page(Page.ofSize(10));
 							this.createConnections(source, paginator, channelsToIgnore);
 						}

@@ -98,10 +98,9 @@ public class CreateConnectionManager {
 									AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
 											.withPayload(content).store();
 									context.connectionId = connectionId;
-									final var paginator = ComponentEntity
-											.find("type = ?1 and channels.subscribe != null and channels.name like ?2",
-													Sort.ascending("_id"), ComponentType.C2,
-													C2_SUBSCRIBER_CHANNEL_NAME_PATTERN)
+									final var paginator = ComponentEntity.find(
+											"type = ?1 and channels.subscribe is not null and channels.name like ?2",
+											Sort.ascending("_id"), ComponentType.C2, C2_SUBSCRIBER_CHANNEL_NAME_PATTERN)
 											.page(Page.ofSize(10));
 									this.checkSubscriptionAndEnable(context, paginator);
 									return Uni.createFrom().nullItem();

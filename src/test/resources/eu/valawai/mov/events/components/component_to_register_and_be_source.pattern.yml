@@ -1,0 +1,24 @@
+asyncapi: "2.6.0"
+info:
+ title: C{0} {1} API
+ version: "{2}"
+ description: {3}
+ license:
+  name: GNU General Public License version 3
+  url: https://opensource.org/license/gpl-3-0/
+ contact:
+  name: VALAWAI
+  url: https://valawai.eu/
+
+channels:
+  valawai/c{0}/{1}/data/{4}:
+    description: {5}
+    publish:
+      message:
+        payload:
+          description: The information that is manipulated by this component.
+          type: object
+          properties:
+            {6}:
+              type: string
+              description: The content of the field.

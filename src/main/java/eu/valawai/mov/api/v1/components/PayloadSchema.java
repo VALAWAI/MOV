@@ -61,7 +61,11 @@ public abstract class PayloadSchema extends Model {
 	 */
 	public boolean match(PayloadSchema other, Map<Integer, PayloadSchema> references) {
 
-		if (other instanceof final ReferencePayloadSchema ref) {
+		if (other == null) {
+
+			return false;
+
+		} else if (other instanceof final ReferencePayloadSchema ref) {
 
 			final var reference = references.get(ref.identifier);
 			if (reference == null) {
