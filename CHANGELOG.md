@@ -1,6 +1,9 @@
 # Master Of Valawai (MOV)
 
 
+## Version 1.3.0 (May 10,2024)
+
+
 ## Version 1.2.0 (May 9,2024)
 
  - Modify logs to contains information of the component that has generated it.

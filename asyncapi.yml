@@ -3,9 +3,9 @@ info:
  title: Value-Aware Artificial Intelligence API
  version: '1.2.0'
  description: |
-  This api provide the messages that the VALAWAI infrastructure cna manage.
-  This messages are used to start/stop the infrastructure and for
-  mantains the data and control topology.
+  This API provides the messages that the VALAWAI infrastructure can manage.
+  These messages are used to start/stop the infrastructure and for
+  maintains the data and control topology.
  license:
   name: GNU General Public License version 3
   url: https://opensource.org/license/gpl-3-0/
@@ -15,7 +15,7 @@ info:
 channels:
   valawai/component/register:
     subscribe:
-      summary: Used by the components to inform that it is present on the infratructure.
+      summary: Used by the components to inform that it is present on the infrastructure.
       message:
         $ref: '#/components/messages/register_component'
   valawai/component/query:
@@ -32,7 +32,7 @@ channels:
 
   valawai/component/unregister:
     subscribe:
-      summary: Used by the components to inform that it leave the infratructure.
+      summary: Used by the components to inform that it leaves the infrastructure.
       message:
         $ref: '#/components/messages/unregister_component'
 
@@ -56,7 +56,7 @@ channels:
 
   valawai/topology/change:
     subscribe:
-      summary: Used by the components to inform of the changes that has to be done to the topology.
+      summary: Used by the components to inform of the changes that have to be done to the topology.
       message:
         $ref: '#/components/messages/change_topology'
 
@@ -69,7 +69,7 @@ channels:
   valawai/c{type}/{name}/control/registered:
     parameters:
       type:
-        description: The identifeier of the component type.
+        description: The identifier of the component type.
         schema:
           type: string
           enum:
@@ -99,7 +99,7 @@ channels:
           type: string
           pattern: '\w+'
     publish:
-      summary: Notify a C2 component of the message interchange between other non C2 components.
+      summary: Notify a C2 component of the message interchange between other non-C2 components.
       message:
         $ref: '#/components/messages/sent_message'
 
@@ -229,7 +229,7 @@ components:
             - 'C0'
             - '/C[1|2]/'
         order:
-          description: The order in witch the components has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending. By default is +since.
+          description: The order in which the components have to be returned. It is formed by the field names, separated by a comma, and each of them with the - prefix for descending order or + for ascending. By default is +since.
           type: string
           pattern: (,?[+|-]?[type|name|description|since])*
           examples: 
@@ -313,7 +313,7 @@ components:
           examples: 
             - '1709902001'
         channels:
-          description: The channels that the component have.
+          description: The channels that the component has.
           type: array
           items:
             - $ref: '#/components/schemas/channel_schema'
@@ -327,7 +327,7 @@ components:
 
     channel_schema:
       type: object
-      description: A schema that define the messages that a channel can receive or send.
+      description: A schema that defines the messages that a channel can receive or send.
       properties:
         id:
           description: The identifier of the channel.
@@ -385,7 +385,7 @@ components:
                 - 'STRING'
 
     enum_payload_schema:
-      description: A payload that is defined of one value of a set.
+      description: A payload that is defined as one value of a set.
       allOf:
         - $ref: '#/components/schemas/payload_schema'
         - type: object
@@ -399,7 +399,7 @@ components:
                 - type: string
 
     object_payload_schema:
-      description: A definition of a schema that describe an object.
+      description: A definition of a schema that describes an object.
       allOf:
         - $ref: '#/components/schemas/payload_schema'
         - type: object
@@ -408,7 +408,7 @@ components:
               const: 'OBJECT'
             id:
               type: integer
-              description: The identifier used whne this schme is refer by other components.
+              description: The identifier used when this scheme is referred to by other components.
             properties:
               description: The properties that define the object.
               additionalProperties:
@@ -429,7 +429,7 @@ components:
                 - $ref: '#/components/schemas/payload_schema'
 
     constant_payload_schema:
-      description: A payload that is a consatnt value.
+      description: A payload that is a constant value.
       allOf:
         - $ref: '#/components/schemas/payload_schema'
         - type: object
@@ -489,7 +489,7 @@ components:
             type:
               const: 'ALL_OF'
             items:
-              description: The schemas that has to match.
+              description: The schemas that have to match.
               type: array
               items:
                 - $ref: '#/components/schemas/payload_schema'
@@ -500,7 +500,7 @@ components:
       properties:
         component_id:
           type: string
-          description: The identifeir of the component to unregister.
+          description: The identifier of the component to unregister.
           pattern: '[0-9a-fA-F]{24}'
           examples: 
             - '65c1f59ea4cb169f42f5edc4'
@@ -530,7 +530,7 @@ components:
             - '{"pattern:"p1"}'
         component_id:
           type: string
-          description: The identifeir of the component that has generated the log.
+          description: The identifier of the component that has generated the log.
           pattern: '[0-9a-fA-F]{24}'
           examples: 
             - '65c1f59ea4cb169f42f5edc4'
@@ -568,7 +568,7 @@ components:
             - '65c1f59ea4cb169f42f5edc4'
             - '/.+59ea.+/i'
         order:
-          description: The order in witch the topology connections has to be returned. It is form by the field names, separated by a comma, and each of it with the - prefix for descending order or + for ascending.By default is -updateTimestamp.
+          description: The order in which the topology connections have to be returned. It is formed by the field names, separated by a comma, and each of them with the - prefix for descending order or + for ascending. By default is -updateTimestamp.
           type: string
           pattern: (,?[+|-]?[createTimestamp|updateTimestamp|enabled|source.componentId|source.channelName|target.componentId|target.channelName])*
           examples: 
@@ -651,7 +651,7 @@ components:
           examples: 
             - '65c1f59ea4cb169f42f5edc4'
         channel_name:
-          description: The name of the channel of the component that do the connection.
+          description: The name of the channel of the component that does the connection.
           type: string
           examples: 
             - 'valawai/c0/voice_to_text/data/audio'
