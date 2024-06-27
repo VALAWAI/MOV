@@ -26,7 +26,6 @@ import jakarta.validation.constraints.NotNull;
  */
 @RegisterForReflection
 @JsonRootName("change_topology_payload")
-
 public class ChangeTopologyPayload extends Payload {
 
 	/**

@@ -26,7 +26,7 @@ public enum TopologyAction {
 	DISABLE,
 
 	/**
-	 * REmove a connection between components.
+	 * Remove a connection between components.
 	 */
 	REMOVE;
 
