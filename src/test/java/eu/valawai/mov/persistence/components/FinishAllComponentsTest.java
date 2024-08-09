@@ -37,7 +37,7 @@ public class FinishAllComponentsTest extends MovPersistenceTestCase {
 
 		final var components = ComponentEntities.nextComponents(10);
 		final var now = TimeManager.now();
-		this.assertItemNull(FinishAllComponents.fresh().execute());
+		this.assertItemIsNull(FinishAllComponents.fresh().execute());
 
 		for (final var component : components) {
 

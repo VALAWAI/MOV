@@ -24,5 +24,5 @@ else
 
 		DOCKER_PARAMS="$DOCKER_PARAMS --env-file .env"
 	fi
-	docker-compose $DOCKER_PARAMS up -d
+	docker compose $DOCKER_PARAMS up -d
 fi

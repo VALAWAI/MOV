@@ -26,7 +26,7 @@ import eu.valawai.mov.persistence.AbstractEntityOperator;
 import eu.valawai.mov.persistence.MongoTestResource;
 import eu.valawai.mov.persistence.logs.LogEntity;
 import io.quarkus.logging.Log;
-import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.common.WithTestResource;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -35,8 +35,8 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
-@QuarkusTestResource(MongoTestResource.class)
-@QuarkusTestResource(RabbitMQTestResource.class)
+@WithTestResource(restrictToAnnotatedClass = false, value = MongoTestResource.class)
+@WithTestResource(restrictToAnnotatedClass = false, value = RabbitMQTestResource.class)
 public class MasterOfValawaiTestCase {
 
 	/**
