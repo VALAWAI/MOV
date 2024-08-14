@@ -1,7 +1,7 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.3.0 (August 9,2024)
+## Version 1.3.0 (August 14,2024)
 
  - Upgrade to use JDK 21
 
