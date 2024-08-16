@@ -15,6 +15,8 @@ import eu.valawai.mov.persistence.logs.AddLog;
 import eu.valawai.mov.persistence.topology.DeleteAllTopologyConnections;
 import eu.valawai.mov.persistence.topology.DisableAllTopologyConnections;
 import io.quarkus.runtime.StartupEvent;
+import io.smallrye.config.Priorities;
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 
@@ -37,41 +39,39 @@ public class OnStart {
 	 *
 	 * @param event that contains the start status.
 	 */
-	public void handle(@Observes StartupEvent event) {
+	public void handle(@Observes @Priority(Priorities.APPLICATION + 23) StartupEvent event) {
 
 		if (this.cleanOnStartup) {
 
-			FinishAllComponents.fresh().execute().subscribe().with(success -> {
+			FinishAllComponents.fresh().execute().onFailure().recoverWithItem(error -> {
 
-				AddLog.fresh().withInfo().withMessage("Finished the previous components").store();
+				AddLog.fresh().withError(error).withMessage("Cannot finish some previous components").store();
+				return null;
 
-			}, error -> {
+			}).await().indefinitely();
 
-				AddLog.fresh().withError(error).withMessage("Cannot finish the previous components").store();
+			AddLog.fresh().withInfo().withMessage("Finished the previous components").store();
 
-			});
+			DeleteAllTopologyConnections.fresh().execute().onFailure().recoverWithItem(error -> {
 
-			DeleteAllTopologyConnections.fresh().execute().subscribe().with(success -> {
+				AddLog.fresh().withError(error).withMessage("Cannot delete some previous topology connections").store();
+				return null;
 
-				AddLog.fresh().withInfo().withMessage("Deleted the previous topology connections").store();
+			}).await().indefinitely();
 
-			}, error -> {
-
-				AddLog.fresh().withError(error).withMessage("Cannot delete the previous topology connections").store();
-
-			});
+			AddLog.fresh().withInfo().withMessage("Deleted the previous topology connections").store();
 
 		} else {
 
-			DisableAllTopologyConnections.fresh().execute().subscribe().with(success -> {
+			DisableAllTopologyConnections.fresh().execute().onFailure().recoverWithItem(error -> {
 
-				AddLog.fresh().withInfo().withMessage("Disabled the previous topology connections").store();
+				AddLog.fresh().withError(error).withMessage("Cannot disable some previous topology connections")
+						.store();
+				return null;
 
-			}, error -> {
+			}).await().indefinitely();
 
-				AddLog.fresh().withError(error).withMessage("Cannot disable the previous topology connections").store();
-
-			});
+			AddLog.fresh().withInfo().withMessage("Disabled the previous topology connections").store();
 		}
 
 	}

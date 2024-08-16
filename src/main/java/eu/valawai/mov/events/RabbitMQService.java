@@ -8,11 +8,15 @@
 
 package eu.valawai.mov.events;
 
+import java.time.Duration;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import eu.valawai.mov.persistence.logs.AddLog;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.Shutdown;
 import io.quarkus.runtime.Startup;
+import io.smallrye.config.Priorities;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.rabbitmq.RabbitMQClient;
@@ -193,7 +197,7 @@ public class RabbitMQService {
 	/**
 	 * Create the client to the rabbit MQ broker.
 	 */
-	@Startup
+	@Startup(Priorities.APPLICATION)
 	public void createClient() {
 
 		final var config = new RabbitMQOptions();
@@ -223,13 +227,23 @@ public class RabbitMQService {
 		config.setConnectionName(this.getClass().getName());
 
 		this.client = RabbitMQClient.create(this.vertx, config);
-		this.client.start().subscribe().with(any -> {
-			Log.infov("Started Rabbit MQ connection with {0}", config);
-		}, error -> {
+		do {
 
-			Log.errorv(error, "Cannot start the connection with the Rabbit MQ.");
-			this.destroyClient();
-		});
+			try {
+
+				this.client.startAndAwait();
+
+			} catch (final Throwable error) {
+
+				Log.errorv(error, "Cannot start the connection with the Rabbit MQ.");
+
+			}
+
+		} while (!this.client.isConnected());
+
+		AddLog.fresh().withInfo()
+				.withMessage("Started Rabbit MQ connection to {0}@{1}:{2}", this.username, this.host, this.port)
+				.store();
 
 	}
 

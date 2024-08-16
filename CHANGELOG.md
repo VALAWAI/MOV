@@ -1,5 +1,9 @@
 # Master Of Valawai (MOV)
 
+## Version 1.3.1 (August 16,2024)
+
+ - Fix Startup sequence.
+
 
 ## Version 1.3.0 (August 14,2024)
 
