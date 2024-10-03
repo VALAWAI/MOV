@@ -1,5 +1,11 @@
 # Master Of Valawai (MOV)
 
+
+## Version 1.4.0 (October 3,2024)
+
+ - Add health checking
+
+
 ## Version 1.3.1 (August 16,2024)
 
  - Fix Startup sequence.
