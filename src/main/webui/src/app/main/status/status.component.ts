@@ -6,9 +6,9 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
-import { MovApiService, Info } from 'src/app/shared/mov-api';
+import { MovApiService, Info, HealthInfo } from 'src/app/shared/mov-api';
 
 
 @Component({
@@ -16,12 +16,22 @@ import { MovApiService, Info } from 'src/app/shared/mov-api';
 	templateUrl: './status.component.html',
 	styleUrls: ['./status.component.css']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The informaiton of the started MOV.
 	 */
 	public info: Info | null = null;
+
+	/**
+	 * The informaiton of the started MOV.
+	 */
+	public health: HealthInfo | null = null;
+
+	/**
+	 * The identifier of the timer.
+	 */
+	private timeoutID: ReturnType<typeof setTimeout> | null = null;
 
 
 	/**
@@ -46,7 +56,37 @@ export class StatusComponent implements OnInit {
 			}
 
 		);
+		this.updateHealth();
 
+	}
+
+	/**
+	 * Called when has to update the health information.
+	 */
+	public updateHealth() {
+
+
+		this.mov.getHealth().subscribe(
+			{
+				next: health => {
+
+					this.health = health;
+					this.timeoutID = setTimeout(() => this.updateHealth(), 30000);
+
+				}
+			}
+		)
+	}
+
+	/**
+	 * Finalizes the component.
+	 */
+	ngOnDestroy(): void {
+
+		if (this.timeoutID != null) {
+
+			clearTimeout(this.timeoutID);
+		}
 	}
 
 }

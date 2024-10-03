@@ -9,6 +9,7 @@
 
 export { MovApiService } from './mov-api.service';
 export { Info } from './info.model';
+export { HealthInfo, HealthStatus, HealthCheck } from './health-info.model';
 export { LOG_LEVEL_NAMES, LogLevel } from './logs/log-level.model';
 export { LogRecord } from './logs/log-record.model';
 export { LogRecordPage } from './logs/log-record-page.model';

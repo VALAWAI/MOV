@@ -8,8 +8,6 @@
 
 package eu.valawai.mov.events;
 
-import java.time.Duration;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import eu.valawai.mov.persistence.logs.AddLog;
@@ -280,6 +278,17 @@ public class RabbitMQService {
 
 			return Uni.createFrom().item(this.client);
 		}
+	}
+
+	/**
+	 * Check if this service is live.
+	 *
+	 * @return {@code true} if the client exist and is opened.
+	 */
+	public boolean isLive() {
+
+		return this.client != null && this.client.isConnected();
+
 	}
 
 }

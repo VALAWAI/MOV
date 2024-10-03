@@ -11,15 +11,19 @@ import { CommonModule } from '@angular/common';
 
 import { StatusRoutingModule } from './status-routing.module';
 import { StatusComponent } from './status.component';
+import { HealthStatusComponent } from './health-status.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
 	declarations: [
 		StatusComponent,
+		HealthStatusComponent
 	],
 	imports: [
 		CommonModule,
-		StatusRoutingModule
+		StatusRoutingModule,
+		MatIconModule
 	],
 	exports: [
 	],

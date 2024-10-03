@@ -1,0 +1,5 @@
+<div *ngIf="isUp;else isDown">
+	<mat-icon class="text-green-600">check</mat-icon>
+</div>
+<ng-template #isDown> <mat-icon class="text-red-600">error</mat-icon>
+<ng-template>

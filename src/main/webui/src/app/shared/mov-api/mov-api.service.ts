@@ -7,10 +7,11 @@
 */
 
 import { Injectable } from '@angular/core';
-import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpParams, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Info } from './info.model';
+import { HealthInfo } from './health-info.model';
 import { LogRecordPage } from './logs/log-record-page.model';
 import { MinComponentPage } from './components/min-component-page.model';
 import { Component } from './components/component.model';
@@ -108,23 +109,32 @@ export class MovApiService {
 	}
 
 	/**
+	 * Get the help information.
+	 */
+	public getHealth(): Observable<HealthInfo> {
+
+		var url = this.url('/q/health/');
+		return this.http.get<HealthInfo>(url);
+	}
+
+	/**
 	 * Get some logs.
 	 */
 	public getLogRecordPage(pattern: string | null = null, level: string | null = null,
-	componentPattern: string | null = null, componentType: string | null = null,
-	 order: string | null = null, offset: number = 0, limit: number = 20): Observable<LogRecordPage> {
+		componentPattern: string | null = null, componentType: string | null = null,
+		order: string | null = null, offset: number = 0, limit: number = 20): Observable<LogRecordPage> {
 
 		var url = this.url('/v1/logs');
 		return this.http.get<LogRecordPage>(url, this.optionsWithParams(
-		  {
-		    pattern: pattern,
-		    level: level,
-		    componentPattern: componentPattern,
-		    componentType: componentType,
-		    order: order,
-		    offset: offset,
-		    limit: limit
-		  }));
+			{
+				pattern: pattern,
+				level: level,
+				componentPattern: componentPattern,
+				componentType: componentType,
+				order: order,
+				offset: offset,
+				limit: limit
+			}));
 	}
 
 	/**
