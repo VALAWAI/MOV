@@ -33,7 +33,6 @@ export class StatusComponent implements OnInit, OnDestroy {
 	 */
 	private timeoutID: ReturnType<typeof setTimeout> | null = null;
 
-
 	/**
 	 *  Create the component.
 	 */

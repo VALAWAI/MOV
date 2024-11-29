@@ -8,12 +8,11 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: AppComponent,
+		loadComponent: () => import('./app.component').then(c => c.AppComponent),
 		children: [
 			{ path: 'main', loadChildren: () => import('./main/main.module').then(m => m.MainModule) },
 			{ path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -24,7 +23,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+	imports: [RouterModule.forRoot(routes)],
+	exports: [RouterModule]
 })
 export class AppRoutingModule { }
