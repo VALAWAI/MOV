@@ -14,7 +14,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import eu.valawai.mov.api.MovApiTestCase;
+import eu.valawai.mov.api.APITestCase;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
  * @author VALAWAI
  */
 @QuarkusTest
-public class HelpResourceTest extends MovApiTestCase {
+public class HelpResourceTest extends APITestCase {
 
 	/**
 	 * Should not found an undefined experiment.

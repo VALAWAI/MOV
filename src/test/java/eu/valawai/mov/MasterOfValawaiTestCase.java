@@ -35,8 +35,8 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
-@WithTestResource(restrictToAnnotatedClass = false, value = MongoTestResource.class)
-@WithTestResource(restrictToAnnotatedClass = false, value = RabbitMQTestResource.class)
+@WithTestResource(MongoTestResource.class)
+@WithTestResource(RabbitMQTestResource.class)
 public class MasterOfValawaiTestCase {
 
 	/**
