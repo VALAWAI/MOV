@@ -1,9 +1,11 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.4.0 (October 3,2024)
+## Version 1.4.0 (November 29,2024)
 
  - Add health checking
+ - Add go to index.html if page not found
+ - Allow UI to change locale
 
 
 ## Version 1.3.1 (August 16,2024)
@@ -19,7 +21,7 @@
 ## Version 1.2.0 (May 9,2024)
 
  - Modify logs to contains information of the component that has generated it.
- - Add C2 subscription to the notified when a messsage pass throught
+ - Add C2 subscription to the notified when a message pass through
   a topology connection.
 
 

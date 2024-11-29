@@ -16,6 +16,7 @@ import eu.valawai.mov.persistence.topology.DeleteAllTopologyConnections;
 import eu.valawai.mov.persistence.topology.DisableAllTopologyConnections;
 import io.quarkus.runtime.StartupEvent;
 import io.smallrye.config.Priorities;
+import io.vertx.mutiny.ext.web.Router;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
@@ -74,6 +75,33 @@ public class OnStart {
 			AddLog.fresh().withInfo().withMessage("Disabled the previous topology connections").store();
 		}
 
+	}
+
+	/**
+	 * Called when the application has been started.
+	 *
+	 * @param router for the webs.
+	 */
+	public void init(@Observes Router router) {
+
+		router.getWithRegex("/.*").last().handler(rc -> {
+
+			final var path = rc.normalizedPath();
+			if (!path.matches("/([ca|es|en]/)?index.html")) {
+
+				rc.fail(404);
+
+			} else {
+
+				var lang = "en";
+				if (path.matches("/([ca|es|en]/).*")) {
+
+					lang = path.substring(1, 3);
+				}
+				rc.reroute("/" + lang + "/index.html");
+			}
+
+		});
 	}
 
 }

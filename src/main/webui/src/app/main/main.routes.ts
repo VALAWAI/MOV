@@ -6,15 +6,12 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-import { MainComponent } from './main.component';
-
-const routes: Routes = [
+export const MAIN_ROUTES: Routes = [
 	{
 		path: '',
-		component: MainComponent,
+		loadComponent: () => import('./main.component').then(c => c.MainComponent),
 		children: [
 			{
 				path: 'status',
@@ -70,12 +67,6 @@ const routes: Routes = [
 				path: '**',
 				loadChildren: () => import('src/app/shared/not-found/not-found.module').then(m => m.NotFoundModule)
 			}
-
 		]
 	}
 ];
-@NgModule({
-	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
-})
-export class MainRoutingModule { }

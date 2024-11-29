@@ -12,30 +12,38 @@ body {
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.success-snackbar {
-	--mdc-snackbar-supporting-text-color: #155724;
-	--mdc-snackbar-container-color: #d4edda;
-	color: #155724;
-	background-color: #d4edda;
+
+/*
+ This expand the size when the error message is multiple lines
+*/
+.mat-mdc-form-field {
+  @apply w-full self-start;
+
+  .mat-mdc-form-field-subscript-wrapper {
+    @apply flex;
+
+    .mat-mdc-form-field-error-wrapper {
+      @apply static;
+    }
+
+    .mat-mdc-form-field-hint-wrapper {
+      @apply static;
+    }
+  }
 }
 
-.info-snackbar {
-	--mdc-snackbar-supporting-text-color: #004085;
-	--mdc-snackbar-container-color: #cce5ff;
-	color: #004085;
-	background-color: #cce5ff;
+/**
+ * Disable default snackbar color
+ */
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
 }
 
-.warn-snackbar {
-	--mdc-snackbar-supporting-text-color: #856404;
-	--mdc-snackbar-container-color: #fff3cd;
-	color: #856404;
-	background-color: #fff3cd;
-}
-
-.error-snackbar {
-	--mdc-snackbar-supporting-text-color: #721c24;
-	--mdc-snackbar-container-color: #f8d7da;
-	color: #721c24;
-	background-color: #f8d7da;
+/**
+ * Fix problem with material and tailwind css
+ */
+.mdc-notched-outline__notch {
+  border-right: none;
 }
