@@ -18,44 +18,43 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgIf } from '@angular/common';
-import { MatCell, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatTable } from '@angular/material/table';
+import { NgFor, NgIf } from '@angular/common';
 import { TimestampPipe } from '@app/shared/timestamp';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { ComponentNameBeautifier } from '@app/shared/component/view';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
 	standalone: true,
-    selector: 'app-logs',
-    imports: [
-        ReactiveFormsModule,
-        MatFormField,
-        MatInput,
+	selector: 'app-logs',
+	imports: [
+		ReactiveFormsModule,
+		MatFormField,
+		MatInput,
 		MatLabel,
 		MatSelect,
 		MatOption,
 		NgIf,
-		MatTable,
-		MatColumnDef,
-		MatHeaderCellDef,
-		MatHeaderCell,
-		MatCell,
 		TimestampPipe,
 		MatButton,
 		MatIcon,
 		ComponentNameBeautifier,
-		MatPaginator
-	    ],
-    templateUrl: './logs.component.html',
-    styleUrl: './logs.component.css'
+		MatPaginator,
+		MatCheckbox,
+		NgFor,
+		MatTableModule
+	],
+	templateUrl: './logs.component.html',
+	styleUrl: './logs.component.css'
 })
 export class LogsComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The columns to display.
 	 */
-	public displayedColumns: string[] = ['timestamp', 'level', 'message', 'payload', 'componentType','componentName'];
+	public displayedColumns: string[] = ['timestamp', 'level', 'message', 'payload', 'componentType', 'componentName'];
 
 	/**
 	 * The component to manage the messages.
@@ -226,7 +225,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 			}
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getLogRecordPage(pattern, level, component, type,orderBy, offset, this.pageSize).subscribe(
+		this.mov.getLogRecordPage(pattern, level, component, type, orderBy, offset, this.pageSize).subscribe(
 			{
 				next: page => this.page = page,
 				error: err => {

@@ -12,42 +12,38 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MessagesService } from 'src/app/shared/messages';
-import { MinConnectionPage, MovApiService } from 'src/app/shared/mov-api';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatTable } from '@angular/material/table';
-import { NgIf } from '@angular/common';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-
+import { NgFor, NgIf } from '@angular/common';
+import { MinConnectionPage, MovApiService } from '@app/shared/mov-api';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
 	standalone: true,
 	selector: 'app-topology-connections-search',
 	imports: [
+		NgIf,
 		ReactiveFormsModule,
 		MatFormField,
 		MatLabel,
 		MatSelect,
 		MatOption,
+		MatInput,
 		MatCheckbox,
 		MatButton,
 		RouterLink,
-		MatTable,
-		NgIf,
-		MatColumnDef,
-		MatHeaderCell,
-		MatHeaderCellDef,
-		MatCell,
-		MatCellDef,
-		MatIcon,
 		MatMenu,
-		MatMenuItem,
 		MatMenuTrigger,
-		MatPaginator
+		MatIcon,
+		MatPaginator,
+		NgFor,
+		MatTableModule
 	],
 	templateUrl: './search.component.html',
 	styleUrl: './search.component.css'

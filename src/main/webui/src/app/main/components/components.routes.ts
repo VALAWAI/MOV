@@ -14,19 +14,19 @@ export const COMPONENTS_ROUTES: Routes = [
 		children: [
 			{
 				path: 'register',
-				loadChildren: () => import('./register').then(m => m.RegisterComponentComponent)
+				loadComponent: () => import('./register').then(m => m.RegisterComponentComponent)
 			},
 			{
 				path: ':id/show',
-				loadChildren: () => import('./show').then(m => m.ShowComponentComponent)
+				loadComponent: () => import('./show').then(m => m.ShowComponentComponent)
 			},
 			{
 				path: ':id/unregister',
-				loadChildren: () => import('./unregister').then(m => m.UnregisterComponentComponent)
+				loadComponent: () => import('./unregister').then(m => m.UnregisterComponentComponent)
 			},
 			{
 				path: 'search',
-				loadChildren: () => import('./search').then(m => m.SearchComponent)
+				loadComponent: () => import('./search').then(m => m.SearchComponent)
 			},
 			{
 				path: '',

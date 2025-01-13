@@ -15,14 +15,14 @@ import { MessagesService } from 'src/app/shared/messages';
 import { COMPONENT_TYPE_NAMES, MinComponentPage, MovApiService } from 'src/app/shared/mov-api';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
-import { MatHeaderCell, MatTable } from '@angular/material/table';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
 	standalone: true,
@@ -38,12 +38,12 @@ import { NgIf } from '@angular/common';
 		MatCheckbox,
 		MatButton,
 		RouterLink,
-		MatTable,
 		MatMenu,
 		MatMenuTrigger,
-		MatHeaderCell,
 		MatIcon,
-		MatPaginator
+		MatPaginator,
+		NgFor,
+		MatTableModule
 	],
 	templateUrl: './search.component.html',
 	styleUrl: './search.component.css'

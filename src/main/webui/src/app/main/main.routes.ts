@@ -15,19 +15,19 @@ export const MAIN_ROUTES: Routes = [
 		children: [
 			{
 				path: 'status',
-				loadChildren: () => import('./status').then(m => m.StatusComponent)
+				loadComponent: () => import('./status').then(m => m.StatusComponent)
 			},
 			{
 				path: 'logs',
-				loadChildren: () => import('./logs').then(m => m.LogsComponent)
+				loadComponent: () => import('./logs').then(m => m.LogsComponent)
 			},
 			{
 				path: 'components',
 				loadChildren: () => import('./components').then(m => m.COMPONENTS_ROUTES)
 			},
 			{
-				path: 'topology/connections',
-				loadChildren: () => import('./topology/connections').then(m => m.TOPOLOGY_CONNECTIONS_ROUTES)
+				path: 'topology',
+				loadChildren: () => import('./topology').then(m => m.TOPOLOGY_ROUTES)
 			},
 			{
 				path: '',

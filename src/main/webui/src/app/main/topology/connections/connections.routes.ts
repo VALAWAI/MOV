@@ -14,19 +14,19 @@ export const TOPOLOGY_CONNECTIONS_ROUTES: Routes = [
 		children: [
 			{
 				path: ':id/show',
-				loadChildren: () => import('./show').then(m => m.ShowTopologyConnectionComponent)
+				loadComponent: () => import('./show').then(m => m.ShowTopologyConnectionComponent)
 			},
 			{
 				path: ':id/change',
-				loadChildren: () => import('./change').then(m => m.ChangeTopologyConnectionComponent)
+				loadComponent: () => import('./change').then(m => m.ChangeTopologyConnectionComponent)
 			},
 			{
 				path: 'create',
-				loadChildren: () => import('./create').then(m => m.CreateTopologyConnectionComponent)
+				loadComponent: () => import('./create').then(m => m.CreateTopologyConnectionComponent)
 			},
 			{
 				path: 'search',
-				loadChildren: () => import('./search').then(m => m.TopologyConnectionsSearchComponent)
+				loadComponent: () => import('./search').then(m => m.TopologyConnectionsSearchComponent)
 			},
 			{
 				path: '',
