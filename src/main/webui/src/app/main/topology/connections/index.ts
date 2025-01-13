@@ -7,4 +7,4 @@
 */
 
 
-export { ComponentSelectorComponent } from './component-selector.component';
+export { TOPOLOGY_CONNECTIONS_ROUTES } from './connections.routes';

@@ -1,7 +1,7 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.4.0 (November 29,2024)
+## Version 1.4.0 (January 13,2024)
 
  - Add health checking
  - Add go to index.html if page not found

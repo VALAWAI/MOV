@@ -9,11 +9,25 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MainService } from './main.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-	selector: 'app-main',
-	templateUrl: './main.component.html',
-	styleUrls: ['./main.component.css']
+	standalone: true,
+    selector: 'app-main',
+    imports: [
+        RouterOutlet,
+        MatIcon,
+        MatMenu,
+        MatMenuTrigger,
+        MatMenuItem,
+        RouterLink,
+        AsyncPipe
+    ],
+    templateUrl: './main.component.html',
+    styleUrl: './main.component.css'
 })
 export class MainComponent {
 

@@ -7,4 +7,4 @@
 */
 
 
-export { ComponentSelectorComponent } from './component-selector.component';
+export { UnregisterComponentComponent } from './unregister-component.component';

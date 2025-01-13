@@ -8,18 +8,47 @@
 
 import { Component, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MessagesService } from 'src/app/shared/messages';
 import { COMPONENT_TYPE_NAMES, MinComponentPage, MovApiService } from 'src/app/shared/mov-api';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { RouterLink } from '@angular/router';
+import { MatHeaderCell, MatTable } from '@angular/material/table';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
 
 @Component({
-	selector: 'app-components',
-	templateUrl: './components.component.html',
-	styleUrls: ['./components.component.css']
+	standalone: true,
+	selector: 'app-components-search',
+	imports: [
+		NgIf,
+		ReactiveFormsModule,
+		MatFormField,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		MatInput,
+		MatCheckbox,
+		MatButton,
+		RouterLink,
+		MatTable,
+		MatMenu,
+		MatMenuTrigger,
+		MatHeaderCell,
+		MatIcon,
+		MatPaginator
+	],
+	templateUrl: './search.component.html',
+	styleUrl: './search.component.css'
 })
-export class ComponentsComponent implements OnInit {
+export class SearchComponent implements OnInit {
 
 	/**
 	 * The columns to display.

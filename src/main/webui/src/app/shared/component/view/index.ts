@@ -8,4 +8,4 @@
 
 
 export { ComponentViewComponent } from './component-view.component';
-export { ComponentViewModule } from './component-view.module';
+export { ComponentNameBeautifier } from './component-name-beautifierr.pipe';

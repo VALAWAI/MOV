@@ -9,12 +9,30 @@
 import { Component, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
-import { ConnectionToCreate, MovApiService, Component as MOVComponent, MinComponent, LogRecord, ChannelSchema } from 'src/app/shared/mov-api';
+import { ConnectionToCreate, MovApiService, Component as MOVComponent, LogRecord, ChannelSchema } from 'src/app/shared/mov-api';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { ComponentSelectorComponent } from '@app/shared/component/selector';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { LoadingComponent } from '@app/shared/loading';
 
 @Component({
-	selector: 'app-create-topology-connection',
+	standalone: true,
+	selector: 'app-topology-connections-create',
+	imports: [
+		NgIf,
+		ReactiveFormsModule,
+		ComponentSelectorComponent,
+		MatFormField,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		NgIf,
+		MatError,
+		LoadingComponent
+	],
 	templateUrl: './create-topology-connection.component.html',
 	styleUrls: ['./create-topology-connection.component.css']
 })

@@ -6,14 +6,21 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { HealthStatus } from 'src/app/shared/mov-api';
 
 
 @Component({
-	selector: 'app-health-status',
-	templateUrl: './health-status.component.html',
-	styleUrls: ['./health-status.component.css']
+	standalone: true,
+    selector: 'app-health-status',
+    imports: [
+        NgIf,
+		MatIcon
+	    ],
+    templateUrl: './health-status.component.html',
+    styleUrl: './health-status.component.css'
 })
 export class HealthStatusComponent {
 

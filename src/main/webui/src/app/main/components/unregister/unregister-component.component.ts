@@ -12,11 +12,21 @@ import { MessagesService } from 'src/app/shared/messages';
 import { MovApiService } from 'src/app/shared/mov-api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractComponentComponent } from '../abstract-component.component';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { LoadingComponent } from '@app/shared/loading';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-	selector: 'app-unregistercomponent',
-	templateUrl: './unregister-component.component.html',
-	styleUrls: ['./unregister-component.component.css']
+	standalone: true,
+    selector: 'app-components-unregister',
+    imports: [
+        NgIf,
+        LoadingComponent,
+        AsyncPipe,
+		MatButton
+    ],
+    templateUrl: './unregister-component.component.html',
+    styleUrl: './unregister-component.component.css'
 })
 export class UnregisterComponentComponent extends AbstractComponentComponent {
 

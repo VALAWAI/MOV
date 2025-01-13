@@ -7,5 +7,4 @@
 */
 
 
-export { TimestampModule } from './timestamp.module';
 export { TimestampPipe } from './timestamp.pipe';

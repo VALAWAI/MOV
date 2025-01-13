@@ -10,14 +10,31 @@ import { Component, OnDestroy } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { MovApiService } from 'src/app/shared/mov-api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
 import { Subscription } from 'rxjs';
-
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { LoadingComponent } from '@app/shared/loading';
+import { TimestampPipe } from '@app/shared/timestamp';
 
 
 @Component({
-	selector: 'app-show-topology-connection',
+	standalone: true,
+	selector: 'app-topology-connections-show',
+	imports: [
+		NgIf,
+		MatIcon,
+		RouterLink,
+		MatButton,
+		NgxJsonViewerModule,
+		NgFor,
+		LoadingComponent,
+		TimestampPipe,
+		AsyncPipe
+	],
 	templateUrl: './show-topology-connection.component.html',
 	styleUrls: ['./show-topology-connection.component.css']
 })

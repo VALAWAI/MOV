@@ -7,4 +7,4 @@
 */
 
 
-export { ComponentSelectorComponent } from './component-selector.component';
+export { ChangeTopologyConnectionComponent } from './change-topology-connection.component';

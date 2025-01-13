@@ -6,7 +6,5 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-export * from './main.component';
-export * from './main.module';
-export * from './main-routing.module';
-export * from './main.service';
+
+export { MainService } from './main.service';

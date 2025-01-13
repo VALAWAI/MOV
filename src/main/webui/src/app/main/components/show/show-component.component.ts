@@ -10,15 +10,28 @@ import { Component, OnDestroy } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { MovApiService } from 'src/app/shared/mov-api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractComponentComponent } from '../abstract-component.component';
 import { Subscription } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { LoadingComponent } from '@app/shared/loading';
+import { ComponentViewComponent } from '@app/shared/component/view';
+import { AsyncPipe, NgIf } from '@angular/common';
 
 
 @Component({
-	selector: 'app-show-component',
-	templateUrl: './show-component.component.html',
-	styleUrls: ['./show-component.component.css']
+	standalone: true,
+    selector: 'app-components-show',
+    imports: [
+		NgIf,
+        MatButton,
+        LoadingComponent,
+		ComponentViewComponent,
+		AsyncPipe,
+		RouterLink
+    ],
+    templateUrl: './show-component.component.html',
+    styleUrl: './show-component.component.css'
 })
 export class ShowComponentComponent extends AbstractComponentComponent implements OnDestroy {
 

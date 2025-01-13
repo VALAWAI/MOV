@@ -7,19 +7,40 @@
 */
 
 
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
+import { LoadingComponent } from 'src/app/shared/loading';
 import { ComponentType, LogRecord, MovApiService } from 'src/app/shared/mov-api';
 import { ComponentToRegister } from 'src/app/shared/mov-api/components/component-to-register.model';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 
 @Component({
-	selector: 'app-register-component',
-	templateUrl: './register-component.component.html',
-	styleUrls: ['./register-component.component.css']
+	standalone: true,
+    selector: 'app-components-register',
+    imports: [
+        NgIf,
+        ReactiveFormsModule,
+        MatFormField,
+		MatLabel,
+        MatSelect,
+        MatOption,
+        MatInput,
+        MatError,
+		MatButton,
+		LoadingComponent,
+		CdkTextareaAutosize
+    ],
+    templateUrl: './register-component.component.html',
+    styleUrl: './register-component.component.css'
 })
 export class RegisterComponentComponent implements OnInit {
 

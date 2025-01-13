@@ -15,48 +15,19 @@ export const MAIN_ROUTES: Routes = [
 		children: [
 			{
 				path: 'status',
-				loadChildren: () => import('./status/status.module').then(m => m.StatusModule)
+				loadChildren: () => import('./status').then(m => m.StatusComponent)
 			},
 			{
 				path: 'logs',
-				loadChildren: () => import('./logs/logs.module').then(m => m.LogsModule)
-			},
-			{
-				path: 'components/register',
-				loadChildren: () => import('./components/register/register-component.module').then(m => m.RegisterComponentModule)
-			},
-			{
-				path: 'components/:id/show',
-				loadChildren: () => import('./components/show/show-component.module').then(m => m.ShowComponentModule)
-			},
-			{
-				path: 'components/:id/unregister',
-				loadChildren: () => import('./components/unregister/unregister-component.module').then(m => m.UnregisterComponentModule)
+				loadChildren: () => import('./logs').then(m => m.LogsComponent)
 			},
 			{
 				path: 'components',
-				loadChildren: () => import('./components/components.module').then(m => m.ComponentsModule)
-			},
-			{
-				path: 'topology/connections/:id/show',
-				loadChildren: () => import('./topology/connections/show/show-topology-connection.module').then(m => m.ShowTopologyConnectionModule)
-			},
-			{
-				path: 'topology/connections/:id/change',
-				loadChildren: () => import('./topology/connections/change/change-topology-connection.module').then(m => m.ChangeTopologyConnectionModule)
-			},
-			{
-				path: 'topology/connections/create',
-				loadChildren: () => import('./topology/connections/create/create-topology-connection.module').then(m => m.CreateTopologyConnectionModule)
+				loadChildren: () => import('./components').then(m => m.COMPONENTS_ROUTES)
 			},
 			{
 				path: 'topology/connections',
-				loadChildren: () => import('./topology/connections/topology-connections.module').then(m => m.TopologyConnectionsModule)
-			},
-			{
-				path: 'topology',
-				pathMatch: 'full',
-				redirectTo: 'topology/connections'
+				loadChildren: () => import('./topology/connections').then(m => m.TOPOLOGY_CONNECTIONS_ROUTES)
 			},
 			{
 				path: '',
@@ -65,7 +36,7 @@ export const MAIN_ROUTES: Routes = [
 			},
 			{
 				path: '**',
-				loadChildren: () => import('src/app/shared/not-found/not-found.module').then(m => m.NotFoundModule)
+				loadComponent: () => import('src/app/shared/not-found').then(m => m.NotFoundComponent)
 			}
 		]
 	}

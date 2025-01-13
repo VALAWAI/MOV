@@ -6,21 +6,49 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { DialogRef } from '@angular/cdk/dialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { COMPONENT_TYPE_NAMES, LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
 import { ShowLogDialog } from './show-log.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { NgIf } from '@angular/common';
+import { MatCell, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatTable } from '@angular/material/table';
+import { TimestampPipe } from '@app/shared/timestamp';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { ComponentNameBeautifier } from '@app/shared/component/view';
 
 @Component({
-	selector: 'app-logs',
-	templateUrl: './logs.component.html',
-	styleUrls: ['./logs.component.css']
+	standalone: true,
+    selector: 'app-logs',
+    imports: [
+        ReactiveFormsModule,
+        MatFormField,
+        MatInput,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		NgIf,
+		MatTable,
+		MatColumnDef,
+		MatHeaderCellDef,
+		MatHeaderCell,
+		MatCell,
+		TimestampPipe,
+		MatButton,
+		MatIcon,
+		ComponentNameBeautifier,
+		MatPaginator
+	    ],
+    templateUrl: './logs.component.html',
+    styleUrl: './logs.component.css'
 })
 export class LogsComponent implements OnInit, OnDestroy {
 

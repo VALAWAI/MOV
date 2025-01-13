@@ -15,7 +15,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  *   DatePipe
 */
 @Pipe({
-	standalone: false,
+	standalone: true,
 	name: 'timestamp'
 })
 export class TimestampPipe implements PipeTransform {

@@ -7,4 +7,5 @@
 */
 
 
-export { ComponentSelectorComponent } from './component-selector.component';
+export { HealthStatusComponent } from './health-status.component';
+export { StatusComponent } from './status.component';

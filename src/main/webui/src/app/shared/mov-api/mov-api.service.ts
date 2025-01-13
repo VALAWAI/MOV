@@ -92,7 +92,7 @@ export class MovApiService {
 				|| typeof params[key] === 'number' || params[key] instanceof Number
 			) {
 
-				httpParams = httpParams.append(key, params[key]);
+				httpParams = httpParams.append(key, String(params[key]));
 			}
 		}
 		return httpParams;

@@ -7,4 +7,5 @@
 */
 
 
-export { ComponentSelectorComponent } from './component-selector.component';
+export { LogsComponent } from './logs.component';
+export { ShowLogDialog } from './show-log.dialog';

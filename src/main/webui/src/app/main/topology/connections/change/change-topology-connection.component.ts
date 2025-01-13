@@ -10,12 +10,26 @@ import { Component, OnDestroy } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { ChangeConnection, MovApiService, TOPOLOGY_ACTION_NAMES, TopologyAction } from 'src/app/shared/mov-api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
 import { Subscription } from 'rxjs';
+import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { LoadingComponent } from '@app/shared/loading';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-	selector: 'app-change-topology-connection',
+	standalone: true,
+	selector: 'app-topology-connections-change',
+	imports: [
+		NgIf,
+		LoadingComponent,
+		NgSwitch,
+		NgSwitchCase,
+		NgSwitchDefault,
+		MatButton,
+		RouterLink,
+		AsyncPipe
+	],
 	templateUrl: './change-topology-connection.component.html',
 	styleUrls: ['./change-topology-connection.component.css']
 })

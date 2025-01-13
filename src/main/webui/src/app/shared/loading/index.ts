@@ -7,5 +7,4 @@
 */
 
 
-export { LoadingModule } from './loading.module';
 export { LoadingComponent } from './loading.component';

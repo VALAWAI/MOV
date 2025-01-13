@@ -1,15 +1,19 @@
-<div class="flex flex-row justify-center">
-	<div class="p-7 gap-3 flex flex-col border rounded-md border-amber-300 content-center max-w-96">
-		<div class="font-bold text-lg"
-			i18n="Not found title@@shared_not-found_title">Page not found</div>
-		<div class="text-base"
-			i18n="Not found message@@shared_not-found_message">The page you
-			are looking for might have been removed, or its name changed, or it
-			temporarily unavailable.</div>
-		<div class="place-content-center">
-			<button mat-flat-button color="primary"
+<div
+	class="p-11 g-3 flex flex-row items-center justify-center content-center">
+	<div></div>
+	<div class="grow box-border rounded-md border-4 bg-white px-4 max-w-lg p-4">
+		<div class="text-center">
+			<h1 class="text-9xl font-black text-red-300"
+				i18n="Not found title@@shared_not-found_title">Page not found</h1>
+			<p class="mt-4 text-gray-500"
+				i18n="Not found message@@shared_not-found_message">The page you
+				are looking for might have been removed, or its name changed, or it
+				temporarily unavailable</p>
+			<a
+				class="mt-6 inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring"
 				i18n="Not found go home page@@shared_not-found_go-home"
-				routerLink="/">Go to home page</button>
+				routerLink="/">Go to home page </a>
 		</div>
 	</div>
+	<div></div>
 </div>

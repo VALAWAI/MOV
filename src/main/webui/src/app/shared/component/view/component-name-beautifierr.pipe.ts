@@ -17,7 +17,7 @@ import { MinComponent} from 'src/app/shared/mov-api';
  *   Echo message
 */
 @Pipe({
-	standalone: false,
+	standalone: true,
 	name: 'componentNameBeautifier'
 })
 export class ComponentNameBeautifier implements PipeTransform {

@@ -8,20 +8,51 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { MessagesService } from 'src/app/shared/messages';
 import { MinConnectionPage, MovApiService } from 'src/app/shared/mov-api';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
+import { MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatTable } from '@angular/material/table';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 
 @Component({
-	selector: 'app-topology-connections',
-	templateUrl: './topology-connections.component.html',
-	styleUrls: ['./topology-connections.component.css']
+	standalone: true,
+	selector: 'app-topology-connections-search',
+	imports: [
+		ReactiveFormsModule,
+		MatFormField,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		MatCheckbox,
+		MatButton,
+		RouterLink,
+		MatTable,
+		NgIf,
+		MatColumnDef,
+		MatHeaderCell,
+		MatHeaderCellDef,
+		MatCell,
+		MatCellDef,
+		MatIcon,
+		MatMenu,
+		MatMenuItem,
+		MatMenuTrigger,
+		MatPaginator
+	],
+	templateUrl: './search.component.html',
+	styleUrl: './search.component.css'
 })
-export class TopologyConnectionsComponent implements OnInit, OnDestroy {
+export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The columns to display.

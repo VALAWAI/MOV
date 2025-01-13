@@ -7,10 +7,13 @@
 */
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { MatError, MatFormField, MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
-
+import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MinComponent, MinComponentPage, MovApiService, Component as MOVComponent } from 'src/app/shared/mov-api';
+import { NgIf } from '@angular/common';
+import { MatLabel, MatOption } from '@angular/material/select';
 
 
 export function requiredMinComponent(): ValidatorFn {
@@ -29,9 +32,21 @@ export function requiredMinComponent(): ValidatorFn {
 }
 
 @Component({
+	standalone: true,
 	selector: 'app-component-selector',
+	imports: [
+		ReactiveFormsModule,
+		MatInput,
+		MatLabel,
+		MatAutocomplete,
+		MatFormField,
+		MatError,
+		NgIf,
+		MatOption,
+		MatAutocompleteTrigger
+	],
 	templateUrl: './component-selector.component.html',
-	styleUrls: ['./component-selector.component.css']
+	styleUrls: ['./component-selector.component.css'],
 })
 export class ComponentSelectorComponent implements OnInit, OnDestroy {
 
