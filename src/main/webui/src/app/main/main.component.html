@@ -21,6 +21,18 @@
 			</mat-menu>
 		</div>
 		<div class="grow text-center text-xl py-2 font-bold">{{headerTitle|async}}</div>
+		<button mat-icon-button [matMenuTriggerFor]="localeMenu"
+			class="flex-none text-right">
+			<mat-icon>language</mat-icon>
+		</button>
+		<mat-menu #localeMenu="matMenu">
+		<button *ngIf="!isLocalizedIn('ca')" mat-menu-item
+			(click)="changeLocaleTo('ca')">Català</button>
+		<button *ngIf="!isLocalizedIn('en')" mat-menu-item
+			(click)="changeLocaleTo('en')">English</button>
+		<button *ngIf="!isLocalizedIn('es')" mat-menu-item
+			(click)="changeLocaleTo('es')">Español</button>
+		</mat-menu>
 	</header>
 	<div class="grow">
 		<router-outlet></router-outlet>
@@ -50,8 +62,7 @@
 					Innovation Council (EIC) research and innovation programme under
 					Grant Agreement number 101070930.</div>
 				<div>
-					<img class="h-16"
-						src="images/EN-Funded-by-the-EU-NEG-768x161.png"
+					<img class="h-16" src="images/EN-Funded-by-the-EU-NEG-768x161.png"
 						alt="EU funding logo">
 				</div>
 			</div>

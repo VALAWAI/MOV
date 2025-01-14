@@ -11,23 +11,25 @@ import { Observable } from 'rxjs';
 import { MainService } from './main.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
+import {  RouterOutlet, RouterLink } from '@angular/router';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { LOCALE_ID, Inject } from '@angular/core';
 
 @Component({
 	standalone: true,
-    selector: 'app-main',
-    imports: [
-        RouterOutlet,
-        MatIcon,
-        MatMenu,
-        MatMenuTrigger,
-        MatMenuItem,
-        RouterLink,
-        AsyncPipe
-    ],
-    templateUrl: './main.component.html',
-    styleUrl: './main.component.css'
+	selector: 'app-main',
+	imports: [
+		RouterOutlet,
+		MatIcon,
+		MatMenu,
+		MatMenuTrigger,
+		MatMenuItem,
+		RouterLink,
+		AsyncPipe,
+		NgIf
+	],
+	templateUrl: './main.component.html',
+	styleUrl: './main.component.css'
 })
 export class MainComponent {
 
@@ -41,10 +43,45 @@ export class MainComponent {
 	 *  Create the component.
 	 */
 	constructor(
-		private main: MainService
+		private main: MainService,
+		@Inject(LOCALE_ID) private locale: string
 	) {
 
 		this.headerTitle = this.main.headerTitle();
+	}
+
+	/**
+	 * Change the locale of the application
+	 */
+	public changeLocaleTo(lang: string) {
+
+		var path = '';
+		var host = '';
+		var href = window.location.href;
+		var index = href.indexOf('/main/');
+		if (index > 0) {
+
+			path = href.substring(index);
+			host = href.substring(0, index);
+		}
+		if (host.match(/\/[a-z]{2}$/)) {
+
+			host = host.substring(0, host.length - 2);
+
+		} else if (!host.endsWith('/')) {
+
+			host = host + '/';
+		}
+		window.location.href = host + lang + path;
+
+	}
+
+	/**
+	 * Check if the app is localized in a language.
+	 */
+	public isLocalizedIn(lang: string) {
+
+		return this.locale != null && this.locale.indexOf(lang) > -1;
 	}
 
 
