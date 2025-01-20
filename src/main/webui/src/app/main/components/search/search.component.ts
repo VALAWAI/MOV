@@ -19,7 +19,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -38,12 +38,11 @@ import { MatTableModule } from '@angular/material/table';
 		MatCheckbox,
 		MatButton,
 		RouterLink,
-		MatMenu,
-		MatMenuTrigger,
 		MatIcon,
 		MatPaginator,
 		NgFor,
-		MatTableModule
+		MatTableModule,
+		MatMenuModule
 	],
 	templateUrl: './search.component.html',
 	styleUrl: './search.component.css'
