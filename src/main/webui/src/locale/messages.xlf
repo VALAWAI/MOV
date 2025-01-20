@@ -262,7 +262,7 @@
         <source>Components</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">The header title for the components </note>
       </trans-unit>
@@ -270,7 +270,7 @@
         <source>Cannot obtain the components</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <note priority="1" from="description">The error message whne can not get the components</note>
       </trans-unit>
@@ -506,7 +506,7 @@
         <source>Logs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">The header title for the logs </note>
       </trans-unit>
@@ -514,7 +514,7 @@
         <source>Cannot obtain the logs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">233</context>
         </context-group>
         <note priority="1" from="description">The error message whne can not get the logs </note>
       </trans-unit>
@@ -598,7 +598,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">35,36</context>
+          <context context-type="linenumber">47,48</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the status</note>
       </trans-unit>
@@ -610,7 +610,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">37,39</context>
+          <context context-type="linenumber">49,51</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the components</note>
       </trans-unit>
@@ -622,7 +622,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">39,41</context>
+          <context context-type="linenumber">51,53</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the topology</note>
       </trans-unit>
@@ -634,7 +634,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">41,44</context>
+          <context context-type="linenumber">53,56</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the logs</note>
       </trans-unit>
@@ -642,7 +642,7 @@
         <source>Index</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">32,34</context>
+          <context context-type="linenumber">44,46</context>
         </context-group>
         <note priority="1" from="description">The menu index item</note>
       </trans-unit>
@@ -650,7 +650,7 @@
         <source>Acknowledgement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">46,48</context>
+          <context context-type="linenumber">58,60</context>
         </context-group>
         <note priority="1" from="description">The menu acknowledgement item</note>
       </trans-unit>
@@ -658,7 +658,7 @@
         <source> VALAWAI project is funded by the European Union under the European Innovation Council (EIC) research and innovation programme under Grant Agreement number 101070930.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">49,54</context>
+          <context context-type="linenumber">61,65</context>
         </context-group>
         <note priority="1" from="description">The acknowledgement text</note>
       </trans-unit>
@@ -666,7 +666,7 @@
         <source>More</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">60,62</context>
+          <context context-type="linenumber">71,73</context>
         </context-group>
         <note priority="1" from="description">The menu more item</note>
       </trans-unit>
@@ -674,7 +674,7 @@
         <source>Project web page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">64,66</context>
+          <context context-type="linenumber">75,77</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project web page</note>
       </trans-unit>
@@ -682,7 +682,7 @@
         <source>Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">69,72</context>
+          <context context-type="linenumber">80,83</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project twitter</note>
       </trans-unit>
@@ -690,7 +690,7 @@
         <source>GitHub</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">74,76</context>
+          <context context-type="linenumber">85,87</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project GitHub</note>
       </trans-unit>
@@ -699,7 +699,7 @@
 				alt=&quot;VALAWAI logo&quot;&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">92,95</context>
         </context-group>
         <note priority="1" from="description">The copyright text</note>
       </trans-unit>
@@ -1103,7 +1103,7 @@
         <source>Topology connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">The header title for the connections component</note>
       </trans-unit>
@@ -1111,7 +1111,7 @@
         <source>Cannot obtain the topology connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <note priority="1" from="description">The error message when can not get the topology connections</note>
       </trans-unit>

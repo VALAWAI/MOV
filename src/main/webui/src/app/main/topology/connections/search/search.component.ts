@@ -20,7 +20,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { NgFor, NgIf } from '@angular/common';
+import {  NgIf } from '@angular/common';
 import { MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { MatTableModule } from '@angular/material/table';
 
@@ -42,7 +42,6 @@ import { MatTableModule } from '@angular/material/table';
 		MatMenuTrigger,
 		MatIcon,
 		MatPaginator,
-		NgFor,
 		MatTableModule
 	],
 	templateUrl: './search.component.html',
