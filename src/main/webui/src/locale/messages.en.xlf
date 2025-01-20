@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en-DV" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="main_doctor_text" datatype="html">
@@ -12,37 +12,159 @@
         <note priority="1" from="description">Test to the doctor page</note>
       </trans-unit>
       <trans-unit id="main_copyright-text" datatype="html">
-        <source> Copyright © 2022-2026 <x id="TAG_IMG" ctype="image" equiv-text="&lt;img class=&quot;h-4&quot; src=&quot;images/valawai-logo.png&quot;
-				alt=&quot;VALAWAI logo&quot;&gt;"/></source>
+        <source>Copyright © 2022-2026 <x id="TAG_IMG" ctype="image" equiv-text="&lt;img class=&quot;h-4&quot; src=&quot;images/valawai-logo.png&quot;     alt=&quot;VALAWAI logo&quot;&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
           <context context-type="linenumber">8,11</context>
         </context-group>
         <note priority="1" from="description">The copyright text</note>
       </trans-unit>
-      <trans-unit id="shared_not-found_title" datatype="html">
+      <trans-unit id="shared_not-found_title" datatype="html" xml:space="preserve">
         <source>Page not found</source>
+        <target state="translated">Page not found</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/not-found/not-found.component.html</context>
           <context context-type="linenumber">4,6</context>
         </context-group>
         <note priority="1" from="description">Not found title</note>
       </trans-unit>
-      <trans-unit id="shared_not-found_message" datatype="html">
+      <trans-unit id="shared_not-found_message" datatype="html" xml:space="preserve">
         <source>The page you are looking for might have been removed, or its name changed, or it temporarily unavailable</source>
+        <target state="translated">The page you are looking for might have been removed, or its name changed, or it is temporarily unavailable</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/not-found/not-found.component.html</context>
           <context context-type="linenumber">6,10</context>
         </context-group>
         <note priority="1" from="description">Not found message</note>
       </trans-unit>
-      <trans-unit id="shared_not-found_go-home" datatype="html">
-        <source>Go to home page </source>
+      <trans-unit id="shared_not-found_go-home" datatype="html" xml:space="preserve">
+        <source>Go to home page</source>
+        <target state="translated">Go to home page</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/not-found/not-found.component.html</context>
           <context context-type="linenumber">12,14</context>
         </context-group>
         <note priority="1" from="description">Not found go home page</note>
+      </trans-unit>
+      <trans-unit id="main_components_abstract_code_get-error" datatype="html" xml:space="preserve">
+        <source>Cannot get the component information</source>
+        <target state="translated">Cannot get the component information</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/abstract-component.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_type-label" datatype="html" xml:space="preserve">
+        <source>Type</source>
+        <target state="translated">Type</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_type-required-error" datatype="html" xml:space="preserve">
+        <source>You must select the type of component.</source>
+        <target state="translated">You must select the type of component.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-label" datatype="html" xml:space="preserve">
+        <source>Name</source>
+        <target state="translated">Name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-required-error" datatype="html" xml:space="preserve">
+        <source>You must write the name of component.</source>
+        <target state="translated">You must write the name of component.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-label" datatype="html" xml:space="preserve">
+        <source>Version</source>
+        <target state="translated">Version</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-placeholder" datatype="html" xml:space="preserve">
+        <source>Ex. c0_hello_world</source>
+        <target state="translated">Ex. c0_hello_world</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-required-error" datatype="html" xml:space="preserve">
+        <source>You must write the version of component.</source>
+        <target state="translated">You must write the version of component.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-pattern-error" datatype="html" xml:space="preserve">
+        <source>The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
+        <target state="translated">The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_asyncapi-version-required-error" datatype="html" xml:space="preserve">
+        <source>You must write the aync of component.</source>
+        <target state="translated">You must write the aync of component.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_register-action-label" datatype="html" xml:space="preserve">
+        <source>Register</source>
+        <target state="translated">Register</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">45,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_page-title" datatype="html" xml:space="preserve">
+        <source>Register a new component</source>
+        <target state="translated">Register a new component</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_error-message" datatype="html" xml:space="preserve">
+        <source>Cananot register the component</source>
+        <target state="translated">Cannot register the component</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-pattern-error" datatype="html" xml:space="preserve">
+        <source>The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
+        <target state="translated">The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-placeholder" datatype="html" xml:space="preserve">
+        <source>Ex. c0_hello_world</source>
+        <target state="translated">Ex. c0_hello_world</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
       </trans-unit>
     </body>
   </file>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en-DV" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="main_doctor_text" datatype="html">
@@ -11,38 +11,1313 @@
         </context-group>
         <note priority="1" from="description">Test to the doctor page</note>
       </trans-unit>
-      <trans-unit id="main_copyright-text" datatype="html">
-        <source> Copyright © 2022-2026 <x id="TAG_IMG" ctype="image" equiv-text="&lt;img class=&quot;h-4&quot; src=&quot;images/valawai-logo.png&quot;
-				alt=&quot;VALAWAI logo&quot;&gt;"/></source>
+      <trans-unit id="main_copyright-text" datatype="html" xml:space="preserve">
+        <source>Copyright © 2022-2026 <x id="TAG_IMG" ctype="image" equiv-text="&lt;img class=&quot;h-4&quot; src=&quot;images/logo.png&quot;     alt=&quot;VALAWAI logo&quot;&gt;"/></source>
+        <target state="translated">Copyright © 2022-2026 <x id="TAG_IMG" ctype="image" equiv-text="&lt;img class=&quot;h-4&quot; src=&quot;images/logo.png&quot;     alt=&quot;VALAWAI logo&quot;&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
           <context context-type="linenumber">8,11</context>
         </context-group>
         <note priority="1" from="description">The copyright text</note>
       </trans-unit>
-      <trans-unit id="shared_not-found_title" datatype="html">
+      <trans-unit id="shared_not-found_title" datatype="html" xml:space="preserve">
         <source>Page not found</source>
+        <target state="translated">Página no encontrada</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/not-found/not-found.component.html</context>
           <context context-type="linenumber">4,6</context>
         </context-group>
         <note priority="1" from="description">Not found title</note>
       </trans-unit>
-      <trans-unit id="shared_not-found_message" datatype="html">
+      <trans-unit id="shared_not-found_message" datatype="html" xml:space="preserve">
         <source>The page you are looking for might have been removed, or its name changed, or it temporarily unavailable</source>
+        <target state="translated">Es posible que la página que está buscando haya sido eliminada, haya cambiado de nombre o no esté disponible temporalmente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/not-found/not-found.component.html</context>
           <context context-type="linenumber">6,10</context>
         </context-group>
         <note priority="1" from="description">Not found message</note>
       </trans-unit>
-      <trans-unit id="shared_not-found_go-home" datatype="html">
-        <source>Go to home page </source>
+      <trans-unit id="shared_not-found_go-home" datatype="html" xml:space="preserve">
+        <source>Go to home page</source>
+        <target state="translated">Ir a la página de inicio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/not-found/not-found.component.html</context>
           <context context-type="linenumber">12,14</context>
         </context-group>
         <note priority="1" from="description">Not found go home page</note>
+      </trans-unit>
+      <trans-unit id="main_components_abstract_code_get-error" datatype="html" xml:space="preserve">
+        <source>Cannot get the component information</source>
+        <target state="translated">No se puede obtener la información del componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/abstract-component.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_type-label" datatype="html" xml:space="preserve">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_type-required-error" datatype="html" xml:space="preserve">
+        <source>You must select the type of component.</source>
+        <target state="translated">Debe seleccionar el tipo de componente.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-label" datatype="html" xml:space="preserve">
+        <source>Name</source>
+        <target state="translated">Nombre</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-placeholder" datatype="html" xml:space="preserve">
+        <source>Ex. c0_hello_world</source>
+        <target state="translated">Por ejemplo: c0_hola_mundo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-required-error" datatype="html" xml:space="preserve">
+        <source>You must write the name of component.</source>
+        <target state="translated">Debe escribir el nombre del componente.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-label" datatype="html" xml:space="preserve">
+        <source>Version</source>
+        <target state="translated">Versión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-placeholder" datatype="html" xml:space="preserve">
+        <source>Ex. c0_hello_world</source>
+        <target state="translated">Por ejemplo: c0_hola_mundo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-required-error" datatype="html" xml:space="preserve">
+        <source>You must write the version of component.</source>
+        <target state="translated">Debe escribir la versión del componente.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-pattern-error" datatype="html" xml:space="preserve">
+        <source>The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
+        <target state="translated">La versión debe seguir el patrón<x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_asyncapi-version-required-error" datatype="html" xml:space="preserve">
+        <source>You must write the aync of component.</source>
+        <target state="translated">Debe escribir el aync del componente.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_register-action-label" datatype="html" xml:space="preserve">
+        <source>Register</source>
+        <target state="translated">Registros</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">45,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_page-title" datatype="html" xml:space="preserve">
+        <source>Register a new component</source>
+        <target state="translated">Registrar un nuevo componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_error-message" datatype="html" xml:space="preserve">
+        <source>Cananot register the component</source>
+        <target state="translated">Cananot registrar el componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_search-label" datatype="html" xml:space="preserve">
+        <source>Name or description</source>
+        <target state="translated">Nombre o descripción</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-label" datatype="html" xml:space="preserve">
+        <source>Order by</source>
+        <target state="translated">Ordenar por</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-type" datatype="html" xml:space="preserve">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-name" datatype="html" xml:space="preserve">
+        <source>Name</source>
+        <target state="translated">Nombre</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-description" datatype="html" xml:space="preserve">
+        <source>Description</source>
+        <target state="translated">Descripción</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-reverse-label" datatype="html" xml:space="preserve">
+        <source>In reverse order</source>
+        <target state="translated">En orden inverso</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_types-label" datatype="html" xml:space="preserve">
+        <source>Filter components by type:</source>
+        <target state="translated">Filtrar componentes por tipo:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_reload-label" datatype="html" xml:space="preserve">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
+        <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Recargar </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_type-header-label" datatype="html" xml:space="preserve">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">51,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_name-header-label" datatype="html" xml:space="preserve">
+        <source>Name</source>
+        <target state="translated">Nombre</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">57,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_description-header-label" datatype="html" xml:space="preserve">
+        <source>Description</source>
+        <target state="translated">Descripción</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">63,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_actions-header-label" datatype="html" xml:space="preserve">
+        <source>Actions</source>
+        <target state="translated">Acciones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">69,71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_show-menu-label" datatype="html" xml:space="preserve">
+        <source>Show</source>
+        <target state="translated">Mostrar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister-menu-label" datatype="html" xml:space="preserve">
+        <source>Unregister</source>
+        <target state="translated">Dar de baja</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_show-connections-label" datatype="html" xml:space="preserve">
+        <source>Show connections</source>
+        <target state="translated">Mostrar todas las conexiones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">85,90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_code_page-title" datatype="html" xml:space="preserve">
+        <source>Components</source>
+        <target state="translated">Componentes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_code_get-error" datatype="html" xml:space="preserve">
+        <source>Cannot obtain the components</source>
+        <target state="translated">No se pueden obtener los componentes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_show_go-back-label" datatype="html" xml:space="preserve">
+        <source>Go to components</source>
+        <target state="translated">Ir a componentes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
+          <context context-type="linenumber">9,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_show_connections-label" datatype="html" xml:space="preserve">
+        <source>Show connections</source>
+        <target state="translated">Mostrar todas las conexiones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_show_go-back-to-connection-label" datatype="html" xml:space="preserve">
+        <source>Go to the connection</source>
+        <target state="translated">Ir a la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
+          <context context-type="linenumber">18,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_show_code_page-title" datatype="html" xml:space="preserve">
+        <source>Show Component</source>
+        <target state="translated">Ver componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/show/show-component.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_ok-label" datatype="html" xml:space="preserve">
+        <source>Yes, unregister it!</source>
+        <target state="translated">¡Sí, anular el registro!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
+          <context context-type="linenumber">16,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_code_page-title" datatype="html" xml:space="preserve">
+        <source>Unregister Component</source>
+        <target state="translated">Cancelar el registro del componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_code_success-msg" datatype="html" xml:space="preserve">
+        <source>Unregistered the component</source>
+        <target state="translated">No registrado el componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_search-mesage-label" datatype="html" xml:space="preserve">
+        <source>Message</source>
+        <target state="translated">Mensaje</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_search-component-label" datatype="html" xml:space="preserve">
+        <source>Component</source>
+        <target state="translated">Componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-label" datatype="html" xml:space="preserve">
+        <source>Order by</source>
+        <target state="translated">Ordenar por</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-timestamp" datatype="html" xml:space="preserve">
+        <source>Timestamp</source>
+        <target state="translated">Registro de fecha</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-level" datatype="html" xml:space="preserve">
+        <source>Level</source>
+        <target state="translated">Nivel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-message" datatype="html" xml:space="preserve">
+        <source>Message</source>
+        <target state="translated">Mensaje</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-component-type" datatype="html" xml:space="preserve">
+        <source>Component type</source>
+        <target state="translated">Tipo de componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-component-name" datatype="html" xml:space="preserve">
+        <source>Component name</source>
+        <target state="translated">Nombre del componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-reverse-label" datatype="html" xml:space="preserve">
+        <source>In reverse order</source>
+        <target state="translated">En orden inverso</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_levels-label" datatype="html" xml:space="preserve">
+        <source>Filter logs messages with level:</source>
+        <target state="translated">Filtrar mensajes de registros con nivel:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_component-types-label" datatype="html" xml:space="preserve">
+        <source>Filter log messages by component type:</source>
+        <target state="translated">Filtrar mensajes de registro por tipo de componente:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_timestamp-column-label" datatype="html" xml:space="preserve">
+        <source>Time</source>
+        <target state="translated">Tiempo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_level-column-label" datatype="html" xml:space="preserve">
+        <source>Level</source>
+        <target state="translated">Nivel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">66,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_message-column-label" datatype="html" xml:space="preserve">
+        <source>Message</source>
+        <target state="translated">Mensaje</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">71,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_payload-column-label" datatype="html" xml:space="preserve">
+        <source>Payload</source>
+        <target state="translated">Carga útil</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">76,78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_component-type-column-label" datatype="html" xml:space="preserve">
+        <source>Component type</source>
+        <target state="translated">Tipo de componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">85,87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_component-name-column-label" datatype="html" xml:space="preserve">
+        <source>Component name</source>
+        <target state="translated">Nombre del componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">90,91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_code_page-title" datatype="html" xml:space="preserve">
+        <source>Logs</source>
+        <target state="translated">Registros</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_code_get-error" datatype="html" xml:space="preserve">
+        <source>Cannot obtain the logs</source>
+        <target state="translated">No se pueden obtener los registros</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-level-label" datatype="html" xml:space="preserve">
+        <source>Level</source>
+        <target state="translated">Nivel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-message-label" datatype="html" xml:space="preserve">
+        <source>Message</source>
+        <target state="translated">Mensaje</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-timestamp-label" datatype="html" xml:space="preserve">
+        <source>Timestamp</source>
+        <target state="translated">Registro de fecha</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-payload-label" datatype="html" xml:space="preserve">
+        <source>Payload</source>
+        <target state="translated">Carga útil</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-type-label" datatype="html" xml:space="preserve">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-name-label" datatype="html" xml:space="preserve">
+        <source>Name</source>
+        <target state="translated">Nombre</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-close" datatype="html" xml:space="preserve">
+        <source>Close</source>
+        <target state="translated">Cerrar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_status" datatype="html" xml:space="preserve">
+        <source>Status</source>
+        <target state="translated">Estado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_components" datatype="html" xml:space="preserve">
+        <source>Components</source>
+        <target state="translated">Componentes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_topology" datatype="html" xml:space="preserve">
+        <source>Topology</source>
+        <target state="translated">Topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_logs" datatype="html" xml:space="preserve">
+        <source>Logs</source>
+        <target state="translated">Registros</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">20,23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu-index" datatype="html" xml:space="preserve">
+        <source>Index</source>
+        <target state="translated">Índice</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu-acknowledgement" datatype="html" xml:space="preserve">
+        <source>Acknowledgement</source>
+        <target state="translated">Reconocimiento</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu-more" datatype="html" xml:space="preserve">
+        <source>More</source>
+        <target state="translated">Más</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_project-web-page" datatype="html" xml:space="preserve">
+        <source>Project web page</source>
+        <target state="translated">Página web del proyecto</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">64,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_project-twitter" datatype="html" xml:space="preserve">
+        <source>Twitter</source>
+        <target state="translated">Twitter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">69,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_menu_project-github" datatype="html" xml:space="preserve">
+        <source>GitHub</source>
+        <target state="translated">GitHub</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_status_version-label" datatype="html" xml:space="preserve">
+        <source>Version:</source>
+        <target state="translated">Versión:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/status/status.component.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_status_profile-label" datatype="html" xml:space="preserve">
+        <source>Profile:</source>
+        <target state="translated">Perfil:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/status/status.component.html</context>
+          <context context-type="linenumber">13,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_status_health-label" datatype="html" xml:space="preserve">
+        <source>Health:</source>
+        <target state="translated">Salud:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/status/status.component.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_status_code_page-title" datatype="html" xml:space="preserve">
+        <source>Status</source>
+        <target state="translated">Estado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/status/status.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_abstract_code_get-error" datatype="html" xml:space="preserve">
+        <source>Cannot get the topology connection information</source>
+        <target state="translated">No se puede obtener la información de conexión de la topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/abstract-topology-connection.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_question-disable-label" datatype="html" xml:space="preserve">
+        <source>Are you sure the disable the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
+        <target state="translated">¿Está seguro de deshabilitar la conexión entre <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> y <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">19,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_cancel-label" datatype="html" xml:space="preserve">
+        <source>Cancel</source>
+        <target state="translated">Cancelar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">42,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_ok-enable-label" datatype="html" xml:space="preserve">
+        <source>Yes, enable the connection</source>
+        <target state="translated">Sí, habilitar la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_ok-disable-label" datatype="html" xml:space="preserve">
+        <source>Yes, disable the connection</source>
+        <target state="translated">Sí, desactivar la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_ok-remove-label" datatype="html" xml:space="preserve">
+        <source>Yes, remove the connection</source>
+        <target state="translated">Sí, eliminar la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">40,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_cancel-enable-label" datatype="html" xml:space="preserve">
+        <source>No, do not enable the connection</source>
+        <target state="translated">No, no habilitar la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_cancel-disable-label" datatype="html" xml:space="preserve">
+        <source>No, do not disable the connection</source>
+        <target state="translated">No, no deshabilitar la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_cancel-remove-label" datatype="html" xml:space="preserve">
+        <source>No, do not remove the connection</source>
+        <target state="translated">No, no retire la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">54,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_code_page-title" datatype="html" xml:space="preserve">
+        <source>Change topology connection</source>
+        <target state="translated">Cambiar conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_error-message" datatype="html" xml:space="preserve">
+        <source>Cannot update the topology connection</source>
+        <target state="translated">No se puede actualizar la conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mmain_topology_connections_change_code_success-disable-msg" datatype="html" xml:space="preserve">
+        <source>Disabled the topology connection</source>
+        <target state="translated">Desactivado la conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mmain_topology_connections_change_code_success-enable-msg" datatype="html" xml:space="preserve">
+        <source>Enabled the topology connection</source>
+        <target state="translated">Habilitado la conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mmain_topology_connections_change_code_success-removed-msg" datatype="html" xml:space="preserve">
+        <source>Removed the topology connection</source>
+        <target state="translated">Se ha eliminado la conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_source-component-label" datatype="html" xml:space="preserve">
+        <source>Source component</source>
+        <target state="translated">Componente fuente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_source-channel-label" datatype="html" xml:space="preserve">
+        <source>Source channel</source>
+        <target state="translated">Canal de Origen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_source-channel-required-error" datatype="html" xml:space="preserve">
+        <source>You must select a source channel.</source>
+        <target state="translated">Debe seleccionar un canal de origen.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_target-component-label" datatype="html" xml:space="preserve">
+        <source>Target component</source>
+        <target state="translated">Componente objetivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_target-channel-label" datatype="html" xml:space="preserve">
+        <source>Target channel</source>
+        <target state="translated">Canal de destino</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_target-channel-required-error" datatype="html" xml:space="preserve">
+        <source>You must select a target channel.</source>
+        <target state="translated">Debe seleccionar un canal de destino.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_enabled-label" datatype="html" xml:space="preserve">
+        <source>Enable the connection</source>
+        <target state="translated">Habilitar la conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">34,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_add-label" datatype="html" xml:space="preserve">
+        <source>Add connection</source>
+        <target state="translated">Añadir conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_code_add-success" datatype="html" xml:space="preserve">
+        <source>Added the new connection</source>
+        <target state="translated">Se ha añadido la nueva conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_search-pattern-label" datatype="html" xml:space="preserve">
+        <source>Source or target</source>
+        <target state="translated">Origen o destino</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_order-by-label" datatype="html" xml:space="preserve">
+        <source>Order by</source>
+        <target state="translated">Ordenar por</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_order-by-source" datatype="html" xml:space="preserve">
+        <source>Source</source>
+        <target state="translated">Fuente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_order-by-target" datatype="html" xml:space="preserve">
+        <source>Target</source>
+        <target state="translated">Destinó</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_order-by-enabled" datatype="html" xml:space="preserve">
+        <source>Enabled</source>
+        <target state="translated">Habilitado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_order-by-reverse-label" datatype="html" xml:space="preserve">
+        <source>In reverse order</source>
+        <target state="translated">En orden inverso</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">21,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create-label" datatype="html" xml:space="preserve">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Create a new connection </source>
+        <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Crear una nueva conexión </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">28,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_go-back-to-component-label" datatype="html" xml:space="preserve">
+        <source>Go to the component</source>
+        <target state="translated">Ir al componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_source-header-label" datatype="html" xml:space="preserve">
+        <source>Source</source>
+        <target state="translated">Fuente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_target-header-label" datatype="html" xml:space="preserve">
+        <source>Target</source>
+        <target state="translated">Destinó</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">55,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_enabled-header-label" datatype="html" xml:space="preserve">
+        <source>Enabled</source>
+        <target state="translated">Habilitado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_actions-header-label" datatype="html" xml:space="preserve">
+        <source>Actions</source>
+        <target state="translated">Acciones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">69,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show-menu-label" datatype="html" xml:space="preserve">
+        <source>Show</source>
+        <target state="translated">Mostrar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_enable-menu-label" datatype="html" xml:space="preserve">
+        <source>Enable</source>
+        <target state="translated">Habilitar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">81,83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_disable-menu-label" datatype="html" xml:space="preserve">
+        <source>Disable</source>
+        <target state="translated">Desactivar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">85,87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_remove-menu-label" datatype="html" xml:space="preserve">
+        <source>Remove</source>
+        <target state="translated">Eliminar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">89,94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_code_page-title" datatype="html" xml:space="preserve">
+        <source>Topology connections</source>
+        <target state="translated">Conexiones de la topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_code_get-error" datatype="html" xml:space="preserve">
+        <source>Cannot obtain the topology connections</source>
+        <target state="translated">No se pueden obtener las conexiones de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_enabled-label" datatype="html" xml:space="preserve">
+        <source>Enabled</source>
+        <target state="translated">Habilitado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_create-timestamp-label" datatype="html" xml:space="preserve">
+        <source>Created at</source>
+        <target state="translated">Creado a las</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_update-timestamp-label" datatype="html" xml:space="preserve">
+        <source>Updated at</source>
+        <target state="translated">Actualizado a las</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_source-label" datatype="html" xml:space="preserve">
+        <source>Source</source>
+        <target state="translated">Fuente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_node-component-label" datatype="html" xml:space="preserve">
+        <source>Component</source>
+        <target state="translated">Componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">46,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_node-channel-label" datatype="html" xml:space="preserve">
+        <source>Channel</source>
+        <target state="translated">Canal</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">58,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_node-channel-publish-label" datatype="html" xml:space="preserve">
+        <source>Publish</source>
+        <target state="translated">Publicar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_target-label" datatype="html" xml:space="preserve">
+        <source>Target</source>
+        <target state="translated">Destinó</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_node-channel-subscribe-label" datatype="html" xml:space="preserve">
+        <source>Subscribe</source>
+        <target state="translated">Suscribir</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">64,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_subscriptions-label" datatype="html" xml:space="preserve">
+        <source>Subscriptions</source>
+        <target state="translated">Suscripciones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_go-back-label" datatype="html" xml:space="preserve">
+        <source>Go to connections</source>
+        <target state="translated">Ir a conexiones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">84,86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_go-back-to-component-connections-label" datatype="html" xml:space="preserve">
+        <source>Go to component connections</source>
+        <target state="translated">Ir a conexiones de componentes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="linenumber">89,92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_show_code_page-title" datatype="html" xml:space="preserve">
+        <source>Show topology conection</source>
+        <target state="translated">Mostrar conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_type-label" datatype="html" xml:space="preserve">
+        <source>Type</source>
+        <target state="translated">Tipo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_version-label" datatype="html" xml:space="preserve">
+        <source>Version</source>
+        <target state="translated">Versión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">8,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_api-version-label" datatype="html" xml:space="preserve">
+        <source>API version</source>
+        <target state="translated">Versión API</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_since-label" datatype="html" xml:space="preserve">
+        <source>Since</source>
+        <target state="translated">Desde</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_channels-label" datatype="html" xml:space="preserve">
+        <source>Channels</source>
+        <target state="translated">Canales</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_component-channel-subscribe-label" datatype="html" xml:space="preserve">
+        <source>Subscribe</source>
+        <target state="translated">Suscribir</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared_component_view_component-channel-publish-label" datatype="html" xml:space="preserve">
+        <source>Publish</source>
+        <target state="translated">Publicar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-pattern-error" datatype="html" xml:space="preserve">
+        <source>The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
+        <target state="translated">El nombre debe seguir el patrón <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_question" datatype="html" xml:space="preserve">
+        <source>Are you sure to unregister the component <x id="INTERPOLATION" equiv-text="{{component.name}}"/>?</source>
+        <target state="translated">¿Seguro que desea cancelar el registro del componente<x id="INTERPOLATION" equiv-text="{{component.name}}"/>?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_cancel-label" datatype="html" xml:space="preserve">
+        <source>No, do not unregister and go to the components</source>
+        <target state="translated">No, no lo dés de baja y ves a los componentes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
+          <context context-type="linenumber">20,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_code_error-msg" datatype="html" xml:space="preserve">
+        <source>Cannot unregister the component</source>
+        <target state="translated">No se puede cancelar el registro del componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_reload-label" datatype="html" xml:space="preserve">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
+        <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Recargar </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
+          <context context-type="linenumber">53,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-label" datatype="html" xml:space="preserve">
+        <source>Component</source>
+        <target state="translated">Componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register-label" datatype="html" xml:space="preserve">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
+        <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Registrar un nuevo componente </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_code_page-title" datatype="html" xml:space="preserve">
+        <source>Create topology connection</source>
+        <target state="translated">Crear conexión de topología</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_create_code_add-error" datatype="html" xml:space="preserve">
+        <source>Cannot add the new connection</source>
+        <target state="translated">No se puede añadir la nueva conexión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="linenumber">272</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_success-message" datatype="html" xml:space="preserve">
+        <source>Registered the new component</source>
+        <target state="translated">Registrado el nuevo componente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-description-label" datatype="html" xml:space="preserve">
+        <source>Description</source>
+        <target state="translated">Descripción</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_acknowledgement-text" datatype="html" xml:space="preserve">
+        <source>VALAWAI project is funded by the European Union under the European Innovation Council (EIC) research and innovation programme under Grant Agreement number 101070930.</source>
+        <target state="translated">El proyecto VALAWAI está financiado por la Unión Europea bajo el programa de investigación e innovación del Consejo Europeo de Innovación (EIC) bajo el Acuerdo de Subvención número 101070930.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">49,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_question-enable-label" datatype="html" xml:space="preserve">
+        <source>Are you sure the enable the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
+        <target state="translated">¿Está seguro de habilitar la conexión entre <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> y <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_reload-label" datatype="html" xml:space="preserve">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
+        <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Recargar </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main_topology_connections_change_question-remove-label" datatype="html" xml:space="preserve">
+        <source>Are you sure the remove the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
+        <target state="translated">¿Está seguro de eliminar la conexión entre <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> y <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="linenumber">24,28</context>
+        </context-group>
       </trans-unit>
     </body>
   </file>
