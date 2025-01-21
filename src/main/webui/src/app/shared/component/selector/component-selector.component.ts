@@ -85,7 +85,7 @@ export class ComponentSelectorComponent implements OnInit, OnDestroy {
 	public hasPublishChannel: boolean = false;
 
 	/**
-	 * The subscription mof teh changes of the component.
+	 * The subscription mof the changes of the component.
 	 */
 	private nameChanged: Subscription | null = null;
 

@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export abstract class AbstractComponentComponent implements OnInit {
 
 	/**
-	 * The indeitifer of teh component to show.
+	 * The indeitifer of the component to show.
 	 */
 	public componentId: string | null = null;
 

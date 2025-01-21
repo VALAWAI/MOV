@@ -136,7 +136,7 @@
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
           <context context-type="linenumber">7,9</context>
         </context-group>
-        <note priority="1" from="description">The label of the field to match the name or desciption of teh compponent</note>
+        <note priority="1" from="description">The label of the field to match the name or desciption of the compponent</note>
       </trans-unit>
       <trans-unit id="main_components_order-by-label" datatype="html">
         <source>Order by</source>
@@ -380,7 +380,7 @@
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
           <context context-type="linenumber">16,17</context>
         </context-group>
-        <note priority="1" from="description">The label to select the order of teh logs</note>
+        <note priority="1" from="description">The label to select the order of the logs</note>
       </trans-unit>
       <trans-unit id="main_logs_order-by-timestamp" datatype="html">
         <source>Timestamp</source>

@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export abstract class AbstractTopologyConnectionComponent implements OnInit {
 
 	/**
-	 * The indeitifer of teh connection to show.
+	 * The indeitifer of the connection to show.
 	 */
 	public connectionId: string | null = null;
 

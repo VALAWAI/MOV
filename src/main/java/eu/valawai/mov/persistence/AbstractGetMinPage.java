@@ -147,7 +147,7 @@ public abstract class AbstractGetMinPage<T, O extends AbstractGetMinPage<T, O>> 
 	protected abstract Uni<T> getPageWith(List<Bson> pipeline);
 
 	/**
-	 * Create teh filter to select the models to get on the page.
+	 * Create the filter to select the models to get on the page.
 	 *
 	 * @return the filter for the components of the page or {@code null} if not have
 	 *         to filter.

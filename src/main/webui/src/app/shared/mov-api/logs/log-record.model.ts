@@ -37,7 +37,7 @@ export class LogRecord {
 	public payload: string | null = null;
 
 	/**
-	 * The component that has generated teh log.
+	 * The component that has generated the log.
 	 */
 	public component: MinComponent | null = null;
 

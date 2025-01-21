@@ -37,7 +37,7 @@ export class ShowLogDialog {
 	public payload: any | null = null;
 
 	/**
-	 * Create teh compoennt.
+	 * Create the compoennt.
 	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: LogRecord

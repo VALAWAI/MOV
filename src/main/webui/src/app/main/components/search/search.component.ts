@@ -131,7 +131,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	/**
-	 * Called when teh page is changed.
+	 * Called when the page is changed.
 	 */
 	public pageChanged(event: PageEvent) {
 

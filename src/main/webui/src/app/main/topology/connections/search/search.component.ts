@@ -147,7 +147,7 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Called when teh page is changed.
+	 * Called when the page is changed.
 	 */
 	public pageChanged(event: PageEvent) {
 
