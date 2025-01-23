@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkiverse.quinoa.testing.QuinoaTestProfiles;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -32,7 +33,18 @@ public class OnStartTest {
 	@Test
 	public void shouldNotGetUndefinedIndex() {
 
-		given().when().get("/nz/index.html").then().statusCode(Status.NOT_FOUND.getStatusCode());
+		given().accept(ContentType.HTML).when().get("/nz/index.html").then()
+				.statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Test get environment from locale.
+	 */
+	@Test
+	public void shouldGetEnvironmentFromLanguage() {
+
+		given().when().get("/nz/env.js").then().statusCode(Status.OK.getStatusCode());
 
 	}
 
@@ -40,9 +52,9 @@ public class OnStartTest {
 	 * Test not delete an undefined treatment.
 	 */
 	@Test
-	public void shouldGetIndex() {
+	public void shouldNotGetIndexIfNotDefineHTmlMimeType() {
 
-		given().when().get("/index.html").then().statusCode(Status.OK.getStatusCode());
+		given().when().get("/index.html").then().statusCode(Status.NOT_FOUND.getStatusCode());
 
 	}
 

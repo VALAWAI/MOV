@@ -45,6 +45,12 @@ public class OnStart {
 	private static final Pattern INDEX_PATTERN = Pattern.compile(".*(/[a-z]{2})(/.*)?");
 
 	/**
+	 * The name of the context variable that is used to mark that the request is
+	 * re-routing.
+	 */
+	private static final String REROUTING_SOURCE = "re-routing-source";
+
+	/**
 	 * Called when the application has been started.
 	 *
 	 * @param event that contains the start status.
@@ -100,7 +106,7 @@ public class OnStart {
 				// redirect to the API resource
 				rc.reroute("/env.js");
 
-			} else if (this.isHtmlRequest(rc)) {
+			} else if (rc.get(REROUTING_SOURCE) == null && this.isHtmlRequest(rc)) {
 
 				final var matcher = INDEX_PATTERN.matcher(path);
 				var lang = "en";
@@ -110,6 +116,7 @@ public class OnStart {
 					lang = group.substring(1, 3);
 				}
 				// Redirect for one Page Angular
+				rc.put(REROUTING_SOURCE, path);
 				rc.reroute("/" + lang + "/index.html");
 
 			} else {
