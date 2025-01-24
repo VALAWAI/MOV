@@ -54,7 +54,7 @@ public class AddLogManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that can enable and disable a connection.
+	 * Check that can add a log message.
 	 */
 	@Test
 	public void shouldAddLog() {
@@ -71,4 +71,24 @@ public class AddLogManagerTest extends MovEventTestCase {
 		assertEquals(payload.payload, last.payload);
 
 	}
+
+	/**
+	 * Check that can add a log message that contains {.
+	 */
+	@Test
+	public void shouldAddLogWithQuadratorInMesage() {
+
+		final var payload = new AddLogPayloadTest().nextModel();
+		payload.message += "{ level: \"ERROR\", message: \"{'patient_id': 'ff6bf1b1-...M...\"} => Invalid log message";
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.addLogQueueName, payload));
+
+		final LogEntity last = this.assertItemNotNull(LogEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= last.timestamp);
+		assertEquals(payload.level, last.level);
+		assertEquals(payload.message, last.message);
+		assertEquals(payload.payload, last.payload);
+
+	}
+
 }

@@ -166,7 +166,15 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 	 */
 	public AddLog withMessage(String pattern, Object... args) {
 
-		this.log.message = MessageFormat.format(pattern, args);
+		if (args == null || args.length > 0) {
+
+			this.log.message = MessageFormat.format(pattern, args);
+
+		} else {
+
+			this.log.message = pattern;
+		}
+
 		return this;
 	}
 
@@ -300,6 +308,9 @@ public class AddLog extends AbstractEntityOperator<Boolean, AddLog> {
 				Log.errorv("Cannot store {0}", this.log);
 			}
 
+		}, error -> {
+
+			Log.errorv(error, "Cannot store {0}", this.log);
 		});
 
 	}

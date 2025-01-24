@@ -228,4 +228,27 @@ public class AddLogTest extends MasterOfValawaiTestCase {
 		assertEquals(json.encodePrettily(), last.payload);
 
 	}
+
+	/**
+	 * Should store a log message that contains the character '{'.
+	 *
+	 * @param level of the log message.
+	 */
+	@ParameterizedTest(name = "Should store a message of the level {0}")
+	@EnumSource(LogLevel.class)
+	public void shouldStoreLogMessageWithQuadratorAndLevelOf(LogLevel level) {
+
+		final var count = this.assertItemNotNull(LogEntity.count());
+		var message = ValueGenerator.nextPattern("Message of the log {0}");
+		message += "{ level: \"ERROR\", message: \"{'patient_id': 'ff6bf1b1-...M...\"} => Invalid log message";
+		AddLog.fresh().withLevel(level).withMessage(message).store();
+		this.waitUntil(() -> this.assertItemNotNull(LogEntity.count()), newCount -> newCount != count);
+
+		final Uni<LogEntity> find = LogEntity.findAll(Sort.descending("_id")).firstResult();
+		final var last = this.assertItemNotNull(find);
+		assertEquals(level, last.level);
+		assertEquals(message, last.message);
+
+	}
+
 }

@@ -7,6 +7,7 @@
  - Add go to index.html if page not found
  - Allow UI to change locale
  - Fix enable connections with the same source
+ - Fix add log message that contains '{'.
 
 
 ## Version 1.3.1 (August 16,2024)
