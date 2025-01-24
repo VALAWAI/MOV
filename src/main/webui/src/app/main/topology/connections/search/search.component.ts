@@ -18,11 +18,11 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import {  NgIf } from '@angular/common';
 import { MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { MatTableModule } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
 	standalone: true,
@@ -38,8 +38,7 @@ import { MatTableModule } from '@angular/material/table';
 		MatCheckbox,
 		MatButton,
 		RouterLink,
-		MatMenu,
-		MatMenuTrigger,
+		MatMenuModule,
 		MatIcon,
 		MatPaginator,
 		MatTableModule
