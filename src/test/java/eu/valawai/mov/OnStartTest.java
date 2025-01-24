@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 @QuarkusTest
 @TestProfile(QuinoaTestProfiles.Enable.class)
-public class OnStartTest {
+public class OnStartTest extends MasterOfValawaiTestCase {
 
 	/**
 	 * Test not get undefined index.

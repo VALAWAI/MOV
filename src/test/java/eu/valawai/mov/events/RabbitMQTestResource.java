@@ -32,6 +32,7 @@ public class RabbitMQTestResource implements QuarkusTestResourceLifecycleManager
 	/**
 	 * The RabbitMQ service container.
 	 */
+	@SuppressWarnings("resource")
 	static GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(RABBITMQ_DOCKER_NAME))
 			.withStartupAttempts(1).withEnv("RABBITMQ_DEFAULT_USER", "mov").withEnv("RABBITMQ_DEFAULT_PASS", "password")
 			.withExposedPorts(5672).waitingFor(Wait.forListeningPort());

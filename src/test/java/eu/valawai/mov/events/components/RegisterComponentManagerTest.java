@@ -472,7 +472,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		} catch (final Throwable error) {
 
-			fail("");
+			fail(error.getMessage());
 			return null;
 		}
 
@@ -562,4 +562,44 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 			assertTrue(now <= updated.updateTimestamp, "The connection is not updated");
 		}
 	}
+
+	/**
+	 * Check that a component is registered and it is notified when is done.
+	 */
+	@Test
+	public void shouldRegisterComponentAndNotifyWhenIsDone2() {
+
+		// The message to register the target component of the connection
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_notification_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
+				componentName);
+		final var queue = this.waitOpenQueue(queueName);
+
+		// register the component
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// wait notify the component is registered
+		final var registered = queue.waitReceiveMessage(ComponentPayload.class);
+		assertEquals(payload.name, registered.name);
+		final var expectedComponent = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+		assertEquals(expectedComponent.description, registered.description);
+		assertEquals(payload.version, registered.version);
+		assertEquals(expectedComponent.apiVersion, registered.apiVersion);
+		assertEquals(payload.type, registered.type);
+		assertTrue(now <= registered.since);
+		assertEquals(expectedComponent.channels, registered.channels);
+
+	}
+
 }

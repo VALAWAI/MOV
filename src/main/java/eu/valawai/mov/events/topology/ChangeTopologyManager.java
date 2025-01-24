@@ -14,6 +14,8 @@ import org.bson.types.ObjectId;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
+import com.mongodb.client.model.Filters;
+
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.events.ListenerService;
 import eu.valawai.mov.events.PayloadService;
@@ -24,6 +26,7 @@ import eu.valawai.mov.persistence.topology.EnableTopologyConnection;
 import eu.valawai.mov.persistence.topology.GetTopologyConnection;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.core.eventbus.EventBus;
@@ -189,8 +192,7 @@ public class ChangeTopologyManager {
 	 */
 	private void enableConnection(TopologyConnectionEntity connection, String connectionLog) {
 
-		final var source = connection.source.channelName;
-		this.listener.toMultiBody(this.listener.openConsumer(source).onItem().invoke(consumer -> {
+		if (!connection.enabled) {
 
 			EnableTopologyConnection.fresh().withConnection(connection.id).withAction(TopologyAction.ENABLE).execute()
 					.subscribe().with(done -> {
@@ -203,16 +205,49 @@ public class ChangeTopologyManager {
 								.withMessage("Opened connection {0}, but not marked as enabled", connectionLog).store();
 
 					});
+			final var source = connection.source.channelName;
+			if (!this.listener.isOpen(source)) {
 
-		})).subscribe().with(received -> {
+				this.listener.toMultiBody(this.listener.openConsumer(source)).subscribe().with(received -> {
 
+					this.handleConnectionMessage(source, received);
+
+				}, error -> {
+
+					AddLog.fresh().withError(error).withMessage("Cannot enable the connection {0}", connectionLog)
+							.store();
+				});
+
+			}
+
+		} else {
+
+			AddLog.fresh().withError().withMessage("Cannot enable the connection {0}", connectionLog).store();
+		}
+
+	}
+
+	/**
+	 * Called when a message is received from a channel.
+	 *
+	 * @param source   channel that has received the message
+	 * @param received message to send.
+	 */
+	private void handleConnectionMessage(String source, JsonObject received) {
+
+		final var query = Filters.and(Filters.eq("enabled", true), Filters.eq("source.channelName", source));
+		final Multi<TopologyConnectionEntity> search = TopologyConnectionEntity.find(query).stream();
+		search.subscribe().with(connection -> {
+
+			final var connectionLog = connection.id.toHexString() + " ( from '" + source + "' to '"
+					+ connection.target.channelName + "')";
 			this.handleConnectionMessage(connection, received, connectionLog);
 
 		}, error -> {
 
-			AddLog.fresh().withError(error).withMessage("Cannot enable the connection {0}", connectionLog).store();
+			AddLog.fresh().withError(error).withPayload(received)
+					.withMessage("Cannot process received message from the queue {0}", source).store();
 		});
-
 	}
 
 	/**

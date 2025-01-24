@@ -1,11 +1,12 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.4.0 (January 13,2024)
+## Version 1.4.0 (January 24,2024)
 
  - Add health checking
  - Add go to index.html if page not found
  - Allow UI to change locale
+ - Fix enable connections with the same source
 
 
 ## Version 1.3.1 (August 16,2024)

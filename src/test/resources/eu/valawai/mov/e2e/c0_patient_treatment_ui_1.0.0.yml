@@ -1,0 +1,531 @@
+asyncapi: '2.6.0'
+info:
+ title: C0 Patient treatment UI API
+ version: '1.0.0'
+ description: |
+  This VALAWAI component provide an user interface that any doctor can use to define a treatment
+  for a patient and receive feedback about it.
+ license:
+  name: GNU General Public License version 3
+  url: https://opensource.org/license/gpl-3-0/
+ contact:
+  name: VALAWAI
+  url: https://valawai.eu/
+
+channels:
+  valawai/c0/patient_treatment_ui/control/registered:
+    description: Notify this component when it has been registered.
+    subscribe:
+      message:
+        $ref: '#/components/messages/registered_component'
+
+  
+  valawai/c0/patient_treatment_ui/data/treatment:
+    description: Notify about a treatment to apply to a patient.
+    publish:
+      message:
+        $ref: '#/components/messages/treatment'
+
+  valawai/c0/patient_treatment_ui/data/treatment_value_feedback:
+    description: The feedback about a value associated to a treatment.
+    subscribe:
+      message:
+        $ref: '#/components/messages/treatment_value_feedback'
+
+  valawai/c0/patient_treatment_ui/data/treatment_action_feedback:
+    description: The feedback about an action of a treatment.
+    subscribe:
+      message:
+        $ref: '#/components/messages/treatment_action_feedback'
+
+
+components:
+  messages:
+    treatment:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/treatment_payload'
+
+    treatment_value_feedback:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/treatment_value_feedback_payload'
+
+    treatment_action_feedback:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/treatment_action_feedback_payload'
+
+    registered_component:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/component_payload'
+
+
+  schemas:
+    component_payload:
+      type: object
+      properties:
+        id:
+          description: The identifier of the component.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+        name:
+          description: The name of the component.
+          type: string
+          examples: 
+            - 'c0_voice_to_text'
+        description:
+          description: The description of the component.
+          type: string
+          examples: 
+            - 'Generate text from the ambient audio'
+        version:
+          description: The component version.
+          type: string
+          pattern: '\d+\.\d+\.\d+'
+          examples: 
+            - '1.0.5'
+        api_version:
+          description: The version of the component API.
+          type: string
+          pattern: '\d+\.\d+\.\d+'
+          examples: 
+            - '2.3.0'
+        type:
+          description: The type level of the component in the VALAWAI.
+          oneOf:
+            - $ref: '#/components/schemas/component_type'
+        since:
+          description: The epoch time, in seconds, since the component is available in VALAWAI.
+          type: integer
+          minimum: 0
+          examples: 
+            - '1709902001'
+        channels:
+          description: The channels that the component has.
+          type: array
+          items:
+            - $ref: '#/components/schemas/channel_schema'
+
+    component_type:
+      type: string
+      enum:
+        - 'C0'
+        - 'C1'
+        - 'C2'
+
+    channel_schema:
+      type: object
+      description: A schema that defines the messages that a channel can receive or send.
+      properties:
+        id:
+          description: The identifier of the channel.
+          type: string
+          examples: 
+            - 'valawai/c0/voice_to_text/data/audio'
+        description:
+          description: The description of the channel.
+          type: string
+          examples: 
+            - 'Provide the audio to convert to text'
+        subscribe:
+          description: The type of payload that the channel can receive.
+          oneOf:
+            - $ref: '#/components/schemas/payload_schema'
+        publish:
+          description: The type of payload that the channel can send.
+          oneOf:
+            - $ref: '#/components/schemas/payload_schema'
+
+    payload_schema:
+      type: object
+      discriminator: type
+      properties:
+        type:
+          type: string
+          enum:
+            - BASIC
+            - ENUM
+            - OBJECT
+            - ARRAY
+            - CONST
+            - REF
+            - ONE_OF
+            - ANY_OF
+            - ALL_OF
+      required:
+        - type
+
+    basic_payload_schema:
+      description: The basic payload schema.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'BASIC'
+            format:
+              type: string
+              description: The format of the basic type.
+              enum:
+                - 'INTEGER'
+                - 'NUMBER'
+                - 'BOOLEAN'
+                - 'STRING'
+
+    enum_payload_schema:
+      description: A payload that is defined as one value of a set.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ENUM'
+            values:
+              type: array
+              description: The possible enum values.
+              items:
+                - type: string
+
+    object_payload_schema:
+      description: A definition of a schema that describes an object.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'OBJECT'
+            id:
+              type: integer
+              description: The identifier used when this scheme is referred to by other components.
+            properties:
+              description: The properties that define the object.
+              additionalProperties:
+                $ref: '#/components/schemas/payload_schema'
+            
+    array_payload_schema:
+      description: A payload that is represented by an array of values.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ARRAY'
+            items:
+              description: The type for the elements on the array.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+
+    constant_payload_schema:
+      description: A payload that is a constant value.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'CONST'
+            value:
+              type: string
+              description: The constant of the schema.
+
+    reference_payload_schema:
+      description: A payload that is a reference to another schema.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'REF'
+            value:
+              type: integer
+              description: The identifier of the schema that this a reference.
+
+    one_of_payload_schema:
+      description: A payload that is one of the possible schemas.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ONE_OF'
+            items:
+              description: The possible schemas.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+
+    any_of_payload_schema:
+      description: A payload that is any of the possible schemas.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ANY_OF'
+            items:
+              description: The possible schemas.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+
+    all_of_payload_schema:
+      description: A payload that is a set of schemas.
+      allOf:
+        - $ref: '#/components/schemas/payload_schema'
+        - type: object
+          properties:
+            type:
+              const: 'ALL_OF'
+            items:
+              description: The schemas that has to match.
+              type: array
+              items:
+                - $ref: '#/components/schemas/payload_schema'
+
+    treatment_payload:
+      description: The payload that contains the information of a treatment.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The identifier of the treatment.
+          examples:
+           - "1234"
+        patient_id:
+          type: string
+          description: The identifier of the patient to apply the treatment.
+          examples:
+           - "4321"
+        created_time:
+          type: integer
+          description: The epoch time, in seconds, when the patient treatment is created.
+          examples:
+           - 1715342664
+        before_status:
+          description: The status before to apply the treatment.
+          oneOf:
+            - $ref: '#/components/schemas/patient_status_criteria_payload'
+        actions:
+          description:  The treatment actions to apply over the patient.
+          type: array
+          items:
+            - $ref: '#/components/schemas/treatment_action'
+        expected_status:
+          description: The expected status of the patient after applying the treatment.
+          oneOf:
+            - $ref: '#/components/schemas/patient_status_criteria_payload'
+    
+    treatment_action:
+      description:  >
+         The posible treatment actions to apply over a patient.
+          * 'CPR' The patient can receive a Cardiopulmonary resuscitation.
+          * 'TRANSPLANT' The patient need an organ transplant.
+          * 'ICU' The patient can be in the intensive curing unit.
+          * 'NIMV' The patient can have non-invasive mechanical ventilation.
+          * 'VASOACTIVE_DRUGS' The patient can receive vasoactive drugs;
+          * 'DIALYSIS' The patient can have dialysis.
+          * 'SIMPLE_CLINICAL_TRIAL' The patient can receive simple clinical trials.
+          * 'MEDIUM_CLINICAL_TRIAL' The patient can receive medium clinical trials.
+          * 'ADVANCED_CLINICAL_TRIAL' The patient can receive advanced clinical trials.
+          * 'PALLIATIVE_SURGERY' The patient can have palliative surgery.
+          * 'CURE_SURGERY' The patient can have surgery with the intention of curing.
+      type: string
+      enum:
+        -  CPR
+        - TRANSPLANT
+        - ICU
+        - NIMV
+        - VASOACTIVE_DRUGS
+        - DIALYSIS
+        - SIMPLE_CLINICAL_TRIAL
+        - MEDIUM_CLINICAL_TRIAL
+        - ADVANCED_CLINICAL_TRIAL
+        - PALLIATIVE_SURGERY
+        - CURE_SURGERY
+
+    patient_status_criteria_payload:
+      description: Describe the status of a patient using some criteria.
+      type: object
+      properties:
+        age_range:
+          type: string
+          description:  The range of age of the patient.
+          enum:
+            - AGE_BETWEEN_0_AND_19
+            - AGE_BETWEEN_20_AND_29
+            - AGE_BETWEEN_30_AND_39
+            - AGE_BETWEEN_40_AND_49
+            - AGE_BETWEEN_50_AND_59
+            - AGE_BETWEEN_60_AND_69
+            - AGE_BETWEEN_70_AND_79
+            - AGE_BETWEEN_80_AND_89
+            - AGE_BETWEEN_90_AND_99
+            - AGE_MORE_THAN_99
+        ccd:
+          type: boolean
+          nullable: true
+          description: Check if the patient status has a Complex Cronic Disease (CCD).
+        maca:
+          type: boolean
+          nullable: true
+          description:  >
+           A MACA patient status has answered no to the question:
+           Would you be surprised if this patient died in less than 12 months?
+        expected_survival:
+          description: The expected survival time for the patient status.
+          type: string
+          enum:
+            - LESS_THAN_12_MONTHS
+            - MORE_THAN_12_MONTHS
+            - UNKNOWN
+        frail_VIG:
+          description: The fragility index of the patient status.
+          type: string
+          enum:
+            - LOW
+            - MODERATE
+            - HIGH
+            - UNKNOWN
+        clinical_risk_group:
+          description: The clinical risk group of the patient status.
+          type: string
+          enum:
+            - PROMOTION_AND_PREVENTION
+            - SELF_MANAGEMENT_SUPPORT
+            - ILLNESS_MANAGEMENT
+            - CASE_MANAGEMENT
+            - UNKNOWN
+        has_social_support:
+          type: boolean
+          nullable: true
+          description: Check if the patient status has social support.
+        independence_at_admission:
+          description:  >
+           The clinical risk group of the patient status.
+            * 'TOTAL'  When the functional independence is between 0 and 20%.
+            * 'SEVERE' When the functional independence is between 21 and 60%.
+            * 'MODERATE' When the functional independence is between 61 and 90%.
+            * 'MILD' When the functional independence is between 91 and 99%.
+            * 'INDEPENDENT' When the functional independence is 100%.
+            * 'UNKNOWN' When the functional independence is unknown.
+          type: string
+          enum:
+            - TOTAL
+            - SEVERE
+            - MODERATE
+            - MILD
+            - INDEPENDENT
+            - UNKNOWN
+        independence_instrumental_activities:
+          description: The index that measures the independence for instrumental activities.
+          type: integer
+          minimum: 0
+          maximum: 8
+          nullable: true
+        has_advance_Directives:
+          type: boolean
+          nullable: true
+          description:  >
+           The answers to the question: Does the patient status have advance directives?
+        is_competent:
+          type: boolean
+          nullable: true
+          description:  >
+           The answers to the question: Is the patient status competent to understand the instructions of health personnel?
+        has_been_informed:
+          type: boolean
+          nullable: true
+          description:  >
+           The answers to the question: To the patient status or his/her referent
+           authorized has been informed of possible treatments and the consequences of
+           receiving it or No.
+        is_coerced:
+          type: boolean
+          nullable: true
+          description:  >
+           The answers to the question:
+           Is it detected that the patient status has seen coerced/pressured by third parties?
+        has_cognitive_impairment:
+          type: string
+          description: Inform if the patient status has cognitive impairment.
+          enum:
+            - ABSENT
+            - MILD_MODERATE
+            - SEVERE
+            - UNKNOWN
+        has_emocional_pain:
+          type: boolean
+          nullable: true
+          description: Inform if the patient status has emotional pain.
+        discomfort_degree:
+          type: string
+          description: Describe the degree of discomfort of the patient status before applying any action.
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+            - UNKNOWN
+        nit_level:
+          type: string
+          description:  >
+           Describe the level of therapeutic intensity of the patient.
+            * 'ONE' It includes all possible measures to prolong survival
+            * 'TWO_A' Includes all possible measures except CPR.
+            * 'TWO_B' Includes all possible measures except CPR and ICU.
+            * 'THREE' Includes complementary scans and non-invasive treatments.
+            * 'FOUR' It includes empiric symptomatic treatments according to clinical suspicion, which can be agreed as temporary.
+            * 'FIVE'  No complementary examinations or etiological treatments are carried out, only treatments for comfort.
+          enum:
+            - ONE
+            - TWO_A
+            - TWO_B
+            - THREE
+            - FOUR
+            - FIVE
+
+    treatment_value_feedback_payload:
+      description: Provides the alignment of a treatment with a value.
+      type: object
+      properties:
+        treatment_id:
+          type: string
+          description: The identifier of the treatment.
+          examples:
+           - "1234"
+        value_name:
+          type: string
+          description: The name of the value that the treatment is aligned.
+          example:
+            - "Autonomy"
+        alignment:
+          type: number
+          description: The alignment of the value with the the treatment.
+          maximum: 1
+          minimum: -1
+          Example:
+            - 0.81675
+
+    treatment_action_feedback_payload:
+      description: The feedback about an action of a treatment.
+      type: object
+      properties:
+        treatment_id:
+          type: string
+          description: The identifier of the treatment.
+          examples:
+           - "1234"
+        action:
+          description: The action to provide feedback.
+          oneOf:
+            - $ref: '#/components/schemas/treatment_action'
+        feedback:
+          type: string
+          description: The feedbacl about if the treatment action.
+          enum:
+            - ALLOW
+            - DENY
+            - UNKNOWN
