@@ -69,6 +69,7 @@ services:
       QUARKUS_MONGODB_CREDENTIALS_USERNAME: ${DB_USER_NAME:-mov}
       QUARKUS_MONGODB_CREDENTIALS_PASSWORD: ${DB_USER_PASSWORD:-password}
       QUARKUS_MONGODB_HOSTS: mongo:${MONGO_PORT:-27017}
+      MOV_URL: http://localhost:${MOV_UI_PORT:-8080}
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:8080/q/health | grep -m 1 -P \"^[\\s|\\{|\\\"]+status[\\s|\\:|\\\"]+.+\\\"\" |grep -q \"\\\"UP\\\"\""]
       interval: 1m
