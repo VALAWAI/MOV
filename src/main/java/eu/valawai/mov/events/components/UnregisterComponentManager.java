@@ -14,6 +14,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
+import com.mongodb.client.model.Filters;
+
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.events.topology.ChangeTopologyPayload;
@@ -23,9 +25,6 @@ import eu.valawai.mov.persistence.logs.AddLog;
 import eu.valawai.mov.persistence.topology.RemoveAllC2SubscriptionByComponent;
 import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
-import io.quarkus.panache.common.Page;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -92,10 +91,27 @@ public class UnregisterComponentManager {
 
 				if (finished) {
 
-					final var paginator = TopologyConnectionEntity
-							.find("source.componentId = ?1 or target.componentId = ?1", payload.componentId)
-							.page(Page.ofSize(10));
-					this.closeConnectionsOf(paginator);
+					final var query = Filters.and(
+							Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)),
+							Filters.or(Filters.eq("source.componentId", payload.componentId),
+									Filters.eq("target.componentId", payload.componentId)));
+					final Multi<TopologyConnectionEntity> findConnections = TopologyConnectionEntity.find(query)
+							.stream();
+					findConnections.subscribe().with(connection -> {
+
+						final var changePayload = new ChangeTopologyPayload();
+						changePayload.action = TopologyAction.REMOVE;
+						changePayload.connectionId = connection.id;
+						this.publish.send(this.changeTopologyQueueName, changePayload).subscribe().with(done -> {
+
+							Log.debugv("Sent remove the connection {0}", connection.id);
+
+						}, error -> {
+
+							Log.errorv(error, "Cannot send remove connection {0}", connection.id);
+						});
+
+					});
 					AddLog.fresh().withInfo().withMessage("Unregistered the component {0}.", payload.componentId)
 							.withPayload(payload).store();
 					return msg.ack();
@@ -115,55 +131,6 @@ public class UnregisterComponentManager {
 					.store();
 			return msg.nack(error);
 		}
-
-	}
-
-	/**
-	 * Close the connections of the paginator.
-	 *
-	 * @param paginator function that paginate the connections to close.
-	 */
-	private void closeConnectionsOf(ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
-
-		final Multi<TopologyConnectionEntity> getter = paginator.stream();
-		getter.onCompletion().invoke(() -> {
-
-			paginator.hasNextPage().subscribe().with(hasNext -> {
-
-				if (hasNext) {
-
-					this.closeConnectionsOf(paginator.nextPage());
-
-				} else {
-
-					Log.debugv("Finished Close connections associated to {0}", paginator);
-				}
-
-			}, error -> {
-
-				Log.errorv(error, "Error when paginate the components to close.");
-
-			});
-
-		}).subscribe().with(connection -> {
-
-			final var msg = new ChangeTopologyPayload();
-			msg.action = TopologyAction.REMOVE;
-			msg.connectionId = connection.id;
-			this.publish.send(this.changeTopologyQueueName, msg).subscribe().with(done -> {
-
-				Log.debugv("Sent remove the connection {0}", connection.id);
-
-			}, error -> {
-
-				Log.errorv(error, "Cannot send remove connection {0}", connection.id);
-			});
-
-		}, error -> {
-
-			Log.errorv(error, "Error when get the connections to close.");
-
-		});
 
 	}
 

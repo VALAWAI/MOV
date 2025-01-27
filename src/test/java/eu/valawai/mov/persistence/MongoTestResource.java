@@ -32,6 +32,7 @@ public class MongoTestResource implements QuarkusTestResourceLifecycleManager {
 	/**
 	 * The mongo service container.
 	 */
+	@SuppressWarnings("resource")
 	static GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(MONGO_DOCKER_NAME))
 			.withStartupAttempts(1).withEnv("MONGO_INITDB_ROOT_USERNAME", "root")
 			.withEnv("MONGO_INITDB_ROOT_PASSWORD", "password").withEnv("MONGO_INITDB_DATABASE", "movDB")

@@ -465,7 +465,7 @@ public class TopologyResourceTest extends APITestCase {
 
 		assertEquals(1l,
 				LogEntity
-						.count("level = ?1 and message like ?2", LogLevel.INFO,
+						.count("level = ?1 and message like ?2", LogLevel.DEBUG,
 								"Removed .*" + connection.id.toHexString() + ".*")
 						.await().atMost(Duration.ofSeconds(30)));
 

@@ -10,7 +10,6 @@ package eu.valawai.mov.events.topology;
 
 import java.util.concurrent.CompletionStage;
 
-import org.bson.types.ObjectId;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
@@ -102,8 +101,8 @@ public class ChangeTopologyManager {
 					final var target = entity.target.channelName;
 					final var connectionLog = entity.id.toHexString() + " ( from '" + source + "' to '" + target + "')";
 					switch (payload.action) {
-					case REMOVE -> this.removeConnection(payload.connectionId, source, connectionLog);
-					case DISABLE -> this.disableConnection(payload.connectionId, source, connectionLog);
+					case REMOVE -> this.removeConnection(entity, connectionLog);
+					case DISABLE -> this.disableConnection(entity, connectionLog);
 					default -> this.enableConnection(entity, connectionLog);
 					}
 					return null;
@@ -133,55 +132,92 @@ public class ChangeTopologyManager {
 	/**
 	 * Called when has to remove a connection.
 	 *
-	 * @param connectionId  the identifier of the connection to remove.
-	 * @param source        channel of the connection.
+	 * @param connection    to remove.
 	 * @param connectionLog identifier of the connection on the log message.
 	 */
-	private void removeConnection(ObjectId connectionId, String source, String connectionLog) {
+	private void removeConnection(TopologyConnectionEntity connection, String connectionLog) {
 
-		DeleteTopologyConnection.fresh().withConnection(connectionId).execute()
-				.chain(deleted -> this.listener.close(source)).subscribe().with(success -> {
+		DeleteTopologyConnection.fresh().withConnection(connection.id).execute().chain(deleted -> {
 
-					AddLog.fresh().withInfo().withMessage("Removed the connection {0}", connectionLog).store();
+			if (deleted) {
 
-				}, error -> {
+				if (connection.enabled) {
 
-					AddLog.fresh().withError(error).withMessage("Cannot remove the connection {0}", connectionLog)
-							.store();
+					return this.closeConnection(connection);
+
+				} else {
+
+					return Uni.createFrom().nullItem();
+				}
+
+			} else {
+
+				return Uni.createFrom().failure(new IllegalStateException("Not found connection to remove"));
+			}
+
+		}).subscribe().with(deleted -> {
+
+			AddLog.fresh().withDebug().withMessage("Removed the connection {0}", connectionLog).store();
+
+		}, error -> {
+
+			AddLog.fresh().withError(error).withMessage("Cannot remove the connection {0}", connectionLog).store();
+
+		});
+	}
+
+	/**
+	 * Close to listen a connection.
+	 *
+	 * @param connection to close.
+	 *
+	 * @return the result if the connection is closed.
+	 */
+	private Uni<Void> closeConnection(TopologyConnectionEntity connection) {
+
+		final var source = connection.source.channelName;
+		return TopologyConnectionEntity
+				.count(Filters.and(Filters.eq("enabled", true), Filters.eq("source.channelName", source),
+						Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null))))
+				.chain(count -> {
+
+					if (count == 0 && this.listener.isOpen(source)) {
+
+						return this.listener.close(source);
+
+					} else {
+
+						return Uni.createFrom().nullItem();
+					}
 				});
 	}
 
 	/**
 	 * Called when has to disable a connection.
 	 *
-	 * @param connectionId  the identifier of the connection to remove.
-	 * @param source        channel of the connection.
+	 * @param connection    to disable.
 	 * @param connectionLog identifier of the connection on the log message.
 	 */
-	private void disableConnection(ObjectId connectionId, String source, String connectionLog) {
+	private void disableConnection(TopologyConnectionEntity connection, String connectionLog) {
 
-		this.listener.close(source).chain(any -> {
+		if (connection.enabled) {
 
-			return EnableTopologyConnection.fresh().withConnection(connectionId).withAction(TopologyAction.DISABLE)
-					.execute();
+			EnableTopologyConnection.fresh().withConnection(connection.id).withAction(TopologyAction.DISABLE).execute()
+					.chain(any -> this.closeConnection(connection)).subscribe().with(success -> {
 
-		}).subscribe().with(success -> {
+						AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connectionLog).store();
 
-			if (success) {
+					}, error -> {
 
-				AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connectionLog).store();
+						AddLog.fresh().withError(error).withMessage("Cannot disable the connection {0}", connectionLog)
+								.store();
+					});
 
-			} else {
+		} else {
 
-				AddLog.fresh().withError()
-						.withMessage("Disabled the connection {0}, but not market as disabled", connectionLog).store();
+			AddLog.fresh().withError().withMessage("Cannot disable the connection {0}", connectionLog).store();
+		}
 
-			}
-
-		}, error -> {
-
-			AddLog.fresh().withError(error).withMessage("Cannot disable the connection {0}", connectionLog).store();
-		});
 	}
 
 	/**
@@ -235,7 +271,8 @@ public class ChangeTopologyManager {
 	 */
 	private void handleConnectionMessage(String source, JsonObject received) {
 
-		final var query = Filters.and(Filters.eq("enabled", true), Filters.eq("source.channelName", source));
+		final var query = Filters.and(Filters.eq("enabled", true), Filters.eq("source.channelName", source),
+				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)));
 		final Multi<TopologyConnectionEntity> search = TopologyConnectionEntity.find(query).stream();
 		search.subscribe().with(connection -> {
 
@@ -263,7 +300,7 @@ public class ChangeTopologyManager {
 		final var target = connection.target.channelName;
 		this.publish.send(target, received).subscribe().with(done -> {
 
-			AddLog.fresh().withInfo().withMessage("Sent a message through the connection {0}", connectionLog)
+			AddLog.fresh().withDebug().withMessage("Sent a message through the connection {0}", connectionLog)
 					.withPayload(received).store();
 
 			if (connection.c2Subscriptions != null) {

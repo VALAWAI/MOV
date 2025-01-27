@@ -98,7 +98,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 	public void shouldNotDisableADisabledConnection() {
 
 		var connection = TopologyConnectionEntities.nextTopologyConnection();
-		while (!connection.enabled) {
+		while (connection.enabled) {
 
 			connection = TopologyConnectionEntities.nextTopologyConnection();
 		}
@@ -296,7 +296,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(sourceQueue, msgPayload));
 		assertEquals(1l,
 				LogEntity
-						.count("level = ?1 and message like ?2 and payload = ?3", LogLevel.INFO,
+						.count("level = ?1 and message like ?2 and payload = ?3", LogLevel.DEBUG,
 								".*" + sourceQueue + ".+" + targetQueueName + ".*", Json.encodePrettily(msgPayload))
 						.await().atMost(Duration.ofSeconds(30)));
 
@@ -365,7 +365,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
 		assertEquals(1l,
 				LogEntity
-						.count("level = ?1 and message like ?2", LogLevel.INFO,
+						.count("level = ?1 and message like ?2", LogLevel.DEBUG,
 								"Removed .*" + connection.id.toHexString() + ".*")
 						.await().atMost(Duration.ofSeconds(30)));
 
@@ -409,7 +409,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
 		assertEquals(1l,
 				LogEntity
-						.count("level = ?1 and message like ?2", LogLevel.INFO,
+						.count("level = ?1 and message like ?2", LogLevel.DEBUG,
 								"Removed .*" + connection.id.toHexString() + ".*")
 						.await().atMost(Duration.ofSeconds(30)));
 

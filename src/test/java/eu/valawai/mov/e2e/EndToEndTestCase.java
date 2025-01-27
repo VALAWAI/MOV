@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.charset.StandardCharsets;
 
+import com.mongodb.client.model.Filters;
+
 import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.MinComponentPage;
@@ -23,6 +25,9 @@ import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.events.components.ComponentPayload;
 import eu.valawai.mov.events.components.RegisterComponentPayload;
 import eu.valawai.mov.events.components.RegisterComponentPayloadTest;
+import eu.valawai.mov.events.components.UnregisterComponentPayload;
+import eu.valawai.mov.persistence.components.ComponentEntity;
+import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -78,7 +83,6 @@ public class EndToEndTestCase extends MovEventTestCase {
 				+ "/control/registered";
 		final ComponentSimulator component = new ComponentSimulator();
 		final var queue = this.waitOpenQueue(registeredQueueName);
-		component.queues.put(registeredQueueName, queue);
 
 		// Send register petition
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish("valawai/component/register", payload));
@@ -89,6 +93,9 @@ public class EndToEndTestCase extends MovEventTestCase {
 		assertEquals(payload.name, registered.name);
 		assertEquals(payload.type, registered.type);
 		assertEquals(payload.version, registered.version);
+
+		// close the registered queue
+		this.assertItemIsNull(this.listener.close(registeredQueueName));
 
 		// check that the component has been registered in the data base
 		final var page = given().when().queryParam("pattern", "/^" + registered.name + "$/")
@@ -132,4 +139,35 @@ public class EndToEndTestCase extends MovEventTestCase {
 		return component;
 	}
 
+	/**
+	 * Unregister a component.
+	 *
+	 * @param component to unregister.
+	 */
+	protected void assertUnregister(ComponentSimulator component) {
+
+		final var payload = new UnregisterComponentPayload();
+		payload.componentId = component.id;
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish("valawai/component/unregister", payload));
+
+		this.waitUntilNotNull(
+				() -> ComponentEntity
+						.count(Filters.and(Filters.eq("_id", component.id), Filters.ne("finishedTime", null))),
+				count -> count == 1);
+
+		this.waitUntilNotNull(
+				() -> TopologyConnectionEntity.count(Filters.and(
+						Filters.or(Filters.eq("source.componentId", payload.componentId),
+								Filters.eq("target.componentId", payload.componentId)),
+						Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)))),
+				count -> count == 0);
+
+		for (final var queueName : component.queues.keySet()) {
+
+			if (this.listener.isOpen(queueName)) {
+
+				this.assertItemIsNull(this.listener.close(queueName));
+			}
+		}
+	}
 }

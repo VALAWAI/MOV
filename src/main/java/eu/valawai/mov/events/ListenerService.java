@@ -113,6 +113,7 @@ public class ListenerService {
 					final var options = new QueueOptions();
 					options.setAutoAck(true);
 					options.setConsumerExclusive(false);
+					options.setKeepMostRecent(true);
 					options.setConsumerTag(this.getClass().getName() + "#" + queueName);
 					return this.service.client().chain(client -> {
 
@@ -185,7 +186,7 @@ public class ListenerService {
 
 						this.consumers.remove(i);
 						return consumer.cancel();
-
+//.chain(any -> this.service.client()).chain(client -> client.queueDeleteIf(queueName, true, false).map(any -> null))
 					}
 				}
 			}
