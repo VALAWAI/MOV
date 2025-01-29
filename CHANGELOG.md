@@ -1,6 +1,11 @@
 # Master Of Valawai (MOV)
 
 
+## Version 1.4.1 (January 27,2024)
+
+ - Localize
+ 
+ 
 ## Version 1.4.0 (January 27,2024)
 
  - Add health checking

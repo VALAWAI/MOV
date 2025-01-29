@@ -6,8 +6,10 @@
 	https://opensource.org/license/gpl-3-0/
 */
 
-import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, Inject, Injectable } from '@angular/core';
+import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarLabel } from '@angular/material/snack-bar';
+import { MessageComponent, MessageType } from './message.component';
+
 
 @Injectable({
 	providedIn: 'root'
@@ -27,7 +29,7 @@ export class MessagesService {
 	 */
 	public showError(text: string) {
 
-		this.show(text, "error-snackbar");
+		this.show(text, 'ERROR');
 	}
 
 	/**
@@ -35,7 +37,7 @@ export class MessagesService {
 	 */
 	public showWarn(text: string) {
 
-		this.show(text, "warn-snackbar");
+		this.show(text, 'WARN');
 	}
 
 	/**
@@ -43,7 +45,7 @@ export class MessagesService {
 	 */
 	public showInfo(text: string) {
 
-		this.show(text, "info-snackbar");
+		this.show(text, 'INFO');
 	}
 
 
@@ -52,16 +54,57 @@ export class MessagesService {
 	 */
 	public showSuccess(text: string) {
 
-		this.show(text, "success-snackbar");
+		this.show(text, 'SUCCESS');
 	}
 
 
 	/**
 	 * Show message of the specified class.
 	 */
-	private show(text: string, clazz: string) {
+	private show(message: string, type: MessageType) {
 
-		this.snackBar.open(text, undefined, { panelClass: clazz, duration: 3000 });
+		this.snackBar.openFromComponent(SnackBarMessage, {
+			duration: 3000,
+			verticalPosition: 'bottom',
+			horizontalPosition: 'center',
+			data: {
+				text: message,
+				type: type
+			}
+		});
+	}
+
+}
+
+export class SnackBarMessageData {
+
+	/**
+	 * The text to show
+	 */
+	text: string = '';
+
+	/**
+	 * The type of message.
+	 */
+	type: MessageType = 'INFO';
+}
+
+
+@Component({
+	standalone: true,
+	selector: 'app-snack-bar-message',
+	template: '<app-message matSnackBarLabel [type]="data.type">{{data.text}}</app-message>',
+	imports: [MessageComponent, MatSnackBarLabel],
+})
+export class SnackBarMessage {
+
+	/**
+	 *  Create the component.
+	 */
+	constructor(
+		@Inject(MAT_SNACK_BAR_DATA) public data: SnackBarMessageData
+	) {
+
 	}
 
 }

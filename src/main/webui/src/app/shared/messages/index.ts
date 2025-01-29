@@ -6,6 +6,5 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-export * from './messages.service';
-export * from './messages.module';
-export * from './message.component';
+export { MessagesService } from './messages.service';
+export { MessageComponent } from './message.component';

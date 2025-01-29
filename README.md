@@ -9,7 +9,7 @@ based on this topology, ensuring component independence and decoupling.
 ## Summary
 
 - Name: Master Of VALAWAI (MOV)
-- Version: 1.4.0 (January 27, 2025)
+- Version: 1.4.1 (January 29, 2025)
 - ASYNCAPI: [1.2.0 (May 9, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/ASYNCAPI_1.2.0/asyncapi.yml)
 - OPENAPI: [1.2.0 (May 9, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/API_1.2.0/openapi.yml)
 - Developed by: [IIIA-CSIC](https://www.iiia.csic.es)
