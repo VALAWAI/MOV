@@ -13,13 +13,13 @@ info:
 channels:
   valawai/c{0}/{1}/data/output:
     publish:
-      summary: Notify about the received e-mails.
+      summary: Send a message.
       message:
         $ref: "#/components/messages/output_message"
 
   valawai/c{0}/{1}/data/input:
     subscribe:
-      summary: The action to change the parameters that configure the component.
+      summary: Listen to a message.
       message:
         $ref: "#/components/messages/input_message"
 
@@ -57,7 +57,7 @@ components:
           description: The content of the field.
 
     input_payload:
-      description: The information that the component usbcribe.
+      description: The information that the component subscribe.
       type: object
       properties:
         {3}:

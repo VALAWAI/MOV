@@ -27,10 +27,14 @@ import java.util.List;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
+import com.mongodb.client.model.Filters;
+
 import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.BasicPayloadFormat;
 import eu.valawai.mov.api.v1.components.BasicPayloadSchema;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
+import eu.valawai.mov.api.v1.components.ChannelSchemaTest;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -310,7 +314,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	 * Check that a component is registered and it is notified when is done.
 	 */
 	@Test
-	public void shouldRegisterComponentAndNotifyWhenIsDone() {
+	public void shouldRegisterComponentCreateçConnectionsAndNotifyWhenIsDone() {
 
 		// The message to register the target component of the connection
 		final var componentTypeIndex = rnd().nextInt(0, 3);
@@ -567,7 +571,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	 * Check that a component is registered and it is notified when is done.
 	 */
 	@Test
-	public void shouldRegisterComponentAndNotifyWhenIsDone2() {
+	public void shouldRegisterComponentAndNotifyWhenIsDone() {
 
 		// The message to register the target component of the connection
 		final var componentTypeIndex = rnd().nextInt(0, 3);
@@ -599,6 +603,97 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(payload.type, registered.type);
 		assertTrue(now <= registered.since);
 		assertEquals(expectedComponent.channels, registered.channels);
+		this.assertItemNull(this.listener.close(queueName));
+
+	}
+
+	/**
+	 * Check that not create connections with deleted components.
+	 */
+	@Test
+	public void shouldRegisterButnotCreateConnectionsWithDeletedComponents() {
+
+		final var finishedSource = ComponentEntities.nextComponent();
+		finishedSource.finishedTime = ValueGenerator.nextPastTime();
+		finishedSource.channels = new ArrayList<ChannelSchema>();
+		final var sourceChannel = new ChannelSchemaTest().nextModel();
+		final var publishMsgSchema = new ObjectPayloadSchema();
+		final var publishFiledName = "field_" + ValueGenerator.nextUUID().toString();
+		publishMsgSchema.properties.put(publishFiledName, BasicPayloadSchema.with(BasicPayloadFormat.STRING));
+		sourceChannel.publish = publishMsgSchema;
+		sourceChannel.subscribe = null;
+		finishedSource.channels.add(sourceChannel);
+		this.assertItemNotNull(finishedSource.update());
+
+		final var activeSource = ComponentEntities.nextComponent();
+		activeSource.finishedTime = null;
+		activeSource.channels = new ArrayList<ChannelSchema>();
+		activeSource.channels.add(sourceChannel);
+		this.assertItemNotNull(activeSource.update());
+
+		final var finishedTarget = ComponentEntities.nextComponent();
+		finishedTarget.finishedTime = ValueGenerator.nextPastTime();
+		finishedTarget.channels = new ArrayList<ChannelSchema>();
+		final var targetChannel = new ChannelSchemaTest().nextModel();
+		final var subscribeMsgSchema = new ObjectPayloadSchema();
+		final var subscribeFiledName = "field_" + ValueGenerator.nextUUID().toString();
+		subscribeMsgSchema.properties.put(subscribeFiledName, BasicPayloadSchema.with(BasicPayloadFormat.STRING));
+		targetChannel.subscribe = subscribeMsgSchema;
+		targetChannel.publish = null;
+		finishedTarget.channels.add(targetChannel);
+		this.assertItemNotNull(finishedTarget.update());
+
+		final var activeTarget = ComponentEntities.nextComponent();
+		activeTarget.finishedTime = null;
+		activeTarget.channels = new ArrayList<ChannelSchema>();
+		activeTarget.channels.add(targetChannel);
+		this.assertItemNotNull(activeTarget.update());
+
+		// The message to register the target component of the connection
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+
+		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
+				componentName);
+		final var queue = this.waitOpenQueue(queueName);
+
+		// register the component
+		final var now = TimeManager.now();
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, subscribeFiledName, publishFiledName);
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// wait notify the component is registered
+		final var registered = queue.waitReceiveMessage(ComponentPayload.class);
+		assertEquals(payload.name, registered.name);
+		final var expectedComponent = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+		assertEquals(expectedComponent.description, registered.description);
+		assertEquals(payload.version, registered.version);
+		assertEquals(expectedComponent.apiVersion, registered.apiVersion);
+		assertEquals(payload.type, registered.type);
+		assertTrue(now <= registered.since);
+		assertEquals(expectedComponent.channels, registered.channels);
+		this.assertItemNull(this.listener.close(queueName));
+
+		this.waitUntilNotNull(() -> TopologyConnectionEntity.count(Filters.gte("createTimestamp", now)),
+				count -> count >= 2);
+
+		var count = this
+				.assertItemNotNull(TopologyConnectionEntity.count(Filters.eq("source.componentId", finishedSource.id)));
+		assertEquals(0, count, "Created connection with the finished source.");
+		count = this
+				.assertItemNotNull(TopologyConnectionEntity.count(Filters.eq("source.componentId", activeSource.id)));
+		assertEquals(1, count, "No treated connection with the active source.");
+
+		count = this
+				.assertItemNotNull(TopologyConnectionEntity.count(Filters.eq("target.componentId", finishedTarget.id)));
+		assertEquals(0, count, "Created connection with the finished target.");
+		count = this
+				.assertItemNotNull(TopologyConnectionEntity.count(Filters.eq("target.componentId", activeTarget.id)));
+		assertEquals(1, count, "No treated connection with the active target.");
 
 	}
 

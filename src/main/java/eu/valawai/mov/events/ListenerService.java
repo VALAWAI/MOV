@@ -186,7 +186,6 @@ public class ListenerService {
 
 						this.consumers.remove(i);
 						return consumer.cancel();
-//.chain(any -> this.service.client()).chain(client -> client.queueDeleteIf(queueName, true, false).map(any -> null))
 					}
 				}
 			}

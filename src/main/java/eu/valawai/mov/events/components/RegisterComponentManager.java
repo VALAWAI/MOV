@@ -21,6 +21,9 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -128,10 +131,7 @@ public class RegisterComponentManager {
 
 						if (source.channels != null && !source.channels.isEmpty()) {
 
-							final var paginator = ComponentEntity
-									.find("channels is not null and _id != ?1", Sort.ascending("_id"), source.id)
-									.page(Page.ofSize(10));
-							this.createConnections(source, paginator, channelsToIgnore);
+							this.createConnectionsFor(source, channelsToIgnore);
 						}
 						return null;
 
@@ -343,44 +343,22 @@ public class RegisterComponentManager {
 	}
 
 	/**
-	 * Create the connection with the source and the components of a page.
+	 * Create the connection with the source.
 	 *
 	 * @param source           component to check to create the connection.
-	 * @param paginator        function that paginate the components.
 	 * @param channelsToIgnore collection to add the channels to ignore.
 	 */
-	private void createConnections(ComponentEntity source,
-			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator, Collection<String> channelsToIgnore) {
+	private void createConnectionsFor(ComponentEntity source, Collection<String> channelsToIgnore) {
 
-		final Multi<ComponentEntity> getter = paginator.stream();
-		getter.onCompletion().invoke(() -> {
+		final var query = Filters.and(Filters.ne("_id", source.id),
+				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+				Filters.exists("channels", true), Filters.ne("channels", null),
+				Filters.not(Filters.size("channels", 0)));
+		final Multi<ComponentEntity> findComponents = ComponentEntity.find(query, Sorts.ascending("_id")).stream();
 
-			paginator.hasNextPage().subscribe().with(hasNext -> {
-
-				if (hasNext) {
-
-					this.createConnections(source, paginator.nextPage(), channelsToIgnore);
-
-				} else {
-
-					this.createLoopConnections(source, channelsToIgnore);
-				}
-
-			}, error -> {
-
-				Log.errorv(error, "Error when paginate the component to create connections.");
-
-			});
-
-		}).subscribe().with(target -> {
-
-			this.createConnections(source, target, channelsToIgnore);
-
-		}, error -> {
-
-			Log.errorv(error, "Error when checking if is necessary a connection.");
-
-		});
+		findComponents.onCompletion().invoke(() -> this.createLoopConnections(source, channelsToIgnore)).subscribe()
+				.with(target -> this.createConnections(source, target, channelsToIgnore),
+						error -> Log.errorv(error, "Error when creating the connections."));
 
 	}
 

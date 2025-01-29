@@ -3,7 +3,7 @@
 
 ## Version 1.4.1 (January 27,2024)
 
- - Localize
+ - Fix no create connections with finished components
  
  
 ## Version 1.4.0 (January 27,2024)
