@@ -153,20 +153,12 @@ public class ComponentResource {
 
 		final var payload = new UnregisterComponentPayload();
 		payload.componentId = componentId;
-		this.unregister.send(payload).handle((success, error) -> {
+		return Uni.createFrom().completionStage(this.unregister.send(payload)).map(any -> Response.noContent().build())
+				.onFailure().recoverWithItem(error -> {
 
-			if (error == null) {
-
-				Log.debugv("Sent unregister component {0}", componentId);
-
-			} else {
-
-				Log.errorv(error, "Cannot unregister component {0}", componentId);
-
-			}
-			return null;
-		});
-		return Uni.createFrom().item(Response.noContent().build());
+					Log.errorv(error, "Cannot unregister component {0}", componentId);
+					return Response.serverError().build();
+				});
 
 	}
 
@@ -190,20 +182,12 @@ public class ComponentResource {
 		payload.name = component.name;
 		payload.version = component.version;
 		payload.asyncapiYaml = component.asyncapiYaml;
-		this.register.send(payload).handle((success, error) -> {
+		return Uni.createFrom().completionStage(this.register.send(payload)).map(any -> Response.noContent().build())
+				.onFailure().recoverWithItem(error -> {
 
-			if (error == null) {
-
-				Log.debugv("Sent register component {0}", component);
-
-			} else {
-
-				Log.errorv(error, "Cannot register component {0}", component);
-
-			}
-			return null;
-		});
-		return Uni.createFrom().item(Response.noContent().build());
+					Log.errorv(error, "Cannot register component {0}", component);
+					return Response.serverError().build();
+				});
 
 	}
 

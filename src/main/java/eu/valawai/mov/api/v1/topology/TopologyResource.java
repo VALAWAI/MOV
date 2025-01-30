@@ -152,20 +152,12 @@ public class TopologyResource {
 		payload.target.componentId = connection.targetComponent;
 		payload.target.channelName = connection.targetChannel;
 		payload.enabled = connection.enabled;
-		this.create.send(payload).handle((success, error) -> {
+		return Uni.createFrom().completionStage(this.create.send(payload)).map(any -> Response.noContent().build())
+				.onFailure().recoverWithItem(error -> {
 
-			if (error == null) {
-
-				Log.debugv("Sent message to create the topology connection {0}", connection);
-
-			} else {
-
-				Log.errorv(error, "Cannot create the topology connection {0}", connection);
-
-			}
-			return null;
-		});
-		return Uni.createFrom().item(Response.noContent().build());
+					Log.errorv(error, "Cannot create the topology connection {0}", connection);
+					return Response.serverError().build();
+				});
 
 	}
 
@@ -188,21 +180,12 @@ public class TopologyResource {
 		final var payload = new ChangeTopologyPayload();
 		payload.connectionId = model.connectionId;
 		payload.action = model.action;
-		this.change.send(payload).handle((success, error) -> {
+		return Uni.createFrom().completionStage(this.change.send(payload)).map(any -> Response.noContent().build())
+				.onFailure().recoverWithItem(error -> {
 
-			if (error == null) {
-
-				Log.debugv("Sent message to change the topology connection {0}", model);
-
-			} else {
-
-				Log.errorv(error, "Cannot change the topology connection {0}", model);
-
-			}
-			return null;
-		});
-		return Uni.createFrom().item(Response.noContent().build());
-
+					Log.errorv(error, "Cannot change the topology connection {0}", model);
+					return Response.serverError().build();
+				});
 	}
 
 }

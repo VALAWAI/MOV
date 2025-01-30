@@ -437,21 +437,11 @@ public class RegisterComponentManager {
 			payload.target = new NodePayload();
 			payload.target.componentId = target.id;
 			payload.target.channelName = targetChannel.name;
-			this.create.send(payload).handle((success, error) -> {
-
-				if (error == null) {
-
-					Log.debugv("Sent create the connection between {0} and {1}", sourceChannel.name,
-							targetChannel.name);
-
-				} else {
-
-					Log.errorv(error, "Cannot create the connection between {0} and {1}", sourceChannel.name,
-							targetChannel.name);
-
-				}
-				return null;
-			});
+			Uni.createFrom().completionStage(this.create.send(payload)).subscribe()
+					.with(any -> Log.debugv("Sent create the connection between {0} and {1}", sourceChannel.name,
+							targetChannel.name),
+							error -> Log.errorv(error, "Cannot create the connection between {0} and {1}",
+									sourceChannel.name, targetChannel.name));
 		}
 
 	}

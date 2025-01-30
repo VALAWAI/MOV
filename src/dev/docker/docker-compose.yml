@@ -25,7 +25,7 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-movDB}
     volumes:
       - ./initialize-movDB.js:/docker-entrypoint-initdb.d/init-mongo.js
-      - ${MONGO_LOCAL_DATA:-~/mongo_data/movDB}:/data/db
+      - ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}:/data/db
   mongo_express:
     image: mongo-express:latest
     container_name: mov_db_ui_dev
