@@ -1,7 +1,7 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.4.1 (January 27,2024)
+## Version 1.4.1 (February 6,2024)
 
  - Fix no create connections with finished components
  
