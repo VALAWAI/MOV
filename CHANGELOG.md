@@ -1,6 +1,11 @@
 # Master Of Valawai (MOV)
 
 
+## Version 1.4.2 (February 6,2024)
+
+ - Fix mvn wrapper
+ 
+ 
 ## Version 1.4.1 (February 6,2024)
 
  - Fix no create connections with finished components
