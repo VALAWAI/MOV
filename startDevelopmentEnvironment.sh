@@ -12,7 +12,7 @@ else
 		then
 			source .env
 		fi
-		rm -rf ${MONGO_LOCAL_DATA:-~/mongo_data/eduteamsDB}
+		rm -rf ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}
 	fi
 	DOCKER_BUILDKIT=1 docker build $DOCKER_ARGS -f src/dev/docker/Dockerfile -t valawai/mov:dev .
 	if [ $? -eq 0 ]; then
