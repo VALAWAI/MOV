@@ -3,6 +3,7 @@ services:
     image: rabbitmq:management
     container_name: mov_mq_dev
     restart: unless-stopped
+    pull_policy: daily
     ports:
       - ${MQ_PORT:-5672}:5672
       - ${MQ_UI_PORT:-8081}:15672
@@ -15,6 +16,7 @@ services:
     image: mongo:latest
     container_name: mov_db_dev
     restart: unless-stopped
+    pull_policy: daily
     ports:
       - ${MONGO_PORT:-27017}:27017
     networks:
@@ -30,6 +32,7 @@ services:
     image: mongo-express:latest
     container_name: mov_db_ui_dev
     restart: unless-stopped
+    pull_policy: daily
     depends_on:
       - mongo
     ports:

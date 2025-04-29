@@ -1,17 +1,22 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.4.2 (February 6,2024)
+## Version 1.5.0 (February 6,2025)
+
+ - Add polling to check changes in the UI.
+ 
+
+## Version 1.4.2 (February 6,2025)
 
  - Fix mvn wrapper
  
  
-## Version 1.4.1 (February 6,2024)
+## Version 1.4.1 (February 6,2025)
 
  - Fix no create connections with finished components
  
  
-## Version 1.4.0 (January 27,2024)
+## Version 1.4.0 (January 27,2025)
 
  - Add health checking
  - Add go to index.html if page not found

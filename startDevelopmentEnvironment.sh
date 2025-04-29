@@ -14,7 +14,7 @@ else
 		fi
 		rm -rf ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}
 	fi
-	DOCKER_BUILDKIT=1 docker build $DOCKER_ARGS -f src/dev/docker/Dockerfile -t valawai/mov:dev .
+	DOCKER_BUILDKIT=1 docker build $DOCKER_ARGS --pull -f src/dev/docker/Dockerfile -t valawai/mov:dev .
 	if [ $? -eq 0 ]; then
 		docker compose -f src/dev/docker/docker-compose.yml up -d
 		DOCKER_PARAMS="--rm --name mov_dev --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock -p 5005:5005 -p 8080:8080 -p 4200:4200 -it"

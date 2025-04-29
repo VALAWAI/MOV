@@ -8,7 +8,6 @@ else
 	TAG=$(grep --max-count=1 '<version>' pom.xml | awk -F '>' '{ print $2 }' | awk -F '<' '{ print $1 }')
 
 	DOCKER_ARGS=""
-	PLATFORMS=""
 	while [[ $# -gt 0 ]]; do
       case $1 in
         -t|--tag)
@@ -36,7 +35,7 @@ else
 		IMAGE_DATE=$(echo $IMAGE_DATE|date +%s)
 	fi
 	if [ $FILE_DATE -ge $IMAGE_DATE ]; then
-		DOCKER_BUILDKIT=1 docker build -f src/dev/docker/Dockerfile -t valawai/mov:dev .
+		DOCKER_BUILDKIT=1 docker build --pull -f src/dev/docker/Dockerfile -t valawai/mov:dev .
 	fi
 
     DOCKER_ARGS="$DOCKER_ARGS --rm --name mov_build_docker_image --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock"

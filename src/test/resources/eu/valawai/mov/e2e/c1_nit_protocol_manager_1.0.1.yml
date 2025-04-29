@@ -423,7 +423,7 @@ components:
           minimum: 0
           maximum: 8
           nullable: true
-        has_advance_Directives:
+        has_advance_directives:
           type: boolean
           nullable: true
           description:  >
