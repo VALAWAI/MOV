@@ -80,7 +80,7 @@
 						"outputPath": "src/locale"
 					}
 				},
-				"test": {
+				"test": { 
 					"builder": "@angular-devkit/build-angular:karma",
 					"options": {
 						"polyfills": [
