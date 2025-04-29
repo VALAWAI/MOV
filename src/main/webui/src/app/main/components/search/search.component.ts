@@ -216,7 +216,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 			}
 		}
 		var offset = this.pageIndex * this.pageSize;
-		var query = '' + pattern + type + orderBy + offset + this.pageSize;
 		return this.mov.getMinComponentPage(pattern, type, orderBy, null, null, offset, this.pageSize);
 
 	}

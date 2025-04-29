@@ -10,8 +10,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
-import { MessagesService } from 'src/app/shared/messages';
+import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
+import { MessageComponent, MessagesService } from 'src/app/shared/messages';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -19,10 +19,11 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {  NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
+import { pullingTime } from '@app/shared';
 
 @Component({
 	standalone: true,
@@ -41,7 +42,8 @@ import { MatMenuModule } from '@angular/material/menu';
 		MatMenuModule,
 		MatIcon,
 		MatPaginator,
-		MatTableModule
+		MatTableModule,
+		MessageComponent
 	],
 	templateUrl: './search.component.html',
 	styleUrl: './search.component.css'
@@ -67,6 +69,11 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 	 * The page to show.
 	 */
 	public page: MinConnectionPage | null = null;
+
+	/**
+	 * Subscription to the page changes.
+	 */
+	private pageSubscription: Subscription | null = null;
 
 	/**
 	 * The size for the pages.
@@ -99,7 +106,6 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 	constructor(
 		private header: MainService,
 		private mov: MovApiService,
-		private messages: MessagesService,
 		private fb: FormBuilder,
 		private route: ActivatedRoute
 	) {
@@ -112,16 +118,17 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.header.changeHeaderTitle($localize`:The header title for the connections component@@main_topology_connections_code_page-title:Topology connections`);
+		this.startUpdatePage();
 		this.formChanged = this.form.valueChanges.subscribe(
 			{
-				next: () => this.updatePage()
+				next: () => this.startUpdatePage()
 			}
 		);
 		this.componentIdChanged = this.route.queryParamMap.subscribe({
 			next: (params) => {
 
 				this.componentId = params.get("componentId");
-				this.updatePage();
+				this.startUpdatePage();
 			}
 		});
 
@@ -142,6 +149,11 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 			this.componentIdChanged.unsubscribe();
 			this.componentIdChanged = null;
 		}
+		if (this.pageSubscription != null) {
+
+			this.pageSubscription.unsubscribe();
+			this.pageSubscription = null;
+		}
 
 	}
 
@@ -152,13 +164,33 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 
 		this.pageIndex = event.pageIndex;
 		this.pageSize = event.pageSize;
-		this.updatePage();
+		this.startUpdatePage();
+	}
+
+	/**
+	 * Called when has to trat to update the page.
+	 */
+	private startUpdatePage() {
+
+		if (this.pageSubscription != null) {
+
+			this.pageSubscription.unsubscribe();
+		}
+
+		this.pageSubscription = timer(0, pullingTime()).pipe(
+			switchMap(() => this.getPage()),
+			retry()
+		).subscribe(
+			{
+				next: page => this.page = page
+			}
+		);
 	}
 
 	/**
 	 * Called to update the page.
 	 */
-	public updatePage() {
+	private getPage(): Observable<MinConnectionPage> {
 
 		var value = this.form.value;
 		var pattern = value.pattern;
@@ -182,17 +214,7 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 			orderBy = "-" + orderBy;
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getMinConnectionPage(pattern, this.componentId, orderBy, offset, this.pageSize).subscribe(
-			{
-				next: page => this.page = page,
-				error: err => {
-
-					this.messages.showError($localize`:The error message when can not get the topology connections@@main_topology_connections_code_get-error:Cannot obtain the topology connections`);
-					console.error(err);
-				}
-			}
-		);
-
+		return this.mov.getMinConnectionPage(pattern, this.componentId, orderBy, offset, this.pageSize);
 
 	}
 
