@@ -6,12 +6,12 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
-import { MessagesService } from 'src/app/shared/messages';
+import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
+import { MessageComponent } from 'src/app/shared/messages';
 import { COMPONENT_TYPE_NAMES, MinComponentPage, MovApiService } from 'src/app/shared/mov-api';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
@@ -23,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { pullingTime } from '@app/shared';
 
 @Component({
 	standalone: true,
@@ -42,12 +43,13 @@ import { MatTableModule } from '@angular/material/table';
 		MatPaginator,
 		NgFor,
 		MatTableModule,
-		MatMenuModule
+		MatMenuModule,
+		MessageComponent
 	],
 	templateUrl: './search.component.html',
 	styleUrl: './search.component.css'
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The columns to display.
@@ -71,6 +73,11 @@ export class SearchComponent implements OnInit {
 	public page: MinComponentPage | null = null;
 
 	/**
+	 * Subscription to the page changes.
+	 */
+	private pageSubscription: Subscription | null = null;
+
+	/**
 	 * The size for the pages.
 	 */
 	public pageSize: number = 15;
@@ -90,13 +97,13 @@ export class SearchComponent implements OnInit {
 	 */
 	public componentTypeNames = COMPONENT_TYPE_NAMES;
 
+
 	/**
 	 *  Create the component.
 	 */
 	constructor(
 		private header: MainService,
 		private mov: MovApiService,
-		private messages: MessagesService,
 		private fb: FormBuilder
 	) {
 
@@ -105,13 +112,13 @@ export class SearchComponent implements OnInit {
 	/**
 	 * Initialize the component.
 	 */
-	ngOnInit(): void {
+	public ngOnInit(): void {
 
 		this.header.changeHeaderTitle($localize`:The header title for the components @@main_components_code_page-title:Components`);
-		this.updatePage();
+		this.startUpdatePage();
 		this.formChanged = this.form.valueChanges.subscribe(
 			{
-				next: () => this.updatePage()
+				next: () => this.startUpdatePage()
 			}
 		);
 
@@ -120,12 +127,18 @@ export class SearchComponent implements OnInit {
 	/**
 	 * Called whne the component is destroyed.
 	 */
-	ngOnDestroy(): void {
+	public ngOnDestroy(): void {
 
 		if (this.formChanged != null) {
 
 			this.formChanged.unsubscribe();
 			this.formChanged = null;
+		}
+
+		if (this.pageSubscription != null) {
+
+			this.pageSubscription.unsubscribe();
+			this.pageSubscription = null;
 		}
 
 	}
@@ -137,13 +150,33 @@ export class SearchComponent implements OnInit {
 
 		this.pageIndex = event.pageIndex;
 		this.pageSize = event.pageSize;
-		this.updatePage();
+		this.startUpdatePage();
+	}
+
+	/**
+	 * Called when has to trat to update the page.
+	 */
+	private startUpdatePage() {
+
+		if (this.pageSubscription != null) {
+
+			this.pageSubscription.unsubscribe();
+		}
+
+		this.pageSubscription = timer(0, pullingTime()).pipe(
+			switchMap(() => this.getPage()),
+			retry()
+		).subscribe(
+			{
+				next: page => this.page = page
+			}
+		);
 	}
 
 	/**
 	 * Called to update the page.
 	 */
-	public updatePage() {
+	private getPage(): Observable<MinComponentPage> {
 
 		var value = this.form.value;
 		var pattern = value.pattern;
@@ -183,17 +216,8 @@ export class SearchComponent implements OnInit {
 			}
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getMinComponentPage(pattern, type, orderBy, null, null, offset, this.pageSize).subscribe(
-			{
-				next: page => this.page = page,
-				error: err => {
-
-					this.messages.showError($localize`:The error message whne can not get the components@@main_components_code_get-error:Cannot obtain the components`);
-					console.error(err);
-				}
-			}
-		);
-
+		var query = '' + pattern + type + orderBy + offset + this.pageSize;
+		return this.mov.getMinComponentPage(pattern, type, orderBy, null, null, offset, this.pageSize);
 
 	}
 

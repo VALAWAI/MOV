@@ -9,7 +9,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
+import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
 import { MainService } from 'src/app/main';
 import { MessagesService } from 'src/app/shared/messages';
 import { COMPONENT_TYPE_NAMES, LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
@@ -25,6 +25,7 @@ import { MatButton } from '@angular/material/button';
 import { ComponentNameBeautifier } from '@app/shared/component/view';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
+import { pullingTime } from '@app/shared';
 
 @Component({
 	standalone: true,
@@ -75,6 +76,11 @@ export class LogsComponent implements OnInit, OnDestroy {
 	public page: LogRecordPage | null = null;
 
 	/**
+	 * Subscription to the page changes.
+	 */
+	private pageSubscription: Subscription | null = null;
+
+	/**
 	 * The size for the pages.
 	 */
 	public pageSize: number = 15;
@@ -105,7 +111,6 @@ export class LogsComponent implements OnInit, OnDestroy {
 	constructor(
 		private header: MainService,
 		private mov: MovApiService,
-		private messages: MessagesService,
 		private fb: FormBuilder,
 		private dialog: MatDialog
 	) {
@@ -118,10 +123,10 @@ export class LogsComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.header.changeHeaderTitle($localize`:The header title for the logs @@main_logs_code_page-title:Logs`);
-		this.updatePage();
+		this.startUpdatePage();
 		this.formChanged = this.form.valueChanges.subscribe(
 			{
-				next: () => this.updatePage()
+				next: () => this.startUpdatePage()
 			}
 		);
 
@@ -138,6 +143,12 @@ export class LogsComponent implements OnInit, OnDestroy {
 			this.formChanged = null;
 		}
 
+		if (this.pageSubscription != null) {
+
+			this.pageSubscription.unsubscribe();
+			this.pageSubscription = null;
+		}
+
 	}
 
 	/**
@@ -147,13 +158,33 @@ export class LogsComponent implements OnInit, OnDestroy {
 
 		this.pageIndex = event.pageIndex;
 		this.pageSize = event.pageSize;
-		this.updatePage();
+		this.startUpdatePage();
+	}
+
+	/**
+	 * Called when has to trat to update the page.
+	 */
+	private startUpdatePage() {
+
+		if (this.pageSubscription != null) {
+
+			this.pageSubscription.unsubscribe();
+		}
+
+		this.pageSubscription = timer(0, pullingTime()).pipe(
+			switchMap(() => this.getPage()),
+			retry()
+		).subscribe(
+			{
+				next: page => this.page = page
+			}
+		);
 	}
 
 	/**
 	 * Called to update the page.
 	 */
-	public updatePage() {
+	private getPage(): Observable<LogRecordPage> {
 
 		var value = this.form.value;
 		var pattern = value.message;
@@ -225,16 +256,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 			}
 		}
 		var offset = this.pageIndex * this.pageSize;
-		this.mov.getLogRecordPage(pattern, level, component, type, orderBy, offset, this.pageSize).subscribe(
-			{
-				next: page => this.page = page,
-				error: err => {
-
-					this.messages.showError($localize`:The error message whne can not get the logs @@main_logs_code_get-error:Cannot obtain the logs`);
-					console.error(err);
-				}
-			}
-		);
+		return this.mov.getLogRecordPage(pattern, level, component, type, orderBy, offset, this.pageSize);
 
 
 	}

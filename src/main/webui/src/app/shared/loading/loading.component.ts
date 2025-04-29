@@ -11,13 +11,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
 	standalone: true,
-    selector: 'app-loading',
-    imports: [MatProgressSpinner],
-    templateUrl: './loading.component.html',
-    styleUrls: ['./loading.component.css']
+	selector: 'app-loading',
+	imports: [MatProgressSpinner],
+	templateUrl: './loading.component.html',
+	styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent {
 
-  constructor() { }
+	constructor() { }
 
 }

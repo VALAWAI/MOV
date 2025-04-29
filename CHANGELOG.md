@@ -1,7 +1,7 @@
 # Master Of Valawai (MOV)
 
 
-## Version 1.5.0 (February 6,2025)
+## Version 1.5.0 (April 29,2025)
 
  - Add polling to check changes in the UI.
  
