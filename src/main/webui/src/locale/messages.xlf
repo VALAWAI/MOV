@@ -134,7 +134,7 @@
         <source>Name or description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">7,9</context>
+          <context context-type="linenumber">7,10</context>
         </context-group>
         <note priority="1" from="description">The label of the field to match the name or desciption of the compponent</note>
       </trans-unit>
@@ -142,7 +142,7 @@
         <source>Order by</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">11,13</context>
+          <context context-type="linenumber">12,14</context>
         </context-group>
         <note priority="1" from="description">The label to select the order of the components</note>
       </trans-unit>
@@ -150,7 +150,7 @@
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">13,15</context>
+          <context context-type="linenumber">14,16</context>
         </context-group>
         <note priority="1" from="description">The option to order by type</note>
       </trans-unit>
@@ -158,7 +158,7 @@
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">15,17</context>
+          <context context-type="linenumber">16,18</context>
         </context-group>
         <note priority="1" from="description">The option to order by name</note>
       </trans-unit>
@@ -166,7 +166,7 @@
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
         <note priority="1" from="description">The option to order by description</note>
       </trans-unit>
@@ -174,7 +174,7 @@
         <source>In reverse order</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">22,24</context>
         </context-group>
         <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
       </trans-unit>
@@ -182,7 +182,7 @@
         <source> Filter components by type: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">25,27</context>
         </context-group>
         <note priority="1" from="description">The label to select the type of the component messages</note>
       </trans-unit>
@@ -190,23 +190,15 @@
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">34,37</context>
+          <context context-type="linenumber">35,38</context>
         </context-group>
         <note priority="1" from="description">Label of the button to register a components</note>
-      </trans-unit>
-      <trans-unit id="main_components_reload-label" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">41,44</context>
-        </context-group>
-        <note priority="1" from="description">Label of the button to reload the components</note>
       </trans-unit>
       <trans-unit id="main_components_type-header-label" datatype="html">
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">51,55</context>
+          <context context-type="linenumber">47,51</context>
         </context-group>
         <note priority="1" from="description">The label of the component type column header</note>
       </trans-unit>
@@ -214,7 +206,7 @@
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">57,61</context>
+          <context context-type="linenumber">53,57</context>
         </context-group>
         <note priority="1" from="description">The label of the component name column header</note>
       </trans-unit>
@@ -222,7 +214,7 @@
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">63,67</context>
+          <context context-type="linenumber">59,63</context>
         </context-group>
         <note priority="1" from="description">The label of the component description column header</note>
       </trans-unit>
@@ -230,7 +222,7 @@
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">69,71</context>
+          <context context-type="linenumber">65,67</context>
         </context-group>
         <note priority="1" from="description">The label of the component actions column header</note>
       </trans-unit>
@@ -238,7 +230,7 @@
         <source>Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">77,79</context>
+          <context context-type="linenumber">73,75</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a component</note>
       </trans-unit>
@@ -246,7 +238,7 @@
         <source>Unregister</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">80,82</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to unregister a component</note>
       </trans-unit>
@@ -254,25 +246,25 @@
         <source>Show connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">85,90</context>
+          <context context-type="linenumber">81,86</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show the connection to a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_no-components-found-warning-msg" datatype="html">
+        <source> No components found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="linenumber">93,97</context>
+        </context-group>
+        <note priority="1" from="description">The warning message when no components found</note>
       </trans-unit>
       <trans-unit id="main_components_code_page-title" datatype="html">
         <source>Components</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">The header title for the components </note>
-      </trans-unit>
-      <trans-unit id="main_components_code_get-error" datatype="html">
-        <source>Cannot obtain the components</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-        <note priority="1" from="description">The error message whne can not get the components</note>
       </trans-unit>
       <trans-unit id="main_components_show_go-back-label" datatype="html">
         <source>Go to components</source>
@@ -362,7 +354,7 @@
         <source>Message</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">5,7</context>
+          <context context-type="linenumber">6,8</context>
         </context-group>
         <note priority="1" from="description">The label of the field to match the messages</note>
       </trans-unit>
@@ -370,7 +362,7 @@
         <source>Component</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">9,11</context>
         </context-group>
         <note priority="1" from="description">The label of the field to match the components</note>
       </trans-unit>
@@ -378,7 +370,7 @@
         <source>Order by</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">13,14</context>
         </context-group>
         <note priority="1" from="description">The label to select the order of the logs</note>
       </trans-unit>
@@ -386,7 +378,7 @@
         <source>Timestamp</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">15,17</context>
         </context-group>
         <note priority="1" from="description">The option to order by timestamp</note>
       </trans-unit>
@@ -394,7 +386,7 @@
         <source>Level</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">20,22</context>
+          <context context-type="linenumber">17,19</context>
         </context-group>
         <note priority="1" from="description">The option to order by level</note>
       </trans-unit>
@@ -402,7 +394,7 @@
         <source>Message</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">22,24</context>
+          <context context-type="linenumber">19,21</context>
         </context-group>
         <note priority="1" from="description">The option to order by message</note>
       </trans-unit>
@@ -410,7 +402,7 @@
         <source>Component type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">21,23</context>
         </context-group>
         <note priority="1" from="description">The option to order by component type</note>
       </trans-unit>
@@ -418,7 +410,7 @@
         <source>Component name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">26,28</context>
+          <context context-type="linenumber">23,25</context>
         </context-group>
         <note priority="1" from="description">The option to order by component name</note>
       </trans-unit>
@@ -426,7 +418,7 @@
         <source>In reverse order</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">30,33</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
       </trans-unit>
@@ -434,7 +426,7 @@
         <source>Filter logs messages with level:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">35,36</context>
+          <context context-type="linenumber">30,31</context>
         </context-group>
         <note priority="1" from="description">The label to select the level of the log messages</note>
       </trans-unit>
@@ -442,23 +434,15 @@
         <source> Filter log messages by component type: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">43,45</context>
+          <context context-type="linenumber">35,37</context>
         </context-group>
         <note priority="1" from="description">The label to select the type of the component of the log messages</note>
-      </trans-unit>
-      <trans-unit id="main_logs_reload-label" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">53,56</context>
-        </context-group>
-        <note priority="1" from="description">Label of the button to reload the logs</note>
       </trans-unit>
       <trans-unit id="main_logs_timestamp-column-label" datatype="html">
         <source>Time</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">61,62</context>
+          <context context-type="linenumber">45,46</context>
         </context-group>
         <note priority="1" from="description">The label of the column timestamp</note>
       </trans-unit>
@@ -466,7 +450,7 @@
         <source>Level</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">66,68</context>
+          <context context-type="linenumber">51,53</context>
         </context-group>
         <note priority="1" from="description">The label of the column level</note>
       </trans-unit>
@@ -474,7 +458,7 @@
         <source>Message</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">57,59</context>
         </context-group>
         <note priority="1" from="description">The label of the column message</note>
       </trans-unit>
@@ -482,7 +466,7 @@
         <source>Payload</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">76,78</context>
+          <context context-type="linenumber">63,65</context>
         </context-group>
         <note priority="1" from="description">The label of the column payload</note>
       </trans-unit>
@@ -490,7 +474,7 @@
         <source>Component type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">85,87</context>
+          <context context-type="linenumber">73,76</context>
         </context-group>
         <note priority="1" from="description">The label of the column component type</note>
       </trans-unit>
@@ -498,7 +482,7 @@
         <source>Component name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">90,91</context>
+          <context context-type="linenumber">80,82</context>
         </context-group>
         <note priority="1" from="description">The label of the column component name</note>
       </trans-unit>
@@ -506,17 +490,9 @@
         <source>Logs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <note priority="1" from="description">The header title for the logs </note>
-      </trans-unit>
-      <trans-unit id="main_logs_code_get-error" datatype="html">
-        <source>Cannot obtain the logs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
-          <context context-type="linenumber">233</context>
-        </context-group>
-        <note priority="1" from="description">The error message whne can not get the logs </note>
       </trans-unit>
       <trans-unit id="main_logs_dialog-level-label" datatype="html">
         <source>Level</source>
@@ -594,11 +570,11 @@
         <source>Status</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">11,13</context>
+          <context context-type="linenumber">10,12</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">47,48</context>
+          <context context-type="linenumber">45,46</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the status</note>
       </trans-unit>
@@ -606,11 +582,11 @@
         <source>Components</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">14,16</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">49,51</context>
+          <context context-type="linenumber">47,49</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the components</note>
       </trans-unit>
@@ -618,11 +594,11 @@
         <source>Topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="linenumber">16,18</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">51,53</context>
+          <context context-type="linenumber">49,51</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the topology</note>
       </trans-unit>
@@ -630,11 +606,11 @@
         <source>Logs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">20,23</context>
+          <context context-type="linenumber">19,21</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">53,56</context>
+          <context context-type="linenumber">51,54</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the logs</note>
       </trans-unit>
@@ -642,7 +618,7 @@
         <source>Index</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">44,46</context>
+          <context context-type="linenumber">42,44</context>
         </context-group>
         <note priority="1" from="description">The menu index item</note>
       </trans-unit>
@@ -650,7 +626,7 @@
         <source>Acknowledgement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">58,60</context>
+          <context context-type="linenumber">56,58</context>
         </context-group>
         <note priority="1" from="description">The menu acknowledgement item</note>
       </trans-unit>
@@ -658,7 +634,7 @@
         <source> VALAWAI project is funded by the European Union under the European Innovation Council (EIC) research and innovation programme under Grant Agreement number 101070930.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">61,65</context>
+          <context context-type="linenumber">59,63</context>
         </context-group>
         <note priority="1" from="description">The acknowledgement text</note>
       </trans-unit>
@@ -666,7 +642,7 @@
         <source>More</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">69,71</context>
         </context-group>
         <note priority="1" from="description">The menu more item</note>
       </trans-unit>
@@ -674,7 +650,7 @@
         <source>Project web page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">75,77</context>
+          <context context-type="linenumber">73,75</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project web page</note>
       </trans-unit>
@@ -682,7 +658,7 @@
         <source>Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">80,83</context>
+          <context context-type="linenumber">78,81</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project twitter</note>
       </trans-unit>
@@ -690,7 +666,7 @@
         <source>GitHub</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">85,87</context>
+          <context context-type="linenumber">83,85</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project GitHub</note>
       </trans-unit>
@@ -699,7 +675,7 @@
 				alt=&quot;VALAWAI logo&quot;&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">92,95</context>
+          <context context-type="linenumber">90,93</context>
         </context-group>
         <note priority="1" from="description">The copyright text</note>
       </trans-unit>
@@ -1019,19 +995,11 @@
         </context-group>
         <note priority="1" from="description">Label of the button to create a new connections</note>
       </trans-unit>
-      <trans-unit id="main_topology_connections_reload-label" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">35,38</context>
-        </context-group>
-        <note priority="1" from="description">Label of the button to reload the connections</note>
-      </trans-unit>
       <trans-unit id="main_topology_connections_go-back-to-component-label" datatype="html">
         <source> Go to the component</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">41,44</context>
+          <context context-type="linenumber">34,38</context>
         </context-group>
         <note priority="1" from="description">Label of the button to go back to the component</note>
       </trans-unit>
@@ -1039,7 +1007,7 @@
         <source>Source</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">49,53</context>
+          <context context-type="linenumber">44,48</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source column header</note>
       </trans-unit>
@@ -1047,7 +1015,7 @@
         <source>Target</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">55,59</context>
+          <context context-type="linenumber">50,54</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target column header</note>
       </trans-unit>
@@ -1055,7 +1023,7 @@
         <source>Enabled</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">61,63</context>
+          <context context-type="linenumber">56,58</context>
         </context-group>
         <note priority="1" from="description">The label of the connection enabled column header</note>
       </trans-unit>
@@ -1063,7 +1031,7 @@
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">69,72</context>
+          <context context-type="linenumber">64,67</context>
         </context-group>
         <note priority="1" from="description">The label of the connection actions column header</note>
       </trans-unit>
@@ -1071,7 +1039,7 @@
         <source>Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">77,79</context>
+          <context context-type="linenumber">72,74</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a connection</note>
       </trans-unit>
@@ -1079,7 +1047,7 @@
         <source>Enable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">81,83</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to enable a connection</note>
       </trans-unit>
@@ -1087,7 +1055,7 @@
         <source>Disable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">85,87</context>
+          <context context-type="linenumber">80,82</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to disable a connection</note>
       </trans-unit>
@@ -1095,25 +1063,25 @@
         <source>Remove</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">89,94</context>
+          <context context-type="linenumber">84,89</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to remove a connection</note>
+      </trans-unit>
+      <trans-unit id="main_connections_no-connections-found-warning-msg" datatype="html">
+        <source> No connections found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="linenumber">95,100</context>
+        </context-group>
+        <note priority="1" from="description">The warning message when no connections found</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_code_page-title" datatype="html">
         <source>Topology connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">The header title for the connections component</note>
-      </trans-unit>
-      <trans-unit id="main_topology_connections_code_get-error" datatype="html">
-        <source>Cannot obtain the topology connections</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
-          <context context-type="linenumber">190</context>
-        </context-group>
-        <note priority="1" from="description">The error message when can not get the topology connections</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_show_enabled-label" datatype="html">
         <source>Enabled</source>

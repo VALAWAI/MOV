@@ -21,7 +21,6 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { NgFor, NgIf } from '@angular/common';
 import { TimestampPipe } from '@app/shared/timestamp';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
 import { ComponentNameBeautifier } from '@app/shared/component/view';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
@@ -39,7 +38,6 @@ import { pullingTime } from '@app/shared';
 		MatOption,
 		NgIf,
 		TimestampPipe,
-		MatButton,
 		MatIcon,
 		ComponentNameBeautifier,
 		MatPaginator,
