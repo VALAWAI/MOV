@@ -3,7 +3,7 @@ services:
     image: rabbitmq:${RABBITMQ_TAG:-management}
     container_name: mov_mq
     restart: unless-stopped
-	pull_policy: daily
+    pull_policy: daily
     ports:
       - ${MQ_PORT:-5672}:5672
       - ${MQ_UI_PORT:-8081}:15672
@@ -24,7 +24,7 @@ services:
     image: mongo:${MONGODB_TAG:-latest}
     container_name: mov_db
     restart: unless-stopped
-	pull_policy: daily
+    pull_policy: daily
     ports:
       - ${MONGO_PORT:-27017}:27017
     networks:
@@ -37,8 +37,7 @@ services:
       DB_USER_NAME: ${DB_USER_NAME:-mov}
       DB_USER_PASSWORD: ${DB_USER_PASSWORD:-password}
     volumes:
-      - ./initialize-movDB.js:/docker-entrypoint-initdb.d/init-mongo.js
-      - ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}:/data/db
+       - ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}:/data/db
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet localhost/${DB_NAME:-movDB} --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'"]
       interval: 1m
@@ -46,6 +45,9 @@ services:
       retries: 5
       start_period: 1m
       start_interval: 5s  
+    configs:
+      - source: initialize-movDB.js
+        target: /docker-entrypoint-initdb.d/init-mongo.js
 
   mov:
     image: valawai/mov:${MOV_TAG:-latest}
@@ -82,3 +84,15 @@ services:
 
 networks:
   mov:
+
+configs:
+  initialize-movDB.js:
+    content: |
+      db.createUser({
+          user: process.env.MOV_DB_USER_NAME,
+          pwd: process.env.MOV_DB_USER_PASSWORD,
+          roles: [{
+              role: 'readWrite',
+              db: process.env.MOV_DB_NAME
+          }]
+      })

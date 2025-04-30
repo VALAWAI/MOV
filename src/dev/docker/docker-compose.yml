@@ -12,6 +12,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${MQ_USER:-mov}
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD:-password}
+
   mongo:
     image: mongo:latest
     container_name: mov_db_dev
@@ -24,10 +25,16 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-movDB}
+      MONGO_INITDB_DATABASE: ${DB_NAME:-movDB}
+      DB_NAME: ${DB_NAME:-movDB}
+      DB_USER_NAME: ${DB_USER_NAME:-mov}
+      DB_USER_PASSWORD: ${DB_USER_PASSWORD:-password}
     volumes:
-      - ./initialize-movDB.js:/docker-entrypoint-initdb.d/init-mongo.js
       - ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}:/data/db
+    configs:
+      - source: initialize-movDB.js
+        target: /docker-entrypoint-initdb.d/init-mongo.js
+
   mongo_express:
     image: mongo-express:latest
     container_name: mov_db_ui_dev
@@ -49,3 +56,15 @@ services:
 
 networks:
   mov_dev:
+
+configs:
+  initialize-movDB.js:
+    content: |
+      db.createUser({
+          user: process.env.MOV_DB_USER_NAME,
+          pwd: process.env.MOV_DB_USER_PASSWORD,
+          roles: [{
+              role: 'readWrite',
+              db: process.env.MOV_DB_NAME
+          }]
+      })
