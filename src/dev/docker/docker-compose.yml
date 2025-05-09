@@ -25,10 +25,10 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${DB_NAME:-movDB}
-      DB_NAME: ${DB_NAME:-movDB}
-      DB_USER_NAME: ${DB_USER_NAME:-mov}
-      DB_USER_PASSWORD: ${DB_USER_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MOV_DB_NAME:-movDB}
+      MOV_DB_NAME: ${MOV_DB_NAME:-movDB}
+      MOV_DB_USER_NAME: ${MOV_DB_USER_NAME:-mov}
+      MOV_DB_USER_PASSWORD: ${MOV_DB_USER_PASSWORD:-password}
     volumes:
       - ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}:/data/db
     configs:

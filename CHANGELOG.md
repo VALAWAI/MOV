@@ -1,5 +1,9 @@
 # Master Of Valawai (MOV)
 
+## Version 1.5.1 (May 9,2025)
+
+ - Upgrade Quarkus to 3.22.2
+ - Upgrade Angular to 19.2.11
 
 ## Version 1.5.0 (April 30,2025)
 
