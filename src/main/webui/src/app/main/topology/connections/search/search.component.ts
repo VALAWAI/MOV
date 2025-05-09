@@ -184,7 +184,7 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 			{
 				next: page => {
 
-					if (JSON.stringify(this.page) !== JSON.stringify(page)) {
+					if (!MinConnectionPage.equals(this.page, page)) {
 
 						this.page = page
 					}

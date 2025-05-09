@@ -30,4 +30,47 @@ export class MinConnectionPage {
 	 */
 	public connections: MinConnection[] | null = null;
 
+	/**
+	 * Check if this page is equals to another.
+	 */
+	public static equals(source: MinConnectionPage | null | undefined, target: MinConnectionPage | null | undefined): boolean {
+
+		if (source == null && target == null) {
+
+			return true;
+
+		} else if (
+			source != null
+			&& target != null
+			&& source.total === target.total
+		) {
+			if ((source.connections == null || source.connections.length == 0)
+				&& (target.connections == null || target.connections.length == 0)
+			) {
+				
+				return true;
+
+			} else if (
+				source.connections != null
+				&& target.connections != null
+				&& source.connections.length === target.connections.length
+			) {
+
+				for (var i = 0; i < source.connections.length; i++) {
+
+					var sourceComponent = source.connections[i];
+					var targetComponent = target.connections[i];
+					if (!MinConnection.equals(sourceComponent, targetComponent)) {
+
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
 }

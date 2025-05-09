@@ -170,7 +170,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 			{
 				next: page => {
 
-					if (JSON.stringify(this.page) !== JSON.stringify(page)) {
+					if (!MinComponentPage.equals(this.page, page)) {
 
 						this.page = page
 					}

@@ -190,7 +190,7 @@
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">35,38</context>
+          <context context-type="linenumber">34,38</context>
         </context-group>
         <note priority="1" from="description">Label of the button to register a components</note>
       </trans-unit>
@@ -198,7 +198,7 @@
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">47,51</context>
+          <context context-type="linenumber">44,48</context>
         </context-group>
         <note priority="1" from="description">The label of the component type column header</note>
       </trans-unit>
@@ -206,7 +206,7 @@
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">53,57</context>
+          <context context-type="linenumber">50,54</context>
         </context-group>
         <note priority="1" from="description">The label of the component name column header</note>
       </trans-unit>
@@ -214,7 +214,7 @@
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">59,63</context>
+          <context context-type="linenumber">56,60</context>
         </context-group>
         <note priority="1" from="description">The label of the component description column header</note>
       </trans-unit>
@@ -222,7 +222,7 @@
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">65,67</context>
+          <context context-type="linenumber">62,64</context>
         </context-group>
         <note priority="1" from="description">The label of the component actions column header</note>
       </trans-unit>
@@ -230,7 +230,7 @@
         <source>Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">70,72</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a component</note>
       </trans-unit>
@@ -238,7 +238,7 @@
         <source>Unregister</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">76,78</context>
+          <context context-type="linenumber">73,75</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to unregister a component</note>
       </trans-unit>
@@ -246,7 +246,7 @@
         <source>Show connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">81,86</context>
+          <context context-type="linenumber">78,83</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show the connection to a component</note>
       </trans-unit>
@@ -254,7 +254,7 @@
         <source> No components found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">93,97</context>
+          <context context-type="linenumber">89,93</context>
         </context-group>
         <note priority="1" from="description">The warning message when no components found</note>
       </trans-unit>
@@ -1007,7 +1007,7 @@
         <source>Source</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">44,48</context>
+          <context context-type="linenumber">43,47</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source column header</note>
       </trans-unit>
@@ -1015,7 +1015,7 @@
         <source>Target</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">50,54</context>
+          <context context-type="linenumber">49,53</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target column header</note>
       </trans-unit>
@@ -1023,7 +1023,7 @@
         <source>Enabled</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">56,58</context>
+          <context context-type="linenumber">55,57</context>
         </context-group>
         <note priority="1" from="description">The label of the connection enabled column header</note>
       </trans-unit>
@@ -1031,7 +1031,7 @@
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">64,67</context>
+          <context context-type="linenumber">63,66</context>
         </context-group>
         <note priority="1" from="description">The label of the connection actions column header</note>
       </trans-unit>
@@ -1039,7 +1039,7 @@
         <source>Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">72,74</context>
+          <context context-type="linenumber">71,73</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a connection</note>
       </trans-unit>
@@ -1047,7 +1047,7 @@
         <source>Enable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">76,78</context>
+          <context context-type="linenumber">75,77</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to enable a connection</note>
       </trans-unit>
@@ -1055,7 +1055,7 @@
         <source>Disable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">80,82</context>
+          <context context-type="linenumber">79,81</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to disable a connection</note>
       </trans-unit>
@@ -1063,7 +1063,7 @@
         <source>Remove</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">84,89</context>
+          <context context-type="linenumber">83,88</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to remove a connection</note>
       </trans-unit>
@@ -1071,7 +1071,7 @@
         <source> No connections found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
-          <context context-type="linenumber">95,100</context>
+          <context context-type="linenumber">94,99</context>
         </context-group>
         <note priority="1" from="description">The warning message when no connections found</note>
       </trans-unit>

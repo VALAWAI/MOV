@@ -176,7 +176,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 			{
 				next: page => {
 
-					if (JSON.stringify(this.page) !== JSON.stringify(page)) {
+					if (!LogRecordPage.equals(this.page, page)) {
 
 						this.page = page
 					}

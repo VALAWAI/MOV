@@ -30,4 +30,46 @@ export class LogRecordPage {
 	 */
 	public logs: LogRecord[] | null = null;
 
+	/**
+	 * Check if this page is equals to another.
+	 */
+	public static equals(source: LogRecordPage | null | undefined, target: LogRecordPage | null | undefined): boolean {
+
+		if (source == null && target == null) {
+
+			return true;
+
+		} else if (
+			source != null
+			&& target != null
+			&& source.total === target.total
+		) {
+			if ((source.logs == null || source.logs.length == 0)
+				&& (target.logs == null || target.logs.length == 0)
+			) {
+
+				return true;
+
+			} else if (
+				source.logs != null
+				&& target.logs != null
+				&& source.logs.length === target.logs.length
+			) {
+
+				for (var i = 0; i < source.logs.length; i++) {
+
+					var sourceComponent = source.logs[i];
+					var targetComponent = target.logs[i];
+					if (!LogRecord.equals(sourceComponent, targetComponent)) {
+
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }

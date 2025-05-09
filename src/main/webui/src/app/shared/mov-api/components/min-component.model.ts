@@ -30,10 +30,22 @@ export class MinComponent {
 	 */
 	public description: string | null = null;
 
-    /**
+	/**
 	 * The type of the component.
 	 */
 	public type: ComponentType | null = null;
 
 
+	/**
+	 * Check if this component record is equals to another.
+	 */
+	public static equals(source: MinComponent | null | undefined, target: MinComponent | null | undefined): boolean {
+
+		return source != null
+			&& target != null
+			&& source.id === target.id
+			&& source.name === target.name
+			&& source.description === target.description
+			&& source.type === target.type;
+	}
 }

@@ -29,10 +29,23 @@ export class MinConnection {
 	 */
 	public target: string | null = null;
 
-    /**
+	/**
 	 * This is true if the connection is enabled.
 	 */
 	public enabled: boolean | null = null;
+
+	/**
+	 * Check if this connection is equals to another.
+	 */
+	public static equals(source: MinConnection | null | undefined, target: MinConnection | null | undefined): boolean {
+
+		return source != null
+			&& target != null
+			&& source.id === target.id
+			&& source.source === target.source
+			&& source.target === target.target
+			&& source.enabled === target.enabled;
+	}
 
 
 }
