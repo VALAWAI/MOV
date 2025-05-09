@@ -1,5 +1,5 @@
 <div
-	class="p-3 gap-7 flex flex-col items-center justify-center content-center"
+	class="p-3 gap-7 w-full flex flex-col items-center justify-center content-center"
 	[formGroup]="form">
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
 		<mat-form-field class="text-left col-span-2"> <mat-label
@@ -20,7 +20,7 @@
 			i18n="The label of the checkbox to order in reverse order@@main_topology_connections_order-by-reverse-label">In
 		reverse order</mat-checkbox>
 	</div>
-	<div class="gap-3 flex flex-row ">
+	<div class="gap-3 flex flex-row justify-center content-center">
 		<button
 			i18n="Label of the button to create a new connections@@main_topology_connections_create-label"
 			routerLink="/main/topology/connections/create" mat-raised-button
@@ -34,8 +34,7 @@
 			Go to the component</button>
 	</div>
 	<div
-		*ngIf="page && page.connections && page.connections.length > 0;else noConnections"
-		class="w-full">
+		*ngIf="page && page.connections && page.connections.length > 0;else noConnections">
 		<table mat-table [dataSource]="page.connections"
 			class="mat-elevation-z8">
 

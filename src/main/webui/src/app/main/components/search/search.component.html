@@ -6,7 +6,7 @@
 			i18n="The label of the field to match the name or desciption of the compponent@@main_components_search-label">Name
 		or description</mat-label> <input matInput type="text" formControlName="pattern">
 		</mat-form-field>
-		
+
 		<mat-form-field class="text-left"> <mat-label
 			i18n="The label to select the order of the components@@main_components_order-by-label">Order
 		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
@@ -27,18 +27,15 @@
 			*ngFor="let type of componentTypeNames" [value]="type">{{type}}</mat-option>
 		</mat-select> </mat-form-field>
 	</div>
-	<div class="gap-3 flex flex-row justify-center content-center">
-		<button
-			i18n="Label of the button to register a components@@main_components_register-label"
-			routerLink="/main/components/register" mat-raised-button
-			color="primary" class="max-w-72">
-			<mat-icon>add</mat-icon>
-			Register a new component
-		</button>
-	</div>
+	<button
+		i18n="Label of the button to register a components@@main_components_register-label"
+		routerLink="/main/components/register" mat-raised-button
+		color="primary" class="max-w-72">
+		<mat-icon>add</mat-icon>
+		Register a new component
+	</button>
 	<div
-		*ngIf="page && page.components && page.components.length > 0;else noComponents"
-		class="w-full">
+		*ngIf="page && page.components && page.components.length > 0;else noComponents">
 		<table mat-table [dataSource]="page.components"
 			class="mat-elevation-z8">
 
@@ -89,10 +86,9 @@
 	</div>
 	<ng-template #noComponents> <app-message type="WARN"
 		i18n="The warning message when no components found@@main_components_no-components-found-warning-msg"
-		class="max-w-md">
-	No components found that meet the specified requirements. Consider
-	reviewing your filtering conditions or expanding your search
-	parameters.</app-message> </ng-template>
+		class="max-w-md"> No components found that meet the
+	specified requirements. Consider reviewing your filtering conditions or
+	expanding your search parameters.</app-message> </ng-template>
 	<div *ngIf="page && page.total > 5">
 		<mat-paginator [length]="page.total"
 			[pageSizeOptions]="[5,10, 50, 100]" [pageSize]="pageSize"

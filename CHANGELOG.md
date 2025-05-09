@@ -4,6 +4,8 @@
 
  - Upgrade Quarkus to 3.22.2
  - Upgrade Angular to 19.2.11
+ - Fix update UI flickering
+
 
 ## Version 1.5.0 (April 30,2025)
 

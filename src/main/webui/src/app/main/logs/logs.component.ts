@@ -174,7 +174,13 @@ export class LogsComponent implements OnInit, OnDestroy {
 			retry()
 		).subscribe(
 			{
-				next: page => this.page = page
+				next: page => {
+
+					if (JSON.stringify(this.page) !== JSON.stringify(page)) {
+
+						this.page = page
+					}
+				}
 			}
 		);
 	}
