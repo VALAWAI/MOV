@@ -1,9 +1,42 @@
 <div
-	class="p-3 gap-7 w-full flex flex-col items-center justify-center content-center">
-	<div>Toolbar</div>
-	<div
-		class="flex flex-row flex-wrap items-center justify-center content-center">
-		<div>graph</div>
-		<div>detail</div>
+	class="size-auto p-3 gap-2 flex flex-col items-center justify-center content-center">
+	<div class="bg-gray-200 grow-0">
+		<button matButton color="primary" (click)="fit()"
+			matTooltip="Fit topology to screen."
+			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-fit-tooltip">
+			<mat-icon>aspect_ratio</mat-icon>
+		</button>
+		<button matButton color="primary" (click)="rescale(0.65)"
+			matTooltip="Zoom in"
+			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-zoon-in-tooltip">
+			<mat-icon>zoom_in</mat-icon>
+		</button>
+		<button matButton color="primary" (click)="rescale(1.35)"
+			matTooltip="Zoom out"
+			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-zoom-out-tooltip">
+			<mat-icon>zoom_out</mat-icon>
+		</button>
+	</div>
+	<div class="grow w-full flex flex-row flex-wrap gap-2 items-center">
+		<div class="grow">
+			<f-flow fDraggable (fLoaded)="loaded()"> <f-canvas fZoom>
+			<f-connection fOutputId="output1" fInputId="input1"></f-connection>
+			<div fNode fDragHandle [fNodePosition]="{ x: 24, y: 24 }" fNodeOutput
+				fOutputId="output1" fOutputConnectableSide="right">Drag me</div>
+			<div fNode fDragHandle [fNodePosition]="{ x: 244, y: 24 }" fNodeInput
+				fInputId="input1" fInputConnectableSide="left">Drag me</div>
+			</f-canvas> </f-flow>
+		</div>
+		<div class="max-w-96">
+			<div *ngIf="selected; else noSelection">
+				<div>Node</div>
+				<div>Edge</div>
+			</div>
+			<ng-template #noSelection>
+			<div class="text-gray-400 italic text-wrap"
+				i18n="@@main_topology_editor-no-selection-msg">Select an
+				element in the graph to show its information.</div>
+			</ng-template>
+		</div>
 	</div>
 </div>

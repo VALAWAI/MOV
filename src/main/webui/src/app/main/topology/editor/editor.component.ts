@@ -7,19 +7,40 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
+import { MessagesService } from '@app/shared/messages';
+import { TopologyGraphElement } from '@app/shared/mov-api';
+import { PointExtensions } from '@foblex/2d';
+import { FCanvasComponent, FFlowModule } from '@foblex/flow';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
 	standalone: true,
 	selector: 'app-topology-editor',
 	imports: [
 		CommonModule,
+		FFlowModule,
+		MatButtonModule,
+		MatTooltipModule,
+		MatIconModule
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css'
 })
 export class TopologyEditorComponent implements OnInit, OnDestroy {
+
+	/**
+	 * The selected component.
+	 */
+	public selected: TopologyGraphElement | null = null;
+
+	/**
+	 * The canvas with the hraph.
+	 */
+	protected fCanvas = viewChild.required(FCanvasComponent);
 
 
 	/**
@@ -27,6 +48,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	constructor(
 		private header: MainService,
+		private messages: MessagesService
 	) {
 
 	}
@@ -47,5 +69,39 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 
 	}
+
+	/**
+	 * Called when the graph has been loaded.
+	 */
+	public loaded() {
+
+		this.messages.showSuccess("Loaded graph");
+
+		this.fit();
+
+	}
+
+
+	/**
+	 * Called when the graph has been loaded.
+	 */
+	public fit() {
+
+		const canvas = this.fCanvas();
+		canvas.fitToScreen(PointExtensions.initialize(), true);
+
+	}
+
+	/**
+	 * Called whne teh scale has changed.
+	 */
+	public rescale(factor: number) {
+
+		const canvas = this.fCanvas();
+		var scale = factor * canvas.getScale();
+		canvas.setScale(scale, PointExtensions.initialize());
+		canvas.redrawWithAnimation()
+	}
+
 
 }

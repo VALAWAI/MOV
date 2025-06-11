@@ -37,3 +37,5 @@ export { OneOfPayloadSchema } from './components/one-of-payload-schema.model';
 export { AnyOfPayloadSchema } from './components/any-of-payload-schema.model';
 export { AllOfPayloadSchema } from './components/all-of-payload-schema.model';
 
+
+export { TopologyGraphElement } from './topology/topology-graph-element.model';
