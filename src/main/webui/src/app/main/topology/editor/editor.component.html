@@ -1,6 +1,6 @@
 <div
-	class="size-auto p-3 gap-2 flex flex-col items-center justify-center content-center">
-	<div class="bg-gray-200 grow-0">
+	class="p-1 flex flex-col md:flex-row flex-wrap gap-1 items-center justify-center content-center">
+	<div class="bg-gray-200 grow-0 flex flex-row flex-wrap md:flex-col">
 		<button matButton color="primary" (click)="fit()"
 			matTooltip="Fit topology to screen."
 			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-fit-tooltip">
@@ -17,26 +17,28 @@
 			<mat-icon>zoom_out</mat-icon>
 		</button>
 	</div>
-	<div class="grow w-full flex flex-row flex-wrap gap-2 items-center">
-		<div class="grow">
-			<f-flow fDraggable (fLoaded)="loaded()"> <f-canvas fZoom>
-			<f-connection fOutputId="output1" fInputId="input1"></f-connection>
+	<div class="grow bg-gray-50">
+		<div [ngStyle]="{'height.px':height}" class="w-xs min-h-xs sm:w-md md:min-w-md md:min-h-sm">
+			<f-flow fDraggable (fLoaded)="loaded()"> <f-background>
+			<f-circle-pattern></f-circle-pattern> </f-background> <f-line-alignment></f-line-alignment>
+			<f-selection-area></f-selection-area> <f-canvas fZoom> <f-connection
+				fOutputId="output1" fInputId="input1"></f-connection>
 			<div fNode fDragHandle [fNodePosition]="{ x: 24, y: 24 }" fNodeOutput
 				fOutputId="output1" fOutputConnectableSide="right">Drag me</div>
 			<div fNode fDragHandle [fNodePosition]="{ x: 244, y: 24 }" fNodeInput
 				fInputId="input1" fInputConnectableSide="left">Drag me</div>
 			</f-canvas> </f-flow>
 		</div>
-		<div class="max-w-96">
-			<div *ngIf="selected; else noSelection">
-				<div>Node</div>
-				<div>Edge</div>
-			</div>
-			<ng-template #noSelection>
-			<div class="text-gray-400 italic text-wrap"
-				i18n="@@main_topology_editor-no-selection-msg">Select an
-				element in the graph to show its information.</div>
-			</ng-template>
+	</div>
+	<div class="lg:max-w-sm">
+		<div *ngIf="selected; else noSelection">
+			<div>Node</div>
+			<div>Edge</div>
 		</div>
+		<ng-template #noSelection>
+		<div class="text-gray-400 italic text-wrap"
+			i18n="@@main_topology_editor-no-selection-msg">Select an
+			element in the graph to show its information.</div>
+		</ng-template>
 	</div>
 </div>

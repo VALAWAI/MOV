@@ -40,8 +40,8 @@
 			routerLink="/main/topology/connections">Connections</button>
 		</mat-menu>
 	</header>
-	<div class="grow">
-		<router-outlet class="size-auto"></router-outlet>
+	<div class="grow w-full h-full">
+		<router-outlet></router-outlet>
 	</div>
 	<footer class="p-11 gap-7 bg-green-950 text-slate-50 flex flex-col">
 		<div class="gap-7 place-content-around flex flex-row flex-wrap">
@@ -56,9 +56,11 @@
 					<li><a class="text-sm italic"
 						i18n="The menu item to go to the topology@@main_menu_topology">Topology</a>
 						<ul class="list-none pl-4 ">
-							<li class="text-sm"><a routerLink="/main/topology/editor" class="text-sm"
+							<li class="text-sm"><a routerLink="/main/topology/editor"
+								class="text-sm"
 								i18n="The menu item to go to the topology@@main_menu_topology-editor">Editor</a></li>
-							<li class="text-sm"><a routerLink="/main/topology/connections" class="text-sm"
+							<li class="text-sm"><a
+								routerLink="/main/topology/connections" class="text-sm"
 								i18n="The menu item to go to the topology connections@@main_menu_topology-connections">Connections</a></li>
 						</ul></li>
 					<li><a routerLink="/main/logs" class="text-sm"

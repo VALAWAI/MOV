@@ -11,22 +11,22 @@ import { Observable } from 'rxjs';
 import { MainService } from './main.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import {  RouterOutlet, RouterLink } from '@angular/router';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { LOCALE_ID, Inject } from '@angular/core';
 
 @Component({
 	standalone: true,
 	selector: 'app-main',
 	imports: [
+		CommonModule,
 		RouterOutlet,
 		MatIcon,
 		MatMenu,
 		MatMenuTrigger,
 		MatMenuItem,
 		RouterLink,
-		AsyncPipe,
-		NgIf
+		AsyncPipe
 	],
 	templateUrl: './main.component.html',
 	styleUrl: './main.component.css'
