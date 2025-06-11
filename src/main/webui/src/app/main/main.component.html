@@ -13,7 +13,7 @@
 			routerLink="/main/components">Components</button>
 		<button mat-menu-item
 			i18n="The menu item to go to the topology@@main_menu_topology"
-			routerLink="/main/topology">Topology</button>
+			[matMenuTriggerFor]="topologyMenu">Topology</button>
 		<button mat-menu-item
 			i18n="The menu item to go to the logs@@main_menu_logs"
 			routerLink="/main/logs">Logs</button>
@@ -31,6 +31,14 @@
 		<button *ngIf="!isLocalizedIn('es')" mat-menu-item
 			(click)="changeLocaleTo('es')">Español</button>
 		</mat-menu>
+		<mat-menu #topologyMenu="matMenu">
+		<button mat-menu-item
+			i18n="The menu item to go to the topology@@main_menu_topology-editor"
+			routerLink="/main/topology/editor">Editor</button>
+		<button mat-menu-item
+			i18n="The menu item to go to the topology connections@@main_menu_topology-connections"
+			routerLink="/main/topology/connections">Connections</button>
+		</mat-menu>
 	</header>
 	<div class="grow">
 		<router-outlet></router-outlet>
@@ -40,13 +48,19 @@
 			<div class="grow flex flex-col">
 				<div class="font-bold text-base"
 					i18n="The menu index item@@main_menu-index">Index</div>
-				<ul>
+				<ul class="list-none pl-2 ">
 					<li><a routerLink="/main/status" class="text-sm"
 						i18n="The menu item to go to the status@@main_menu_status">Status</a></li>
 					<li><a routerLink="/main/components" class="text-sm"
 						i18n="The menu item to go to the components@@main_menu_components">Components</a></li>
-					<li><a routerLink="/main/topology" class="text-sm"
-						i18n="The menu item to go to the topology@@main_menu_topology">Topology</a></li>
+					<li><a class="text-sm italic"
+						i18n="The menu item to go to the topology@@main_menu_topology">Topology</a>
+						<ul class="list-none pl-4 ">
+							<li class="text-sm"><a routerLink="/main/topology/editor" class="text-sm"
+								i18n="The menu item to go to the topology@@main_menu_topology-editor">Editor</a></li>
+							<li class="text-sm"><a routerLink="/main/topology/connections" class="text-sm"
+								i18n="The menu item to go to the topology connections@@main_menu_topology-connections">Connections</a></li>
+						</ul></li>
 					<li><a routerLink="/main/logs" class="text-sm"
 						i18n="The menu item to go to the logs@@main_menu_logs">Logs</a></li>
 				</ul>

@@ -17,6 +17,10 @@ export const TOPOLOGY_ROUTES: Routes = [
 				loadChildren: () => import('./connections').then(m => m.TOPOLOGY_CONNECTIONS_ROUTES)
 			},
 			{
+				path: 'editor',
+				loadComponent: () => import('./editor').then(m => m.TopologyEditorComponent)
+			},
+			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'connections'
