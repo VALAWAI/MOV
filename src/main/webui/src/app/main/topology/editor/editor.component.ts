@@ -123,5 +123,26 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		canvas.redrawWithAnimation()
 	}
 
+	/**
+	 * Add a C0 component.
+	 */
+	public addC0() {
+
+	}
+
+	/**
+	 * Add a C1 component.
+	 */
+	public addC1() {
+
+	}
+
+	/**
+	 * Add a C2 component.
+	 */
+	public addC2() {
+
+	}
+
 
 }

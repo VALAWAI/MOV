@@ -1,6 +1,23 @@
 <div
 	class="p-1 flex flex-col md:flex-row flex-wrap gap-1 items-center justify-center content-center">
 	<div class="bg-gray-200 grow-0 flex flex-row flex-wrap md:flex-col">
+		<button (click)="addC0()" matTooltip="Add a C0 component."
+			i18n-matTooltip="The tool tip to add C0 component@@main_topology_editor-toolbar-add-c0-tooltip"
+			class="p-2">
+			<div class="border border-indigo-500 text-indigo-500">C0</div>
+		</button>
+		<button (click)="addC1()" matTooltip="Add a C1 component."
+			i18n-matTooltip="The tool tip to add C1 component@@main_topology_editor-toolbar-add-c1-tooltip"
+			class="p-2">
+			<div class="border border-purple-500 text-purple-500">C1</div>
+		</button>
+		<button (click)="addC2()" matTooltip="Add a C2 component."
+			i18n-matTooltip="The tool tip to add C2 component@@main_topology_editor-toolbar-add-c2-tooltip"
+			class="p-2">
+			<div class="border border-sky-500 text-sky-500">C2</div>
+		</button>
+
+
 		<button matButton color="primary" (click)="fit()"
 			matTooltip="Fit topology to screen."
 			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-fit-tooltip">
@@ -18,7 +35,8 @@
 		</button>
 	</div>
 	<div class="grow bg-gray-50">
-		<div [ngStyle]="{'height.px':height}" class="w-xs min-h-xs sm:w-md md:min-w-md md:min-h-sm">
+		<div [ngStyle]="{'height.px':height}"
+			class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fLoaded)="loaded()"> <f-background>
 			<f-circle-pattern></f-circle-pattern> </f-background> <f-line-alignment></f-line-alignment>
 			<f-selection-area></f-selection-area> <f-canvas fZoom> <f-connection
