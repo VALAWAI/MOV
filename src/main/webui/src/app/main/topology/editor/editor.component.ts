@@ -13,7 +13,7 @@ import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
 import { TopologyGraphElement } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
-import { FCanvasComponent, FFlowModule } from '@foblex/flow';
+import { EFConnectionBehavior, EFMarkerType, FCanvasComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -47,12 +47,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public height = 100;
 
-	/**
-	 * The wodth of the component.
-	 */
-	public width = 100;
-
-
+	public eConnectionBehaviour = EFConnectionBehavior;
+	protected readonly eMarkerType = EFMarkerType;
 	/**
 	 *  Create the component.
 	 */
@@ -144,5 +140,13 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	}
 
+	/**
+	 * Called when something is selectd in the flow.
+	 */
+	public selectionChanged(event:FSelectionChangeEvent){
+		
+		
+		
+	}
 
 }

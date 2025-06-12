@@ -38,4 +38,7 @@ export { AnyOfPayloadSchema } from './components/any-of-payload-schema.model';
 export { AllOfPayloadSchema } from './components/all-of-payload-schema.model';
 
 
+export { TopologyGraph } from './topology/topology-graph.model';
 export { TopologyGraphElement } from './topology/topology-graph-element.model';
+export { TopologyGraphNode } from './topology/topology-graph-node.model';
+export { TopologyGraphConnection } from './topology/topology-graph-connection.model';

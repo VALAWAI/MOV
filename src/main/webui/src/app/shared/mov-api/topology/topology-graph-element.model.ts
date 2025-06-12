@@ -16,5 +16,10 @@ import { ChannelSchema } from '../components/channel-schema.model';
  */
 export class TopologyGraphElement {
 
+	/**
+	 * The identifier of the element.
+	 */
+	public id: string | null = null;
+
 
 }
