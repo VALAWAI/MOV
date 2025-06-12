@@ -9,8 +9,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MainService } from './main.service';
-import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { LOCALE_ID, Inject } from '@angular/core';
@@ -21,10 +21,8 @@ import { LOCALE_ID, Inject } from '@angular/core';
 	imports: [
 		CommonModule,
 		RouterOutlet,
-		MatIcon,
-		MatMenu,
-		MatMenuTrigger,
-		MatMenuItem,
+		MatIconModule,
+		MatMenuModule,
 		RouterLink,
 		AsyncPipe
 	],

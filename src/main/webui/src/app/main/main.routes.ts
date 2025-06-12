@@ -18,16 +18,12 @@ export const MAIN_ROUTES: Routes = [
 				loadComponent: () => import('./status').then(m => m.StatusComponent)
 			},
 			{
-				path: 'logs',
-				loadComponent: () => import('./logs').then(m => m.LogsComponent)
-			},
-			{
-				path: 'components',
-				loadChildren: () => import('./components').then(m => m.COMPONENTS_ROUTES)
-			},
-			{
 				path: 'topology',
 				loadChildren: () => import('./topology').then(m => m.TOPOLOGY_ROUTES)
+			},
+			{
+				path: 'config',
+				loadComponent: () => import('./config').then(m => m.ConfigComponent)
 			},
 			{
 				path: '',

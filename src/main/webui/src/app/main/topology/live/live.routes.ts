@@ -8,22 +8,30 @@
 
 import { Routes } from '@angular/router';
 
-export const TOPOLOGY_ROUTES: Routes = [
+export const LIVE_ROUTES: Routes = [
 	{
 		path: '',
 		children: [
 			{
-				path: 'live',
-				loadChildren: () => import('./live').then(m => m.LIVE_ROUTES)
+				path: 'status',
+				loadComponent: () => import('./status').then(m => m.StatusComponent)
 			},
 			{
-				path: 'design',
-				loadChildren: () => import('./design').then(m => m.DESIGN_ROUTES)
+				path: 'components',
+				loadChildren: () => import('./components').then(m => m.COMPONENTS_ROUTES)
+			},
+			{
+				path: 'connections',
+				loadChildren: () => import('./connections').then(m => m.TOPOLOGY_CONNECTIONS_ROUTES)
+			},
+			{
+				path: 'logs',
+				loadComponent: () => import('./logs').then(m => m.LogsComponent)
 			},
 			{
 				path: '',
 				pathMatch: 'full',
-				redirectTo: 'live'
+				redirectTo: 'status'
 			},
 			{
 				path: '**',
@@ -32,3 +40,4 @@ export const TOPOLOGY_ROUTES: Routes = [
 		]
 	}
 ];
+
