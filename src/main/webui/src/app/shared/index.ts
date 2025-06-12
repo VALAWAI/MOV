@@ -6,21 +6,4 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-export function pullingTime() {
-
-	var pool = localStorage.getItem('POOLING_TIME');
-	if (pool) {
-
-		var time = Number(pool);
-		if (!isNaN(time)) {
-
-			return time;
-		}
-	}
-	return 1500;
-}
-
-export function updatePullingTime(time: number) {
-
-	localStorage.setItem('POOLING_TIME', String(time));
-}
+export { ConfigService } from './config.service';

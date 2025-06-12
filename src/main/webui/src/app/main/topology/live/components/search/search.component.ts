@@ -23,7 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { pullingTime } from '@app/shared';
+import { ConfigService } from '@app/shared';
 
 @Component({
 	standalone: true,
@@ -104,7 +104,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 	constructor(
 		private header: MainService,
 		private mov: MovApiService,
-		private fb: FormBuilder
+		private fb: FormBuilder,
+		private conf: ConfigService
 	) {
 
 	}
@@ -163,7 +164,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 			this.pageSubscription.unsubscribe();
 		}
 
-		this.pageSubscription = timer(0, pullingTime()).pipe(
+		this.pageSubscription = timer(0, this.conf.pollingTime).pipe(
 			switchMap(() => this.getPage()),
 			retry()
 		).subscribe(

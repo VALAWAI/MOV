@@ -16,6 +16,9 @@ import { PointExtensions } from '@foblex/2d';
 import { EFConnectionBehavior, EFMarkerType, FCanvasComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { ConfigService } from '@app/shared';
+import { Observable } from 'rxjs';
 
 @Component({
 	standalone: true,
@@ -25,7 +28,8 @@ import { MatIconModule } from '@angular/material/icon';
 		FFlowModule,
 		MatButtonModule,
 		MatTooltipModule,
-		MatIconModule
+		MatIconModule,
+		MatMenuModule
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css'
@@ -47,6 +51,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public height = 100;
 
+	/**
+	 * This is {@code true} if has to show the grid.
+	 */
+	public showGrid$: Observable<boolean>;
+
 	public eConnectionBehaviour = EFConnectionBehavior;
 	protected readonly eMarkerType = EFMarkerType;
 	/**
@@ -54,9 +63,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	constructor(
 		private header: MainService,
-		private messages: MessagesService
+		private messages: MessagesService,
+		private conf: ConfigService
 	) {
 
+		this.showGrid$ = this.conf.editorShowGrid$;
 	}
 
 	/**
@@ -109,14 +120,39 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Do a zoom in in the graph.
+	 */
+	public zoomIn() {
+
+		this.rescale(1.35)
+	}
+
+	/**
+	 * Do a zoom out out the graph.
+	 */
+	public zoomOut() {
+
+		this.rescale(0.65)
+	}
+
+	/**
 	 * Called whne teh scale has changed.
 	 */
-	public rescale(factor: number) {
+	private rescale(factor: number) {
 
 		const canvas = this.fCanvas();
 		var scale = factor * canvas.getScale();
 		canvas.setScale(scale, PointExtensions.initialize());
 		canvas.redrawWithAnimation()
+	}
+
+	/**
+	 * Enable disable the grid.
+	 */
+	public toogleGrid() {
+
+		this.conf.editorShowGrid = !this.conf.editorShowGrid;
+		this.fCanvas().redraw();
 	}
 
 	/**
@@ -143,10 +179,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called when something is selectd in the flow.
 	 */
-	public selectionChanged(event:FSelectionChangeEvent){
-		
-		
-		
+	public selectionChanged(event: FSelectionChangeEvent) {
+
+
+
 	}
 
 }

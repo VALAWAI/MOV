@@ -16,29 +16,68 @@
 			class="p-2">
 			<div class="border border-sky-500 text-sky-500">C2</div>
 		</button>
-		<button matButton color="primary" (click)="fit()"
+		<button mat-icon-button color="primary" (click)="fit()"
 			matTooltip="Fit topology to screen."
 			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-fit-tooltip">
 			<mat-icon>aspect_ratio</mat-icon>
 		</button>
-		<button matButton color="primary" (click)="rescale(1.35)"
+		<button mat-icon-button color="primary" (click)="zoomIn()"
 			matTooltip="Zoom in"
 			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-zoon-in-tooltip">
 			<mat-icon>zoom_in</mat-icon>
 		</button>
-		<button matButton color="primary" (click)="rescale(0.65)"
+		<button mat-icon-button color="primary" (click)="zoomOut()"
 			matTooltip="Zoom out"
 			i18n-matTooltip="The tool tip for the fit action@@main_topology_editor-toolbar-zoom-out-tooltip">
 			<mat-icon>zoom_out</mat-icon>
 		</button>
+		<button mat-icon-button color="primary"
+			[matMenuTriggerFor]="editorMenu">
+			<mat-icon>more_horiz</mat-icon>
+		</button>
+		<mat-menu #editorMenu="matMenu">
+		<button mat-menu-item>New</button>
+		<button mat-menu-item
+			i18n="The label of the menu to zoom in@@main_topology_editor-toolbar-zoon-in-menu"
+			[matMenuTriggerFor]="viewMenu">View</button>
+		</mat-menu>
+		<mat-menu #viewMenu="matMenu">
+		<button mat-menu-item (click)="fit()">
+			<mat-icon>aspect_ratio</mat-icon>
+			<span i18n="The menu label to fit@@main_topology_editor-menu-fit">Fit
+				to Screen </span>
+		</button>
+		<button mat-menu-item (click)="zoomIn()">
+			<mat-icon>zoom_in</mat-icon>
+			<span
+				i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-in">Zoom
+				in</span>
+		</button>
+		<button mat-menu-item (click)="zoomOut()">
+			<mat-icon>zoom_out</mat-icon>
+			<span
+				i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-out">Zoom
+				out</span>
+		</button>
+		<button mat-menu-item (click)="toogleGrid()">
+			<!-- The icon is the reverse because the action what to do the reverse of the current status -->
+			<mat-icon *ngIf="showGrid$ | async; else gridOff">grid_off
+			</mat-icon>
+			<ng-template #gridOff> <mat-icon>grid_on</mat-icon> </ng-template>
+			<span
+				i18n="The menu label to toogle grid@@main_topology_editor-menu-toogle-grid">Toggle
+				Grid</span>
+		</button>
+
+		</mat-menu>
 	</div>
 	<div class="grow bg-gray-50">
 		<div [ngStyle]="{'height.px':height}"
 			class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fLoaded)="loaded()"
-				(fSelectionChange)="selectionChanged($event)"> <f-background>
-			<f-circle-pattern></f-circle-pattern> </f-background> <f-line-alignment
-				[fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
+				(fSelectionChange)="selectionChanged($event)"> <f-background
+				*ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
+			</f-background> <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
 			<f-canvas fZoom> <f-connection fOutputId="output1"
 				fInputId="input1" fType="bezier"> <svg
 				viewBox="0 0 20 20" fMarker [type]="eMarkerType.START" [height]="20"
@@ -59,9 +98,7 @@
 				[height]="5" [width]="5" [refX]="4" [refY]="2.5">
         <path fill="var(--connection-gradient-2)"
 					d="M0,0L700,350L0,700L150,350z" />
-      </svg> </f-connection>
-
-<f-connection fOutputId="output2" fInputId="input21"
+      </svg> </f-connection> <f-connection fOutputId="output2" fInputId="input21"
 				fType="bezier"> <svg viewBox="0 0 10 10" fMarker
 				[type]="eMarkerType.START" [height]="10" [width]="10" [refX]="5"
 				[refY]="5">
@@ -71,9 +108,7 @@
 				[height]="5" [width]="5" [refX]="4" [refY]="2.5">
         <path fill="var(--connection-gradient-2)"
 					d="M0,0L700,350L0,700L150,350z" />
-      </svg> </f-connection>
-
-<f-connection fOutputId="output22" fInputId="input1"
+      </svg> </f-connection> <f-connection fOutputId="output22" fInputId="input1"
 				fType="bezier"> <svg viewBox="0 0 10 10" fMarker
 				[type]="eMarkerType.START" [height]="10" [width]="10" [refX]="5"
 				[refY]="5">

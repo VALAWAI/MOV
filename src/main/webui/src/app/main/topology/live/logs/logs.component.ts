@@ -11,38 +11,36 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
 import { MainService } from 'src/app/main';
-import { MessagesService } from 'src/app/shared/messages';
 import { COMPONENT_TYPE_NAMES, LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
 import { ShowLogDialog } from './show-log.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { NgFor, NgIf } from '@angular/common';
 import { TimestampPipe } from '@app/shared/timestamp';
 import { MatIcon } from '@angular/material/icon';
 import { ComponentNameBeautifier } from '@app/shared/component/view';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
-import { pullingTime } from '@app/shared';
+import { ConfigService } from '@app/shared';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	standalone: true,
 	selector: 'app-logs',
 	imports: [
+		CommonModule,
 		ReactiveFormsModule,
 		MatFormField,
 		MatInput,
 		MatLabel,
 		MatSelect,
 		MatOption,
-		NgIf,
 		TimestampPipe,
 		MatIcon,
 		ComponentNameBeautifier,
 		MatPaginator,
 		MatCheckbox,
-		NgFor,
 		MatTableModule
 	],
 	templateUrl: './logs.component.html',
@@ -110,7 +108,8 @@ export class LogsComponent implements OnInit, OnDestroy {
 		private header: MainService,
 		private mov: MovApiService,
 		private fb: FormBuilder,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private conf: ConfigService
 	) {
 
 	}
@@ -169,7 +168,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 			this.pageSubscription.unsubscribe();
 		}
 
-		this.pageSubscription = timer(0, pullingTime()).pipe(
+		this.pageSubscription = timer(0, this.conf.pollingTime).pipe(
 			switchMap(() => this.getPage()),
 			retry()
 		).subscribe(
