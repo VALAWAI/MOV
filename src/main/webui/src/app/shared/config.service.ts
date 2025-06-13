@@ -79,7 +79,6 @@ export class ConfigService {
 	public get editorShowGrid(): boolean {
 
 		var item = localStorage.getItem('EDITOR_SHOW_GRID');
-		console.log(item);
 		return (item == null) || (item.toLowerCase() === 'true');
 	}
 

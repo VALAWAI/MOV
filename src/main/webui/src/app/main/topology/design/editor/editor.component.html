@@ -1,20 +1,17 @@
 <div
 	class="p-1 flex flex-col md:flex-row flex-wrap gap-1 items-center justify-center content-center">
 	<div class="bg-gray-200 grow-0 flex flex-row flex-wrap md:flex-col">
-		<button (click)="addC0()" matTooltip="Add a C0 component."
-			i18n-matTooltip="The tool tip to add C0 component@@main_topology_editor-toolbar-add-c0-tooltip"
-			class="p-2">
+		<button class="p-2" fExternalItem [fPreview]="c0PreviewTemplate"
+			fData="C0">
 			<div class="border border-indigo-500 text-indigo-500">C0</div>
 		</button>
-		<button (click)="addC1()" matTooltip="Add a C1 component."
-			i18n-matTooltip="The tool tip to add C1 component@@main_topology_editor-toolbar-add-c1-tooltip"
-			class="p-2">
+		<button class="p-2" fExternalItem [fPreview]="c1PreviewTemplate"
+			fData="C1">
 			<div class="border border-purple-500 text-purple-500">C1</div>
 		</button>
-		<button (click)="addC2()" matTooltip="Add a C2 component."
-			i18n-matTooltip="The tool tip to add C2 component@@main_topology_editor-toolbar-add-c2-tooltip"
-			class="p-2">
-			<div class="border border-sky-500 text-sky-500">C2</div>
+		<button class="p-2" fExternalItem [fPreview]="c2PreviewTemplate"
+			fData="C2">
+			<div class="border border-slky-500 text-sky-500">C2</div>
 		</button>
 		<button mat-icon-button color="primary" (click)="fit()"
 			matTooltip="Fit topology to screen."
@@ -36,11 +33,24 @@
 			<mat-icon>more_horiz</mat-icon>
 		</button>
 		<mat-menu #editorMenu="matMenu">
-		<button mat-menu-item>New</button>
+		<button mat-menu-item [matMenuTriggerFor]="fileMenu">File</button>
+		<button mat-menu-item [matMenuTriggerFor]="editMenu">Edit</button>
 		<button mat-menu-item
 			i18n="The label of the menu to zoom in@@main_topology_editor-toolbar-zoon-in-menu"
 			[matMenuTriggerFor]="viewMenu">View</button>
-		</mat-menu>
+		<a
+			href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
+			target="_blank">
+			<button mat-menu-item
+				i18n="The menu item that go to the Editor help site@@main_topology_editor-menu-help">Help</button>
+		</a> </mat-menu>
+		<mat-menu #fileMenu="matMenu"> New Open Save Save As Import
+
+		Export </mat-menu>
+		<mat-menu #editMenu="matMenu"> Undo Redo cut copy paste
+
+
+		clear canvar? Save As Import Export </mat-menu>
 		<mat-menu #viewMenu="matMenu">
 		<button mat-menu-item (click)="fit()">
 			<mat-icon>aspect_ratio</mat-icon>
@@ -68,17 +78,50 @@
 				i18n="The menu label to toogle grid@@main_topology_editor-menu-toogle-grid">Toggle
 				Grid</span>
 		</button>
-
+		<button mat-menu-item [matMenuTriggerFor]="layoutsMenu">
+			<span
+				i18n="The menu label to change the layout@@main_topology_editor-menu-layouts">Layouts</span>
+		</button>
 		</mat-menu>
+		<mat-menu #layoutsMenu="matMenu"> <!-- 
+		<button mat-menu-item (click)="changeLayout('horizontal')">
+			<span
+				i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
+		</button>
+		<button mat-menu-item (click)="changeLayout('vertical')">
+			<span
+				i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
+		</button>
+		 --> </mat-menu>
 	</div>
+	<ng-template #c0PreviewTemplate>
+	<div
+		class="border border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
+		<div>C0</div>
+	</div>
+	</ng-template>
+	<ng-template #c1PreviewTemplate>
+	<div
+		class="border border-purple-500 text-purple-500 flex flex flex-col items-center justify-center content-center">
+		<div>C1</div>
+	</div>
+	</ng-template>
+	<ng-template #c2PreviewTemplate>
+	<div
+		class="border border-sky-500 text-sky-500 flex flex flex-col items-center justify-center content-center">
+		<div>C2</div>
+	</div>
+	</ng-template>
 	<div class="grow bg-gray-50">
 		<div [ngStyle]="{'height.px':height}"
 			class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fLoaded)="loaded()"
-				(fSelectionChange)="selectionChanged($event)"> <f-background
+				(fSelectionChange)="selectionChanged($event)"
+				(fCreateNode)="onNodeAdded($event)"> <f-background
 				*ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
 			</f-background> <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
-			<f-canvas fZoom> <f-connection fOutputId="output1"
+			<f-canvas fZoom> <!-- 
+			<f-connection fOutputId="output1"
 				fInputId="input1" fType="bezier"> <svg
 				viewBox="0 0 20 20" fMarker [type]="eMarkerType.START" [height]="20"
 				[width]="20" [refX]="10" [refY]="-5">
@@ -176,7 +219,10 @@
 
   </svg>
 			</div>
-			</f-canvas> </f-flow>
+			--> @for(node of nodes;track node.id){
+			<div fNode fDragHandle [fNodePosition]="node.position">
+				{{node.type}}</div>
+			} </f-canvas> </f-flow>
 		</div>
 	</div>
 	<div class="lg:max-w-sm">

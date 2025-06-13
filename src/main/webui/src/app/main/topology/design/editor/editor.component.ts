@@ -7,18 +7,29 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
 import { TopologyGraphElement } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
-import { EFConnectionBehavior, EFMarkerType, FCanvasComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
+import {
+	EFConnectionBehavior,
+	EFMarkerType,
+	FCanvasComponent,
+	FExternalItemDirective,
+	FFlowModule,
+	FSelectionChangeEvent,
+	FCreateNodeEvent
+} from '@foblex/flow';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
 import { Observable } from 'rxjs';
+import { TopologyViewNodeModel } from './topolofy-view-node.model';
+
+
 
 @Component({
 	standalone: true,
@@ -29,10 +40,12 @@ import { Observable } from 'rxjs';
 		MatButtonModule,
 		MatTooltipModule,
 		MatIconModule,
-		MatMenuModule
+		MatMenuModule,
+		FExternalItemDirective
 	],
 	templateUrl: './editor.component.html',
-	styleUrl: './editor.component.css'
+	styleUrl: './editor.component.css',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopologyEditorComponent implements OnInit, OnDestroy {
 
@@ -45,6 +58,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * The canvas with the hraph.
 	 */
 	protected fCanvas = viewChild.required(FCanvasComponent);
+
+	/**
+	 * The nodes of the graph.
+	 */
+	public nodes: TopologyViewNodeModel[] = [];
 
 	/**
 	 * The height of the component.
@@ -64,7 +82,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	constructor(
 		private header: MainService,
 		private messages: MessagesService,
-		private conf: ConfigService
+		private conf: ConfigService,
+		private ref: ChangeDetectorRef
 	) {
 
 		this.showGrid$ = this.conf.editorShowGrid$;
@@ -182,6 +201,29 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public selectionChanged(event: FSelectionChangeEvent) {
 
 
+
+	}
+
+	/**
+	 * Called when a node is added to the graf.
+	 */
+	public onNodeAdded(event: FCreateNodeEvent): void {
+
+		var node = new TopologyViewNodeModel();
+		node.id = this.nodes.length.toString();
+		node.type = event.data;
+		node.position = { x: event.rect.x, y: event.rect.y };
+		this.nodes.push(node);
+		this.updatedGraph();
+	}
+
+	/**
+	 * Called whne the graph has been updated.
+	 */
+	private updatedGraph() {
+
+		this.ref.markForCheck();
+		this.fCanvas().redrawWithAnimation();
 
 	}
 
