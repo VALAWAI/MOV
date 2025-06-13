@@ -21,8 +21,6 @@ import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
-import eu.valawai.mov.persistence.live.topology.DisableAllTopologyConnections;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

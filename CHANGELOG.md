@@ -1,5 +1,10 @@
 # Master Of Valawai (MOV)
 
+## Version 2.0.0 (June 13,2025)
+
+ - Allow to define a Topology using a graph.
+
+
 ## Version 1.5.1 (May 9,2025)
 
  - Upgrade Quarkus to 3.22.2

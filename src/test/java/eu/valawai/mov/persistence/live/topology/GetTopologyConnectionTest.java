@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.api.v1.topology.TopologyConnectionTest;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
-import eu.valawai.mov.persistence.live.topology.GetTopologyConnection;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

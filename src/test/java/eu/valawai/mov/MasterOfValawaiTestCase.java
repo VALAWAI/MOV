@@ -11,13 +11,11 @@ package eu.valawai.mov;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -25,9 +23,9 @@ import eu.valawai.mov.events.RabbitMQTestResource;
 import eu.valawai.mov.persistence.AbstractEntityOperator;
 import eu.valawai.mov.persistence.MongoTestResource;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
-import io.quarkus.logging.Log;
 import io.quarkus.test.common.WithTestResource;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 
 /**
  * The common infrastructure to run a test that uses the Master Of VALAWAI
@@ -70,15 +68,10 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected <T> T assertItemNotNull(Uni<T> operator) {
 
-		final Function<? super Throwable, ? extends T> manageError = error -> {
-
-			Log.errorv(error, "Cannot do the operation");
-			return null;
-
-		};
-		final var result = operator.onFailure().recoverWithItem(manageError).await().atMost(Duration.ofSeconds(30));
-		assertNotNull(result);
-		return result;
+		final var item = operator.subscribe().withSubscriber(UniAssertSubscriber.create())
+				.awaitItem(Duration.ofSeconds(30)).getItem();
+		assertNotNull(item);
+		return item;
 	}
 
 	/**
@@ -88,17 +81,9 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected <T> void assertItemNull(Uni<T> operator) {
 
-		final List<Throwable> errors = new ArrayList<>();
-		final Function<? super Throwable, ? extends T> manageError = error -> {
-
-			Log.errorv(error, "Cannot do the operation");
-			errors.add(error);
-			return null;
-
-		};
-		final var result = operator.onFailure().recoverWithItem(manageError).await().atMost(Duration.ofSeconds(30));
-		assertNull(result);
-		assertTrue(errors.isEmpty(), "The operator has failed");
+		final var item = operator.subscribe().withSubscriber(UniAssertSubscriber.create())
+				.awaitItem(Duration.ofSeconds(30)).getItem();
+		assertNull(item);
 	}
 
 	/**
@@ -108,7 +93,8 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected <T> void assertItemNullOrFailed(Uni<T> operator) {
 
-		final var result = operator.onFailure().recoverWithNull().await().atMost(Duration.ofSeconds(30));
+		final var result = operator.subscribe().withSubscriber(UniAssertSubscriber.create())
+				.awaitItem(Duration.ofSeconds(30)).getItem();
 		assertNull(result);
 	}
 

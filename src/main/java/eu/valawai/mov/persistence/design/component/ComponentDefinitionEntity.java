@@ -13,6 +13,7 @@ import java.util.List;
 
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
+import eu.valawai.mov.api.v2.design.components.VersionInfo;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 
@@ -62,12 +63,12 @@ public class ComponentDefinitionEntity extends ReactivePanacheMongoEntity implem
 	/**
 	 * The version of the component.
 	 */
-	public String version;
+	public VersionInfo version;
 
 	/**
 	 * The API version of the component.
 	 */
-	public String apiVersion;
+	public VersionInfo apiVersion;
 
 	/**
 	 * The channels that the component has.

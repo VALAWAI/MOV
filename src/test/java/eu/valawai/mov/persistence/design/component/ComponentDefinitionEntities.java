@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.persistence.live.components;
+package eu.valawai.mov.persistence.design.component;
 
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
@@ -14,7 +14,6 @@ import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,18 +25,17 @@ import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.api.v1.components.PayloadSchemaTestCase;
+import eu.valawai.mov.api.v2.design.components.VersionInfoTest;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 
 /**
- * Methods to manage the {@like ComponentEntity} over tests.
- *
- * ComponentEntity
+ * Methods to manage the {@like ComponentDefinitionEntity} over tests.
  *
  * @author VALAWAI
  */
-public interface ComponentEntities {
+public interface ComponentDefinitionEntities {
 
 	/**
 	 * Check exist the minimum components.
@@ -46,15 +44,16 @@ public interface ComponentEntities {
 	 *
 	 * @return the min components.
 	 */
-	public static List<ComponentEntity> minComponents(int min) {
+	public static List<ComponentDefinitionEntity> minComponents(int min) {
 
-		final var total = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
+		final var total = ComponentDefinitionEntity.count().await().atMost(Duration.ofSeconds(30));
 		if (total < min) {
 
-			nextComponents(min - total);
+			nextComponentDefinitions(min - total);
 		}
 
-		final Uni<List<ComponentEntity>> find = ComponentEntity.findAll(Sort.descending("_id")).range(0, min).list();
+		final Uni<List<ComponentDefinitionEntity>> find = ComponentDefinitionEntity.findAll(Sort.descending("_id"))
+				.range(0, min).list();
 		return find.await().atMost(Duration.ofSeconds(30));
 	}
 
@@ -63,16 +62,18 @@ public interface ComponentEntities {
 	 *
 	 * @return the created component.
 	 */
-	public static ComponentEntity nextComponent() {
+	public static ComponentDefinitionEntity nextComponentDefinition() {
 
-		final ComponentEntity entity = new ComponentEntity();
+		final ComponentDefinitionEntity entity = new ComponentDefinitionEntity();
 		entity.type = next(ComponentType.values());
-		final var name = nextPattern("component_{0}");
-		entity.name = "valawai/" + entity.type.name().toLowerCase() + "/" + name;
-		entity.description = "Description of " + name;
-		entity.version = nextPattern("{0}.{1}.{2}", 3);
-		entity.apiVersion = nextPattern("{0}.{1}.{2}", 3);
-		entity.since = rnd().nextLong(0, Instant.now().getEpochSecond());
+		entity.name = nextPattern("Component {0}");
+		entity.description = "Description of '" + entity.name + "'.";
+		final var normalizedName = entity.name.toLowerCase().replaceAll("\\W", "_");
+		entity.docsLink = "https://valawai.github.io/docs/components/" + entity.type.name() + "/" + normalizedName;
+		entity.gitLink = "https://github.com/VALAWAI/" + entity.type.name() + "_" + normalizedName;
+		final var versionBuilder = new VersionInfoTest();
+		entity.version = versionBuilder.nextModel();
+		entity.apiVersion = versionBuilder.nextModel();
 		final var max = ValueGenerator.rnd().nextInt(0, 5);
 		if (max > 0) {
 
@@ -81,7 +82,8 @@ public interface ComponentEntities {
 
 				final var channel = new ChannelSchema();
 				final var action = nextPattern("action_{0}");
-				channel.name = entity.name + "/" + next(Arrays.asList("control", "data")) + "/" + action;
+				channel.name = "valawai/" + entity.type.name().toLowerCase() + "/" + normalizedName + "/"
+						+ next(Arrays.asList("control", "data")) + "/" + action;
 				channel.description = "Description of " + action;
 				final PayloadSchema schema = PayloadSchemaTestCase.nextPayloadSchema(3);
 				if (rnd().nextBoolean()) {
@@ -115,12 +117,12 @@ public interface ComponentEntities {
 	 *
 	 * @return the created components.
 	 */
-	public static List<ComponentEntity> nextComponents(long num) {
+	public static List<ComponentDefinitionEntity> nextComponentDefinitions(long num) {
 
-		final var components = new ArrayList<ComponentEntity>();
+		final var components = new ArrayList<ComponentDefinitionEntity>();
 		for (var i = 0; i < num; i++) {
 
-			final var next = nextComponent();
+			final var next = nextComponentDefinition();
 			components.add(next);
 
 		}
@@ -137,23 +139,25 @@ public interface ComponentEntities {
 	 *
 	 * @return the number of components entities that satisfy the filter.
 	 */
-	public static long nextComponentsUntil(Bson filter, long num) {
+	public static long nextComponentDefinitionsUntil(Bson filter, long num) {
 
-		var total = ComponentEntity.mongoCollection().countDocuments(filter).onFailure().recoverWithItem(error -> {
+		var total = ComponentDefinitionEntity.mongoCollection().countDocuments(filter).onFailure()
+				.recoverWithItem(error -> {
 
-			Log.errorv(error, "Cannot count the component entities");
-			return null;
+					Log.errorv(error, "Cannot count the component entities");
+					return null;
 
-		}).await().atMost(Duration.ofSeconds(30));
+				}).await().atMost(Duration.ofSeconds(30));
 		while (total < num) {
 
-			ComponentEntities.nextComponents(num - total);
-			total = ComponentEntity.mongoCollection().countDocuments(filter).onFailure().recoverWithItem(error -> {
+			nextComponentDefinitions(num - total);
+			total = ComponentDefinitionEntity.mongoCollection().countDocuments(filter).onFailure()
+					.recoverWithItem(error -> {
 
-				Log.errorv(error, "Cannot count the component entities");
-				return null;
+						Log.errorv(error, "Cannot count the component entities");
+						return null;
 
-			}).await().atMost(Duration.ofSeconds(30));
+					}).await().atMost(Duration.ofSeconds(30));
 		}
 
 		return total;

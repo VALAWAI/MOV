@@ -26,8 +26,6 @@ import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.MinComponentPage;
 import eu.valawai.mov.api.v1.components.MinComponentTest;
-import eu.valawai.mov.persistence.live.components.ComponentEntity;
-import eu.valawai.mov.persistence.live.components.GetMinComponentPage;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

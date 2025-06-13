@@ -20,8 +20,6 @@ import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.events.topology.TopologyAction;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
-import eu.valawai.mov.persistence.live.topology.EnableTopologyConnection;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

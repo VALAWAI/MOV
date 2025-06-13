@@ -26,8 +26,6 @@ import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
-import eu.valawai.mov.persistence.live.logs.AddLog;
-import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;

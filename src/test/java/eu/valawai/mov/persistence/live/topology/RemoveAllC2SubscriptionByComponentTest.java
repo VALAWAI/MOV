@@ -25,9 +25,6 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
-import eu.valawai.mov.persistence.live.topology.RemoveAllC2SubscriptionByComponent;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

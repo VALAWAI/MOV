@@ -19,7 +19,6 @@ import org.bson.conversions.Bson;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
-import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.quarkus.logging.Log;
 
 /**

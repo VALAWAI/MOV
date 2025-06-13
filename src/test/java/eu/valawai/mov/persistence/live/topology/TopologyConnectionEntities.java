@@ -23,8 +23,6 @@ import eu.valawai.mov.api.v1.components.ChannelSchemaTest;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import io.quarkus.logging.Log;
 
 /**

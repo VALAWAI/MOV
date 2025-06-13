@@ -31,8 +31,6 @@ import eu.valawai.mov.events.topology.ConnectionPayloadTest;
 import eu.valawai.mov.events.topology.ConnectionsPagePayload;
 import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.events.topology.QueryConnectionsPayload;
-import eu.valawai.mov.persistence.live.topology.GetConnectionsPagePayload;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
-import eu.valawai.mov.persistence.live.components.GetComponent;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

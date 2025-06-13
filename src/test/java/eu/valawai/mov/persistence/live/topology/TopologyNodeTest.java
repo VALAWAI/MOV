@@ -10,7 +10,6 @@ package eu.valawai.mov.persistence.live.topology;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
 
 /**
  * Test the {@link TopologyNode}.

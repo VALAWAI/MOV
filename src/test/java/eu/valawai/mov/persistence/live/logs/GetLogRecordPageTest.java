@@ -26,8 +26,6 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecordPage;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
-import eu.valawai.mov.persistence.live.logs.GetLogRecordPage;
-import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 

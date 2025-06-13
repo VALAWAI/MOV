@@ -19,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
-import eu.valawai.mov.persistence.live.components.AddComponent;
-import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 
