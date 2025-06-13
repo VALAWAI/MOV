@@ -11,7 +11,7 @@ package eu.valawai.mov.events.topology;
 import static eu.valawai.mov.ValueGenerator.flipCoin;
 
 import eu.valawai.mov.events.PayloadTestCase;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 
 /**
  * Test the {@link CreateConnectionPayload}.

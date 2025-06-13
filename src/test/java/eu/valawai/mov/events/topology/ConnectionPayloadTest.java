@@ -13,7 +13,7 @@ import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.nextPastTime;
 
 import eu.valawai.mov.events.PayloadTestCase;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 
 /**
  * Test the {@link ConnectionPayload}.

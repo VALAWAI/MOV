@@ -10,7 +10,7 @@ package eu.valawai.mov.events;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import eu.valawai.mov.persistence.logs.AddLog;
+import eu.valawai.mov.persistence.live.logs.AddLog;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.Shutdown;
 import io.quarkus.runtime.Startup;

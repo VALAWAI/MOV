@@ -14,7 +14,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
 import eu.valawai.mov.events.PayloadService;
-import eu.valawai.mov.persistence.logs.AddLog;
+import eu.valawai.mov.persistence.live.logs.AddLog;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

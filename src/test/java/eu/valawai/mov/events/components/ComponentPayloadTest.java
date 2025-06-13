@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import eu.valawai.mov.api.v1.components.ChannelSchemaTest;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.events.PayloadTestCase;
-import eu.valawai.mov.persistence.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
 
 /**
  * Test the {@link ComponentPayload}.

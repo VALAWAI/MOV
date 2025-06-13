@@ -10,7 +10,7 @@ package eu.valawai.mov.events.topology;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.events.PayloadTestCase;
-import eu.valawai.mov.persistence.topology.TopologyNode;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
 
 /**
  * Test the {@link NodePayload}.

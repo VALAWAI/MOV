@@ -218,8 +218,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 				if (node.id == selectedNodeId) {
 
 					this.selectedElement = node;
-					this.ref.markForCheck();
-					return;
+					break;
 				}
 			}
 
@@ -231,12 +230,16 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 				if (connection.id == selectedConnectionId) {
 
 					this.selectedElement = connection;
-					this.ref.markForCheck();
-					return;
+					break;
 				}
 			}
 
+		} else {
+
+			this.selectedElement = null;
 		}
+
+		this.ref.markForCheck();
 
 	}
 
@@ -293,7 +296,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		if (this.selectedElement?.constructor?.name === 'TopologyViewNodeModel') {
 
-
 			return this.selectedElement as TopologyViewNodeModel;
 		}
 
@@ -306,7 +308,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public get selectedConnection(): TopologyViewConnectionModel | null {
 
 		if (this.selectedElement?.constructor?.name === 'TopologyViewConnectionModel') {
-
 
 			return this.selectedElement as TopologyViewConnectionModel;
 		}

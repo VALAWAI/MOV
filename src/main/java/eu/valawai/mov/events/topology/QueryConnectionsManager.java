@@ -16,8 +16,8 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
 import eu.valawai.mov.events.PayloadService;
-import eu.valawai.mov.persistence.logs.AddLog;
-import eu.valawai.mov.persistence.topology.GetConnectionsPagePayload;
+import eu.valawai.mov.persistence.live.logs.AddLog;
+import eu.valawai.mov.persistence.live.topology.GetConnectionsPagePayload;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;

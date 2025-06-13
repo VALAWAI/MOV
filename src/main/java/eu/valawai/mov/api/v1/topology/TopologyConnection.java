@@ -17,7 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.valawai.mov.api.Model;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import io.smallrye.common.constraint.NotNull;
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 
 /**
  * Test the {@link TopologyConnection}.

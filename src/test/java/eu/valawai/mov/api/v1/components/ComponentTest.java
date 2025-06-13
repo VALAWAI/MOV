@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 import eu.valawai.mov.ValueGenerator;
-import eu.valawai.mov.persistence.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
 
 /**
  * Test the {@link Component}.

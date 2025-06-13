@@ -21,8 +21,8 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import eu.valawai.mov.events.components.RegisterComponentPayload;
 import eu.valawai.mov.events.components.UnregisterComponentPayload;
-import eu.valawai.mov.persistence.components.GetComponent;
-import eu.valawai.mov.persistence.components.GetMinComponentPage;
+import eu.valawai.mov.persistence.live.components.GetComponent;
+import eu.valawai.mov.persistence.live.components.GetMinComponentPage;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;

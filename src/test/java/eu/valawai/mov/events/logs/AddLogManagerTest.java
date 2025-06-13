@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
-import eu.valawai.mov.persistence.logs.LogEntity;
+import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;

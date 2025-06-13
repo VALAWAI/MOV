@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import eu.valawai.mov.events.RabbitMQTestResource;
 import eu.valawai.mov.persistence.AbstractEntityOperator;
 import eu.valawai.mov.persistence.MongoTestResource;
-import eu.valawai.mov.persistence.logs.LogEntity;
+import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.quarkus.logging.Log;
 import io.quarkus.test.common.WithTestResource;
 import io.smallrye.mutiny.Uni;

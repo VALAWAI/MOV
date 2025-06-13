@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import eu.valawai.mov.persistence.components.FinishAllComponents;
-import eu.valawai.mov.persistence.logs.AddLog;
-import eu.valawai.mov.persistence.topology.DeleteAllTopologyConnections;
-import eu.valawai.mov.persistence.topology.DisableAllTopologyConnections;
+import eu.valawai.mov.persistence.live.components.FinishAllComponents;
+import eu.valawai.mov.persistence.live.logs.AddLog;
+import eu.valawai.mov.persistence.live.topology.DeleteAllTopologyConnections;
+import eu.valawai.mov.persistence.live.topology.DisableAllTopologyConnections;
 import io.quarkus.runtime.StartupEvent;
 import io.smallrye.config.Priorities;
 import io.vertx.mutiny.core.http.HttpHeaders;

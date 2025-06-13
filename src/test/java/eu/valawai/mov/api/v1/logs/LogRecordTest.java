@@ -19,8 +19,8 @@ import java.util.HashMap;
 
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.api.v1.components.MinComponentTest;
-import eu.valawai.mov.persistence.components.ComponentEntity;
-import eu.valawai.mov.persistence.logs.LogEntity;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 

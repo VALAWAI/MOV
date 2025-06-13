@@ -26,8 +26,8 @@ import eu.valawai.mov.events.components.ComponentPayload;
 import eu.valawai.mov.events.components.RegisterComponentPayload;
 import eu.valawai.mov.events.components.RegisterComponentPayloadTest;
 import eu.valawai.mov.events.components.UnregisterComponentPayload;
-import eu.valawai.mov.persistence.components.ComponentEntity;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import jakarta.ws.rs.core.Response.Status;
 
 /**

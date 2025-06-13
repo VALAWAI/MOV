@@ -15,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import eu.valawai.mov.persistence.logs.GetLogRecordPage;
+import eu.valawai.mov.persistence.live.logs.GetLogRecordPage;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;

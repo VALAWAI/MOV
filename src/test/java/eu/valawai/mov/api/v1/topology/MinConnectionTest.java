@@ -15,7 +15,7 @@ import static eu.valawai.mov.ValueGenerator.nextPattern;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.api.v1.components.ComponentType;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 
 /**
  * Test the {@link MinConnection}.

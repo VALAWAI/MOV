@@ -13,8 +13,8 @@ import java.time.Duration;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.api.v1.components.ChannelSchemaTest;
 import eu.valawai.mov.api.v1.components.MinComponentTest;
-import eu.valawai.mov.persistence.components.ComponentEntity;
-import eu.valawai.mov.persistence.topology.TopologyNode;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
 
 /**
  * Test the {@link TopologyConnectionNode}.

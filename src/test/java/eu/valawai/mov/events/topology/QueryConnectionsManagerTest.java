@@ -24,9 +24,9 @@ import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
-import eu.valawai.mov.persistence.logs.LogEntity;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntities;
-import eu.valawai.mov.persistence.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.logs.LogEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
 

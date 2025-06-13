@@ -25,8 +25,8 @@ import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.api.v1.components.ComponentType;
-import eu.valawai.mov.persistence.logs.LogEntities;
-import eu.valawai.mov.persistence.logs.LogEntity;
+import eu.valawai.mov.persistence.live.logs.LogEntities;
+import eu.valawai.mov.persistence.live.logs.LogEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.core.Response.Status;
