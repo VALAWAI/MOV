@@ -1,0 +1,9 @@
+<div *ngIf="node!=null;else noNode" class="w-full h-full flex flex-col">
+	<div>Level: {{node.type}}</div>
+	<div>Name: {{node.name}}</div>
+	<div>Posiiton: {{node.position.x}}, {{node.position.y}}</div>
+
+</div>
+<ng-template #noNode> <app-message type="ERROR"
+	i18n="Error message when no node is selected to edit@@main_topology_design_node-editor_no-node-error-msg">
+No node is selected. Please select a node to edit. </app-message> </ng-template>

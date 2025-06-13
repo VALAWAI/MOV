@@ -254,14 +254,16 @@
 			} </f-canvas> </f-flow>
 		</div>
 	</div>
-	<div class="lg:max-w-sm">
-		<div *ngIf="selectedElement; else noSelection">
-			<div class="w-full p-2">{{selectedElement | json}}</div>
-		</div>
-		<ng-template #noSelection>
+	<div class="lg:max-w-sm w-full p-2">
+		@switch(selectedElement?.constructor?.name){
+		@case('TopologyViewNodeModel'){
+		<app-topology-node-editor [node]="selectedNode"></app-topology-node-editor>
+		} @case('TopologyViewConnectionModel'){
+		<app-topology-connection-editor [connection]="selectedConnection"></app-topology-connection-editor>
+		} @default {
 		<div class="text-gray-400 italic text-wrap"
 			i18n="@@main_topology_editor-no-selection-msg">Select an
 			element in the graph to show its information.</div>
-		</ng-template>
+		} }
 	</div>
 </div>

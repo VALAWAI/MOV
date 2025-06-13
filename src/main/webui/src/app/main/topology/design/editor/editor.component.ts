@@ -29,7 +29,8 @@ import { ConfigService } from '@app/shared';
 import { Observable } from 'rxjs';
 import { TopologyViewNodeModel } from './topolofy-view-node.model';
 import { TopologyViewConnectionModel } from './topolofy-view-connection.model';
-
+import { TopologyNodeEditorComponent } from './node-editor.component';
+import { TopologyConnectionEditorComponent } from './connection-editor.component';
 
 
 @Component({
@@ -42,7 +43,9 @@ import { TopologyViewConnectionModel } from './topolofy-view-connection.model';
 		MatTooltipModule,
 		MatIconModule,
 		MatMenuModule,
-		FExternalItemDirective
+		FExternalItemDirective,
+		TopologyNodeEditorComponent,
+		TopologyConnectionEditorComponent
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css',
@@ -281,6 +284,34 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		}
 
 
+	}
+
+	/**
+	 * Return the selected node or {@code null} if not selected.
+	 */
+	public get selectedNode(): TopologyViewNodeModel | null {
+
+		if (this.selectedElement?.constructor?.name === 'TopologyViewNodeModel') {
+
+
+			return this.selectedElement as TopologyViewNodeModel;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return the selected connection or {@code null} if not selected.
+	 */
+	public get selectedConnection(): TopologyViewConnectionModel | null {
+
+		if (this.selectedElement?.constructor?.name === 'TopologyViewConnectionModel') {
+
+
+			return this.selectedElement as TopologyViewConnectionModel;
+		}
+
+		return null;
 	}
 
 }

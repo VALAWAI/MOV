@@ -1,0 +1,6 @@
+<div *ngIf="connection!=null;else noConnection" class="w-full h-full flex flex-col">
+	<div>{{connection|json}}</div>
+</div>
+<ng-template #noConnection> <app-message type="ERROR"
+	i18n="Error message when no connection is selected to edit@@main_topology_design_connection-editor_no-connection-error-msg">
+No connection is selected. Please select a connection to edit. </app-message> </ng-template>
