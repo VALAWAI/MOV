@@ -221,7 +221,24 @@
 			</div>
 			--> @for(node of nodes;track node.id){
 			<div fNode fDragHandle [fNodePosition]="node.position">
-				{{node.type}}</div>
+				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
+					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2'}">
+					<div
+						class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
+						<div
+							class="p-1 rounded-sm text-white w-[24px] h-[24px] text-[11px] font-bold text-center"
+							[ngClass]="{'bg-indigo-600':node.type=='C0','bg-purple-600':node.type=='C1','bg-sky-600':node.type=='C2'}">
+							{{node.type}}</div>
+						<div class="grow text-wrap font-bold">{{node.name}}</div>
+					</div>
+					<!-- 
+					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
+						fOutputConnectableSide="right">input</div>
+					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output2"
+						fOutputConnectableSide="right">input</div>
+						 -->
+				</div>
+			</div>
 			} </f-canvas> </f-flow>
 		</div>
 	</div>

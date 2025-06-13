@@ -16,7 +16,7 @@ import { IPoint } from "@foblex/2d";
  * @author VALAWAI
  */
 export class TopologyViewNodeModel {
-	
+
 	/**
 	 * The identifier of the node.
 	 */
@@ -31,6 +31,11 @@ export class TopologyViewNodeModel {
 	 * The type of the component.
 	 */
 	public type: ComponentType = "C0";
+
+	/**
+	 * The name of the node.
+	 */
+	public name: string = "";
 
 
 }
