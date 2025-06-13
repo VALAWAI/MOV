@@ -11,7 +11,10 @@ package eu.valawai.mov;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import io.vertx.core.json.Json;
 
@@ -24,6 +27,7 @@ import io.vertx.core.json.Json;
  *
  * @author VALAWAI
  */
+@Timeout(value = 1, unit = TimeUnit.MINUTES)
 public abstract class ReflectionModelTestCase<T extends ReflectionModel> {
 
 	/**
