@@ -220,16 +220,28 @@
   </svg>
 			</div>
 			--> @for(node of nodes;track node.id){
-			<div fNode fDragHandle [fNodePosition]="node.position">
+			<div fNode [fNodeId]="node.id" fDragHandle
+				[fNodePosition]="node.position">
 				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
 					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2'}">
 					<div
 						class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 						<div
-							class="p-1 rounded-sm text-white w-[24px] h-[24px] text-[11px] font-bold text-center"
+							class="p-1 rounded-sm text-white w-[24px] h-[24px] text-xs font-bold text-center"
 							[ngClass]="{'bg-indigo-600':node.type=='C0','bg-purple-600':node.type=='C1','bg-sky-600':node.type=='C2'}">
 							{{node.type}}</div>
-						<div class="grow text-wrap font-bold">{{node.name}}</div>
+						<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
+						<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
+							<mat-icon class="text-xs">more_vert</mat-icon>
+						</button>
+						<mat-menu #nodeMenu="matMenu">
+						<button mat-menu-item (click)="deleteNode(node)">
+							<mat-icon color="warn">delete</mat-icon>
+							<span
+								i18n="The label of the menu to delete a node from the topology@@main_topology_design_editor-menu-delete-node">Delete
+								node</span>
+						</button>
+						</mat-menu>
 					</div>
 					<!-- 
 					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
@@ -243,9 +255,8 @@
 		</div>
 	</div>
 	<div class="lg:max-w-sm">
-		<div *ngIf="selected; else noSelection">
-			<div>Node</div>
-			<div>Edge</div>
+		<div *ngIf="selectedElement; else noSelection">
+			<div class="w-full p-2">{{selectedElement | json}}</div>
 		</div>
 		<ng-template #noSelection>
 		<div class="text-gray-400 italic text-wrap"

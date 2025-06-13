@@ -28,6 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
 import { Observable } from 'rxjs';
 import { TopologyViewNodeModel } from './topolofy-view-node.model';
+import { TopologyViewConnectionModel } from './topolofy-view-connection.model';
 
 
 
@@ -50,11 +51,6 @@ import { TopologyViewNodeModel } from './topolofy-view-node.model';
 export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	/**
-	 * The selected component.
-	 */
-	public selected: TopologyGraphElement | null = null;
-
-	/**
 	 * The canvas with the hraph.
 	 */
 	protected fCanvas = viewChild.required(FCanvasComponent);
@@ -65,14 +61,25 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public nodes: TopologyViewNodeModel[] = [];
 
 	/**
-	 * The height of the component.
+	 * The connections of the graph.
 	 */
-	public height = 100;
+	public connections: TopologyViewConnectionModel[] = [];
 
 	/**
 	 * This is {@code true} if has to show the grid.
 	 */
 	public showGrid$: Observable<boolean>;
+
+	/**
+	 * Selected element.
+	 */
+	public selectedElement: TopologyViewNodeModel | TopologyViewConnectionModel | null = null;
+
+	/**
+	 * The height of the component.
+	 */
+	public height = 100;
+
 
 	public eConnectionBehaviour = EFConnectionBehavior;
 	protected readonly eMarkerType = EFMarkerType;
@@ -200,7 +207,33 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public selectionChanged(event: FSelectionChangeEvent) {
 
+		if (event.fNodeIds.length > 0) {
 
+			const selectedNodeId = event.fNodeIds[0];
+			for (let node of this.nodes) {
+
+				if (node.id == selectedNodeId) {
+
+					this.selectedElement = node;
+					this.ref.markForCheck();
+					return;
+				}
+			}
+
+		} else if (event.fConnectionIds.length > 0) {
+
+			const selectedConnectionId = event.fConnectionIds[0];
+			for (let connection of this.connections) {
+
+				if (connection.id == selectedConnectionId) {
+
+					this.selectedElement = connection;
+					this.ref.markForCheck();
+					return;
+				}
+			}
+
+		}
 
 	}
 
@@ -215,6 +248,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		node.position = { x: event.rect.x, y: event.rect.y };
 		this.nodes.push(node);
 		this.updatedGraph();
+		this.selectedElement = node;
 	}
 
 	/**
@@ -224,6 +258,28 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		this.ref.markForCheck();
 		this.fCanvas().redrawWithAnimation();
+
+	}
+
+	/**
+	 * Called whne has to delete a node.
+	 */
+	public deleteNode(node: TopologyViewNodeModel) {
+
+		for (let i = 0; i < this.nodes.length; i++) {
+
+			if (node.id == this.nodes[i].id) {
+
+				if (this.selectedElement?.id == node.id) {
+
+					this.selectedElement = null;
+				}
+				this.nodes.splice(i, 1);
+				this.ref.markForCheck();
+				return;
+			}
+		}
+
 
 	}
 
