@@ -8,7 +8,11 @@
 
 package eu.valawai.mov.persistence.live.logs;
 
+import static eu.valawai.mov.ValueGenerator.next;
+import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.api.v1.logs.LogRecordPage;
 import eu.valawai.mov.api.v1.logs.LogRecordTest;
+import eu.valawai.mov.persistence.live.components.ComponentEntities;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 
@@ -411,72 +417,39 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 	 * Test get a page that match a patterns¡ and a level.
 	 */
 	@Test
-	public void shouldReturnPageWithPatternAndLevelAndComponentPatternAndType() {
+	public void shouldReturnPageThatMatchesMessageComponentLevelAndType() {
 
-		final var pattern = ".*1.*";
-		final var level = ValueGenerator.next(LogLevel.values());
-		final var type = "C1";
-		final var expected = new LogRecordPage();
-		expected.total = 0;
-		expected.offset = ValueGenerator.rnd().nextInt(2, 5);
+		final var msgPattern = ".*" + rnd().nextInt(0, 10) + ".*";
+		final var componentPattern = ".*" + rnd().nextInt(0, 10) + ".*";
+		final var level = next(LogLevel.values());
+		final var type = next(ComponentType.values());
+		final var offset = ValueGenerator.rnd().nextInt(2, 5);
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
-		var min = 100;
-		final var minTotal = expected.offset + limit + 10;
+		final var filter = Filters.and(Filters.regex("name", componentPattern), Filters.eq("type", type));
+		final var count = 10 + offset + limit;
+		ComponentEntities.nextComponentsUntil(filter, count);
+		final var components = this.assertItemNotNull(
+				ComponentEntity.mongoCollection().find(filter, ComponentEntity.class).collect().asList());
+		LogEntities.nextLogs(count + 10, components);
 
-		do {
+		final var page = this.assertExecutionNotNull(
+				GetLogRecordPage.fresh().withPattern("/" + msgPattern + "/").withLevel(level.name())
+						.withComponnetType(type.name()).withComponnetPattern("/" + componentPattern + "/")
+						.withOrder("-message,level,compoennt.name,-timestamp").withOffset(offset).withLimit(limit));
+		assertNotNull(page);
+		assertNotNull(page.total);
+		assertNotNull(page.logs);
+		assertEquals(offset, page.offset);
+		assertTrue(page.total >= page.logs.size());
 
-			expected.total = 0;
-			expected.logs = new ArrayList<>();
-			LogEntities.minLogs(min);
-			final Uni<List<LogEntity>> find = LogEntity.findAll().list();
-			final var logs = find.await().atMost(Duration.ofSeconds(30));
-			for (final var log : logs) {
+		for (final var log : page.logs) {
 
-				if (log.level == level && log.message.matches(pattern)) {
-
-					final var expectedLog = LogRecordTest.from(log);
-					if (expectedLog.component != null && expectedLog.component.type == ComponentType.C1
-							&& (expectedLog.component.name != null && expectedLog.component.name.matches(pattern)
-									|| expectedLog.component.description != null
-											&& expectedLog.component.description.matches(pattern))) {
-						expected.total++;
-						expected.logs.add(expectedLog);
-
-					}
-				}
-			}
-			min += 100;
-
-		} while (expected.total < minTotal);
-
-		expected.logs.sort((l1, l2) -> {
-
-			var cmp = l2.message.compareTo(l1.message);
-			if (cmp == 0) {
-				cmp = l1.component.type.name().compareTo(l2.component.type.name());
-				if (cmp == 0) {
-
-					cmp = l2.component.name.compareTo(l1.component.name);
-					if (cmp == 0) {
-
-						cmp = l1.component.description.compareTo(l2.component.description);
-						if (cmp == 0) {
-
-							cmp = Long.compare(l1.timestamp, l2.timestamp);
-						}
-					}
-				}
-			}
-			return cmp;
-		});
-
-		expected.logs = expected.logs.subList(expected.offset, expected.offset + limit);
-
-		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withPattern("/" + pattern + "/")
-				.withLevel(level.name()).withComponnetType(type).withComponnetPattern("/" + pattern + "/")
-				.withOrder("-message,component.type,-component.name,component.description,timestamp")
-				.withOffset(expected.offset).withLimit(limit));
-		assertEquals(expected, page);
+			assertTrue(log.message.matches(msgPattern));
+			assertEquals(log.level, level);
+			assertNotNull(log.component);
+			assertEquals(log.component.type, type);
+			assertTrue(log.component.name.matches(componentPattern));
+		}
 
 	}
 

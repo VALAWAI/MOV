@@ -27,7 +27,7 @@ import jakarta.ws.rs.QueryParam;
 public interface GitHubAPIService {
 
 	/**
-	 * REturn the repositories defined in an organization.
+	 * Return the repositories defined in an organization.
 	 *
 	 * @param organization to get the repositories.
 	 * @param limit        number maximum of repositories to return. It cannot be
