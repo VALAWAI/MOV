@@ -11,6 +11,8 @@ package eu.valawai.mov.persistence.design.component;
 import java.io.Serializable;
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v2.design.components.VersionInfo;
@@ -74,5 +76,11 @@ public class ComponentDefinitionEntity extends ReactivePanacheMongoEntity implem
 	 * The channels that the component has.
 	 */
 	public List<ChannelSchema> channels;
+
+	/**
+	 * The epoch time, in seconds, when the definition is updated.
+	 */
+	@Schema(title = "The epoch time, in seconds, when the definition is updated.", example = "1640995200")
+	public Long updatedAt;
 
 }

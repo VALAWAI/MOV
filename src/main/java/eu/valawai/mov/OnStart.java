@@ -16,6 +16,7 @@ import eu.valawai.mov.persistence.live.components.FinishAllComponents;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.DeleteAllTopologyConnections;
 import eu.valawai.mov.persistence.live.topology.DisableAllTopologyConnections;
+import eu.valawai.mov.services.ComponenetLibraryService;
 import io.quarkus.runtime.StartupEvent;
 import io.smallrye.config.Priorities;
 import io.vertx.mutiny.core.http.HttpHeaders;
@@ -24,6 +25,7 @@ import io.vertx.mutiny.ext.web.RoutingContext;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 /**
  * The class that manage when the application has been started.
@@ -36,8 +38,26 @@ public class OnStart {
 	/**
 	 * If this is {@code true} it removes all the previous data on start up.
 	 */
-	@ConfigProperty(name = "mov.cleanOnStartup", defaultValue = "true")
+	@ConfigProperty(name = MOVSettings.CLEAN_ON_STARTUP, defaultValue = "true")
 	protected boolean cleanOnStartup;
+
+	/**
+	 * If this is {@code true} it has to update the components library on start up.
+	 */
+	@ConfigProperty(name = MOVSettings.COMPONENTS_LIBRARY_UPDATE_ON_START, defaultValue = "true")
+	protected boolean updateOnStart;
+
+	/**
+	 * The data of the last time the component library has been updated.
+	 */
+	@ConfigProperty(name = MOVSettings.COMPONENTS_LIBRARY_LAST_UPDATE, defaultValue = "0")
+	protected long lastUpdate;
+
+	/**
+	 * The seconds to wait until update process.
+	 */
+	@ConfigProperty(name = MOVSettings.COMPONENTS_LIBRARY_UPDATE_PERIOD, defaultValue = "86400")
+	protected long updatePeriod;
 
 	/**
 	 * The pattern to check the on page resource.
@@ -49,6 +69,12 @@ public class OnStart {
 	 * re-routing.
 	 */
 	private static final String REROUTING_SOURCE = "re-routing-source";
+
+	/**
+	 * The service to update the library.
+	 */
+	@Inject
+	ComponenetLibraryService libraryService;
 
 	/**
 	 * Called when the application has been started.
@@ -88,6 +114,17 @@ public class OnStart {
 			}).await().indefinitely();
 
 			AddLog.fresh().withInfo().withMessage("Disabled the previous topology connections").store();
+		}
+
+		if (this.updateOnStart && this.lastUpdate + this.updatePeriod < TimeManager.now()) {
+			// Needs to update the library
+			this.libraryService.update().onFailure().recoverWithItem(error -> {
+
+				AddLog.fresh().withError(error).withMessage("Cannot start the update of the components library.")
+						.store();
+				return null;
+
+			}).await().indefinitely();
 		}
 
 	}

@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -71,8 +69,7 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected <T> T assertItemNotNull(Uni<T> operator) {
 
-		final var item = operator.subscribe().withSubscriber(UniAssertSubscriber.create())
-				.awaitItem(Duration.ofSeconds(30)).getItem();
+		final var item = this.assertNotFailure(operator, Duration.ofSeconds(30));
 		assertNotNull(item);
 		return item;
 	}
@@ -84,8 +81,7 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected <T> void assertItemNull(Uni<T> operator) {
 
-		final var item = operator.subscribe().withSubscriber(UniAssertSubscriber.create())
-				.awaitItem(Duration.ofSeconds(30)).getItem();
+		final var item = this.assertNotFailure(operator, Duration.ofSeconds(30));
 		assertNull(item);
 	}
 
@@ -328,17 +324,8 @@ public class MasterOfValawaiTestCase {
 	 */
 	protected void assertItemIsNull(Uni<?> uni, Duration duration) {
 
-		final List<Throwable> errors = new ArrayList<>();
-		final var result = uni.onFailure().recoverWithItem(error -> {
-			errors.add(error);
-			return null;
-		}).await().atMost(duration);
-
-		assertNull(result, "The uni has returned a result .");
-		if (!errors.isEmpty()) {
-
-			fail(errors.get(0));
-		}
+		final var item = this.assertNotFailure(uni, duration);
+		assertNull(item, "The uni has returned a non null item.");
 	}
 
 	/**
@@ -376,4 +363,30 @@ public class MasterOfValawaiTestCase {
 		}
 
 	}
+
+	/**
+	 * Check that a Uni not fails.
+	 *
+	 * @param uni to check.
+	 *
+	 * @return the returned item.
+	 */
+	protected <T> T assertNotFailure(Uni<T> uni) {
+
+		return this.assertNotFailure(uni, Duration.ofSeconds(30));
+	}
+
+	/**
+	 * Check that a Uni not fails.
+	 *
+	 * @param uni      to check.
+	 * @param duration to wait that the uni not fails.
+	 *
+	 * @return the returned item.
+	 */
+	protected <T> T assertNotFailure(Uni<T> uni, Duration duration) {
+
+		return uni.subscribe().withSubscriber(UniAssertSubscriber.create()).awaitItem(duration).getItem();
+	}
+
 }
