@@ -213,6 +213,7 @@ nb-configuration.xml
 .env
 .lastUpdateDate
 var/
+config/
 /target-ide/
 # Plugin directory
 .quarkus
