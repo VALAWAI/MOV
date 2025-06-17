@@ -20,6 +20,7 @@ import { TopologyConnection } from './topology/topology-connection.model';
 import { ConnectionToCreate } from './topology/connection-to-create.model';
 import { ChangeConnection } from './topology/change-connection.model';
 import { ComponentToRegister } from './components/component-to-register.model';
+import { ComponentDefinitionPage } from './design/components/component-definition-page.model';
 
 
 /**
@@ -216,5 +217,16 @@ export class MovApiService {
 		return this.http.post<void>(url, component);
 	}
 
+	/**
+	 * Get some defined components.
+	 */
+	public getComponentDefinitionPage(pattern: string | null = null, type: string | null = null,
+		order: string | null = null, offset: number = 0, limit: number = 20): Observable<ComponentDefinitionPage> {
+
+		var url = this.url('/v2/design/components');
+		return this.http.get<ComponentDefinitionPage>(url, this.optionsWithParams({
+			pattern: pattern, type: type, order: order, offset: offset, limit: limit
+		}));
+	}
 
 }

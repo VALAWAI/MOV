@@ -11,7 +11,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Host
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
-import { TopologyGraphElement } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
 import {
 	EFConnectionBehavior,

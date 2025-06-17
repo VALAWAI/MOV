@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * the definition of a component that can be used in a topology
+ * The definition of a component that can be used in a topology.
  *
  * @see ComponentDefinitionEntity
  * @see ComponentEntity
