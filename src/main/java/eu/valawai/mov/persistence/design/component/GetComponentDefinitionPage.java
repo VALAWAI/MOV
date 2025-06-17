@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.bson.conversions.Bson;
 
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
 
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -78,6 +80,19 @@ public class GetComponentDefinitionPage extends AbstractGetPage<ComponentDefinit
 
 		this.type = type;
 		return this.operator();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected List<Bson> createPipelineBeforeFacet() {
+
+		final var pipeline = super.createPipelineBeforeFacet();
+		pipeline.add(Aggregates.set(new Field<>("gitHubLink", "$repository.html_url")));
+
+		return pipeline;
+
 	}
 
 	/**
