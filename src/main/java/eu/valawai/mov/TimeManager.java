@@ -9,6 +9,9 @@ package eu.valawai.mov;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+
+import io.quarkus.logging.Log;
 
 /**
  * The component used to manage the time values.
@@ -51,6 +54,29 @@ public interface TimeManager {
 	static Instant fromTime(final long time) {
 
 		return Instant.ofEpochSecond(time);
+
+	}
+
+	/**
+	 * Return the time associated to an ISO date.
+	 *
+	 * @param date to convert too time.
+	 *
+	 * @return the seconds since the epoch of 1970-01-01T00:00:00Z.
+	 */
+	static long toTime(final String date) {
+
+		try {
+
+			final var parsed = DateTimeFormatter.ISO_INSTANT.parse(date);
+			final var instant = Instant.from(parsed);
+			return toTime(instant);
+
+		} catch (final Throwable error) {
+
+			Log.errorv(error, "Cannot parse the date.");
+			return 0;
+		}
 
 	}
 

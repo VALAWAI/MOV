@@ -13,6 +13,8 @@ import eu.valawai.mov.api.Model;
 /**
  * Contains the information about a GitHub repository.
  *
+ * @see GitHubAPIService
+ *
  * @author VALAWAI
  */
 public class GitHubRepository extends Model {
@@ -20,11 +22,31 @@ public class GitHubRepository extends Model {
 	/**
 	 * The identifier of the repository.
 	 */
-	public String id;
+	public long id;
 
 	/**
 	 * The name of the repository.
 	 */
 	public String name;
+
+	/**
+	 * The full name of the repository.
+	 */
+	public String full_name;
+
+	/**
+	 * The full name of the repository.
+	 */
+	public String html_url;
+
+	/**
+	 * The description of the repository.
+	 */
+	public String description;
+
+	/**
+	 * The time when the repository has been updated.
+	 */
+	public String updated_at;
 
 }

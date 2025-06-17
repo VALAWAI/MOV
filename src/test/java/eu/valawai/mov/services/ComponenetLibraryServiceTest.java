@@ -53,6 +53,8 @@ public class ComponenetLibraryServiceTest extends MasterOfValawaiTestCase {
 		final var emailSensor = new ComponentDefinitionEntity();
 		emailSensor.type = ComponentType.C0;
 		emailSensor.name = "Email sensor";
+		emailSensor.repository = new GitHubRepository();
+		emailSensor.repository.html_url = "https://github.com/VALAWAI/C0_email_sensor";
 		this.assertItemNotNull(emailSensor.persist());
 
 		final var now = TimeManager.now();
@@ -66,25 +68,34 @@ public class ComponenetLibraryServiceTest extends MasterOfValawaiTestCase {
 		assertNotEquals(emailSensor.name, updatedEmailSensor.name);
 		assertEquals("E-mail sensor", updatedEmailSensor.name);
 		assertNotNull(updatedEmailSensor.description);
-		assertEquals("https://github.com/VALAWAI/C0_email_sensor", updatedEmailSensor.gitLink);
+		assertNotNull(updatedEmailSensor.repository);
+		assertEquals("https://github.com/VALAWAI/C0_email_sensor", updatedEmailSensor.repository.html_url);
 		assertEquals("https://valawai.github.io/docs/components/C0/email_sensor", updatedEmailSensor.docsLink);
 		assertNotNull(updatedEmailSensor.version);
+		assertNotNull(updatedEmailSensor.version.name);
+		assertNotNull(updatedEmailSensor.version.since);
 		assertNotNull(updatedEmailSensor.apiVersion);
+		assertNotNull(updatedEmailSensor.apiVersion.name);
+		assertNotNull(updatedEmailSensor.apiVersion.since);
 		assertNotNull(updatedEmailSensor.channels);
 
 		final var updatedEmailActuator = this.waitUntil(
 				() -> (ComponentDefinitionEntity) this.assertNotFailure(ComponentDefinitionEntity.mongoCollection()
 						.find(Filters.and(Filters.eq("type", ComponentType.C0.name()),
-								Filters.regex("type", ".*e.?mail.+actuator.*", "i"), Filters.exists("updatedAt", true),
+								Filters.eq("name", "E-mail actuator"), Filters.exists("updatedAt", true),
 								Filters.ne("updatedAt", null), Filters.gte("updatedAt", now)))
 						.collect().first()),
-				component -> component == null, Duration.ofSeconds(1), Duration.ofMinutes(3));
-		assertEquals("E-mail actuator", updatedEmailActuator.name);
+				component -> component != null, Duration.ofSeconds(1), Duration.ofMinutes(3));
 		assertNotNull(updatedEmailActuator.description);
-		assertEquals("https://github.com/VALAWAI/C0_email_actuator", updatedEmailActuator.gitLink);
+		assertNotNull(updatedEmailActuator.repository);
+		assertEquals("https://github.com/VALAWAI/C0_email_actuator", updatedEmailActuator.repository.html_url);
 		assertEquals("https://valawai.github.io/docs/components/C0/email_actuator", updatedEmailActuator.docsLink);
 		assertNotNull(updatedEmailActuator.version);
+		assertNotNull(updatedEmailActuator.version.name);
+		assertNotNull(updatedEmailActuator.version.since);
 		assertNotNull(updatedEmailActuator.apiVersion);
+		assertNotNull(updatedEmailActuator.apiVersion.name);
+		assertNotNull(updatedEmailActuator.apiVersion.since);
 		assertNotNull(updatedEmailActuator.channels);
 
 	}

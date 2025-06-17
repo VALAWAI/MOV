@@ -26,6 +26,7 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.api.v1.components.PayloadSchemaTestCase;
 import eu.valawai.mov.api.v2.design.components.VersionInfoTest;
+import eu.valawai.mov.services.GitHubRepositoryTest;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
@@ -70,7 +71,7 @@ public interface ComponentDefinitionEntities {
 		entity.description = "Description of '" + entity.name + "'.";
 		final var normalizedName = entity.name.toLowerCase().replaceAll("\\W", "_");
 		entity.docsLink = "https://valawai.github.io/docs/components/" + entity.type.name() + "/" + normalizedName;
-		entity.gitLink = "https://github.com/VALAWAI/" + entity.type.name() + "_" + normalizedName;
+		entity.repository = new GitHubRepositoryTest().nextModel();
 		final var versionBuilder = new VersionInfoTest();
 		entity.version = versionBuilder.nextModel();
 		entity.apiVersion = versionBuilder.nextModel();

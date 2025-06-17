@@ -78,9 +78,9 @@ public class ComponentDefinition extends Model {
 	/**
 	 * The git link of the component.
 	 */
-	@Schema(title = "The git link of the component.")
+	@Schema(title = "The url to the GitHub repository of the component.")
 	@URL
-	public String gitLink;
+	public String gitHubLink;
 
 	/**
 	 * The version of the component.

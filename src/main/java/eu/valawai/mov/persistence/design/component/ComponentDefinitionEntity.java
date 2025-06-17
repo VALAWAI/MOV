@@ -16,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v2.design.components.VersionInfo;
+import eu.valawai.mov.services.GitHubRepository;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 
@@ -58,9 +59,9 @@ public class ComponentDefinitionEntity extends ReactivePanacheMongoEntity implem
 	public String docsLink;
 
 	/**
-	 * The URL to the repository of the component.
+	 * The repository where the component is defined.
 	 */
-	public String gitLink;
+	public GitHubRepository repository;
 
 	/**
 	 * The version of the component.

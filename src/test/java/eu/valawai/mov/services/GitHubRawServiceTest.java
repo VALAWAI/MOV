@@ -62,7 +62,7 @@ public class GitHubRawServiceTest extends MasterOfValawaiTestCase {
 	public void shouldGetVALAWAIComponentReadmeContent() {
 
 		final var repository = new GitHubRepository();
-		repository.id = "781332782";
+		repository.id = 781332782;
 		repository.name = "C0_email_sensor";
 		final var content = this.assertItemNotNull(this.service.getVALAWAIComponentReadmeContent(repository));
 		assertFalse(content.length() == 0);
@@ -79,7 +79,7 @@ public class GitHubRawServiceTest extends MasterOfValawaiTestCase {
 	public void shouldGetVALAWAIComponentAsyncapiContent() {
 
 		final var repository = new GitHubRepository();
-		repository.id = "781332782";
+		repository.id = 781332782;
 		repository.name = "C0_email_sensor";
 		final var content = this.assertItemNotNull(this.service.getVALAWAIComponentAsyncapiContent(repository));
 		assertFalse(content.length() == 0);

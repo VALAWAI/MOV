@@ -47,7 +47,7 @@ public class ComponentDefinitionTest extends ModelTestCase<ComponentDefinition> 
 		model.description = ValueGenerator.nextPattern("Component description {0}");
 		model.type = ValueGenerator.next(ComponentType.values());
 		model.docsLink = ValueGenerator.nextPattern("https://valawai.github.io/docs/components/{0}/");
-		model.gitLink = ValueGenerator.nextPattern("https://github.com/VALAWAI/{0}");
+		model.gitHubLink = ValueGenerator.nextPattern("https://github.com/VALAWAI/{0}");
 		model.version = new VersionInfoTest().nextModel();
 		model.apiVersion = new VersionInfoTest().nextModel();
 		final var max = ValueGenerator.rnd().nextInt(0, 5);
@@ -84,7 +84,7 @@ public class ComponentDefinitionTest extends ModelTestCase<ComponentDefinition> 
 			model.description = entity.description;
 			model.type = entity.type;
 			model.docsLink = entity.docsLink;
-			model.gitLink = entity.gitLink;
+			model.gitHubLink = entity.repository != null ? entity.repository.html_url : null;
 			model.version = entity.version;
 			model.apiVersion = entity.apiVersion;
 			if (entity.channels != null) {

@@ -8,25 +8,26 @@
 
 package eu.valawai.mov.services;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.bson.conversions.Bson;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
-
 import eu.valawai.mov.MOVSettings;
 import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.api.v1.components.Component;
+import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentType;
+import eu.valawai.mov.api.v2.design.components.VersionInfo;
 import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
-import io.quarkus.mongodb.FindOptions;
-import io.quarkus.mongodb.reactive.ReactiveMongoCollection;
+import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -119,7 +120,7 @@ public class ComponenetLibraryService {
 						.store();
 				return null;
 
-			}).onItem().call(foundRepositories -> {
+			}).onItem().invoke(foundRepositories -> {
 
 				if (foundRepositories == null || foundRepositories.isEmpty()) {
 					// No more components to update
@@ -132,142 +133,90 @@ public class ComponenetLibraryService {
 
 					this.udateInBackground(foundRepositories, newOffset);
 				}
-				return null;
 
 			}).await().indefinitely();
 
 		} else {
 
 			final var repository = repositories.remove(0);
-			if (repository.name == null || !repository.name.matches("^[C|c][0|1|2]_.+$")) {
+			if (repository.name == null || repository.html_url == null
+					|| !repository.name.matches("^[C|c][0|1|2]_.+$")) {
 
 				this.udateInBackground(repositories, pageOffset);
 
 			} else {
 
-				this.rawService.getVALAWAIComponentReadmeContent(repository).chain(
-						readme -> this.rawService.getVALAWAIComponentAsyncapiContent(repository).chain(asyncapi -> {
+				final Uni<ComponentDefinitionEntity> find = ComponentDefinitionEntity
+						.find("repository.html_url = ?1", repository.html_url).firstResult();
+				find.onItem().ifNull().continueWith(() -> {
 
-							return this.searchByNameAndType(repository, readme, asyncapi)
-									.chain(entity -> this.updateComponent(repository, readme, asyncapi, entity));
+					final var entity = new ComponentDefinitionEntity();
+					// no exception thrown because it matches ^[C|c][0|1|2]_.+$, see upper
+					entity.type = ComponentType.valueOf(repository.name.substring(0, 2).toUpperCase());
+					return entity;
 
-						})).onFailure().recoverWithItem(error -> {
+				}).chain(entity -> {
 
-							AddLog.fresh().withError(error)
-									.withMessage("Cannot update the repository of {0}.", repository.name).store();
-							return null;
+					final var updated = TimeManager.toTime(repository.updated_at);
+					if (entity.updatedAt == null || entity.updatedAt <= updated) {
 
-						}).onItem().call(() -> {
+						entity.repository = repository;
+						return this.rawService.getVALAWAIComponentReadmeContent(repository)
+								.chain(readme -> this.rawService.getVALAWAIComponentAsyncapiContent(repository)
+										.chain(asyncapi -> this.updateComponent(entity, readme, asyncapi)));
 
-							AddLog.fresh().withDebug().withMessage("Updated repository of {0}.", repository.name)
-									.store();
-							this.udateInBackground(repositories, pageOffset);
-							return null;
+					} else {
 
-						}).await().indefinitely();
+						return Uni.createFrom().nullItem();
+
+					}
+
+				}).onFailure().recoverWithItem(error -> {
+
+					AddLog.fresh().withError(error)
+							.withMessage("Cannot update the component of {0}.", repository.html_url).store();
+					return null;
+
+				}).onItem().invoke(() -> this.udateInBackground(repositories, pageOffset)).await().indefinitely();
 			}
 		}
-
-	}
-
-	/**
-	 * Search for the {@link ComponentDefinitionEntity} by name and type, and then
-	 * update it or create it.
-	 *
-	 * @param repository the repository of the component.
-	 * @param readme     the content of the {@code README.md}.
-	 * @param asyncapi   the content of the {@code asyncapi.yaml}.
-	 *
-	 * @return the entity with the name and type.
-	 */
-	private Uni<ComponentDefinitionEntity> searchByNameAndType(GitHubRepository repository, String readme,
-			String asyncapi) {
-
-		try {
-
-			final var type = ComponentType.valueOf(repository.name.substring(0, 2).toUpperCase());
-
-			final List<Bson> nameFilters = new ArrayList<>();
-			nameFilters.add(Filters.regex("name", repository.name, "i"));
-			var repoName = repository.name.substring(3);
-			nameFilters.add(Filters.regex("name", repoName, "i"));
-			repoName = repoName.replaceAll("\\W", " ").trim();
-			nameFilters.add(Filters.regex("name", repoName, "i"));
-
-			final var nameMatcher = Pattern.compile("^[\\- \\*]+name[\\* \\:]+(.+)$", Pattern.CASE_INSENSITIVE)
-					.matcher(readme);
-			final var name = nameMatcher.find() ? nameMatcher.group(1) : repoName;
-			if (name != repoName) {
-
-				nameFilters.add(Filters.regex("name", name, "i"));
-			}
-
-			final var query = Filters.and(Filters.eq("type", type), Filters.or(nameFilters));
-			final var options = new FindOptions().sort(Sorts.ascending("id")).limit(1);
-			final ReactiveMongoCollection<ComponentDefinitionEntity> collection = ComponentDefinitionEntity
-					.mongoCollection();
-			final Uni<ComponentDefinitionEntity> search = collection.find(query, options).collect().first();
-			return search.map(component -> {
-
-				if (component == null) {
-
-					component = new ComponentDefinitionEntity();
-					component.type = type;
-				}
-				component.name = name;
-				return component;
-
-			});
-
-		} catch (final Throwable cause) {
-
-			return Uni.createFrom().failure(cause);
-		}
-
 	}
 
 	/**
 	 * Update the entity that contains the component definition.
 	 *
-	 * @param repository the repository of the component.
-	 * @param readme     the content of the {@code README.md}.
-	 * @param asyncapi   the content of the {@code asyncapi.yaml}.
-	 * @param entity     to update.
+	 * @param readme   the content of the {@code README.md}.
+	 * @param asyncapi the content of the {@code asyncapi.yaml}.
+	 * @param entity   to update.
 	 *
 	 * @return the entity with the name and type.
 	 */
-	private Uni<ComponentDefinitionEntity> updateComponent(GitHubRepository repository, String readme, String asyncapi,
-			ComponentDefinitionEntity entity) {
+	private Uni<ComponentDefinitionEntity> updateComponent(ComponentDefinitionEntity entity, String readme,
+			String asyncapi) {
 
 		try {
 
-			final var docsLinkPattern = Pattern.compile(
-					"(https://valawai.github.io/docs/components/" + entity.toString() + "/[^\\/\\s\\]\\)]+)",
-					Pattern.CASE_INSENSITIVE);
-			var docsLinkMatcher = docsLinkPattern.matcher(readme);
-			if (docsLinkMatcher.find()) {
-
-				entity.docsLink = docsLinkMatcher.group(1);
-
-			} else {
-
-				docsLinkMatcher = docsLinkPattern.matcher(asyncapi);
-				if (docsLinkMatcher.find()) {
-
-					entity.docsLink = docsLinkMatcher.group(1);
-
-				}
-			}
+			final var component = ComponentBuilder.fromAsyncapi(asyncapi);
+			this.updateNameIn(entity, readme, component);
+			this.updateDescriptionIn(entity, readme, component);
+			this.updateDocsLinkIn(entity, readme);
+			this.updateVersionIn(entity, readme);
+			this.updateAPIVersionIn(entity, readme, component);
+			entity.channels = component.channels;
 
 			entity.updatedAt = TimeManager.now();
+			Uni<ComponentDefinitionEntity> update = null;
 			if (entity.id == null) {
 
-				return entity.persist();
+				update = entity.persist();
 
 			} else {
 
-				return entity.update();
+				update = entity.update();
 			}
+
+			return update.onItem().invoke(() -> AddLog.fresh().withDebug()
+					.withMessage("Update the component {0} {1}.", entity.type, entity.name).store());
 
 		} catch (final Throwable cause) {
 
@@ -275,4 +224,167 @@ public class ComponenetLibraryService {
 		}
 
 	}
+
+	/**
+	 * Update the name of the component.
+	 *
+	 * @param readme    the content of the {@code README.md}.
+	 * @param component defined by the {@code asyncapi.yaml}.
+	 * @param entity    to update.
+	 */
+	public void updateNameIn(ComponentDefinitionEntity entity, String readme, Component component) {
+
+		final var nameMatcher = Pattern
+				.compile("[\\-|\\s|\\*|\\_]+name[\\*|\\_|\\s|\\:]+([^\\n]+)", Pattern.CASE_INSENSITIVE).matcher(readme);
+		if (nameMatcher.find()) {
+
+			entity.name = nameMatcher.group(1).trim();
+
+		} else if (component != null && component.name != null) {
+
+			entity.name = component.name;
+
+		} else {
+
+			entity.name = entity.repository.name.substring(3).replaceAll("\\W", " ");
+
+		}
+
+	}
+
+	/**
+	 * Update the description of the component.
+	 *
+	 * @param readme    the content of the {@code README.md}.
+	 * @param component defined by the {@code asyncapi.yaml}.
+	 * @param entity    to update.
+	 */
+	public void updateDescriptionIn(ComponentDefinitionEntity entity, String readme, Component component) {
+
+		final var descriptionMatcher = Pattern.compile("^#[^\\n]+([^\\#]+)", Pattern.CASE_INSENSITIVE).matcher(readme);
+		if (descriptionMatcher.find()) {
+
+			entity.description = descriptionMatcher.group(1).replace('\n', ' ').trim();
+
+		} else if (component != null && component.description != null) {
+
+			entity.description = component.description;
+
+		} else {
+
+			entity.description = entity.repository.description;
+		}
+	}
+
+	/**
+	 * Update the document link of the component.
+	 *
+	 * @param readme the content of the {@code README.md}.
+	 * @param entity to update.
+	 */
+	public void updateDocsLinkIn(ComponentDefinitionEntity entity, String readme) {
+
+		final var docsLinkPattern = Pattern.compile(
+				"(https://valawai.github.io/docs/components/" + entity.toString() + "/[^\\/\\s\\]\\)]+)",
+				Pattern.CASE_INSENSITIVE);
+		final var docsLinkMatcher = docsLinkPattern.matcher(readme);
+		if (docsLinkMatcher.find()) {
+
+			entity.docsLink = docsLinkMatcher.group(1);
+
+		} else {
+
+			entity.docsLink = "https://valawai.github.io/docs/components/" + entity.type.name() + "/"
+					+ entity.repository.name.substring(3);
+		}
+	}
+
+	/**
+	 * Update the version of the component.
+	 *
+	 * @param readme the content of the {@code README.md}.
+	 * @param entity to update.
+	 */
+	public void updateVersionIn(ComponentDefinitionEntity entity, String readme) {
+
+		final var versionPattern = Pattern.compile(
+				"version[\\:|\\*|\\_|\\s|\\[]*(\\d+\\.\\d+\\.\\d+)\\s*(\\([^\\)]+\\))?", Pattern.CASE_INSENSITIVE);
+		final var versionMatcher = versionPattern.matcher(readme);
+		if (versionMatcher.find()) {
+
+			if (entity.version == null) {
+
+				entity.version = new VersionInfo();
+			}
+
+			entity.version.name = versionMatcher.group(1);
+			entity.version.since = this.versionDateToInstant(versionMatcher.group(2));
+		}
+	}
+
+	/**
+	 * Obtain the time from a version date.
+	 *
+	 * @param versionDate to obtain the time.
+	 *
+	 * @return the time associated to the version date.
+	 */
+	private Long versionDateToInstant(String versionDate) {
+
+		if (versionDate != null && versionDate.length() > 6) {
+
+			try {
+
+				final var dateString = versionDate.substring(1, versionDate.length() - 1).trim();
+				final var formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy").withLocale(Locale.US);
+				final var date = LocalDate.parse(dateString, formatter).atStartOfDay(ZoneId.of("UTC"));
+				final var instant = date.toInstant();
+				return TimeManager.toTime(instant);
+
+			} catch (final Throwable error) {
+
+				Log.debug("Cannot parse version date.", error);
+			}
+
+		}
+		return null;
+
+	}
+
+	/**
+	 * Update the API version of the component.
+	 *
+	 * @param readme    the content of the {@code README.md}.
+	 * @param component defined by the {@code asyncapi.yaml}.
+	 * @param entity    to update.
+	 */
+	public void updateAPIVersionIn(ComponentDefinitionEntity entity, String readme, Component component) {
+
+		final var versionPattern = Pattern.compile("api[\\:|\\*|\\_|\\s|\\[]*(\\d+\\.\\d+\\.\\d+)\s*(\\([^\\)]+\\))?",
+				Pattern.CASE_INSENSITIVE);
+		final var versionMatcher = versionPattern.matcher(readme);
+		if (versionMatcher.find()) {
+
+			if (entity.apiVersion == null) {
+
+				entity.apiVersion = new VersionInfo();
+			}
+			entity.apiVersion.name = versionMatcher.group(1);
+			entity.apiVersion.since = this.versionDateToInstant(versionMatcher.group(2));
+
+		} else {
+
+			if (entity.apiVersion == null) {
+
+				entity.apiVersion = new VersionInfo();
+			}
+
+			if (component != null) {
+
+				entity.apiVersion.name = component.apiVersion;
+				entity.apiVersion.since = TimeManager.toTime(entity.repository.updated_at);
+			}
+		}
+	}
+
 }
