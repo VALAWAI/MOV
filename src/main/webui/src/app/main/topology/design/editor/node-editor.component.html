@@ -1,12 +1,12 @@
 <div class="w-full h-full">
 	<form [formGroup]="nodeForm" class=" flex flex-col">
 		<mat-form-field appearance="fill"> <mat-label
-			i18n="The lavel to select the level@@main_topology_design_node-editor_level">Level</mat-label>
+			i18n="The label to select the level@@main_topology_design_node-editor_level">Level</mat-label>
 		<mat-select formControlName="level"> <mat-option
 			value="C0">C0</mat-option> <mat-option value="C1">C1</mat-option> <mat-option
 			value="C2">C2</mat-option> </mat-select> </mat-form-field>
 		<mat-form-field appearance="fill"> <mat-label
-			i18n="The lavel to select the component@@main_topology_design_node-editor_component">Component</mat-label>
+			i18n="The label to select the component@@main_topology_design_node-editor_component">Component</mat-label>
 		<input matInput formControlName="component"
 			[matAutocomplete]="componentAuto"> <mat-autocomplete
 			#componentAuto="matAutocomplete" [displayWith]="displayComponent">
@@ -27,5 +27,29 @@
 					Learn more </span>
 			</a> }
 		</div>
+		<fieldset
+			class="fieldset  border-base-300 rounded-box w-xs border p-4">
+			<legend class="p-2 font-bold"
+				i18n="The legend to edit the node position@@main_topology_design_node-editor_position">Position:</legend>
+			<div class="max-w-fit flex flex-row gap-2 max-w-xs">
+				<mat-form-field class="max-w-1/2" appearance="fill">
+				<mat-label
+					i18n="The label to edit the X position of the node@@main_topology_design_node-editor_x">X</mat-label>
+				<input matInput formControlName="positionX" type="number"> </mat-form-field>
+				<mat-form-field class="max-w-1/2" appearance="fill">
+				<mat-label
+					i18n="The label to edit the Y position of the node@@main_topology_design_node-editor_x">Y</mat-label>
+				<input matInput formControlName="positionY" type="number"> </mat-form-field>
+			</div>
+		</fieldset>
+		<!-- 
+		<mat-form-field appearance="fill"> <mat-label
+			i18n="The label of the field to esit the position of the node@@main_topology_design_node-editor_position">
+		>Position</mat-label> <input mat-input type="number" formControlName=""
+			placeholder="X"> </mat-form-field>
+		<mat-form-field appearance="fill"> <mat-label>Y</mat-label>
+		<input mat-input type="number" formControlName="positionY"
+			placeholder="Y"> </mat-form-field>
+			 -->
 	</form>
 </div>
