@@ -16,6 +16,7 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService, TopologyNode, Point } from '@app/shared/mov-api';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -36,7 +37,8 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 		MatInputModule,
 		MatFormFieldModule,
 		ReactiveFormsModule,
-		MatSelectModule
+		MatSelectModule,
+		MatIconModule
 	],
 	templateUrl: './node-editor.component.html'
 })
@@ -109,6 +111,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 		if (JSON.stringify(this.viewNode) != JSON.stringify(node)) {
 
 			this.viewNode = node;
+			this.page = null;
 			if (node != null) {
 
 				this.nodeForm.setValue(
@@ -254,6 +257,14 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
+	}
+
+	/**
+	 * The selected component.
+	 */
+	public get node(): TopologyNode | null {
+
+		return this.viewNode;
 	}
 
 }

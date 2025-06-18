@@ -13,10 +13,19 @@
 		@for(component of page?.components;track component.id){ <mat-option
 			[value]="component">
 		<h1 class="font-bold mb-4">{{component.name}}</h1>
-		<p class="leading-relaxed">{{component.description}}</p>
+		<p class="leading-relaxed line-clamp-5 overflow-hidden text-ellipsi">{{component.description}}</p>
 		</mat-option> } </mat-autocomplete> @if(nodeForm.controls.component.hasError('required')){ <mat-error
 			i18n="The error message if no component is selected@@main_topology_design_node-editor_component-required">You
 		must select the component associated to the node.</mat-error> } </mat-form-field>
-		<div class="leading-relaxed">decription</div>
+		<div>
+			<span class="line-clamp-5 text-gray-400 overflow-hidden text-ellipsi">
+				{{node?.component?.description!}}</span> @if(node?.component?.docsLink !=
+			null){ <a [href]="node?.component?.docsLink" target="_blank"
+				class="text-blue-500 hover:text-blue-700"> <mat-icon>arrow_forward</mat-icon>
+				<span
+				i18n="Text to learn more about the selected omcponent in teh node@@main_topology_design_node-editor_component-learn-more">
+					Learn more </span>
+			</a> }
+		</div>
 	</form>
 </div>
