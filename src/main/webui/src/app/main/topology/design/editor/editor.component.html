@@ -219,18 +219,18 @@
 
   </svg>
 			</div>
-			--> @for(node of nodes;track node.id){
+			--> @for(node of topology.nodes;track node.id){
 			<div fNode [fNodeId]="node.id" fDragHandle
 				[fNodePosition]="node.position">
 				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
-					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2'}">
+					[ngClass]="{'border-indigo-800':node.component?.type=='C0','border-purple-800':node.component?.type=='C1','border-sky-800':node.component?.type=='C2'}">
 					<div
 						class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 						<div
 							class="p-1 rounded-sm text-white w-[24px] h-[24px] text-xs font-bold text-center"
-							[ngClass]="{'bg-indigo-600':node.type=='C0','bg-purple-600':node.type=='C1','bg-sky-600':node.type=='C2'}">
-							{{node.type}}</div>
-						<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
+							[ngClass]="{'bg-indigo-600':node.component?.type=='C0','bg-purple-600':node.component?.type=='C1','bg-sky-600':node.component?.type=='C2'}">
+							{{node.component?.type}}</div>
+						<div class="grow text-wrap font-bold text-lg">{{node.component?.name}}</div>
 						<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
 							<mat-icon class="text-xs">more_vert</mat-icon>
 						</button>
@@ -255,10 +255,10 @@
 		</div>
 	</div>
 	<div class="lg:max-w-sm w-full p-2">
-		@switch(selectedElement?.constructor?.name){
-		@case('TopologyViewNodeModel'){
-		<app-topology-node-editor [node]="selectedNode"></app-topology-node-editor>
-		} @case('TopologyViewConnectionModel'){
+		@switch(selectedElement?.constructor?.name){ @case('TopologyNode'){
+		<app-topology-node-editor [node]="selectedNode"
+			(nodeUpdated)="updatedNode($event)"></app-topology-node-editor>
+		} @case('TopologyConnection'){
 		<app-topology-connection-editor [connection]="selectedConnection"></app-topology-connection-editor>
 		} @default {
 		<div class="text-gray-400 italic text-wrap"

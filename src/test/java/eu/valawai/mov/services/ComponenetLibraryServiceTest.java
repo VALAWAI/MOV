@@ -63,7 +63,7 @@ public class ComponenetLibraryServiceTest extends MasterOfValawaiTestCase {
 		final var updatedEmailSensor = this.waitUntil(
 				() -> (ComponentDefinitionEntity) this
 						.assertItemNotNull(ComponentDefinitionEntity.findById(emailSensor.id)),
-				component -> component.updatedAt != null && component.updatedAt >= now);
+				component -> component.updatedAt >= now);
 		assertEquals(emailSensor.type, updatedEmailSensor.type);
 		assertNotEquals(emailSensor.name, updatedEmailSensor.name);
 		assertEquals("E-mail sensor", updatedEmailSensor.name);

@@ -11,77 +11,100 @@ package eu.valawai.mov.persistence.design.component;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v2.design.components.VersionInfo;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
 import eu.valawai.mov.services.GitHubRepository;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 
 /**
- * Define the information of a component that can be used to define a topology.
+ * Defines the blueprint or specification for a reusable component that can be
+ * instantiated and used within a {@link TopologyGraphEntity}. This entity
+ * encapsulates all necessary information about a component, including its type,
+ * naming, documentation, versioning, and channel schemas for communication. It
+ * serves as a master record for available components in the system. *
  *
  * @author VALAWAI
+ *
+ * @see TopologyGraphEntity
+ * @see ComponentType
+ * @see GitHubRepository
+ * @see VersionInfo
+ * @see ChannelSchema
  */
 @MongoEntity(collection = ComponentDefinitionEntity.COLLECTION_NAME)
 public class ComponentDefinitionEntity extends ReactivePanacheMongoEntity implements Serializable {
 
 	/**
-	 * The name of the collection with the component definitions.
+	 * The name of the MongoDB collection where component definition entities are
+	 * stored. This constant ensures consistency across the application when
+	 * referencing the collection.
 	 */
 	public static final String COLLECTION_NAME = "componentDefinitions";
 
 	/**
-	 * Serialization identifier.
+	 * Serialization identifier. This field is used by the Java serialization
+	 * mechanism to ensure that a serialized class can be deserialized by the same
+	 * version of the class.
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The type of the component.
+	 * The categorical type of this component (e.g., 'Source', 'Processor', 'Sink').
+	 * This helps in classifying and filtering components.
 	 */
 	public ComponentType type;
 
 	/**
-	 * The name of the component.
+	 * The unique and human-readable name of this component definition. This name
+	 * should ideally be unique across all component definitions.
 	 */
 	public String name;
 
 	/**
-	 * The description of the element.
+	 * An optional, detailed description providing more context about the
+	 * component's functionality, purpose, or use cases.
 	 */
 	public String description;
 
 	/**
-	 * The URL to the documentation of the component.
+	 * A URL linking to external documentation or specifications for this component.
+	 * This provides easy access to more in-depth information.
 	 */
 	public String docsLink;
 
 	/**
-	 * The repository where the component is defined.
+	 * Information about the GitHub repository where the source code or definition
+	 * of this component is maintained.
 	 */
 	public GitHubRepository repository;
 
 	/**
-	 * The version of the component.
+	 * The specific version of this component definition. This tracks changes to the
+	 * component's internal logic or features.
 	 */
 	public VersionInfo version;
 
 	/**
-	 * The API version of the component.
+	 * The version of the component's API (Application Programming Interface). This
+	 * tracks compatibility changes in how the component interacts with others.
 	 */
 	public VersionInfo apiVersion;
 
 	/**
-	 * The channels that the component has.
+	 * A list of {@link ChannelSchema} objects defining the input and/or output
+	 * channels that this component possesses. Each schema specifies the channel's
+	 * name, type, and expected data format.
 	 */
 	public List<ChannelSchema> channels;
 
 	/**
-	 * The epoch time, in seconds, when the definition is updated.
+	 * The timestamp, represented as epoch seconds, indicating the last time this
+	 * component definition was updated or modified. This helps in tracking the
+	 * freshness of component information.
 	 */
-	@Schema(title = "The epoch time, in seconds, when the definition is updated.", example = "1640995200")
-	public Long updatedAt;
+	public long updatedAt;
 
 }

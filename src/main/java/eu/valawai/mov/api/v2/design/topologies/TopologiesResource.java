@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 /**
  * The resource that can be used to manage the topologies.
  *
- * @see TopologyGraph
+ * @see Topology
  *
  * @author VALAWAI
  */

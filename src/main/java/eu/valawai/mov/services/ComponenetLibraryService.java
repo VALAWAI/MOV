@@ -158,7 +158,7 @@ public class ComponenetLibraryService {
 				}).chain(entity -> {
 
 					final var updated = TimeManager.toTime(repository.updated_at);
-					if (entity.updatedAt == null || entity.updatedAt <= updated) {
+					if (entity.updatedAt <= updated) {
 
 						entity.repository = repository;
 						return this.rawService.getVALAWAIComponentReadmeContent(repository)

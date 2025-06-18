@@ -10,31 +10,31 @@ package eu.valawai.mov.api.v2.design.topology;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
-import eu.valawai.mov.api.v2.design.topologies.TopologyGraph;
+import eu.valawai.mov.api.v2.design.topologies.Topology;
 
 /**
- * Test the {@link TopologyGraph}.
+ * Test the {@link Topology}.
  *
- * @see TopologyGraph
+ * @see Topology
  *
  * @author VALAWAI
  */
-public class TopologyGraphTest extends ModelTestCase<TopologyGraph> {
+public class TopologyGraphTest extends ModelTestCase<Topology> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TopologyGraph createEmptyModel() {
+	public Topology createEmptyModel() {
 
-		return new TopologyGraph();
+		return new Topology();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void fillIn(TopologyGraph model) {
+	public void fillIn(Topology model) {
 
 		model.id = ValueGenerator.nextObjectId();
 		model.name = ValueGenerator.nextPattern("Component name {0}");

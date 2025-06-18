@@ -7,18 +7,25 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { TopologyViewNodeModel } from './topolofy-view-node.model';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MessagesService } from '@app/shared/messages';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService } from '@app/shared/mov-api';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService, TopologyNode, Point } from '@app/shared/mov-api';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 
 
+function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
+
+	if (control.value == null || typeof control.value === 'string') {
+
+		return { 'required': true };
+	}
+	return null;
+}
 
 @Component({
 	standalone: true,
@@ -38,21 +45,33 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The ciew node that is editing.
 	 */
-	private viewNode: TopologyViewNodeModel | null = null;
+	private viewNode: TopologyNode | null = null;
 
+	/**
+	 * Notify when teh node has been updated.
+	 */
+	@Output()
+	public nodeUpdated = new EventEmitter<TopologyNode>();
 
 	/**
 	 * The form to edit the component.
 	 */
-	public componentForm = new FormGroup(
+	public nodeForm = new FormGroup(
 		{
 			level: new FormControl<ComponentType | null>(null, Validators.required),
 			component: new FormControl<ComponentDefinition | string | null>(null, {
 				updateOn: 'change',
-				validators: Validators.required
-			})
+				validators: [requiredComponentValidator]
+			}),
+			positionX: new FormControl<number>(0.0, Validators.required),
+			positionY: new FormControl<number>(0.0, Validators.required)
 		}
 	);
+
+	/**
+	 * The subscription to the changes of the node form.
+	 */
+	public nodeStatusSubscription: Subscription | null = null;
 
 	/**
 	 * The subscription to the changes of the level form.
@@ -69,6 +88,8 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public page: ComponentDefinitionPage | null = null;
 
+
+
 	/**
 	 *  Create the component.
 	 */
@@ -83,18 +104,35 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 * The node to edit.
 	 */
 	@Input()
-	public set node(node: TopologyViewNodeModel | null) {
+	public set node(node: TopologyNode | null) {
 
-		this.viewNode = node;
-		if (node != null) {
+		if (JSON.stringify(this.viewNode) != JSON.stringify(node)) {
 
+			this.viewNode = node;
+			if (node != null) {
 
-		} else {
+				this.nodeForm.setValue(
+					{
+						level: node.component?.type || null,
+						component: node.component,
+						positionX: node.position.x,
+						positionY: node.position.y
+					},
+					{ emitEvent: false }
+				);
 
-			this.componentForm.setValue({
-				level: null,
-				component: null
-			});
+			} else {
+
+				this.nodeForm.setValue(
+					{
+						level: null,
+						component: null,
+						positionX: 0.0,
+						positionY: 0.0
+					},
+					{ emitEvent: false }
+				);
+			}
 		}
 
 	}
@@ -104,12 +142,44 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnInit(): void {
 
-		this.levelChangeSubscription = this.componentForm.controls.level.valueChanges.subscribe(
+		this.nodeStatusSubscription = this.nodeForm.statusChanges.subscribe(
 			{
-				next: () => this.updatePage()
+				next: status => {
+
+					if (status == 'VALID') {
+
+						var newNode = new TopologyNode();
+						newNode.id = this.viewNode?.id || '0';
+						newNode.component = this.nodeForm.controls.component.value as ComponentDefinition;
+						newNode.position = new Point();
+						newNode.position.x = this.nodeForm.controls.positionX.value || 0;
+						newNode.position.y = this.nodeForm.controls.positionY.value || 0;
+
+						if (JSON.stringify(this.viewNode) != JSON.stringify(newNode)) {
+
+							this.viewNode = newNode;
+							this.nodeUpdated.emit(newNode);
+						}
+					}
+				}
 			}
 		);
-		this.componentChangeSubscription = this.componentForm.controls.component.valueChanges.subscribe(
+
+		this.levelChangeSubscription = this.nodeForm.controls.level.valueChanges.subscribe(
+			{
+				next: value => {
+
+					var component = this.nodeForm.controls.component.value;
+					if (component != null && typeof component !== 'string' && component.type != value) {
+
+						this.nodeForm.controls.component.setValue(null, { emitEvent: false });
+					}
+					this.updatePage();
+
+				}
+			}
+		);
+		this.componentChangeSubscription = this.nodeForm.controls.component.valueChanges.subscribe(
 			{
 				next: value => {
 
@@ -163,7 +233,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	private updatePage() {
 
 		var pattern = "/.*";
-		var component = this.componentForm.controls.component.value;
+		var component = this.nodeForm.controls.component.value;
 		if (typeof component == 'string') {
 
 			if (component.length > 0) {
@@ -176,7 +246,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 			pattern += component.name.replaceAll(/\W/g, '.*') + ".*";
 		}
 		pattern += "/i";
-		var type = this.componentForm.controls.level.value;
+		var type = this.nodeForm.controls.level.value;
 		this.api.getComponentDefinitionPage(pattern, type, "name", 0, 10).subscribe(
 			{
 				next: page => this.page = page,

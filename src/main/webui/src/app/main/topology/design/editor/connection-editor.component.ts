@@ -8,8 +8,9 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { TopologyViewConnectionModel } from './topolofy-view-connection.model';
+
 import { MessageComponent } from '@app/shared/messages';
+import { DesignTopologyconnection } from '@app/shared/mov-api';
 
 
 
@@ -23,12 +24,12 @@ import { MessageComponent } from '@app/shared/messages';
 	templateUrl: './connection-editor.component.html'
 })
 export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
-	
+
 	/**
 	 * The connection to edit.
 	 */
 	@Input()
-	public connection: TopologyViewConnectionModel|null = null;
+	public connection: DesignTopologyconnection | null = null;
 
 	/**
 	 *  Create the component.

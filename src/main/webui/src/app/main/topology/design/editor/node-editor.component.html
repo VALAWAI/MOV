@@ -1,5 +1,5 @@
 <div class="w-full h-full">
-	<form [formGroup]="componentForm" class=" flex flex-col">
+	<form [formGroup]="nodeForm" class=" flex flex-col">
 		<mat-form-field appearance="fill"> <mat-label
 			i18n="The lavel to select the level@@main_topology_design_node-editor_level">Level</mat-label>
 		<mat-select formControlName="level"> <mat-option
@@ -14,9 +14,9 @@
 			[value]="component">
 		<h1 class="font-bold mb-4">{{component.name}}</h1>
 		<p class="leading-relaxed">{{component.description}}</p>
-		</mat-option> } </mat-autocomplete> </mat-form-field>
-		<div class="leading-relaxed" >
-decription
-		</div>
+		</mat-option> } </mat-autocomplete> @if(nodeForm.controls.component.hasError('required')){ <mat-error
+			i18n="The error message if no component is selected@@main_topology_design_node-editor_component-required">You
+		must select the component associated to the node.</mat-error> } </mat-form-field>
+		<div class="leading-relaxed">decription</div>
 	</form>
 </div>

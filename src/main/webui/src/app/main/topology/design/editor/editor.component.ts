@@ -26,10 +26,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
 import { Observable } from 'rxjs';
-import { TopologyViewNodeModel } from './topolofy-view-node.model';
-import { TopologyViewConnectionModel } from './topolofy-view-connection.model';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
+import {
+	MovApiService,
+	Topology,
+	TopologyNode,
+	DesignTopologyconnection,
+	ComponentDefinition
+} from '@app/shared/mov-api';
 
 
 @Component({
@@ -58,14 +63,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	protected fCanvas = viewChild.required(FCanvasComponent);
 
 	/**
-	 * The nodes of the graph.
+	 * The topology that is editing.
 	 */
-	public nodes: TopologyViewNodeModel[] = [];
-
-	/**
-	 * The connections of the graph.
-	 */
-	public connections: TopologyViewConnectionModel[] = [];
+	public topology: Topology = new Topology();
 
 	/**
 	 * This is {@code true} if has to show the grid.
@@ -75,7 +75,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Selected element.
 	 */
-	public selectedElement: TopologyViewNodeModel | TopologyViewConnectionModel | null = null;
+	public selectedElement: TopologyNode | DesignTopologyconnection | null = null;
 
 	/**
 	 * The height of the component.
@@ -92,7 +92,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		private header: MainService,
 		private messages: MessagesService,
 		private conf: ConfigService,
-		private ref: ChangeDetectorRef
+		private ref: ChangeDetectorRef,
+		private api: MovApiService
 	) {
 
 		this.showGrid$ = this.conf.editorShowGrid$;
@@ -212,7 +213,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		if (event.fNodeIds.length > 0) {
 
 			const selectedNodeId = event.fNodeIds[0];
-			for (let node of this.nodes) {
+			for (let node of this.topology.nodes) {
 
 				if (node.id == selectedNodeId) {
 
@@ -224,7 +225,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		} else if (event.fConnectionIds.length > 0) {
 
 			const selectedConnectionId = event.fConnectionIds[0];
-			for (let connection of this.connections) {
+			for (let connection of this.topology.connections) {
 
 				if (connection.id == selectedConnectionId) {
 
@@ -247,11 +248,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public onNodeAdded(event: FCreateNodeEvent): void {
 
-		var node = new TopologyViewNodeModel();
-		node.id = this.nodes.length.toString();
-		node.type = event.data;
+		var node = new TopologyNode();
+		node.id = this.topology.nodes.length.toString();
 		node.position = { x: event.rect.x, y: event.rect.y };
-		this.nodes.push(node);
+		node.component = new ComponentDefinition();
+		node.component.type = event.data;
+		this.topology.nodes.push(node);
 		this.updatedGraph();
 		this.selectedElement = node;
 	}
@@ -269,17 +271,17 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called whne has to delete a node.
 	 */
-	public deleteNode(node: TopologyViewNodeModel) {
+	public deleteNode(node: TopologyNode) {
 
-		for (let i = 0; i < this.nodes.length; i++) {
+		for (let i = 0; i < this.topology.nodes.length; i++) {
 
-			if (node.id == this.nodes[i].id) {
+			if (node.id == this.topology.nodes[i].id) {
 
 				if (this.selectedElement?.id == node.id) {
 
 					this.selectedElement = null;
 				}
-				this.nodes.splice(i, 1);
+				this.topology.nodes.splice(i, 1);
 				this.ref.markForCheck();
 				return;
 			}
@@ -291,11 +293,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Return the selected node or {@code null} if not selected.
 	 */
-	public get selectedNode(): TopologyViewNodeModel | null {
+	public get selectedNode(): TopologyNode | null {
 
-		if (this.selectedElement?.constructor?.name === 'TopologyViewNodeModel') {
+		if (this.selectedElement?.constructor?.name === 'TopologyNode' || this.selectedElement instanceof TopologyNode) {
 
-			return this.selectedElement as TopologyViewNodeModel;
+			return this.selectedElement as TopologyNode;
 		}
 
 		return null;
@@ -304,14 +306,33 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Return the selected connection or {@code null} if not selected.
 	 */
-	public get selectedConnection(): TopologyViewConnectionModel | null {
+	public get selectedConnection(): DesignTopologyconnection | null {
 
-		if (this.selectedElement?.constructor?.name === 'TopologyViewConnectionModel') {
+		if (this.selectedElement?.constructor?.name === 'Topologyconnection' || this.selectedElement instanceof DesignTopologyconnection) {
 
-			return this.selectedElement as TopologyViewConnectionModel;
+			return this.selectedElement as DesignTopologyconnection;
 		}
 
 		return null;
+	}
+
+	/**
+	 * Called when the node has changed.
+	 */
+	public updatedNode(node: TopologyNode) {
+
+		for (let i = 0; i < this.topology.nodes.length; i++) {
+
+			if (node.id == this.topology.nodes[i].id) {
+
+				this.selectedElement = node;
+				this.topology.nodes.splice(i, 1,node);
+				this.ref.markForCheck();
+				return;
+			}
+		}
+
+		this.topology.nodes.push(node);
 	}
 
 }
