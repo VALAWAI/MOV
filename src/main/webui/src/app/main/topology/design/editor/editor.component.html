@@ -38,9 +38,14 @@
 			<button mat-menu-item
 				i18n="The menu item that go to the Editor help site@@main_topology_editor-menu-help">Help</button>
 		</a> </mat-menu>
-		<mat-menu #fileMenu="matMenu"> New Open Save Save As Import
+		<mat-menu #fileMenu="matMenu"> 
+		<button mat-menu-item (click)="changeTopology()">
+    	<mat-icon>note_add</mat-icon>
+    <span i18n="The menu item that create a new topology@@main_topology_editor-menu-file-new">New topology</span>
+  </button>
+		
 
-		Export </mat-menu>
+		</mat-menu>
 		<mat-menu #editMenu="matMenu">
 		<button mat-menu-item [matMenuTriggerFor]="addNodeMenu">
 			<mat-icon color="primary">add</mat-icon>

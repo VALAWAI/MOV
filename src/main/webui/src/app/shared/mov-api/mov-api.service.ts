@@ -9,7 +9,7 @@
 import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Info } from './info.model';
 import { HealthInfo } from './health-info.model';
 import { LogRecordPage } from './logs/log-record-page.model';
@@ -21,6 +21,7 @@ import { ConnectionToCreate } from './topology/connection-to-create.model';
 import { ChangeConnection } from './topology/change-connection.model';
 import { ComponentToRegister } from './components/component-to-register.model';
 import { ComponentDefinitionPage } from './design/components/component-definition-page.model';
+import { Topology } from './design/topologies/topology.model';
 
 
 /**
@@ -227,6 +228,22 @@ export class MovApiService {
 		return this.http.get<ComponentDefinitionPage>(url, this.optionsWithParams({
 			pattern: pattern, type: type, order: order, offset: offset, limit: limit
 		}));
+	}
+
+	/**
+	 * Called when want to update a designed topology.
+	 */
+	public updateDesignedTopology(topology: Topology): Observable<Topology> {
+
+		return of(topology);
+	}
+
+	/**
+	 * Called when want to store a new designed topology.
+	 */
+	public storeDesignedTopology(topology: Topology): Observable<Topology> {
+
+		return of(topology);
 	}
 
 }

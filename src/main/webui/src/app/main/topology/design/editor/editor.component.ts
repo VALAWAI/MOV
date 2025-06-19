@@ -37,6 +37,8 @@ import {
 	Point
 } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 
 
 @Component({
@@ -50,13 +52,40 @@ import { PointExtensions } from '@foblex/2d';
 		MatMenuModule,
 		FExternalItemDirective,
 		TopologyNodeEditorComponent,
-		TopologyConnectionEditorComponent
+		TopologyConnectionEditorComponent,
+		MatDialogModule
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopologyEditorComponent implements OnInit, OnDestroy {
+
+	/**
+	 *  The service over teh main view. 
+	 */
+	private readonly header = inject(MainService);
+
+	/**
+	 * The service to show messages.
+	 */
+	private readonly messages = inject(MessagesService);
+
+	/**
+	 * The service to access the APP configuration.
+	 */
+	private readonly conf = inject(ConfigService);
+
+	/**
+	 * Service over the changes.
+	 */
+	private readonly ref = inject(ChangeDetectorRef);
+
+	/**
+	 * Service to access to teh MOV API.
+	 */
+	private readonly api = inject(MovApiService);
+
 
 	/**
 	 * The flow with the hraph.
@@ -76,7 +105,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * This is {@code true} if has to show the grid.
 	 */
-	public showGrid$: Observable<boolean>;
+	public showGrid$: Observable<boolean> = this.conf.editorShowGrid$;
 
 	/**
 	 * Selected element.
@@ -88,22 +117,20 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public height = 100;
 
+	/**
+	 * This is {@code true} if the topology is not saved.
+	 */
+	public unsaved = false;
+
+
+	/**
+	 * The component to manage the dialogs.
+	 */
+	private readonly dialog = inject(MatDialog);
+
 
 	public eConnectionBehaviour = EFConnectionBehavior;
 	protected readonly eMarkerType = EFMarkerType;
-	/**
-	 *  Create the component.
-	 */
-	constructor(
-		private header: MainService,
-		private messages: MessagesService,
-		private conf: ConfigService,
-		private ref: ChangeDetectorRef,
-		private api: MovApiService
-	) {
-
-		this.showGrid$ = this.conf.editorShowGrid$;
-	}
 
 	/**
 	 * Called when the window is resized.
@@ -224,8 +251,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			this.selectedElement = null;
 		}
 
+		// the graph is not changed only the selected value
 		this.ref.markForCheck();
-
 	}
 
 	/**
@@ -278,10 +305,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		}
 		this.topology.nodes.push(newNode);
-
-		this.updatedGraph();
 		this.selectedElement = newNode;
-
+		this.updatedGraph();
 	}
 
 	/**
@@ -306,13 +331,14 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private updatedGraph() {
 
+		this.unsaved = true;
 		this.ref.markForCheck();
 		this.fCanvas().redrawWithAnimation();
 
 	}
 
 	/**
-	 * Called whne has to delete a node.
+	 * Called when has to delete a node.
 	 */
 	public deleteNode(node: TopologyNode) {
 
@@ -325,7 +351,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 					this.selectedElement = null;
 				}
 				this.topology.nodes.splice(i, 1);
-				this.ref.markForCheck();
+				this.updatedGraph();
 				return;
 			}
 		}
@@ -370,12 +396,56 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 				this.selectedElement = node;
 				this.topology.nodes.splice(i, 1, node);
-				this.ref.markForCheck();
+				this.updatedGraph();
 				return;
 			}
 		}
 
 		this.topology.nodes.push(node);
+		this.updatedGraph();
+	}
+
+	/**
+	 * Called when has to chnage the topology of the editor.
+	 */
+	public changeTopology(newTopology: Topology = new Topology()) {
+
+		if (this.unsaved) {
+
+			this.dialog.open(ConfirmSaveBeforeChangeDialog).afterClosed().subscribe(
+				{
+					next: (result) => {
+
+						if (result === true) {
+
+							var action: Observable<any> = newTopology.id != null ? this.api.updateDesignedTopology(this.topology) : this.api.storeDesignedTopology(this.topology);
+							action.subscribe(
+								{
+									next: () => {
+										this.unsaved = false;
+										this.changeTopology(newTopology);
+									},
+									error: err => this.messages.showMOVConnectionError(err)
+								}
+							);
+
+						} else {
+
+							this.unsaved = false;
+							this.changeTopology(newTopology);
+						}
+					}
+				}
+
+			);
+
+
+		} else {
+
+			this.topology = newTopology;
+			this.selectedElement = null;
+			this.fit();
+		}
 	}
 
 }
