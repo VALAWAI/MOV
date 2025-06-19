@@ -7,11 +7,11 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
-import { PointExtensions } from '@foblex/2d';
+import { Point, PointExtensions } from '@foblex/2d';
 import {
 	EFConnectionBehavior,
 	EFMarkerType,
@@ -21,7 +21,6 @@ import {
 	FSelectionChangeEvent,
 	FCreateNodeEvent
 } from '@foblex/flow';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
@@ -33,8 +32,11 @@ import {
 	Topology,
 	TopologyNode,
 	DesignTopologyconnection,
-	ComponentDefinition
+	ComponentDefinition,
+	ComponentType
 } from '@app/shared/mov-api';
+import { FMediator } from '@foblex/mediator';
+
 
 
 @Component({
@@ -44,7 +46,6 @@ import {
 		CommonModule,
 		FFlowModule,
 		MatButtonModule,
-		MatTooltipModule,
 		MatIconModule,
 		MatMenuModule,
 		FExternalItemDirective,
@@ -185,27 +186,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Add a C0 component.
-	 */
-	public addC0() {
-
-	}
-
-	/**
-	 * Add a C1 component.
-	 */
-	public addC1() {
-
-	}
-
-	/**
-	 * Add a C2 component.
-	 */
-	public addC2() {
-
-	}
-
-	/**
 	 * Called when something is selectd in the flow.
 	 */
 	public selectionChanged(event: FSelectionChangeEvent) {
@@ -248,14 +228,38 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public onNodeAdded(event: FCreateNodeEvent): void {
 
+		this.addNode(event.data, event.rect.x, event.rect.y);
+	}
+
+	/**
+	 * Add a node to the topology.
+	 */
+	private addNode(type: ComponentType, x: number, y: number) {
+
 		var node = new TopologyNode();
 		node.id = this.topology.nodes.length.toString();
-		node.position = { x: event.rect.x, y: event.rect.y };
+		node.position = new Point();
+		node.position.x = x;
+		node.position.y = y;
 		node.component = new ComponentDefinition();
-		node.component.type = event.data;
+		node.component.type = type;
 		this.topology.nodes.push(node);
 		this.updatedGraph();
 		this.selectedElement = node;
+
+	}
+
+	/**
+	 * Called to add a node by type..
+	 */
+	public addNodeByType(type: ComponentType): void {
+
+		var zero = this.fCanvas().position();
+		var scale = this.fCanvas().scale()
+		debugger
+		var x = (scale * (this.height / 2.0)) + zero.x;
+		var y = (scale * (this.height / 2.0)) + zero.y;
+		this.addNode(type, x, y);
 	}
 
 	/**
@@ -326,7 +330,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			if (node.id == this.topology.nodes[i].id) {
 
 				this.selectedElement = node;
-				this.topology.nodes.splice(i, 1,node);
+				this.topology.nodes.splice(i, 1, node);
 				this.ref.markForCheck();
 				return;
 			}
