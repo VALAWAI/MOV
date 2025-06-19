@@ -42,15 +42,30 @@
 
 		Export </mat-menu>
 		<mat-menu #editMenu="matMenu">
-		<button mat-menu-item [matMenuTriggerFor]="addNodeMenu"
-			i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add
-			node</button>
+		<button mat-menu-item [matMenuTriggerFor]="addNodeMenu">
+			<mat-icon color="primary">add</mat-icon>
+			<span
+				i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add
+				node</span>
+		</button>
+		<button mat-menu-item [matMenuTriggerFor]="deleteNodeMenu"
+			[disabled]="topology.nodes.length==0">
+			<mat-icon color="warn">delete</mat-icon>
+			<span
+				i18n="The menu label to delete a node@@main_topology_editor-menu-delete-node">Delete
+				node</span>
+		</button>
 		</mat-menu>
 		<mat-menu #addNodeMenu="matMenu">
 		<button mat-menu-item (click)="addNodeByType('C0')">C0</button>
 		<button mat-menu-item (click)="addNodeByType('C1')">C1</button>
 		<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
 		</mat-menu>
+		<mat-menu #deleteNodeMenu="matMenu"> @for(node of
+		topology.nodes;track node.id){
+		<button mat-menu-item (click)="deleteNode(node)">{{node.component?.type}}
+			{{node.component?.name}}</button>
+		} </mat-menu>
 		<mat-menu #viewMenu="matMenu">
 		<button mat-menu-item (click)="fit()">
 			<mat-icon>aspect_ratio</mat-icon>
