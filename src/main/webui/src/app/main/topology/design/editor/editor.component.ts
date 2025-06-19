@@ -418,7 +418,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 						if (result === true) {
 
-							var action: Observable<any> = newTopology.id != null ? this.api.updateDesignedTopology(this.topology) : this.api.storeDesignedTopology(this.topology);
+							var action: Observable<any> = this.topology.id != null ? this.api.updateDesignedTopology(this.topology) : this.api.storeDesignedTopology(this.topology);
 							action.subscribe(
 								{
 									next: () => {
@@ -446,6 +446,29 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			this.selectedElement = null;
 			this.fit();
 		}
+	}
+
+	/**
+	 * Called when want to save the topology.
+	 */
+	public saveTopology() {
+
+		var action: Observable<Topology> = this.topology.id != null ? this.api.updateDesignedTopology(this.topology) : this.api.storeDesignedTopology(this.topology);
+		action.subscribe(
+			{
+				next: savedTopology => {
+
+					this.topology.id = savedTopology.id;
+					this.unsaved = false;
+					this.messages.showSuccess(
+						$localize`:Success message when the topology has bene saved@@main_topology_editor_code_save-success-msg:Topology saved!`
+					);
+
+				},
+				error: err => this.messages.showMOVConnectionError(err)
+			}
+		);
+
 	}
 
 }
