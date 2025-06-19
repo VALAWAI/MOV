@@ -29,4 +29,12 @@ export class Point implements IPoint {
 	 */
 	public y: number = 0;
 
+	/**
+	 * Calculate the distance between two points.
+	 */
+	public static distance(p1: IPoint, p2: IPoint): number {
+
+		return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+	}
+
 }

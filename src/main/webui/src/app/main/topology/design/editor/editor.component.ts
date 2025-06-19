@@ -11,7 +11,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, in
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
-import { Point, PointExtensions } from '@foblex/2d';
 import {
 	EFConnectionBehavior,
 	EFMarkerType,
@@ -19,7 +18,8 @@ import {
 	FExternalItemDirective,
 	FFlowModule,
 	FSelectionChangeEvent,
-	FCreateNodeEvent
+	FCreateNodeEvent,
+	FFlowComponent
 } from '@foblex/flow';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -33,10 +33,10 @@ import {
 	TopologyNode,
 	DesignTopologyconnection,
 	ComponentDefinition,
-	ComponentType
+	ComponentType,
+	Point
 } from '@app/shared/mov-api';
-import { FMediator } from '@foblex/mediator';
-
+import { PointExtensions } from '@foblex/2d';
 
 
 @Component({
@@ -57,6 +57,11 @@ import { FMediator } from '@foblex/mediator';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopologyEditorComponent implements OnInit, OnDestroy {
+
+	/**
+	 * The flow with the hraph.
+	 */
+	protected fFlow = viewChild.required(FFlowComponent);
 
 	/**
 	 * The canvas with the hraph.
@@ -236,16 +241,46 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private addNode(type: ComponentType, x: number, y: number) {
 
-		var node = new TopologyNode();
-		node.id = this.topology.nodes.length.toString();
-		node.position = new Point();
-		node.position.x = x;
-		node.position.y = y;
-		node.component = new ComponentDefinition();
-		node.component.type = type;
-		this.topology.nodes.push(node);
+		var newNode = new TopologyNode();
+		var id = this.topology.nodes.length + 1;
+		newNode.id = 'node_' + id;
+		newNode.position = new Point();
+		newNode.position.x = x;
+		newNode.position.y = y;
+		newNode.component = new ComponentDefinition();
+		newNode.component.type = type;
+		var collision = true;
+		while (collision) {
+
+			collision = false;
+			for (var node of this.topology.nodes) {
+
+				if (node.id == newNode.id) {
+
+					id++;
+					newNode.id = 'node' + id;
+					collision = true;
+					break;
+
+				} else {
+
+					var distance = Point.distance(node.position, newNode.position);
+					if (distance < 64) {
+
+						newNode.position.x += 64;
+						newNode.position.y += 64;
+						collision = true;
+						break;
+
+					}
+				}
+			}
+
+		}
+		this.topology.nodes.push(newNode);
+
 		this.updatedGraph();
-		this.selectedElement = node;
+		this.selectedElement = newNode;
 
 	}
 
@@ -254,12 +289,16 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public addNodeByType(type: ComponentType): void {
 
-		var zero = this.fCanvas().position();
-		var scale = this.fCanvas().scale()
-		debugger
-		var x = (scale * (this.height / 2.0)) + zero.x;
-		var y = (scale * (this.height / 2.0)) + zero.y;
+		var x = 0;
+		var y = 0;
+		var box = this.fFlow().getNodesBoundingBox();
+		if (box != null) {
+
+			var x = (box.x + box.width) / 2.0;
+			var y = (box.y + box.height) / 2.0;
+		}
 		this.addNode(type, x, y);
+
 	}
 
 	/**
