@@ -22,6 +22,8 @@ import { ChangeConnection } from './topology/change-connection.model';
 import { ComponentToRegister } from './components/component-to-register.model';
 import { ComponentDefinitionPage } from './design/components/component-definition-page.model';
 import { Topology } from './design/topologies/topology.model';
+import { MinTopologyPage } from './design/topologies/min-topology-page.model';
+import { MinTopology } from './design/topologies/min-topology.model';
 
 
 /**
@@ -244,6 +246,42 @@ export class MovApiService {
 	public storeDesignedTopology(topology: Topology): Observable<Topology> {
 
 		return of(topology);
+	}
+
+	/**
+	 * Get some designed topologies. 
+	 */
+	public getMinTopologyPage(pattern: string | null = null,
+		order: string | null = null, offset: number = 0, limit: number = 20): Observable<MinTopologyPage> {
+
+		var url = this.url('/v2/design/topologies');
+		return this.http.get<MinTopologyPage>(url, this.optionsWithParams({
+			pattern: pattern, order: order, offset: offset, limit: limit
+		}));
+	}
+
+	/**
+	 * Return the topology.
+	 */
+	public getTopologyFrom(min: MinTopology | null): Observable<Topology | null> {
+
+		if (min == null || min.id == null) {
+
+			return of(null);
+
+		} else {
+
+			return this.getTopology(min.id);
+		}
+	}
+
+	/**
+	 * Return the topology associated to teh identifier.
+	 */
+	public getTopology(id: string): Observable<Topology> {
+
+		var url = this.url('/v2/design/topologies', [id]);
+		return this.http.get<Topology>(url);
 	}
 
 }

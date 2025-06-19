@@ -1,0 +1,30 @@
+<h2 mat-dialog-title class="text-lg font-bold mb-4"
+	i18n="Title of the dialog to select the topology to load@@main_topology_editor-dialog-select-topology-to-open-title">
+	Select topology</h2>
+<mat-dialog-content class="text-gray-600 mb-4">
+<p class="text-lg"
+	i18n="Question of the dialog to select the topology to load@@main_topology_editor-dialog-select-topology-to-open-question">
+	Select the topology to open:</p>
+<mat-form-field class="w-full"> <mat-label
+	i18n="The label for the topology name@@main_topology_editor-dialog-select-topology-to-open-name-label">Name</mat-label>
+<input matInput type="text" [formControl]="topologyForm" required
+	placeholder="Write topology name..."
+	i18n-placeholder="The placeholder for the field to write the topology name@@main_topology_editor-dialog-select-topology-to-open-name-placeholder"
+[matAutocomplete]="topologyAuto"> <mat-autocomplete
+	#topologyAuto="matAutocomplete" [displayWith]="displayTopology">
+@for(topology of page?.topologies;track topology.id){ <mat-option
+	[value]="topology">
+<h1 class="font-bold mb-4">{{topology.name}}</h1>
+<p class="leading-relaxed line-clamp-5 overflow-hidden text-ellipsi">{{topology.description}}</p>
+</mat-option> } </mat-autocomplete> @if(topologyForm.hasError('required')){ <mat-error
+	i18n="The error message if no topology is selected@@main_topology_editor-dialog-select-topology-to-open-required">You
+must select one topology to open.</mat-error> } </mat-form-field> </mat-dialog-content>
+<mat-dialog-actions>
+<button matButton color="warn" [mat-dialog-close]="null"
+	i18n="Cancel label of the dialog to select the topology to load@@main_topology_editor-dialog-select-topology-to-open-cancel-label">
+	Cancel</button>
+<button matButton color="primary" [disabled]="topologyForm.invalid"
+	[mat-dialog-close]="topologyForm.value" cdkFocusInitial
+	i18n="OK label of the dialog to select the topology to load@@main_topology_editor-dialog-select-topology-to-open-ok-label">
+	Open it!</button>
+</mat-dialog-actions>

@@ -8,6 +8,7 @@
 
 import { TopologyNode } from './topology-node.model';
 import { TopologyConnection } from './topology-connection.model';
+import { MinTopology } from './min-topology.model';
 
 
 /**
@@ -16,23 +17,7 @@ import { TopologyConnection } from './topology-connection.model';
  *
  * @author VALAWAI
  */
-export class Topology {
-
-	/**
-	 * The unique identifier of the topology. This is system-generated and read-only.
-	 */
-	public id: string | null = null;
-
-
-	/**
-	 * A unique, human-readable name for the topology. This field is mandatory.
-	 */
-	public name: string | null = null;
-
-	/**
-	 * An optional, detailed description of the topology's purpose or design.
-	 */
-	public description: string | null = null;
+export class Topology extends MinTopology {
 
 	/**
 	 * A list of {@link TopologyNode} objects that represent the different VALAWAI

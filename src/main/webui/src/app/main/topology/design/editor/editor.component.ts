@@ -24,7 +24,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
 import {
@@ -34,11 +34,13 @@ import {
 	DesignTopologyconnection,
 	ComponentDefinition,
 	ComponentType,
-	Point
+	Point,
+	MinTopology
 } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
+import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 
 
 @Component({
@@ -449,6 +451,29 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Select a topology to be opened.
+	 */
+	public openTopology() {
+
+		this.dialog.open(SelectTopologyToOpenDialog).afterClosed().pipe(
+			switchMap(
+				minTopology => this.api.getTopologyFrom(minTopology)
+			)
+		).subscribe(
+			{
+				next: (result: Topology | null) => {
+
+					if (result != null) {
+
+						this.changeTopology(result);
+					}
+				}
+			}
+		);
+
+	}
+
+	/**
 	 * Called when want to save the topology.
 	 */
 	public saveTopology() {
@@ -471,4 +496,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	}
 
+	/**
+	 * Called when want to duplicate the topology.
+	 */
+	public duplicateTopology() {
+
+	}
 }

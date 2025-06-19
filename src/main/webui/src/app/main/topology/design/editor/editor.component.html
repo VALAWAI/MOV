@@ -45,6 +45,12 @@
 				i18n="The menu item that create a new topology@@main_topology_editor-menu-file-new">New
 				topology</span>
 		</button>
+		<button mat-menu-item (click)="openTopology()">
+			<mat-icon>folder_open</mat-icon>
+			<span
+				i18n="The menu item that save the current topology@@main_topology_editor-menu-file-open">
+				Open... </span>
+		</button>
 		<button mat-menu-item (click)="saveTopology()">
 			<mat-icon>save</mat-icon>
 			<span

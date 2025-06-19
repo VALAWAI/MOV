@@ -54,3 +54,5 @@ export { Topology } from './design/topologies/topology.model';
 export { TopologyConnection as DesignTopologyconnection } from './design/topologies/topology-connection.model';
 export { TopologyConnectionEndpoint } from './design/topologies/topology-connection-endpoint.model';
 export { TopologyNode } from './design/topologies/topology-node.model';
+export { MinTopology } from './design/topologies/min-topology.model';
+export { MinTopologyPage } from './design/topologies/min-topology-page.model';
