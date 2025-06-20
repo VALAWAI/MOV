@@ -58,11 +58,13 @@ public class UpdateTopologyTest extends MovPersistenceTestCase {
 
 		final TopologyGraphEntity unmodified = this.assertItemNotNull(TopologyGraphEntity.findById(topology.id));
 		final var unmodifiedTopology = TopologyTest.from(unmodified);
-		assertEquals(updated, unmodifiedTopology);
+		assertEquals(topology, unmodifiedTopology);
 
 		final TopologyGraphEntity current = this.assertItemNotNull(TopologyGraphEntity.findById(targetId));
 		final var currentTopology = TopologyTest.from(current);
-		assertEquals(updated, currentTopology);
+		topology.id = current.id;
+		topology.updatedAt = current.updatedAt;
+		assertEquals(topology, currentTopology);
 
 	}
 

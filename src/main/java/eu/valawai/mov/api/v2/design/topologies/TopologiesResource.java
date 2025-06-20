@@ -148,7 +148,7 @@ public class TopologiesResource {
 
 		return UpdateTopology.fresh().withId(topologyId).withTopology(topology).execute().map(updated -> {
 
-			if (updated == null) {
+			if (updated == false) {
 
 				return Response.status(Response.Status.NOT_FOUND)
 						.entity("Not found a topology associated to the path identifier.").build();

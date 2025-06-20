@@ -238,14 +238,14 @@ public class TopologiesResourceTest extends APITestCase {
 	 * @see TopologiesResource#updateTopology
 	 */
 	@Test
-	public void shouldNotUpdateBadUndefinedTopology() {
+	public void shouldNotUpdateUndefinedTopology() {
 
 		final var entity = TopologyGraphEntities.minTopologies(1).get(0);
 		final var topology = TopologyTest.from(entity);
 		final var undefined = TopologyGraphEntities.undefined();
 		given().contentType(ContentType.JSON).contentType(ContentType.JSON).body(topology).when()
 				.put("/v2/design/topologies/" + undefined.toHexString()).then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode());
+				.statusCode(Status.NOT_FOUND.getStatusCode());
 
 	}
 
@@ -285,7 +285,7 @@ public class TopologiesResourceTest extends APITestCase {
 				.extract().as(Topology.class);
 		final TopologyGraphEntity unmodified = this.assertItemNotNull(TopologyGraphEntity.findById(topology.id));
 		final var unmodifiedTopology = TopologyTest.from(unmodified);
-		assertEquals(updated, unmodifiedTopology);
+		assertEquals(topology, unmodifiedTopology);
 
 		topology.id = targetId;
 		topology.updatedAt = updated.updatedAt;
