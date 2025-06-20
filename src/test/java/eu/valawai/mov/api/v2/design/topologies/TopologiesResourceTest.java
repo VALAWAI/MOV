@@ -133,4 +133,34 @@ public class TopologiesResourceTest extends APITestCase {
 
 	}
 
+	/**
+	 * Should not get an undefined topology.
+	 *
+	 * @see TopologiesResource#getTopology
+	 */
+	@Test
+	public void shouldNotGetUndefinedTopology() {
+
+		final var undefined = TopologyGraphEntities.undefined();
+		given().when().get("/v2/design/topologies/" + undefined.toHexString()).then()
+				.statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Should get a topology.
+	 *
+	 * @see TopologiesResource#getTopology
+	 */
+	@Test
+	public void shouldGetTopology() {
+
+		final var topology = TopologyGraphEntities.minTopologies(1).get(0);
+		final var found = given().when().get("/v2/design/topologies/" + topology.id.toHexString()).then()
+				.statusCode(Status.OK.getStatusCode()).extract().as(Topology.class);
+		final var expected = TopologyTest.from(topology);
+		assertEquals(found, expected);
+
+	}
+
 }

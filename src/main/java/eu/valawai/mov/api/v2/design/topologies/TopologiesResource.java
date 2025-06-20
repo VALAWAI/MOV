@@ -20,6 +20,7 @@ import eu.valawai.mov.persistence.design.topology.GetTopology;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
@@ -76,21 +77,21 @@ public class TopologiesResource {
 	 *
 	 * @return the topology associated to the identifier.
 	 */
-	@Path("/{topologyId:^[0-9a-fA-F]{24}$}")
+	@Path("/{topologyId:[0-9a-fA-F]{24}}")
 	@GET
 	@Operation(description = "Obtain some topologies.")
 	@APIResponse(responseCode = "200", description = "The topology associated to the identifier", content = {
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinTopologyPage.class)) })
 	@APIResponse(responseCode = "400", description = "If not found a topology associated to the identifier.")
 	public Uni<Response> getTopology(
-			@Parameter(description = "The identifier of the topology to return.") @PathParam("pattern") @Valid final ObjectId topologyId) {
+			@Parameter(description = "The identifier of the topology to return.") @PathParam("topologyId") final @Valid @NotNull ObjectId topologyId) {
 
 		return GetTopology.fresh().withId(topologyId).execute().map(topology -> {
 
 			if (topology == null) {
 
 				return Response.status(Response.Status.NOT_FOUND)
-						.entity("Not found a topology with the identifier " + topologyId).build();
+						.entity("Not found a topology associated to the path identifier.").build();
 
 			} else {
 
