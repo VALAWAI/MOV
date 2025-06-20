@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntities;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
@@ -167,6 +169,21 @@ public interface TopologyGraphEntities {
 
 		return total;
 
+	}
+
+	/**
+	 * Return an identifier for a topology that is not stored in the data base.
+	 *
+	 * @return the identifier of an undefined topology
+	 */
+	public static ObjectId undefined() {
+
+		var id = ValueGenerator.nextObjectId();
+		while (TopologyGraphEntity.findById(id).await().indefinitely() != null) {
+
+			id = ValueGenerator.nextObjectId();
+		}
+		return id;
 	}
 
 }

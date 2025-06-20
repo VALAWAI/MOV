@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v2.design.topologies;
 import java.util.ArrayList;
 
 import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
 
 /**
  * Test the {@link Topology}.
@@ -63,7 +64,51 @@ public class TopologyTest extends MinTopologyTestCase<Topology> {
 			}
 
 		}
+		model.updatedAt = ValueGenerator.nextPastTime();
 
+	}
+
+	/**
+	 * Return the topology from the entity.
+	 *
+	 * @param entity to get the data for the model.
+	 *
+	 * @return the topology model with the data defined in the entity.
+	 */
+	public static Topology from(TopologyGraphEntity entity) {
+
+		if (entity == null) {
+			return null;
+
+		} else {
+
+			final var model = new Topology();
+			model.id = entity.id;
+			model.name = entity.name;
+			model.description = entity.description;
+			model.updatedAt = entity.updatedAt;
+			if (entity.nodes != null) {
+
+				model.nodes = new ArrayList<>();
+				model.connections = new ArrayList<>();
+				for (final var node : entity.nodes) {
+
+					final var modelNode = TopologyNodeTest.from(node);
+					model.nodes.add(modelNode);
+					if (node.outputs != null) {
+
+						for (final var output : node.outputs) {
+
+							final var connection = TopologyConnectionTest.from(node, output);
+							model.connections.add(connection);
+						}
+					}
+				}
+			}
+
+			return model;
+
+		}
 	}
 
 }

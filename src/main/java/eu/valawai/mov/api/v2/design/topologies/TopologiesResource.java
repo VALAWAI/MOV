@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.api.v2.design.topologies;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -15,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import eu.valawai.mov.persistence.design.topology.GetMinTopologyPage;
+import eu.valawai.mov.persistence.design.topology.GetTopology;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -23,6 +25,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -63,6 +66,38 @@ public class TopologiesResource {
 
 		return GetMinTopologyPage.fresh().withPattern(pattern).withOrder(order).withOffset(offset).withLimit(limit)
 				.execute().map(page -> Response.ok(page).build());
+
+	}
+
+	/**
+	 * Get the information of a topology.
+	 *
+	 * @param topologyId identifier of the topology to get.
+	 *
+	 * @return the topology associated to the identifier.
+	 */
+	@Path("/{topologyId:^[0-9a-fA-F]{24}$}")
+	@GET
+	@Operation(description = "Obtain some topologies.")
+	@APIResponse(responseCode = "200", description = "The topology associated to the identifier", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinTopologyPage.class)) })
+	@APIResponse(responseCode = "400", description = "If not found a topology associated to the identifier.")
+	public Uni<Response> getTopology(
+			@Parameter(description = "The identifier of the topology to return.") @PathParam("pattern") @Valid final ObjectId topologyId) {
+
+		return GetTopology.fresh().withId(topologyId).execute().map(topology -> {
+
+			if (topology == null) {
+
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity("Not found a topology with the identifier " + topologyId).build();
+
+			} else {
+
+				return Response.ok(topology).build();
+			}
+
+		});
 
 	}
 

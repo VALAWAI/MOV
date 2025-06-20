@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
@@ -163,6 +164,20 @@ public interface ComponentDefinitionEntities {
 
 		return total;
 
+	}
+
+	/**
+	 * Return the component associated to the identifier.
+	 *
+	 * @param id identifier of the component to get.
+	 *
+	 * @return the component associated to the identifier or {@code null} if any
+	 *         component is defined.
+	 */
+	public static ComponentDefinitionEntity getById(ObjectId id) {
+
+		final Uni<ComponentDefinitionEntity> find = ComponentDefinitionEntity.findById(id);
+		return find.await().atMost(Duration.ofSeconds(30));
 	}
 
 }

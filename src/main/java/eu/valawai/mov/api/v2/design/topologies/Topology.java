@@ -12,12 +12,16 @@ import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
+import jakarta.annotation.Nullable;
+
 /**
  * Represents a logical topology definition of the components that define the
  * interaction between the VALAWAI component.
  *
  * @see TopologyNode
  * @see TopologyConnection
+ * @see TopologyGraphEntity
  *
  * @author VALAWAI
  */
@@ -29,6 +33,7 @@ public class Topology extends MinTopology {
 	 * components that form the value aware application.
 	 */
 	@Schema(title = "The nodes defined within the topology.")
+	@Nullable
 	public List<TopologyNode> nodes;
 
 	/**
@@ -36,5 +41,14 @@ public class Topology extends MinTopology {
 	 * interactions between the VALAWAI components.
 	 */
 	@Schema(title = "The connections between nodes in the topology.")
+	@Nullable
 	public List<TopologyConnection> connections;
+
+	/**
+	 * The timestamp (epoch time in seconds) indicating the last time this topology
+	 * graph was updated. This is automatically managed upon persistence.
+	 */
+	@Schema(title = "The epoch time, in seconds, when this topology was last updated.", readOnly = true)
+	@Nullable
+	public Long updatedAt;
 }

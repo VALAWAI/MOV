@@ -32,9 +32,9 @@ public class TopologyNode extends Model {
 	 * in establishing connections ({@link TopologyConnection}) to and from this
 	 * specific node.
 	 */
-	@Schema(description = "The unique identifier (tag) of the node within the topology. Used for connecting nodes.", example = "my-processor-node-1")
+	@Schema(description = "The unique identifier (tag) of the node within the topology. Used for connecting nodes.", examples = "my-processor-node-1")
 	@NotEmpty(message = "Node ID (tag) cannot be empty.")
-	public String id;
+	public String tag;
 
 	/**
 	 * The graphical coordinates (X and Y) of the node within the topology
