@@ -50,6 +50,5 @@ public class TopologyNode extends Model {
 	 * This defines the functional behavior and capabilities of the node.
 	 */
 	@Schema(description = "The component definition that this node embodies, defining its functionality.")
-	@NotNull(message = "Node must be associated with a component definition.")
 	public ComponentDefinition component;
 }

@@ -23,6 +23,7 @@ import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntities;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -161,6 +162,138 @@ public class TopologiesResourceTest extends APITestCase {
 		final var expected = TopologyTest.from(topology);
 		assertEquals(found, expected);
 
+	}
+
+	/**
+	 * Should not delete an undefined topology.
+	 *
+	 * @see TopologiesResource#deleteTopology
+	 */
+	@Test
+	public void shouldNotDeleteUndefinedTopology() {
+
+		final var undefined = TopologyGraphEntities.undefined();
+		given().when().delete("/v2/design/topologies/" + undefined.toHexString()).then()
+				.statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Should delete a topology.
+	 *
+	 * @see TopologiesResource#deleteTopology
+	 */
+	@Test
+	public void shouldDeleteTopology() {
+
+		final var topology = TopologyGraphEntities.minTopologies(1).get(0);
+		given().when().delete("/v2/design/topologies/" + topology.id.toHexString()).then()
+				.statusCode(Status.NO_CONTENT.getStatusCode());
+		this.assertItemNull(TopologyGraphEntity.findById(topology.id));
+
+	}
+
+	/**
+	 * Should not store a bad topology.
+	 *
+	 * @see TopologiesResource#storeTopology
+	 */
+	@Test
+	public void shouldNotStoreBadTopology() {
+
+		var topology = new TopologyTest().nextModel();
+		while (topology.nodes == null || topology.connections == null) {
+
+			topology = new TopologyTest().nextModel();
+		}
+		given().contentType(ContentType.JSON).body(topology).when().post("/v2/design/topologies/").then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should store topology.
+	 *
+	 * @see TopologiesResource#storeTopology
+	 */
+	@Test
+	public void shouldStoreTopology() {
+
+		final var entity = TopologyGraphEntities.minTopologies(1).get(0);
+		final var topology = TopologyTest.from(entity);
+		final var stored = given().contentType(ContentType.JSON).body(topology).when().post("/v2/design/topologies/")
+				.then().statusCode(Status.OK.getStatusCode()).extract().as(Topology.class);
+		topology.id = stored.id;
+		topology.updatedAt = stored.updatedAt;
+		assertEquals(topology, stored);
+
+		final TopologyGraphEntity current = this.assertItemNotNull(TopologyGraphEntity.findById(topology.id));
+		final var currentTopology = TopologyTest.from(current);
+		assertEquals(stored, currentTopology);
+	}
+
+	/**
+	 * Should not update an undefined topology.
+	 *
+	 * @see TopologiesResource#updateTopology
+	 */
+	@Test
+	public void shouldNotUpdateBadUndefinedTopology() {
+
+		final var entity = TopologyGraphEntities.minTopologies(1).get(0);
+		final var topology = TopologyTest.from(entity);
+		final var undefined = TopologyGraphEntities.undefined();
+		given().contentType(ContentType.JSON).contentType(ContentType.JSON).body(topology).when()
+				.put("/v2/design/topologies/" + undefined.toHexString()).then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should not update a bad topology.
+	 *
+	 * @see TopologiesResource#updateTopology
+	 */
+	@Test
+	public void shouldNotUpdateBadTopology() {
+
+		final var entity = TopologyGraphEntities.minTopologies(1).get(0);
+		var topology = new TopologyTest().nextModel();
+		while (topology.nodes == null || topology.connections == null) {
+
+			topology = new TopologyTest().nextModel();
+		}
+		given().contentType(ContentType.JSON).body(topology).when()
+				.put("/v2/design/topologies/" + entity.id.toHexString()).then()
+				.statusCode(Status.BAD_REQUEST.getStatusCode());
+
+	}
+
+	/**
+	 * Should update topology.
+	 *
+	 * @see TopologiesResource#updateTopology
+	 */
+	@Test
+	public void shouldUpdateTopology() {
+
+		final var entities = TopologyGraphEntities.minTopologies(2);
+		final var targetId = entities.get(1).id;
+		final var topology = TopologyTest.from(entities.get(0));
+		final var updated = given().contentType(ContentType.JSON).body(topology).when()
+				.put("/v2/design/topologies/" + targetId.toHexString()).then().statusCode(Status.OK.getStatusCode())
+				.extract().as(Topology.class);
+		final TopologyGraphEntity unmodified = this.assertItemNotNull(TopologyGraphEntity.findById(topology.id));
+		final var unmodifiedTopology = TopologyTest.from(unmodified);
+		assertEquals(updated, unmodifiedTopology);
+
+		topology.id = targetId;
+		topology.updatedAt = updated.updatedAt;
+		assertEquals(topology, updated);
+
+		final TopologyGraphEntity current = this.assertItemNotNull(TopologyGraphEntity.findById(targetId));
+		final var currentTopology = TopologyTest.from(current);
+		assertEquals(updated, currentTopology);
 	}
 
 }

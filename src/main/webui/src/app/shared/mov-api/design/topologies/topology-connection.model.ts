@@ -41,7 +41,7 @@ export class TopologyConnection {
 	/**
 	 * Return the identifier of the connection.
 	 */
-	public get id(): string {
+	public get tag(): string {
 
 		return `${this.source!.nodeTag}-${this.source!.channel}-${this.target!.nodeTag}-${this.target!.channel}`;
 	}

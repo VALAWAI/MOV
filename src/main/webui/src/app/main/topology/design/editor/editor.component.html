@@ -81,7 +81,7 @@
 		<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
 		</mat-menu>
 		<mat-menu #deleteNodeMenu="matMenu"> @for(node of
-		topology.nodes;track node.id){
+		topology.nodes;track node.tag){
 		<button mat-menu-item (click)="deleteNode(node)">{{node.component?.type}}
 			{{node.component?.name}}</button>
 		} </mat-menu>
@@ -253,8 +253,8 @@
 
   </svg>
 			</div>
-			--> @for(node of topology.nodes;track node.id){
-			<div fNode [fNodeId]="node.id" fDragHandle
+			--> @for(node of topology.nodes;track node.tag){
+			<div fNode [fNodeId]="node.tag" fDragHandle
 				[fNodePosition]="node.position">
 				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
 					[ngClass]="{'border-indigo-800':node.component?.type=='C0','border-purple-800':node.component?.type=='C1','border-sky-800':node.component?.type=='C2'}">

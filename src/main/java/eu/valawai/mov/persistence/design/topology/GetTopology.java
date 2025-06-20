@@ -50,7 +50,6 @@ public class GetTopology extends AbstractEntityOperator<Topology, GetTopology> {
 	/**
 	 * Create the operator to get a {@link Topology}.
 	 *
-	 *
 	 * @return the operator to get the topology.
 	 */
 	public static GetTopology fresh() {

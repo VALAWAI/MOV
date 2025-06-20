@@ -152,7 +152,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 					if (status == 'VALID') {
 
 						var newNode = new TopologyNode();
-						newNode.id = this.viewNode?.id || '0';
+						newNode.tag = this.viewNode?.tag || '0';
 						newNode.component = this.nodeForm.controls.component.value as ComponentDefinition;
 						newNode.position = new Point();
 						newNode.position.x = this.nodeForm.controls.positionX.value || 0;

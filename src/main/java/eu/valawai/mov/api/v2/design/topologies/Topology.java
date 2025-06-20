@@ -26,6 +26,8 @@ import jakarta.annotation.Nullable;
  * @author VALAWAI
  */
 @Schema(description = "The definition of a topology with a graph.")
+@NodeTagsUnique
+@ConnectionNodeDefined
 public class Topology extends MinTopology {
 
 	/**

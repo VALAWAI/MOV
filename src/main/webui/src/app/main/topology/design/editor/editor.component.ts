@@ -229,7 +229,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			const selectedNodeId = event.fNodeIds[0];
 			for (let node of this.topology.nodes) {
 
-				if (node.id == selectedNodeId) {
+				if (node.tag == selectedNodeId) {
 
 					this.selectedElement = node;
 					break;
@@ -241,7 +241,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			const selectedConnectionId = event.fConnectionIds[0];
 			for (let connection of this.topology.connections) {
 
-				if (connection.id == selectedConnectionId) {
+				if (connection.tag == selectedConnectionId) {
 
 					this.selectedElement = connection;
 					break;
@@ -272,7 +272,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		var newNode = new TopologyNode();
 		var id = this.topology.nodes.length + 1;
-		newNode.id = 'node_' + id;
+		newNode.tag = 'node_' + id;
 		newNode.position = new Point();
 		newNode.position.x = x;
 		newNode.position.y = y;
@@ -284,10 +284,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			collision = false;
 			for (var node of this.topology.nodes) {
 
-				if (node.id == newNode.id) {
+				if (node.tag == newNode.tag) {
 
 					id++;
-					newNode.id = 'node' + id;
+					newNode.tag = 'node' + id;
 					collision = true;
 					break;
 
@@ -346,9 +346,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		for (let i = 0; i < this.topology.nodes.length; i++) {
 
-			if (node.id == this.topology.nodes[i].id) {
+			if (node.tag == this.topology.nodes[i].tag) {
 
-				if (this.selectedElement?.id == node.id) {
+				if (this.selectedElement?.tag == node.tag) {
 
 					this.selectedElement = null;
 				}
@@ -394,7 +394,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		for (let i = 0; i < this.topology.nodes.length; i++) {
 
-			if (node.id == this.topology.nodes[i].id) {
+			if (node.tag == this.topology.nodes[i].tag) {
 
 				this.selectedElement = node;
 				this.topology.nodes.splice(i, 1, node);

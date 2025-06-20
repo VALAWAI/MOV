@@ -37,17 +37,9 @@ export { OneOfPayloadSchema } from './components/one-of-payload-schema.model';
 export { AnyOfPayloadSchema } from './components/any-of-payload-schema.model';
 export { AllOfPayloadSchema } from './components/all-of-payload-schema.model';
 
-
-export { TopologyGraph } from './topology/topology-graph.model';
-export { TopologyGraphElement } from './topology/topology-graph-element.model';
-export { TopologyGraphNode } from './topology/topology-graph-node.model';
-export { TopologyGraphConnection } from './topology/topology-graph-connection.model';
-
-
 export { VersionInfo } from './design/components/version.info.model';
 export { ComponentDefinition } from './design/components/component-definition.model';
 export { ComponentDefinitionPage } from './design/components/component-definition-page.model';
-
 
 export { Point } from './design/topologies/point.model';
 export { Topology } from './design/topologies/topology.model';

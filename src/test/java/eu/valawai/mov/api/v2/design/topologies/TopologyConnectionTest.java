@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.api.v2.design.topologies;
 
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphNode;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphNodeOutputConnection;
@@ -40,6 +41,7 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 		final var builder = new TopologyConnectionEndpointTest();
 		model.source = builder.nextModel();
 		model.target = builder.nextModel();
+		model.convertCode = ValueGenerator.nextPattern("//Convert {0}");
 	}
 
 	/**

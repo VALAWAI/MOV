@@ -24,7 +24,7 @@ export class TopologyNode {
 	 * in establishing connections ({@link TopologyConnection}) to and from this
 	 * specific node.
 	 */
-	public id: string = "";
+	public tag: string = "";
 
 	/**
 	 * The graphical coordinates (X and Y) of the node within the topology
