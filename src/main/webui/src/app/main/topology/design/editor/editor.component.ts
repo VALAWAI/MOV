@@ -231,7 +231,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			const selectedConnectionId = event.fConnectionIds[0];
 			for (let connection of this.topology.connections) {
 
-				if (connection.tag == selectedConnectionId) {
+				var connectionTag = DesignTopologyConnection.tag(connection);
+				if (connectionTag == selectedConnectionId) {
 
 					this.selectedElement = connection;
 					break;
@@ -337,7 +338,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 			if (node.tag == this.topology.nodes[i].tag) {
 
-				if (this.selectedElement?.tag == node.tag) {
+				var selected = this.selectedNode;
+				if (selected != null && selected.tag == node.tag) {
 
 					this.selectedElement = null;
 				}

@@ -41,8 +41,26 @@ export class TopologyConnection {
 	/**
 	 * Return the identifier of the connection.
 	 */
-	public get tag(): string {
+	public static tag(connection: TopologyConnection | null): string {
 
-		return `${this.source!.nodeTag}-${this.source!.channel}-${this.target!.nodeTag}-${this.target!.channel}`;
+		var connectionTag = '';
+		if (connection != null) {
+
+			if (connection.source != null) {
+
+				connectionTag += connection.source.nodeTag + '_' + connection.source.channel;
+
+			}
+
+			connectionTag += "->";
+
+			if (connection.target != null) {
+
+				connectionTag += connection.target.nodeTag + '_' + connection.target.channel;
+
+			}
+
+		}
+		return connectionTag;
 	}
 }
