@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { MessageComponent } from '@app/shared/messages';
-import { DesignTopologyconnection } from '@app/shared/mov-api';
+import { DesignTopologyConnection } from '@app/shared/mov-api';
 
 
 
@@ -29,7 +29,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	 * The connection to edit.
 	 */
 	@Input()
-	public connection: DesignTopologyconnection | null = null;
+	public connection: DesignTopologyConnection | null = null;
 
 	/**
 	 *  Create the component.

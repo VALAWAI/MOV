@@ -147,8 +147,7 @@
 	<div class="grow bg-gray-50">
 		<div [ngStyle]="{'height.px':height}"
 			class="w-sm sm:w-md md:w-full md:min-w-xl">
-			<f-flow fDraggable (fLoaded)="loaded()"
-				(fSelectionChange)="selectionChanged($event)"
+			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)"
 				(fCreateNode)="onNodeAdded($event)"> <f-background
 				*ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
 			</f-background> <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
@@ -287,13 +286,14 @@
 		</div>
 	</div>
 	<div class="lg:max-w-sm w-full p-2">
-		@switch(selectedElement?.constructor?.name){ @case('TopologyNode'){
+		@if(isNodeSelected()){
 		<app-topology-node-editor [node]="selectedNode"
 			(nodeUpdated)="updatedNode($event)"></app-topology-node-editor>
-		} @case('TopologyConnection'){
+		} @else if(isConnectionSelected()){
 		<app-topology-connection-editor [connection]="selectedConnection"></app-topology-connection-editor>
-		} @default {
-		<app-min-topology-editor [topology]="topology" (topologyUpdated)="updatedTopology($event)"></app-min-topology-editor>
-		} }
+		} @else {
+		<app-min-topology-editor [topology]="topology"
+			(topologyUpdated)="updatedTopology($event)"></app-min-topology-editor>
+		}
 	</div>
 </div>

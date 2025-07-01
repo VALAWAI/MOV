@@ -31,7 +31,7 @@ import {
 	MovApiService,
 	Topology,
 	TopologyNode,
-	DesignTopologyconnection,
+	DesignTopologyConnection,
 	ComponentDefinition,
 	ComponentType,
 	Point,
@@ -114,7 +114,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Selected element.
 	 */
-	public selectedElement: TopologyNode | DesignTopologyconnection | null = null;
+	public selectedElement: TopologyNode | DesignTopologyConnection | null = null;
 
 	/**
 	 * The height of the component.
@@ -162,18 +162,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 
 	}
-
-	/**
-	 * Called when the graph has been loaded.
-	 */
-	public loaded() {
-
-		this.messages.showSuccess("Loaded graph");
-
-		this.fit();
-
-	}
-
 
 	/**
 	 * Called when the graph has been loaded.
@@ -364,11 +352,19 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Check if a node is selected.
+	 */
+	public isNodeSelected(): boolean {
+
+		return this.selectedElement != null && 'position' in this.selectedElement;
+	}
+
+	/**
 	 * Return the selected node or {@code null} if not selected.
 	 */
 	public get selectedNode(): TopologyNode | null {
 
-		if (this.selectedElement?.constructor?.name === 'TopologyNode' || this.selectedElement instanceof TopologyNode) {
+		if (this.isNodeSelected()) {
 
 			return this.selectedElement as TopologyNode;
 		}
@@ -377,13 +373,21 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Check if a connection is selected.
+	 */
+	public isConnectionSelected(): boolean {
+
+		return this.selectedElement != null && !('position' in this.selectedElement);
+	}
+
+	/**
 	 * Return the selected connection or {@code null} if not selected.
 	 */
-	public get selectedConnection(): DesignTopologyconnection | null {
+	public get selectedConnection(): DesignTopologyConnection | null {
 
-		if (this.selectedElement?.constructor?.name === 'Topologyconnection' || this.selectedElement instanceof DesignTopologyconnection) {
+		if (this.isConnectionSelected()) {
 
-			return this.selectedElement as DesignTopologyconnection;
+			return this.selectedElement as DesignTopologyConnection;
 		}
 
 		return null;
@@ -449,6 +453,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			this.topology = newTopology;
 			this.selectedElement = null;
 			this.fit();
+			this.updatedGraph();
+			this.unsaved = false;
+			this.messages.showSuccess($localize`:Message to explain when success changed the topology@@main_topology_editor_code_changed-topology:Topology chnaged`);
 		}
 	}
 
@@ -513,6 +520,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.topology.name = min.name;
 		this.topology.description = min.description;
 		this.unsaved = true;
-
+		this.ref.markForCheck();
 	}
 }

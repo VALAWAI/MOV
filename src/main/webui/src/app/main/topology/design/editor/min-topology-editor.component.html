@@ -1,4 +1,14 @@
-<div>
-Form name
-From description
+<div class="w-full h-full">
+	<form [formGroup]="topologyForm" class="flex flex-col">
+		<mat-form-field class="w-full mb-4"> <mat-label
+			i18n="The label of the field to write the topology name@@main_topology_design_editor_min_name">Name</mat-label>
+		<input matInput formControlName="name" class="w-full p-2">
+		@if(topologyForm.controls.name.hasError('required')){ <mat-error
+			i18n="The error message if no topology name is defined@@main_topology_design-editor_min_name-required">You
+		must write a name for the topology.</mat-error> } </mat-form-field>
+		<mat-form-field class="w-full mb-4"> <mat-label
+			i18n="The label of the field to write the topology description@@main_topology_design_editor_min_description">Description</mat-label>
+		<textarea matInput formControlName="description" class="w-full p-2"></textarea>
+		</mat-form-field>
+	</form>
 </div>

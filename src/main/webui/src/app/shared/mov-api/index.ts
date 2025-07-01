@@ -43,7 +43,7 @@ export { ComponentDefinitionPage } from './design/components/component-definitio
 
 export { Point } from './design/topologies/point.model';
 export { Topology } from './design/topologies/topology.model';
-export { TopologyConnection as DesignTopologyconnection } from './design/topologies/topology-connection.model';
+export { TopologyConnection as DesignTopologyConnection } from './design/topologies/topology-connection.model';
 export { TopologyConnectionEndpoint } from './design/topologies/topology-connection-endpoint.model';
 export { TopologyNode } from './design/topologies/topology-node.model';
 export { MinTopology } from './design/topologies/min-topology.model';

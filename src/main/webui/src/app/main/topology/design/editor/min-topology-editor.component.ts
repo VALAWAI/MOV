@@ -93,7 +93,7 @@ export class MinTopologyEditorComponent implements OnInit, OnDestroy {
 			this.editingTopology = topology;
 			if (topology != null) {
 
-				this.topologyForm.setValue(
+				this.topologyForm.patchValue(
 					{
 						name: topology.name,
 						description: topology.description
@@ -103,7 +103,7 @@ export class MinTopologyEditorComponent implements OnInit, OnDestroy {
 
 			} else {
 
-				this.topologyForm.setValue(
+				this.topologyForm.patchValue(
 					{
 						name: null,
 						description: null
