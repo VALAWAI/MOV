@@ -37,7 +37,7 @@ import {
 	Point,
 	MinTopology
 } from '@app/shared/mov-api';
-import { PointExtensions } from '@foblex/2d';
+import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
@@ -244,7 +244,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		}
 
 		// the graph is not changed only the selected value
-		this.ref.markForCheck();
+		this.ref.detectChanges();
 	}
 
 	/**
@@ -323,8 +323,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private updatedGraph() {
 
-		this.unsaved = true;
-		this.ref.markForCheck();
+		this.updatedData();
 		this.fCanvas().redrawWithAnimation();
 
 	}
@@ -513,13 +512,37 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Called when the data of the model is changed. 
+	 */
+	public updatedData() {
+
+		this.unsaved = true;
+		this.ref.detectChanges();
+
+	}
+
+	/**
 	 * Called when has changed teh values of teh topology.
 	 */
 	public updatedTopology(min: MinTopology) {
 
 		this.topology.name = min.name;
 		this.topology.description = min.description;
-		this.unsaved = true;
-		this.ref.markForCheck();
+		this.updatedData();
+	}
+
+	/**
+	 * Called whne the position of a node has changed.
+	 */
+	public updatedNodePosition(node: TopologyNode, point: IPoint) {
+
+		var newNode = new TopologyNode();
+		newNode.tag = node.tag;
+		newNode.position = new Point();
+		newNode.position.x = point.x;
+		newNode.position.y = point.y;
+		newNode.component = node.component;
+		this.updatedNode(newNode);
+
 	}
 }

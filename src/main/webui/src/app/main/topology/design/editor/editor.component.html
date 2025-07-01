@@ -252,7 +252,9 @@
 			</div>
 			--> @for(node of topology.nodes;track node.tag){
 			<div fNode [fNodeId]="node.tag" fDragHandle
-				[fNodePosition]="node.position">
+				[fNodePosition]="node.position"
+				(fNodePositionChange)="updatedNodePosition(node,$event)"
+				>
 				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
 					[ngClass]="{'border-indigo-800':node.component?.type=='C0','border-purple-800':node.component?.type=='C1','border-sky-800':node.component?.type=='C2'}">
 					<div
