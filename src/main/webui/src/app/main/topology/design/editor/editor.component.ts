@@ -41,6 +41,7 @@ import { PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
+import { MinTopologyEditorComponent } from './min-topology-editor.component';
 
 
 @Component({
@@ -55,7 +56,8 @@ import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 		FExternalItemDirective,
 		TopologyNodeEditorComponent,
 		TopologyConnectionEditorComponent,
-		MatDialogModule
+		MatDialogModule,
+		MinTopologyEditorComponent
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css',
@@ -500,6 +502,17 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * Called when want to duplicate the topology.
 	 */
 	public duplicateTopology() {
+
+	}
+
+	/**
+	 * Called when has changed teh values of teh topology.
+	 */
+	public updatedTopology(min: MinTopology) {
+
+		this.topology.name = min.name;
+		this.topology.description = min.description;
+		this.unsaved = true;
 
 	}
 }

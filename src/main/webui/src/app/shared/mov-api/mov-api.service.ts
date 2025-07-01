@@ -237,7 +237,9 @@ export class MovApiService {
 	 */
 	public updateDesignedTopology(topology: Topology): Observable<Topology> {
 
-		return of(topology);
+		var url = this.url('/v2/design/topologies', [topology.id]);
+		return this.http.put<Topology>(url, topology);
+
 	}
 
 	/**
@@ -245,7 +247,9 @@ export class MovApiService {
 	 */
 	public storeDesignedTopology(topology: Topology): Observable<Topology> {
 
-		return of(topology);
+		var url = this.url('/v2/design/topologies');
+		return this.http.post<Topology>(url, topology);
+
 	}
 
 	/**
@@ -282,6 +286,15 @@ export class MovApiService {
 
 		var url = this.url('/v2/design/topologies', [id]);
 		return this.http.get<Topology>(url);
+	}
+
+	/**
+	 * Delete a topology associated to teh identifier.
+	 */
+	public deleteTopology(id: string): Observable<any> {
+
+		var url = this.url('/v2/design/topologies', [id]);
+		return this.http.delete<any>(url);
 	}
 
 }
