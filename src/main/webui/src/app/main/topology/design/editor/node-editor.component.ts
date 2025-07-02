@@ -107,7 +107,6 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	@Input()
 	public set node(node: TopologyNode | null | undefined) {
 
-		console.log(".");
 		var value = {
 			tag: 'node_0',
 			level: null as ComponentType | null,
