@@ -45,9 +45,9 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 
 	/**
-	 * The ciew node that is editing.
+	 * The the last valid node.
 	 */
-	private viewNode: TopologyNode | null = null;
+	private lastValid: TopologyNode | null = null;
 
 	/**
 	 * Notify when teh node has been updated.
@@ -60,6 +60,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public nodeForm = new FormGroup(
 		{
+			tag: new FormControl<string>('node_0'),
 			level: new FormControl<ComponentType | null>(null, Validators.required),
 			component: new FormControl<ComponentDefinition | string | null>(null, {
 				updateOn: 'change',
@@ -90,8 +91,6 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public page: ComponentDefinitionPage | null = null;
 
-
-
 	/**
 	 *  Create the component.
 	 */
@@ -106,37 +105,26 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 * The node to edit.
 	 */
 	@Input()
-	public set node(node: TopologyNode | null) {
+	public set node(node: TopologyNode | null | undefined) {
 
-		if (JSON.stringify(this.viewNode) != JSON.stringify(node)) {
+		console.log(".");
+		var value = {
+			tag: 'node_0',
+			level: null as ComponentType | null,
+			component: null as ComponentDefinition | string | null,
+			positionX: 0.0,
+			positionY: 0.0
+		};
+		if (node != null) {
 
-			this.viewNode = node;
-			this.page = null;
-			if (node != null) {
-
-				this.nodeForm.setValue(
-					{
-						level: node.component?.type || null,
-						component: node.component,
-						positionX: node.position.x,
-						positionY: node.position.y
-					},
-					{ emitEvent: false }
-				);
-
-			} else {
-
-				this.nodeForm.setValue(
-					{
-						level: null,
-						component: null,
-						positionX: 0.0,
-						positionY: 0.0
-					},
-					{ emitEvent: false }
-				);
-			}
+			value.tag = node.tag;
+			value.level = node.component?.type || null;
+			value.component = node.component;
+			value.positionX = node.position.x;
+			value.positionY = node.position.y;
 		}
+
+		this.nodeForm.patchValue(value, { emitEvent: false });
 
 	}
 
@@ -152,15 +140,15 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 					if (status == 'VALID') {
 
 						var newNode = new TopologyNode();
-						newNode.tag = this.viewNode?.tag || '0';
+						newNode.tag = this.nodeForm.controls.tag.value || 'node_0';
 						newNode.component = this.nodeForm.controls.component.value as ComponentDefinition;
 						newNode.position = new Point();
 						newNode.position.x = this.nodeForm.controls.positionX.value || 0;
 						newNode.position.y = this.nodeForm.controls.positionY.value || 0;
 
-						if (JSON.stringify(this.viewNode) != JSON.stringify(newNode)) {
+						if (JSON.stringify(this.lastValid) != JSON.stringify(newNode)) {
 
-							this.viewNode = newNode;
+							this.lastValid = newNode;
 							this.nodeUpdated.emit(newNode);
 						}
 					}
@@ -259,12 +247,6 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 
 	}
 
-	/**
-	 * The selected component.
-	 */
-	public get node(): TopologyNode | null {
 
-		return this.viewNode;
-	}
 
 }

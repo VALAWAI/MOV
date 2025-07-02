@@ -59,7 +59,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	 * Set the conneciton to edit.
 	 */
 	@Input()
-	public set connection(connection: DesignTopologyConnection | null) {
+	public set connection(connection: DesignTopologyConnection | null | undefined) {
 
 	}
 

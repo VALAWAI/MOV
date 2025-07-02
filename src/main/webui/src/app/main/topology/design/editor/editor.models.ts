@@ -115,11 +115,19 @@ export class NodeData implements TopologyElement {
 	}
 
 	/**
-	 * Return the identifeir of the Node.
+	 * Return the poition of the node.
 	 */
 	public get position(): IPoint {
 
 		return this.model.position;
+	}
+
+	/**
+	 * Change the node position..
+	 */
+	public set position(point: IPoint) {
+
+		this.model.position = point;
 	}
 
 	/**
@@ -245,11 +253,6 @@ export class TopologyData {
 	public connections: ConnectionData[] = [];
 
 	/**
-	 * This is true if the information has changed.
-	 */
-	public modified: boolean = false;
-
-	/**
 	 * Create a new topology data.
 	 */
 	public constructor(topology: Topology | null = null) {
@@ -279,9 +282,6 @@ export class TopologyData {
 			}
 		}
 
-		// this is done the last because the adding elements change teh modified field		
-		this.modified = false;
-
 	}
 
 	/**
@@ -300,6 +300,38 @@ export class TopologyData {
 		this.min.id = id;
 	}
 
+	/**
+	 * Return teh node associated to the specifried identifier.
+	 */
+	public getNodeWithId(id: string): NodeData | null {
+
+		for (let node of this.nodes) {
+
+			if (node.id == id) {
+
+				return node;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return teh connection associated to the specifried identifier.
+	 */
+	public getConnectionWithId(id: string): ConnectionData | null {
+
+		for (let connection of this.connections) {
+
+			if (connection.id == id) {
+
+				return connection;
+			}
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * Return the element associated to the selection event. 
@@ -309,28 +341,17 @@ export class TopologyData {
 		if (event.fNodeIds.length > 0) {
 
 			const selectedNodeId = event.fNodeIds[0];
-			for (let node of this.nodes) {
-
-				if (node.id == selectedNodeId) {
-
-					return node;
-				}
-			}
+			return this.getNodeWithId(selectedNodeId);
 
 		} else if (event.fConnectionIds.length > 0) {
 
 			const selectedConnectionId = event.fConnectionIds[0];
-			for (let connection of this.connections) {
+			return this.getConnectionWithId(selectedConnectionId);
 
-				if (connection.id == selectedConnectionId) {
+		} else {
 
-					return connection;
-				}
-			}
-
+			return null;
 		}
-
-		return null;
 
 	}
 
@@ -385,7 +406,6 @@ export class TopologyData {
 
 		}
 		this.nodes.push(newNode);
-		this.modified = true;
 		return newNode;
 	}
 
@@ -403,7 +423,6 @@ export class TopologyData {
 			if (id == this.nodes[i].id) {
 
 				this.nodes.splice(i, 1);
-				this.modified = true;
 				return true;
 			}
 		}
@@ -414,22 +433,22 @@ export class TopologyData {
 	 * Update the position of a node.
 	 * 
 	 * @param id identifier of the node.
-	 * @param x position for the node.
-	 * @param y posiiton of the node.
+	 * @param point to teh new node position.
 	 * 
 	 * @return true if the node is updated. 
 	 */
-	public updateNodePosition(id: string, x: number, y: number): boolean {
+	public updateNodePosition(id: string, point: IPoint): NodeData | null {
 
 		for (var node of this.nodes) {
 
-			node.position.x = x;
-			node.position.y = y;
-			this.modified = true;
-			return true;
+			if (id == node.id) {
+
+				node.position = point;
+				return node;
+			}
 		}
 
-		return false;
+		return null;
 	}
 
 	/**
@@ -473,7 +492,6 @@ export class TopologyData {
 			if (node.id == id) {
 
 				node.model = model;
-				this.modified = true;
 				return true;
 			}
 		}
@@ -496,7 +514,6 @@ export class TopologyData {
 			if (connection.id == id) {
 
 				connection.model = model;
-				this.modified = true;
 				return true;
 			}
 		}
@@ -530,7 +547,6 @@ export class TopologyData {
 
 		}
 		this.connections.push(newConnection);
-		this.modified = true;
 		return newConnection;
 	}
 

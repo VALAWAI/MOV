@@ -254,7 +254,7 @@
 				[fNodePosition]="node.position"
 				(fNodePositionChange)="updatedNodePosition(node.id,$event)">
 				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
-					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2'}">
+					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2','border-8':node.id == selectedElement?.id}">
 					<div
 						class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 						<div
@@ -292,10 +292,10 @@
 	</div>
 	<div class="lg:max-w-sm w-full p-2">
 		@if(isNodeSelected()){
-		<app-topology-node-editor [node]="selectedNode"
+		<app-topology-node-editor [node]="selectedNode?.model"
 			(nodeUpdated)="updatedSelectedNode($event)"></app-topology-node-editor>
 		} @else if(isConnectionSelected()){
-		<app-topology-connection-editor [connection]="selectedConnection"
+		<app-topology-connection-editor [connection]="selectedConnection?.model"
 			(connectionUpdated)="updatedSelectedConnection($event)"></app-topology-connection-editor>
 		} @else {
 		<app-min-topology-editor [topology]="topology.min"
