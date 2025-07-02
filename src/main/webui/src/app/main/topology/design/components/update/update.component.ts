@@ -6,12 +6,13 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfigService } from '@app/shared';
 import { LoadingComponent } from '@app/shared/loading';
 import { MessagesService } from '@app/shared/messages';
 import { MovApiService } from '@app/shared/mov-api';
-import { Observable } from 'rxjs';
 import { MainService } from 'src/app/main';
 
 /**
@@ -21,7 +22,8 @@ import { MainService } from 'src/app/main';
 	standalone: true,
 	selector: 'app-topology-design-components-update-library',
 	imports: [
-		
+		CommonModule,
+		LoadingComponent
 	],
 	templateUrl: './update.component.html'
 })
@@ -31,12 +33,12 @@ export class UpdateLibraryComponent implements OnInit {
 	 *  The service over the main view. 
 	 */
 	private readonly header = inject(MainService);
-	
+
 	/**
 	 * The service to access the APP configuration.
 	 */
 	private readonly conf = inject(ConfigService);
-	
+
 	/**
 	 * Service to access to the MOV API.
 	 */
@@ -47,6 +49,15 @@ export class UpdateLibraryComponent implements OnInit {
 	 */
 	private readonly messages = inject(MessagesService);
 
+	/**
+	 * The router of the APP.
+	 */
+	private readonly router = inject(Router);
+
+	/**
+	 * This si {@code true} if it is updating.
+	 */
+	public updating: boolean = false;
 
 	/**
 	 * Initialize the component.
@@ -60,17 +71,54 @@ export class UpdateLibraryComponent implements OnInit {
 	/**
 	 * Called whne is updating the library.
 	 */
-	public update(){
-		
+	public update() {
+
 		this.api.refreshComponentsLibrary().subscribe(
 			{
-				next:()=>{
-					
+				next: () => {
+
+					this.updating = true;
+					this.checkIfLibraryHasBeenRefreshed();
 				},
-				error:err=>this.messages.showMOVConnectionError(err)
-				
+				error: err => this.messages.showMOVConnectionError(err)
 			}
 		);
-		
+
+	}
+
+	/**
+	 * Check if the library has been refreshed.
+	 */
+	private checkIfLibraryHasBeenRefreshed(zeros: number = 0) {
+
+		this.api.getComponentsLibraryStatus().subscribe(
+			{
+				next: status => {
+
+					var newZeros = 0;
+					if (status.componentCount == 0) {
+
+						newZeros = zeros + 1;
+
+					} else if (status.newestComponentTimestamp > 0 && status.oldestComponentTimestamp == status.newestComponentTimestamp) {
+						//finished to update
+						this.router.navigate(["/main/topology/design/components/search"]);
+					}
+
+					if (newZeros > this.conf.pollingIterations) {
+
+						this.updating = false;
+						this.messages.showError($localize`:The error message when can not update the library@@main_topology_design_components_update_code_update-error-msg:Cannot update the components library`);
+
+					} else {
+
+						setTimeout(() => this.checkIfLibraryHasBeenRefreshed(newZeros), this.conf.pollingTime);
+					}
+				},
+				error: err => this.messages.showMOVConnectionError(err)
+			}
+
+		);
+
 	}
 }

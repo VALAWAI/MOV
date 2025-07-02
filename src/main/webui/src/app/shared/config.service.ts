@@ -27,6 +27,10 @@ export class ConfigService {
 	 */
 	private editorShowGridSubject: BehaviorSubject<boolean>;
 
+	/**
+	 * The subject to notify the changes on the polling iterations.
+	 */
+	private pollingIterationsSubject: BehaviorSubject<number>;
 
 	/**
 	 * Create the service.
@@ -35,6 +39,7 @@ export class ConfigService {
 
 		this.pollingTimeSubject = new BehaviorSubject<number>(this.pollingTime);
 		this.editorShowGridSubject = new BehaviorSubject<boolean>(this.editorShowGrid);
+		this.pollingIterationsSubject = new BehaviorSubject<number>(this.pollingIterations);
 	}
 
 	/**
@@ -90,6 +95,37 @@ export class ConfigService {
 		localStorage.setItem('EDITOR_SHOW_GRID', String(view));
 		this.editorShowGridSubject.next(view);
 
+	}
+
+	/**
+	 * Return the observable of the polling iterations. 
+	 */
+	public get pollingIterations$(): Observable<number> {
+
+		return this.pollingIterationsSubject.asObservable();
+	}
+
+	public get pollingIterations(): number {
+
+		var pool = localStorage.getItem('POLLING_ITERATIONS');
+		if (pool != null) {
+
+			var iterations = Number(pool);
+			if (!isNaN(iterations)) {
+
+				return iterations;
+			}
+		}
+		return 10;
+	}
+
+	/**
+	 * Store the polling iterations.
+	 */
+	public set pollingIterations(iterations: number) {
+
+		localStorage.setItem('POLLING_ITERATIONS', String(iterations));
+		this.pollingIterationsSubject.next(iterations);
 	}
 
 }
