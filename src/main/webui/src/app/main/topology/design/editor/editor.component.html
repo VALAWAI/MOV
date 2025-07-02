@@ -276,6 +276,10 @@
 						</button>
 						</mat-menu>
 					</div>
+					@for(channel of node.component?.channels;track channel.name){
+					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
+						fOutputConnectableSide="right">{{channel.name}}</div>
+					}
 					<!-- 
 					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
 						fOutputConnectableSide="right">input</div>

@@ -90,6 +90,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private readonly api = inject(MovApiService);
 
+	/**
+	 * The component to manage the dialogs.
+	 */
+	private readonly dialog = inject(MatDialog);
 
 	/**
 	 * The flow with the hraph.
@@ -125,12 +129,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * This is {@code true} if the topology is not saved.
 	 */
 	public unsaved = false;
-
-
-	/**
-	 * The component to manage the dialogs.
-	 */
-	private readonly dialog = inject(MatDialog);
 
 
 	public eConnectionBehaviour = EFConnectionBehavior;
