@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { MessageComponent } from '@app/shared/messages';
 import { DesignTopologyConnection } from '@app/shared/mov-api';
@@ -25,11 +25,12 @@ import { DesignTopologyConnection } from '@app/shared/mov-api';
 })
 export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 
+
 	/**
-	 * The connection to edit.
+	 * Notify when teh node has been updated.
 	 */
-	@Input()
-	public connection: DesignTopologyConnection | null = null;
+	@Output()
+	public connectionUpdated = new EventEmitter<DesignTopologyConnection>();
 
 	/**
 	 *  Create the component.
@@ -53,5 +54,14 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 
 
 	}
+
+	/**
+	 * Set the conneciton to edit.
+	 */
+	@Input()
+	public set connection(connection: DesignTopologyConnection | null) {
+
+	}
+
 
 }

@@ -42,6 +42,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 import { MinTopologyEditorComponent } from './min-topology-editor.component';
+import { ConnectionData, NodeData, TopologyData, TopologyElement } from './editor.models';
 
 
 @Component({
@@ -108,7 +109,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The topology that is editing.
 	 */
-	public topology: Topology = new Topology();
+	public topology: TopologyData = new TopologyData();
 
 	/**
 	 * This is {@code true} if has to show the grid.
@@ -118,17 +119,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Selected element.
 	 */
-	public selectedElement: TopologyNode | DesignTopologyConnection | null = null;
+	public selectedElement: TopologyElement | null = null;
 
 	/**
 	 * The height of the component.
 	 */
 	public height = 100;
-
-	/**
-	 * This is {@code true} if the topology is not saved.
-	 */
-	public unsaved = false;
 
 
 	public eConnectionBehaviour = EFConnectionBehavior;
@@ -212,35 +208,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public selectionChanged(event: FSelectionChangeEvent) {
 
-		if (event.fNodeIds.length > 0) {
-
-			const selectedNodeId = event.fNodeIds[0];
-			for (let node of this.topology.nodes) {
-
-				if (node.tag == selectedNodeId) {
-
-					this.selectedElement = node;
-					break;
-				}
-			}
-
-		} else if (event.fConnectionIds.length > 0) {
-
-			const selectedConnectionId = event.fConnectionIds[0];
-			for (let connection of this.topology.connections) {
-
-				var connectionTag = DesignTopologyConnection.tag(connection);
-				if (connectionTag == selectedConnectionId) {
-
-					this.selectedElement = connection;
-					break;
-				}
-			}
-
-		} else {
-
-			this.selectedElement = null;
-		}
+		this.selectedElement = this.topology.getElementFor(event);
 
 		// the graph is not changed only the selected value
 		this.ref.detectChanges();
@@ -259,44 +227,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private addNode(type: ComponentType, x: number, y: number) {
 
-		var newNode = new TopologyNode();
-		var id = this.topology.nodes.length + 1;
-		newNode.tag = 'node_' + id;
-		newNode.position = new Point();
-		newNode.position.x = x;
-		newNode.position.y = y;
-		newNode.component = new ComponentDefinition();
-		newNode.component.type = type;
-		var collision = true;
-		while (collision) {
-
-			collision = false;
-			for (var node of this.topology.nodes) {
-
-				if (node.tag == newNode.tag) {
-
-					id++;
-					newNode.tag = 'node' + id;
-					collision = true;
-					break;
-
-				} else {
-
-					var distance = Point.distance(node.position, newNode.position);
-					if (distance < 64) {
-
-						newNode.position.x += 64;
-						newNode.position.y += 64;
-						collision = true;
-						break;
-
-					}
-				}
-			}
-
-		}
-		this.topology.nodes.push(newNode);
-		this.selectedElement = newNode;
+		this.selectedElement = this.topology.addNodeWithType(type, x, y);
 		this.updatedGraph();
 	}
 
@@ -322,7 +253,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private updatedGraph() {
 
-		this.updatedData();
+		this.ref.detectChanges();
 		this.fCanvas().redrawWithAnimation();
 
 	}
@@ -330,23 +261,16 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called when has to delete a node.
 	 */
-	public deleteNode(node: TopologyNode) {
+	public deleteNode(node: NodeData) {
 
-		for (let i = 0; i < this.topology.nodes.length; i++) {
+		if (this.topology.removeNode(node.id)) {
 
-			if (node.tag == this.topology.nodes[i].tag) {
+			if (this.selectedElement?.id == node.id) {
 
-				var selected = this.selectedNode;
-				if (selected != null && selected.tag == node.tag) {
-
-					this.selectedElement = null;
-				}
-				this.topology.nodes.splice(i, 1);
-				this.updatedGraph();
-				return;
+				this.selectedElement = null;
 			}
+			this.updatedGraph();
 		}
-
 
 	}
 
@@ -355,7 +279,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public isNodeSelected(): boolean {
 
-		return this.selectedElement != null && 'position' in this.selectedElement;
+		return this.selectedElement instanceof NodeData;
 	}
 
 	/**
@@ -365,7 +289,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		if (this.isNodeSelected()) {
 
-			return this.selectedElement as TopologyNode;
+			return (this.selectedElement as NodeData).model;
 		}
 
 		return null;
@@ -376,7 +300,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public isConnectionSelected(): boolean {
 
-		return this.selectedElement != null && !('position' in this.selectedElement);
+		return this.selectedElement instanceof ConnectionData;
 	}
 
 	/**
@@ -386,38 +310,32 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		if (this.isConnectionSelected()) {
 
-			return this.selectedElement as DesignTopologyConnection;
+			return (this.selectedElement as ConnectionData).model;
 		}
 
 		return null;
 	}
 
 	/**
-	 * Called when the node has changed.
+	 * Called when the selected node has changed.
 	 */
-	public updatedNode(node: TopologyNode) {
+	public updatedSelectedNode(node: TopologyNode) {
 
-		for (let i = 0; i < this.topology.nodes.length; i++) {
+		if (this.selectedElement != null
+			&& this.topology.updateNodeModel(this.selectedElement.id, node)
+		) {
 
-			if (node.tag == this.topology.nodes[i].tag) {
-
-				this.selectedElement = node;
-				this.topology.nodes.splice(i, 1, node);
-				this.updatedGraph();
-				return;
-			}
+			this.updatedGraph();
 		}
 
-		this.topology.nodes.push(node);
-		this.updatedGraph();
 	}
 
 	/**
-	 * Called when has to chnage the topology of the editor.
+	 * Called when has to change the topology of the editor.
 	 */
 	public changeTopology(newTopology: Topology = new Topology()) {
 
-		if (this.unsaved) {
+		if (this.topology.modified) {
 
 			this.dialog.open(ConfirmSaveBeforeChangeDialog).afterClosed().subscribe(
 				{
@@ -425,11 +343,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 						if (result === true) {
 
-							var action: Observable<any> = this.topology.id != null ? this.api.updateDesignedTopology(this.topology) : this.api.storeDesignedTopology(this.topology);
+							var model = this.topology.model;
+							var action: Observable<any> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);
 							action.subscribe(
 								{
 									next: () => {
-										this.unsaved = false;
+										this.topology.modified = false;
 										this.changeTopology(newTopology);
 									},
 									error: err => this.messages.showMOVConnectionError(err)
@@ -438,7 +357,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 						} else {
 
-							this.unsaved = false;
+							this.topology.modified = false;
 							this.changeTopology(newTopology);
 						}
 					}
@@ -449,11 +368,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		} else {
 
-			this.topology = newTopology;
+			this.topology = new TopologyData(newTopology);
 			this.selectedElement = null;
 			this.fit();
 			this.updatedGraph();
-			this.unsaved = false;
 			this.messages.showSuccess($localize`:Message to explain when success changed the topology@@main_topology_editor_code_changed-topology:Topology chnaged`);
 		}
 	}
@@ -486,13 +404,14 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public saveTopology() {
 
-		var action: Observable<Topology> = this.topology.id != null ? this.api.updateDesignedTopology(this.topology) : this.api.storeDesignedTopology(this.topology);
+		var model = this.topology.model;
+		var action: Observable<Topology> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);
 		action.subscribe(
 			{
 				next: savedTopology => {
 
 					this.topology.id = savedTopology.id;
-					this.unsaved = false;
+					this.topology.modified = false;
 					this.messages.showSuccess(
 						$localize`:Success message when the topology has bene saved@@main_topology_editor_code_save-success-msg:Topology saved!`
 					);
@@ -511,38 +430,39 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	}
 
-	/**
-	 * Called when the data of the model is changed. 
-	 */
-	public updatedData() {
-
-		this.unsaved = true;
-		this.ref.detectChanges();
-
-	}
 
 	/**
 	 * Called when has changed teh values of teh topology.
 	 */
 	public updatedTopology(min: MinTopology) {
 
-		this.topology.name = min.name;
-		this.topology.description = min.description;
-		this.updatedData();
+		this.topology.min = min;
+		this.topology.modified = true;
+		this.ref.detectChanges();
 	}
 
 	/**
 	 * Called whne the position of a node has changed.
 	 */
-	public updatedNodePosition(node: TopologyNode, point: IPoint) {
+	public updatedNodePosition(nodeId: string, point: IPoint) {
 
-		var newNode = new TopologyNode();
-		newNode.tag = node.tag;
-		newNode.position = new Point();
-		newNode.position.x = point.x;
-		newNode.position.y = point.y;
-		newNode.component = node.component;
-		this.updatedNode(newNode);
+		if (this.topology.updateNodePosition(nodeId, point.x, point.y)) {
+
+			this.ref.detectChanges();
+		}
+	}
+
+	/**
+	 * Called when the selected connection has changed.
+	 */
+	public updatedSelectedConnection(connection: DesignTopologyConnection) {
+
+		if (this.selectedElement != null
+			&& this.topology.updateConnectionModel(this.selectedElement.id, connection)
+		) {
+
+			this.updatedGraph();
+		}
 
 	}
 }

@@ -79,9 +79,8 @@
 		<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
 		</mat-menu>
 		<mat-menu #deleteNodeMenu="matMenu"> @for(node of
-		topology.nodes;track node.tag){
-		<button mat-menu-item (click)="deleteNode(node)">{{node.component?.type}}
-			{{node.component?.name}}</button>
+		topology.nodes;track node.id){
+		<button mat-menu-item (click)="deleteNode(node)">{{node.typeName}}</button>
 		} </mat-menu>
 		<mat-menu #viewMenu="matMenu">
 		<button mat-menu-item (click)="fit()">
@@ -250,20 +249,19 @@
 
   </svg>
 			</div>
-			--> @for(node of topology.nodes;track node.tag){
-			<div fNode [fNodeId]="node.tag" fDragHandle
+			--> @for(node of topology.nodes;track node.id){
+			<div fNode [fNodeId]="node.id" fDragHandle
 				[fNodePosition]="node.position"
-				(fNodePositionChange)="updatedNodePosition(node,$event)"
-				>
+				(fNodePositionChange)="updatedNodePosition(node.id,$event)">
 				<div class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg"
-					[ngClass]="{'border-indigo-800':node.component?.type=='C0','border-purple-800':node.component?.type=='C1','border-sky-800':node.component?.type=='C2'}">
+					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2'}">
 					<div
 						class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 						<div
 							class="p-1 rounded-sm text-white w-[24px] h-[24px] text-xs font-bold text-center"
-							[ngClass]="{'bg-indigo-600':node.component?.type=='C0','bg-purple-600':node.component?.type=='C1','bg-sky-600':node.component?.type=='C2'}">
-							{{node.component?.type}}</div>
-						<div class="grow text-wrap font-bold text-lg">{{node.component?.name}}</div>
+							[ngClass]="{'bg-indigo-600':node.type=='C0','bg-purple-600':node.type=='C1','bg-sky-600':node.type=='C2'}">
+							{{node.type}}</div>
+						<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
 						<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
 							<mat-icon class="text-xs">more_vert</mat-icon>
 						</button>
@@ -276,11 +274,12 @@
 						</button>
 						</mat-menu>
 					</div>
-					@for(channel of node.component?.channels;track channel.name){
+					<!-- 
+					@for(channel of node.channels;track channel.name){
 					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
 						fOutputConnectableSide="right">{{channel.name}}</div>
 					}
-					<!-- 
+					
 					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
 						fOutputConnectableSide="right">input</div>
 					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output2"
@@ -294,11 +293,12 @@
 	<div class="lg:max-w-sm w-full p-2">
 		@if(isNodeSelected()){
 		<app-topology-node-editor [node]="selectedNode"
-			(nodeUpdated)="updatedNode($event)"></app-topology-node-editor>
+			(nodeUpdated)="updatedSelectedNode($event)"></app-topology-node-editor>
 		} @else if(isConnectionSelected()){
-		<app-topology-connection-editor [connection]="selectedConnection"></app-topology-connection-editor>
+		<app-topology-connection-editor [connection]="selectedConnection"
+			(connectionUpdated)="updatedSelectedConnection($event)"></app-topology-connection-editor>
 		} @else {
-		<app-min-topology-editor [topology]="topology"
+		<app-min-topology-editor [topology]="topology.min"
 			(topologyUpdated)="updatedTopology($event)"></app-min-topology-editor>
 		}
 	</div>
