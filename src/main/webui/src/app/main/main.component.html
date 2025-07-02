@@ -54,8 +54,16 @@
 			routerLink="/main/topology/design/search">Defined Topologies</button>
 		<button mat-menu-item
 			i18n="The menu item to go to the topology design components@@main_menu_topology-design-components"
-			routerLink="/main/topology/design/components">Component
+			 [matMenuTriggerFor]="designComponentsMenu">Component
 			Library</button>
+		</mat-menu>
+		<mat-menu #designComponentsMenu="matMenu">
+		<button mat-menu-item
+			i18n="The menu item to search for the components taht can be used in teh design@@main_menu_topology-design-components-search"
+			routerLink="/main/topology/design/components/search">Library</button>
+		<button mat-menu-item
+			i18n="The menu item to update for the components taht can be used in teh design@@main_menu_topology-design-components-update"
+			routerLink="/main/topology/design/components/update">Update library</button>
 		</mat-menu>
 		<div class="grow text-center font-bold text-2xl">{{headerTitle|async}}</div>
 		<button mat-icon-button [matMenuTriggerFor]="localeMenu"

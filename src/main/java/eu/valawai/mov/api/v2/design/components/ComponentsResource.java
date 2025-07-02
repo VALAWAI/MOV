@@ -15,11 +15,15 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import eu.valawai.mov.persistence.design.component.GetComponentDefinitionPage;
+import eu.valawai.mov.persistence.design.component.GetComponentsLibraryStatus;
+import eu.valawai.mov.services.ComponenetLibraryService;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -39,6 +43,12 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ComponentsResource {
+
+	/**
+	 * The service to update the library.
+	 */
+	@Inject
+	ComponenetLibraryService libraryService;
 
 	/**
 	 * Get the information of some components.
@@ -65,6 +75,37 @@ public class ComponentsResource {
 
 		return GetComponentDefinitionPage.fresh().withPattern(pattern).withType(type).withOrder(order)
 				.withOffset(offset).withLimit(limit).execute().map(page -> Response.ok(page).build());
+
+	}
+
+	/**
+	 * Get the status of the components library.
+	 *
+	 * @return the status of the library.
+	 */
+	@Path("/library")
+	@GET
+	@Operation(description = "Obtain library status")
+	@APIResponse(responseCode = "200", description = "The current status of the library", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ComponentsLibraryStatus.class)) })
+	public Uni<Response> getComponentsLibraryStatus() {
+
+		return GetComponentsLibraryStatus.fresh().execute().map(page -> Response.ok(page).build());
+
+	}
+
+	/**
+	 * Get the status of the components library.
+	 *
+	 * @return the status of the library.
+	 */
+	@Path("/library")
+	@DELETE
+	@Operation(description = "Obtain library status")
+	@APIResponse(responseCode = "204", description = "If the process has started")
+	public Uni<Response> refreshComponentsLibrary() {
+
+		return this.libraryService.update().map(page -> Response.noContent().build());
 
 	}
 

@@ -180,4 +180,39 @@ public interface ComponentDefinitionEntities {
 		return find.await().atMost(Duration.ofSeconds(30));
 	}
 
+	/**
+	 * Return the number of components defined in the database.
+	 *
+	 * @return the number of components.
+	 */
+	public static long count() {
+
+		final Uni<Long> count = ComponentDefinitionEntity.count();
+		return count.await().atMost(Duration.ofSeconds(30));
+	}
+
+	/**
+	 * Return the update time of the oldest component.
+	 *
+	 * @return the oldest update timestamp.
+	 */
+	public static long oldestComponentTimestamp() {
+
+		final Uni<ComponentDefinitionEntity> find = ComponentDefinitionEntity.findAll(Sort.ascending("updatedAt"))
+				.firstResult();
+		return find.map(c -> c == null ? 0 : c.updatedAt).await().atMost(Duration.ofSeconds(30));
+	}
+
+	/**
+	 * Return the update time of the newest component.
+	 *
+	 * @return the newest update timestamp.
+	 */
+	public static long newestComponentTimestamp() {
+
+		final Uni<ComponentDefinitionEntity> find = ComponentDefinitionEntity.findAll(Sort.descending("updatedAt"))
+				.firstResult();
+		return find.map(c -> c == null ? 0 : c.updatedAt).await().atMost(Duration.ofSeconds(30));
+	}
+
 }

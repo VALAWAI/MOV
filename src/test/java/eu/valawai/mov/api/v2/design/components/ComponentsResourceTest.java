@@ -12,6 +12,8 @@ import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -184,6 +187,42 @@ public class ComponentsResourceTest extends APITestCase {
 		final var page = given().when().queryParam("type", type.name()).get("/v2/design/components").then()
 				.statusCode(Status.OK.getStatusCode()).extract().as(ComponentDefinitionPage.class);
 		assertEquals(expected, page);
+
+	}
+
+	/**
+	 * Should get current components library status.
+	 */
+	@Test
+	public void shouldGetCurrentComponentsLibraryStatus() {
+
+		final var total = ComponentDefinitionEntities.count();
+		final var oldestComponentTimestamp = ComponentDefinitionEntities.oldestComponentTimestamp();
+		final var newestComponentTimestamp = ComponentDefinitionEntities.newestComponentTimestamp();
+
+		final var status = given().when().get("/v2/design/components/library").then()
+				.statusCode(Status.OK.getStatusCode()).extract().as(ComponentsLibraryStatus.class);
+		assertNotNull(status);
+
+		assertTrue(total >= status.componentCount);
+		assertTrue(status.oldestComponentTimestamp <= status.newestComponentTimestamp);
+		assertTrue(oldestComponentTimestamp <= status.oldestComponentTimestamp);
+		assertTrue(newestComponentTimestamp >= status.newestComponentTimestamp);
+
+	}
+
+	/**
+	 * Should update components library status.
+	 *
+	 * @see ComponentsResource#refreshComponentsLibrary
+	 */
+	@Test
+	public void shouldRefreshComponentsLibrary() {
+
+		final var now = TimeManager.now();
+		given().when().delete("/v2/design/components/library").then().statusCode(Status.NO_CONTENT.getStatusCode());
+
+		this.waitUntil(() -> ComponentDefinitionEntities.newestComponentTimestamp(), time -> time >= now);
 
 	}
 

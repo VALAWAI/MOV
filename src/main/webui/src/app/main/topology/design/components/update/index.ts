@@ -7,4 +7,4 @@
 */
 
 
-export { COMPONENTS_LIBRARY_ROUTES } from './components.routes';
+export { UpdateLibraryComponent } from './update.component';

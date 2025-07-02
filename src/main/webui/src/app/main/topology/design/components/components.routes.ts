@@ -8,26 +8,26 @@
 
 import { Routes } from '@angular/router';
 
-export const DESIGN_ROUTES: Routes = [
+export const COMPONENTS_LIBRARY_ROUTES: Routes = [
 	{
 		path: '',
 		children: [
 			{
-				path: 'editor',
-				loadComponent: () => import('./editor').then(m => m.TopologyEditorComponent)
+				path: 'update',
+				loadComponent: () => import('./update').then(m => m.UpdateLibraryComponent)
+			},
+			{
+				path: ':id/show',
+				loadComponent: () => import('./show').then(m => m.ShowLibraryComponent)
 			},
 			{
 				path: 'search',
-				loadComponent: () => import('./search').then(m => m.TopologySeakerComponent)
-			},
-			{
-				path: 'components',
-				loadChildren: () => import('./components').then(m => m.COMPONENTS_LIBRARY_ROUTES)
+				loadComponent: () => import('./search').then(m => m.SearchLibraryComponent)
 			},
 			{
 				path: '',
 				pathMatch: 'full',
-				redirectTo: 'editor'
+				redirectTo: 'search'
 			},
 			{
 				path: '**',

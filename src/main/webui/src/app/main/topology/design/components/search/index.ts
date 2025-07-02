@@ -7,4 +7,4 @@
 */
 
 
-export { COMPONENTS_LIBRARY_ROUTES } from './components.routes';
+export { SearchLibraryComponent } from './search.component';

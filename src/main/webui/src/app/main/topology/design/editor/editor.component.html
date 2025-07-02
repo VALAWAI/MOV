@@ -274,17 +274,10 @@
 						</button>
 						</mat-menu>
 					</div>
-					<!-- 
-					@for(channel of node.channels;track channel.name){
-					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
-						fOutputConnectableSide="right">{{channel.name}}</div>
+					@for(endpoint of node.endpoints;track endpoint.id){
+					<div class="grow rounded-lg p-2" fNodeOutput [fOutputId]="endpoint.id" [fOutputMultiple]="true"
+						fOutputConnectableSide="right">{{endpoint.name}}</div>
 					}
-					
-					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output1"
-						fOutputConnectableSide="right">input</div>
-					<div class="grow rounded-lg p-2" fNodeOutput fOutputId="output2"
-						fOutputConnectableSide="right">input</div>
-						 -->
 				</div>
 			</div>
 			} </f-canvas> </f-flow>

@@ -40,6 +40,7 @@ export { AllOfPayloadSchema } from './components/all-of-payload-schema.model';
 export { VersionInfo } from './design/components/version.info.model';
 export { ComponentDefinition } from './design/components/component-definition.model';
 export { ComponentDefinitionPage } from './design/components/component-definition-page.model';
+export { ComponentsLibraryStatus } from './design/components/components-library-status.model';
 
 export { Point } from './design/topologies/point.model';
 export { Topology } from './design/topologies/topology.model';

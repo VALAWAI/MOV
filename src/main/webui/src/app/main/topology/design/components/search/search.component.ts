@@ -10,16 +10,16 @@ import { Component, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
 
 /**
- * This is used to manage the posible components taht cna be used into the design of a topology.
+ * This is used to search for a component defined in the library of components.
  */
 @Component({
 	standalone: true,
-	selector: 'app-topology-design-components-library',
+	selector: 'app-topology-design-components-search-library',
 	imports: [
 	],
-	templateUrl: './components.component.html'
+	templateUrl: './search.component.html'
 })
-export class ComponentsLibraryComponent implements OnInit {
+export class SearchLibraryComponent implements OnInit {
 
 	/**
 	 *  Create the component.
@@ -35,7 +35,7 @@ export class ComponentsLibraryComponent implements OnInit {
 	 */
 	ngOnInit(): void {
 
-		this.header.changeHeaderTitle($localize`:The header title for the comnfig page@@main_topology_design_components_code_page-title:Components library`);
+		this.header.changeHeaderTitle($localize`:The header title for the comnfig page@@main_topology_design_components_search_code_page-title:Components library`);
 
 	}
 

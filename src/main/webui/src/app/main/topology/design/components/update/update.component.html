@@ -1,0 +1,27 @@
+<div
+	class="w-full h-full p-2 flex flex-col items-center justify-center gap-7">
+	<div class="text-gray-700 leading-relaxed max-w-2xl text-lg"
+		i18n="The explanation of waht means update the components library@@main_topology_design_components_update_explanation">
+		<p>
+			You're about to update the components that can be used in a topology
+			with the very latest component information directly from its official
+			<a href="https://github.com/VALAWAI" target="_blank"
+				class="text-blue-600 hover:underline font-semibold">VALAWAI
+				GitHub repository</a>. This ensures you have access to the most recent
+			features, bug fixes, and additions.
+		</p>
+		<p>
+			When you click the update button below, this process will begin.
+			Please be aware that it involves downloading and integrating a
+			significant amount of data, so it <b>will take some time to
+				complete</b>. We appreciate your patience while we bring your library
+			fully up to date.
+		</p>
+	</div>
+	<button
+		class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75"
+		i18n="The Label of the button to update the library@@main_topology_design_components_update_label"
+		(click)="update()"
+		>
+		Start Update</button>
+</div>

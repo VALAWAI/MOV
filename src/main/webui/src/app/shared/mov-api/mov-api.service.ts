@@ -24,6 +24,7 @@ import { ComponentDefinitionPage } from './design/components/component-definitio
 import { Topology } from './design/topologies/topology.model';
 import { MinTopologyPage } from './design/topologies/min-topology-page.model';
 import { MinTopology } from './design/topologies/min-topology.model';
+import { ComponentsLibraryStatus } from './design/components/components-library-status.model';
 
 
 /**
@@ -295,6 +296,24 @@ export class MovApiService {
 
 		var url = this.url('/v2/design/topologies', [id]);
 		return this.http.delete<any>(url);
+	}
+
+	/**
+	 * Called when want to refresh the components defined in the library.
+	 */
+	public refreshComponentsLibrary(): Observable<any> {
+
+		var url = this.url('/v2/design/components/library');
+		return this.http.delete<any>(url);
+	}
+
+	/**
+	 * Called when want to get the current library status.
+	 */
+	public getComponentsLibraryStatus(): Observable<ComponentsLibraryStatus> {
+
+		var url = this.url('/v2/design/components/library');
+		return this.http.get<ComponentsLibraryStatus>(url);
 	}
 
 }
