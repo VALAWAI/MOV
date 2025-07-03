@@ -8,7 +8,6 @@
 
 package eu.valawai.mov.events;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
@@ -17,14 +16,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.AfterEach;
 
 import eu.valawai.mov.MasterOfValawaiTestCase;
-import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Multi;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
 
@@ -130,47 +127,100 @@ public class MovEventTestCase extends MasterOfValawaiTestCase {
 	 */
 	public Throwable assertNotOpenQueue(String queueName) {
 
-		final List<Throwable> errors = new ArrayList<>();
-		final var semaphore = new Semaphore(0);
-		this.listener.open(queueName).subscribe().with(msg -> {
-
-			Log.error("Unexpected message");
-			semaphore.release();
-
-		}, error -> {
-
-			errors.add(error);
-			semaphore.release();
-		});
-
-		try {
-
-			semaphore.tryAcquire(1, TimeUnit.MINUTES);
-
-		} catch (final InterruptedException ignored) {
-		}
-
-		assertEquals(1, errors.size());
-		return errors.get(0);
+		return this.assertFailure(this.listener.open(queueName).toUni());
 
 	}
 
 	/**
 	 * A queue that can be used to manage the received messages.
 	 *
-	 * @param messages  that has been received.
-	 * @param errors    that has been received.
-	 * @param semaphore to release for every error or received message.
+	 * @param messages that has been received.
+	 * @param errors   that has been received.
 	 */
-	public record TestMQQueue(List<JsonObject> messages, List<Throwable> errors, Semaphore semaphore) {
+	public record TestMQQueue(List<JsonObject> messages, List<Throwable> errors) {
 
 		/**
 		 * Create a new queue.
 		 */
-		public TestMQQueue() {
+		private TestMQQueue() {
 
-			this(Collections.synchronizedList(new ArrayList<>()), Collections.synchronizedList(new ArrayList<>()),
-					new Semaphore(0));
+			this(Collections.synchronizedList(new ArrayList<>()), Collections.synchronizedList(new ArrayList<>()));
+		}
+
+		/**
+		 * Create the queue to listen for the specified queue.
+		 *
+		 * @param multi to listen for the messages.
+		 *
+		 * @return the queue to listen for the messages.
+		 */
+		public static TestMQQueue listenTo(Multi<JsonObject> multi) {
+
+			final var queue = new TestMQQueue();
+			multi.subscribe().with(msg -> {
+
+				synchronized (queue) {
+
+					queue.messages.add(msg);
+					queue.notifyAll();
+
+				}
+
+			}, error -> {
+
+				synchronized (queue) {
+
+					queue.errors.add(error);
+					queue.notifyAll();
+
+				}
+
+			});
+
+			return queue;
+
+		}
+
+		/**
+		 * Wait until an element satisfy a filter.
+		 *
+		 * @param elements to search the element.
+		 * @param filter   of the element.
+		 * @param duration maximum time to wait.
+		 *
+		 * @return the element that satisfy the filter.
+		 */
+		private final <T> T waitElement(List<T> elements, Predicate<T> filter, Duration duration) {
+
+			final var until = System.currentTimeMillis() + duration.toMillis();
+			do {
+
+				synchronized (this) {
+
+					final var i = elements.iterator();
+					while (i.hasNext()) {
+
+						final var element = i.next();
+						if (filter.test(element)) {
+
+							i.remove();
+							return element;
+						}
+					}
+
+					try {
+
+						this.wait(duration.toMillis());
+
+					} catch (final Throwable ignored) {
+					}
+				}
+
+			} while (System.currentTimeMillis() < until);
+
+			fail("Not received the expected element in the specified time.");
+			return null;
+
 		}
 
 		/**
@@ -185,43 +235,7 @@ public class MovEventTestCase extends MasterOfValawaiTestCase {
 		 */
 		public JsonObject waitReceiveMessage(Predicate<JsonObject> filter, Duration duration) {
 
-			synchronized (this.messages) {
-
-				final var max = this.messages.size();
-				for (var i = 0; i < max; i++) {
-
-					final var msg = this.messages.get(i);
-					if (filter.test(msg)) {
-
-						this.messages.remove(i);
-						return msg;
-					}
-				}
-
-				try {
-
-					this.semaphore.tryAcquire(duration.toMillis(), TimeUnit.MILLISECONDS);
-
-				} catch (final Throwable ignored) {
-				}
-			}
-
-			synchronized (this.messages) {
-
-				final var max = this.messages.size();
-				for (var i = 0; i < max; i++) {
-
-					final var msg = this.messages.get(i);
-					if (filter.test(msg)) {
-
-						this.messages.remove(i);
-						return msg;
-					}
-				}
-			}
-
-			fail("Not received the message in the specified time.");
-			return null;
+			return this.waitElement(this.messages, filter, duration);
 		}
 
 		/**
@@ -276,43 +290,7 @@ public class MovEventTestCase extends MasterOfValawaiTestCase {
 		 */
 		public Throwable waitReceiveError(Predicate<Throwable> filter, Duration duration) {
 
-			synchronized (this.errors) {
-
-				final var max = this.errors.size();
-				for (var i = 0; i < max; i++) {
-
-					final var error = this.errors.get(i);
-					if (filter.test(error)) {
-
-						this.errors.remove(i);
-						return error;
-					}
-				}
-
-				try {
-
-					this.semaphore.tryAcquire(duration.toMillis(), TimeUnit.MILLISECONDS);
-
-				} catch (final Throwable ignored) {
-				}
-			}
-
-			synchronized (this.errors) {
-
-				final var max = this.errors.size();
-				for (var i = 0; i < max; i++) {
-
-					final var error = this.errors.get(i);
-					if (filter.test(error)) {
-
-						this.errors.remove(i);
-						return error;
-					}
-				}
-			}
-
-			fail("Not received the error in the specified time.");
-			return null;
+			return this.waitElement(this.errors, filter, duration);
 		}
 
 		/**
@@ -351,17 +329,7 @@ public class MovEventTestCase extends MasterOfValawaiTestCase {
 	 */
 	public TestMQQueue waitOpenQueue(String queueName, Duration duration) {
 
-		final var queue = new TestMQQueue();
-		this.listener.open(queueName).subscribe().with(msg -> {
-
-			queue.messages.add(msg);
-			queue.semaphore.release();
-
-		}, error -> {
-
-			queue.errors.add(error);
-			queue.semaphore.release();
-		});
+		final var queue = TestMQQueue.listenTo(this.listener.open(queueName));
 		this.waitUntilQueueIsOpen(queueName, duration);
 		return queue;
 
