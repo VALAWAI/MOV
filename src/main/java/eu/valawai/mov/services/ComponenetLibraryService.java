@@ -264,7 +264,7 @@ public class ComponenetLibraryService {
 		final var descriptionMatcher = Pattern.compile("^#[^\\n]+([^\\#]+)", Pattern.CASE_INSENSITIVE).matcher(readme);
 		if (descriptionMatcher.find()) {
 
-			entity.description = descriptionMatcher.group(1).replace('\n', ' ').trim();
+			entity.description = descriptionMatcher.group(1).replace('\n', ' ');
 
 		} else if (component != null && component.description != null) {
 
@@ -273,6 +273,13 @@ public class ComponenetLibraryService {
 		} else {
 
 			entity.description = entity.repository.description;
+		}
+		if (entity.description != null) {
+
+			entity.description = entity.description.trim();
+			if (entity.description.length() == 0) {
+				entity.description = null;
+			}
 		}
 	}
 
