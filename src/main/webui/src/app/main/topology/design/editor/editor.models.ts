@@ -515,7 +515,7 @@ export class TopologyData {
 				if (dataNode.id == newNode.id) {
 
 					id++;
-					newNode.id = 'node' + id;
+					newNode.id = 'node_' + id;
 					collision = true;
 					break;
 
@@ -668,7 +668,7 @@ export class TopologyData {
 				if (dataConnection.id == newConnection.id) {
 
 					id++;
-					newConnection.id = 'connection' + id;
+					newConnection.id = 'connection_' + id;
 					collision = true;
 					break;
 
