@@ -147,10 +147,12 @@
 		<div [ngStyle]="{'height.px':height}"
 			class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)"
-				(fCreateNode)="onNodeAdded($event)"> <f-background
+				(fCreateNode)="onNodeAdded($event)"
+				(fCreateConnection)="onConnectionAdded($event)"> <f-background
 				*ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
 			</f-background> <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
-			<f-canvas fZoom> <!-- 
+			<f-canvas fZoom> <f-connection-for-create></f-connection-for-create>
+			<!-- 
 			<f-connection fOutputId="output1"
 				fInputId="input1" fType="bezier"> <svg
 				viewBox="0 0 20 20" fMarker [type]="eMarkerType.START" [height]="20"
@@ -282,13 +284,27 @@
 						</mat-menu>
 					</div>
 					@for(endpoint of node.endpoints;track endpoint.id){
+					@if(endpoint.isPublished){
 					<div class="grow rounded-lg p-2" fNodeOutput
 						[fOutputId]="endpoint.id" [fOutputMultiple]="true"
-						fOutputConnectableSide="right">{{endpoint.name}}</div>
-					}
+						fOutputConnectableSide="right" fNodeOutlet class="right">
+						<mat-icon color="primary" fontIcon="publish"></mat-icon>
+						{{endpoint.name}}
+					</div>
+
+					} @else{
+					<div class="grow rounded-lg p-2" fNodeInput
+						[fInputId]="endpoint.id" [fInputMultiple]="true"
+						fInputConnectableSide="left">
+						<mat-icon color="primary" fontIcon="download"></mat-icon>
+						{{endpoint.name}}
+					</div>
+					} }
 				</div>
 			</div>
-			} </f-canvas> </f-flow>
+			} @for(connection of topology.connections;track connection.id){ <f-connection
+				[fConnectionId]="connection.id" [fInputId]="connection.sourceId"
+				[fOutputId]="connection.targetId"></f-connection> } </f-canvas> </f-flow>
 		</div>
 	</div>
 	<div class="lg:max-w-sm w-full p-2">

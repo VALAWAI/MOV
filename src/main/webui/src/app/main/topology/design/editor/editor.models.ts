@@ -68,13 +68,13 @@ export class EndpointData implements TopologyElement {
 	 * Create the model.
 	 */
 	constructor(
-		public endPoint: TopologyConnectionEndpoint
+		public model: TopologyConnectionEndpoint
 	) {
 
-		this.id = this.endPoint.nodeTag + '_' + this.endPoint.channel;
-		if (this.endPoint.channel) {
+		this.id = this.model.nodeTag + '_' + this.model.channel;
+		if (this.model.channel) {
 
-			const matches = /.+\/c[0|1|2]\/\w+\/([\w|\/]+)/ig.exec(this.endPoint.channel);
+			const matches = /.+\/c[0|1|2]\/\w+\/([\w|\/]+)/ig.exec(this.model.channel);
 			if (matches && matches.length == 2) {
 
 				this.name = matches[1];
@@ -209,7 +209,7 @@ export class NodeData implements TopologyElement {
 
 				for (var channel of this.model.component.channels) {
 
-					if (channel.name == data.endPoint.channel) {
+					if (channel.name == data.model.channel) {
 
 						data.isPublished = channel.publish != null;
 						data.description = channel.description;
@@ -331,21 +331,25 @@ export class ConnectionData implements TopologyElement {
 		public model: DesignTopologyConnection
 	) {
 
-		this.id = '';
-		if (this.model.source != null) {
-
-			this.id += this.model.source.nodeTag + '_' + this.model.source.channel;
-
-		}
-
-		this.id += "->";
-
-		if (this.model.target != null) {
-
-			this.id += this.model.target.nodeTag + '_' + this.model.target.channel;
-
-		}
+		this.id = 'connection_0';
 	}
+
+	/**
+	 * Return the identifeir of the spurce connection endpoint.
+	 */
+	public get sourceId(): string {
+
+		return this.model.source?.nodeTag + '_' + this.model.source?.channel;
+	}
+
+	/**
+	 * Return the identifeir of the spurce connection endpoint.
+	 */
+	public get targetId(): string {
+
+		return this.model.target?.nodeTag + '_' + this.model.target?.channel;
+	}
+
 }
 
 
@@ -648,7 +652,6 @@ export class TopologyData {
 		return false;
 	}
 
-
 	/**
 	 * Add a connection to the topology.
 	 */
@@ -675,6 +678,33 @@ export class TopologyData {
 		}
 		this.connections.push(newConnection);
 		return newConnection;
+	}
+
+	/**
+	 * Add a connection to the topology.
+	 */
+	public addConnectionBetween(sourceId: string, targetId: string): ConnectionData {
+
+		var newConnection = new DesignTopologyConnection();
+		for (var node of this.nodes) {
+
+			for (var endpoint of node.endpoints) {
+
+				if (endpoint.id === sourceId) {
+
+					newConnection.source = endpoint.model;
+
+				} else if (endpoint.id === targetId) {
+
+					newConnection.target = endpoint.model;
+				}
+			}
+
+			if (newConnection.source != null && newConnection.target != null) {
+				break;
+			}
+		}
+		return this.addConnectionWithModel(newConnection)
 	}
 
 }

@@ -19,7 +19,8 @@ import {
 	FFlowModule,
 	FSelectionChangeEvent,
 	FCreateNodeEvent,
-	FFlowComponent
+	FFlowComponent,
+	FCreateConnectionEvent
 } from '@foblex/flow';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -555,6 +556,21 @@ export class TopologyEditorComponent implements OnInit {
 				}
 			}
 		);
+
+	}
+
+	/**
+	 * Called when a connection is added into the graf.
+	 */
+	public onConnectionAdded(event: FCreateConnectionEvent): void {
+
+		if (event.fInputId != null && event.fInputId != null) {
+
+			this.topology.addConnectionBetween(event.fInputId, event.fOutputId);
+			this.unsaved = true;
+			this.updatedGraph();
+
+		}
 
 	}
 
