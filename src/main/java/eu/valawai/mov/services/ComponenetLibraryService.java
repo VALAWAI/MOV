@@ -166,8 +166,8 @@ public class ComponenetLibraryService {
 										.chain(asyncapi -> this.updateComponent(entity, readme, asyncapi)));
 
 					} else {
-
-						return Uni.createFrom().nullItem();
+						// not necessary to update
+						return this.storeOrUpdate(entity);
 
 					}
 
@@ -204,24 +204,37 @@ public class ComponenetLibraryService {
 			this.updateAPIVersionIn(entity, readme, component);
 			entity.channels = component.channels;
 
-			entity.updatedAt = TimeManager.now();
-			Uni<ComponentDefinitionEntity> update = null;
-			if (entity.id == null) {
-
-				update = entity.persist();
-
-			} else {
-
-				update = entity.update();
-			}
-
-			return update.onItem().invoke(() -> AddLog.fresh().withDebug()
-					.withMessage("Update the component {0} {1}.", entity.type, entity.name).store());
+			return this.storeOrUpdate(entity);
 
 		} catch (final Throwable cause) {
 
 			return Uni.createFrom().failure(cause);
 		}
+
+	}
+
+	/**
+	 * Store or update the entity.
+	 *
+	 * @param entity to store or update.
+	 *
+	 * @return the result of the store.
+	 */
+	private Uni<ComponentDefinitionEntity> storeOrUpdate(ComponentDefinitionEntity entity) {
+
+		entity.updatedAt = TimeManager.now();
+		Uni<ComponentDefinitionEntity> update = null;
+		if (entity.id == null) {
+
+			update = entity.persist();
+
+		} else {
+
+			update = entity.update();
+		}
+
+		return update.onItem().invoke(() -> AddLog.fresh().withDebug()
+				.withMessage("Update the component {0} {1}.", entity.type, entity.name).store());
 
 	}
 
