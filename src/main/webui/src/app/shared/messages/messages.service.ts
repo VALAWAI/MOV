@@ -62,7 +62,7 @@ export class MessagesService {
 	 */
 	public showMOVConnectionError(err: any) {
 
-		var text = $localize`Error message when can not connect with the MOC@@shared_messages_server-error-msg:Could not connect to the MOV, try again later.`;
+		var text = $localize`:Error message when can not connect with the MOV@@shared_messages_server-error-msg:Could not connect to the MOV, try again later.`;
 		this.show(text, 'ERROR');
 		if (err != null) {
 

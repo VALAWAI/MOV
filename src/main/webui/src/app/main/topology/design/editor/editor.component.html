@@ -272,10 +272,17 @@
 								i18n="The label of the menu to delete a node from the topology@@main_topology_design_editor-menu-delete-node">Delete
 								node</span>
 						</button>
+						<button mat-menu-item (click)="addEndPointTo(node)">
+							<mat-icon color="primary">add</mat-icon>
+							<span
+								i18n="The label of the menu to add an endpoint into a node@@main_topology_design_editor-menu-add-endpoint">Add
+								endpoint</span>
+						</button>
 						</mat-menu>
 					</div>
 					@for(endpoint of node.endpoints;track endpoint.id){
-					<div class="grow rounded-lg p-2" fNodeOutput [fOutputId]="endpoint.id" [fOutputMultiple]="true"
+					<div class="grow rounded-lg p-2" fNodeOutput
+						[fOutputId]="endpoint.id" [fOutputMultiple]="true"
 						fOutputConnectableSide="right">{{endpoint.name}}</div>
 					}
 				</div>
@@ -288,7 +295,8 @@
 		<app-topology-node-editor [node]="selectedNode?.model"
 			(nodeUpdated)="updatedSelectedNode($event)"></app-topology-node-editor>
 		} @else if(isConnectionSelected()){
-		<app-topology-connection-editor [connection]="selectedConnection?.model"
+		<app-topology-connection-editor
+			[connection]="selectedConnection?.model"
 			(connectionUpdated)="updatedSelectedConnection($event)"></app-topology-connection-editor>
 		} @else {
 		<app-min-topology-editor [topology]="topology.min"

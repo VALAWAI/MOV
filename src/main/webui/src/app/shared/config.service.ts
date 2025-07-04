@@ -33,6 +33,16 @@ export class ConfigService {
 	private pollingIterationsSubject: BehaviorSubject<number>;
 
 	/**
+	 * The subject to notify the changes on the editor if it has to autoload the last edited topology.
+	 */
+	private editorAutoloadLastTopologySubject: BehaviorSubject<boolean>;
+
+	/**
+	 * The subject to notify the changes whne the editor has stored a topology.
+	 */
+	private editorLastStoredTopologyIdSubject: BehaviorSubject<string | null>;
+
+	/**
 	 * Create the service.
 	 */
 	constructor() {
@@ -40,6 +50,8 @@ export class ConfigService {
 		this.pollingTimeSubject = new BehaviorSubject<number>(this.pollingTime);
 		this.editorShowGridSubject = new BehaviorSubject<boolean>(this.editorShowGrid);
 		this.pollingIterationsSubject = new BehaviorSubject<number>(this.pollingIterations);
+		this.editorAutoloadLastTopologySubject = new BehaviorSubject<boolean>(this.editorAutoloadLastTopology);
+		this.editorLastStoredTopologyIdSubject = new BehaviorSubject<string | null>(this.editorLastStoredTopologyId);
 	}
 
 	/**
@@ -126,6 +138,66 @@ export class ConfigService {
 
 		localStorage.setItem('POLLING_ITERATIONS', String(iterations));
 		this.pollingIterationsSubject.next(iterations);
+	}
+
+	/**
+	 * Return the observable of the editor autoload last topology. 
+	 */
+	public get editorAutoloadLastTopology$(): Observable<boolean> {
+
+		return this.editorAutoloadLastTopologySubject.asObservable();
+	}
+
+	/**
+	 * Get the current value if the editor must autoload last topology.
+	 */
+	public get editorAutoloadLastTopology(): boolean {
+
+		var item = localStorage.getItem('EDITOR_AUTOLOAD_LAST_TOPOLOGY');
+		return (item == null) || (item.toLowerCase() === 'true');
+	}
+
+	/**
+	 * Store the editor autoload last topology.
+	 */
+	public set editorAutoloadLastTopology(view: boolean) {
+
+		localStorage.setItem('EDITOR_AUTOLOAD_LAST_TOPOLOGY', String(view));
+		this.editorAutoloadLastTopologySubject.next(view);
+
+	}
+
+	/**
+	 * Return the observable of the identifier of th last topology stored in the editor. 
+	 */
+	public get editorLastStoredTopologyId$(): Observable<string | null> {
+
+		return this.editorLastStoredTopologyIdSubject.asObservable();
+	}
+
+	/**
+	 * Get the current value if the identifier of th last topology stored in the editor.
+	 */
+	public get editorLastStoredTopologyId(): string | null {
+
+		return localStorage.getItem('EDITOR_LAST_STORED__TOPOLOGY_ID');
+
+	}
+
+	/**
+	 * Store the identifier of th last topology stored in the editor.
+	 */
+	public set editorLastStoredTopologyId(id: string | null) {
+
+		if (id) {
+
+			localStorage.setItem('EDITOR_LAST_STORED__TOPOLOGY_ID', id);
+
+		} else {
+
+			localStorage.removeItem('EDITOR_LAST_STORED__TOPOLOGY_ID');
+		}
+		this.editorLastStoredTopologyIdSubject.next(id);
 	}
 
 }

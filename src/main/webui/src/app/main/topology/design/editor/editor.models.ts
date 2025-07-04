@@ -15,7 +15,8 @@ import {
 	Topology,
 	TopologyConnectionEndpoint,
 	TopologyNode,
-	Point
+	Point,
+	ChannelSchema
 } from "@app/shared/mov-api";
 import { IPoint } from "@foblex/2d";
 import { FSelectionChangeEvent } from "@foblex/flow";
@@ -54,7 +55,7 @@ export class EndpointData implements TopologyElement {
 	public isData: boolean = false;
 
 	/**
-	 * The name of the component.
+	 * The name of the endpoint.
 	 */
 	public name: string = '';
 
@@ -71,12 +72,35 @@ export class EndpointData implements TopologyElement {
 	) {
 
 		this.id = this.endPoint.nodeTag + '_' + this.endPoint.channel;
-		const matches = this.endPoint.channel?.match(/.*\/(data|flow)\/(\w+)/g);
-		if (matches && matches.length == 2) {
+		if (this.endPoint.channel) {
 
-			this.isData = 'data' == matches[0];
-			this.name = matches[1];
+			const matches = /.+\/c[0|1|2]\/\w+\/([\w|\/]+)/ig.exec(this.endPoint.channel);
+			if (matches && matches.length == 2) {
+
+				this.name = matches[1];
+				this.isData = this.name.startsWith('data');
+
+			}
 		}
+	}
+
+	/**
+	 * Create the endpoint fro a node and a scehma.
+	 * 
+	 * @param node of the endpoint.
+	 * @param channle for the endpoint.
+	 * 
+	 * @return the endpoint for the node for the specified schema.
+	 */
+	public static with(node: NodeData, channel: ChannelSchema): EndpointData {
+
+		var model = new TopologyConnectionEndpoint();
+		model.nodeTag = node.model.tag;
+		model.channel = channel.name;
+		var data = new EndpointData(model);
+		data.description = channel.description;
+		data.isPublished = channel.publish != null;
+		return data;
 	}
 
 }
@@ -158,6 +182,7 @@ export class NodeData implements TopologyElement {
 	/**
 	 * Update the encpoints associated to the specified connection.
 	 * 
+	 * @param connection where the node may be it is the source or the target.
 	 */
 	public updateEndpointsWith(connection: ConnectionData) {
 
@@ -186,10 +211,53 @@ export class NodeData implements TopologyElement {
 				}
 			}
 
-			this.endpoints.push(data);
-			this.endpoints.sort((a: EndpointData, b: EndpointData) => a.name.localeCompare(b.name));
+			this.addEndpoint(data);
 		}
 
+	}
+
+	/**
+	 * Add an endpoint into the node.
+	 */
+	public addEndpoint(data: EndpointData) {
+
+		this.endpoints.push(data);
+		this.endpoints.sort((a: EndpointData, b: EndpointData) => a.name.localeCompare(b.name));
+	}
+
+	/**
+	 * Change the endpoints of the node.
+	 */
+	public chnageEndpoints(data: EndpointData[]) {
+
+		this.endpoints = data;
+		this.endpoints.sort((a: EndpointData, b: EndpointData) => a.name.localeCompare(b.name));
+	}
+
+	/**
+	 * Return the posible end points.
+	 */
+	public possibleEndpoint(): EndpointData[] {
+
+		var possible: EndpointData[] = [];
+		if (this.model.component?.channels) {
+
+			CHANNEL: for (var channel of this.model.component.channels) {
+
+				for (var endpoint of this.endpoints) {
+
+					if (endpoint.endPoint.channel == channel.name) {
+
+						continue CHANNEL;
+					}
+				}
+
+				var endpoint = EndpointData.with(this, channel);
+				possible.push(endpoint);
+			}
+		}
+
+		return possible;
 	}
 
 }
@@ -266,19 +334,25 @@ export class TopologyData {
 			this.min.name = topology.name;
 			this.min.description = topology.description;
 
-			for (var node of topology.nodes) {
+			if (topology.nodes) {
 
-				this.addNodeWithModel(node);
-			}
+				for (var node of topology.nodes) {
 
-			for (var model of topology.connections) {
-
-				var connection = this.addConnectionWithModel(model);
-				for (var nodeData of this.nodes) {
-
-					nodeData.updateEndpointsWith(connection);
+					this.addNodeWithModel(node);
 				}
 
+				if (topology.connections) {
+
+					for (var model of topology.connections) {
+
+						var connection = this.addConnectionWithModel(model);
+						for (var nodeData of this.nodes) {
+
+							nodeData.updateEndpointsWith(connection);
+						}
+
+					}
+				}
 			}
 		}
 
@@ -460,7 +534,8 @@ export class TopologyData {
 		model.id = this.min.id;
 		model.name = this.min.name;
 		model.description = this.min.description;
-
+		model.nodes = [];
+		model.connections = [];
 		for (var node of this.nodes) {
 
 			model.nodes.push(node.model);

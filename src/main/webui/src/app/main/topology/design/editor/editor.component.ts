@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnInit, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
@@ -42,7 +42,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 import { MinTopologyEditorComponent } from './min-topology-editor.component';
-import { ConnectionData, NodeData, TopologyData, TopologyElement } from './editor.models';
+import { ConnectionData, EndpointData, NodeData, TopologyData, TopologyElement } from './editor.models';
+import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 
 
 @Component({
@@ -64,7 +65,7 @@ import { ConnectionData, NodeData, TopologyData, TopologyElement } from './edito
 	styleUrl: './editor.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopologyEditorComponent implements OnInit, OnDestroy {
+export class TopologyEditorComponent implements OnInit {
 
 	/**
 	 *  The service over the main view. 
@@ -151,14 +152,24 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		this.header.changeHeaderTitle($localize`:The header title for the topology editor@@main_topology_editor_code_page-title:Topology Editor`);
 		this.windowResized();
-	}
 
-	/**
-	 * Called whne the component is destroyed.
-	 */
-	public ngOnDestroy(): void {
+		if (this.conf.editorAutoloadLastTopology) {
 
+			const id = this.conf.editorLastStoredTopologyId;
+			if (id) {
 
+				this.api.getTopology(id).subscribe(
+					{
+						next: topology => this.changeTopology(topology),
+						error: err => {
+
+							this.conf.editorLastStoredTopologyId = null;
+							console.error(err);
+						}
+					}
+				);
+			}
+		}
 	}
 
 	/**
@@ -412,6 +423,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 					if (result != null) {
 
+						this.conf.editorLastStoredTopologyId = result.id;
 						this.changeTopology(result);
 					}
 				}
@@ -441,6 +453,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 						this.topology.id = stored.id;
 						this.unsaved = false;
+						this.conf.editorLastStoredTopologyId = stored.id;
 						return true;
 
 					} else {
@@ -463,10 +476,14 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 			this.storeModel().subscribe(
 				{
-					next: () =>
-						this.messages.showSuccess(
-							$localize`:Success message when the topology has bene saved@@main_topology_editor_code_save-success-msg:Topology saved!`
-						)
+					next: stored => {
+
+						if (stored) {
+							this.messages.showSuccess(
+								$localize`:Success message when the topology has been saved@@main_topology_editor_code_save-success-msg:Topology saved!`
+							);
+						}
+					}
 				}
 			);
 		}
@@ -519,4 +536,25 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		}
 
 	}
+
+	/**
+	 * Called when has to add and endpoint into a node.
+	 */
+	public addEndPointTo(node: NodeData) {
+
+		this.dialog.open(SelectNodeEndpointsDialog, { data: node }).afterClosed().subscribe(
+			{
+				next: (result: EndpointData[] | null) => {
+
+					if (result != null) {
+
+						node.chnageEndpoints(result);
+						this.updatedGraph();
+					}
+				}
+			}
+		);
+
+	}
+
 }

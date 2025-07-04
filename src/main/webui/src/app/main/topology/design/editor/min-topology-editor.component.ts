@@ -73,16 +73,6 @@ export class MinTopologyEditorComponent implements OnInit, OnDestroy {
 
 
 	/**
-	 *  Create the topology.
-	 */
-	constructor(
-		private api: MovApiService,
-		private messages: MessagesService
-	) {
-
-	}
-
-	/**
 	 * The topology to edit.
 	 */
 	@Input()
@@ -126,7 +116,7 @@ export class MinTopologyEditorComponent implements OnInit, OnDestroy {
 				next: value => {
 
 					var topology = new MinTopology();
-					topology.id = this.editingTopology?.id || '';
+					topology.id = this.editingTopology?.id || null;
 					topology.name = this.topologyForm.controls.name.value;
 					topology.description = this.topologyForm.controls.description.value;
 					if (JSON.stringify(this.editingTopology) != JSON.stringify(topology)) {
