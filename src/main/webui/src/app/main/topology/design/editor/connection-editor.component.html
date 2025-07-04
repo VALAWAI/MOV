@@ -1,6 +1,18 @@
-<div *ngIf="connection!=null;else noConnection" class="w-full h-full flex flex-col">
-	<div>{{connection|json}}</div>
+<div class="w-full h-full">
+	<form [formGroup]="connectionForm" class="flex flex-col">
+		<fieldset class="fieldset border-base-300 rounded-box w-xs border p-4">
+			<legend class="p-2 font-bold"
+				i18n="The legend to edit the source of the connection@@main_topology_design_connexction-editor_source-fieldset-label">Source:</legend>
+			<app-topology-connection-endpoint-editor class="w-full"
+				[isSource]="true" [topology]="topology"
+				[endpoint]="connectionForm.controls.source.value"></app-topology-connection-endpoint-editor>
+		</fieldset>
+		<fieldset class="fieldset border-base-300 rounded-box w-xs border p-4">
+			<legend class="p-2 font-bold"
+				i18n="The legend to edit the target of the connection@@main_topology_design_connexction-editor_target-fieldset-label">Target:</legend>
+			<app-topology-connection-endpoint-editor class="w-full"
+				[isSource]="false" [topology]="topology"
+				[endpoint]="connectionForm.controls.target.value"></app-topology-connection-endpoint-editor>
+		</fieldset>
+	</form>
 </div>
-<ng-template #noConnection> <app-message type="ERROR"
-	i18n="Error message when no connection is selected to edit@@main_topology_design_connection-editor_no-connection-error-msg">
-No connection is selected. Please select a connection to edit. </app-message> </ng-template>

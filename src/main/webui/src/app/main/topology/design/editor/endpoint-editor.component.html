@@ -1,0 +1,19 @@
+<div class="w-full h-full">
+	<form [formGroup]="endpointForm" class="flex flex-col">
+		<mat-form-field> <mat-label
+			i18n="The label of teh form field to edit the endpoimnt node@@main_topology_design_endpoint-editor_node-label">Node</mat-label>
+		<mat-select formControlName="nodeTag"> <mat-option>node_0</mat-option>
+		</mat-select> <mat-error *ngIf="endpointForm.controls.nodeTag.hasError('required')"
+			i18n="The error message if no node tag is selected@@main_topology_design_endpoint-editor_node-required">
+		>You must select a node.</mat-error> </mat-form-field>
+		<mat-form-field> <mat-label
+			i18n="The label of teh form field to edit the endpoimnt channel@@main_topology_design_endpoint-editor_channel-label">Channel</mat-label>
+		<mat-select formControlName="channel"> <mat-option>channel_0</mat-option>
+		</mat-select> <mat-error *ngIf="endpointForm.controls.channel.hasError('required')"
+			i18n="The error message if no channel is selected@@main_topology_design_endpoint-editor_channel-required">
+		You must select a channel.</mat-error> <mat-error
+			*ngIf="endpointForm.controls.channel.hasError('undefined')"
+			i18n="The error message if the channel is not defined in the node@@main_topology_design_endpoint-editor_channel-undefined">
+		The channel is not posible in the slected node.</mat-error> </mat-form-field>
+	</form>
+</div>
