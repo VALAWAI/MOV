@@ -1,0 +1,33 @@
+<h2 mat-dialog-title class="text-lg font-bold mb-4"
+	i18n="Title of the dialog to select an endpoint for the node@@main_topology_editor-dialog-select-node-endpoints-dialog-title">
+	Node Endpoints</h2>
+<mat-dialog-content class="text-gray-600 mb-4">
+@if(endpoints.length == 0){ <app-message type="ERROR"
+	i18n="Error message when does not exist any endpoint@@main_topology_editor-dialog-select-node-endpoints-no-endpoint-error-msg">
+Any endpoint couldn't be selected. This is either because no endpoints
+exist or no component is selected for the node. </app-message> } @else{
+<div
+	i18n="The message to inform the user to select an endpoint@@main_topology_editor-dialog-select-node-endpoints-select-message">
+	Select one or more endpoints for the node from the list below.</div>
+@for(endpoint of endpoints;track endpoint.id){ <mat-selection-list
+	(selectionChange)="endppointsSelectionChange($event)">
+<mat-list-option [value]="endpoint"
+	[selected]="data.getEndpointWith(endpoint.id)!=null">
+<div class="flex flex-row gap-2">
+	@if(endpoint.isPublished){
+	<mat-icon color="primary" fontIcon="publish"></mat-icon>
+	}@else{
+	<mat-icon color="primary" fontIcon="download"></mat-icon>
+	} <span class="text-lg font-bold">{{endpoint.name}}</span>
+</div>
+<div class="text-gray-600">{{ endpoint.description }}</div>
+</mat-list-option> </mat-selection-list> } } </mat-dialog-content>
+<mat-dialog-actions>
+<button matButton color="warn" [mat-dialog-close]="null"
+	i18n="Cancel label of the dialog to select the node endpoints@@main_topology_editor-dialog-select-node-endpoints-cancel-label">
+	Cancel</button>
+<button matButton [ngClass]="{'!hidden':endpoints.length == 0}"
+	color="primary" [mat-dialog-close]="selectedEndpoints"
+	i18n="OK label of the dialog to select the node endpoints@@main_topology_editor-dialog-select-node-endpoints-ok-label">
+	Use selected endpoints</button>
+</mat-dialog-actions>

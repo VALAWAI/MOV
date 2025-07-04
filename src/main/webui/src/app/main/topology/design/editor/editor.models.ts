@@ -178,6 +178,13 @@ export class NodeData implements TopologyElement {
 		return this.type + ' ' + this.name;
 	}
 
+	/**
+	 * Check if the node has any defined channel.
+	 */
+	public get hasChannels(): boolean {
+
+		return this.model != null && this.model.component != null && this.model.component.channels != null && this.model.component.channels.length > 0;
+	}
 
 	/**
 	 * Update the encpoints associated to the specified connection.
@@ -226,15 +233,6 @@ export class NodeData implements TopologyElement {
 	}
 
 	/**
-	 * Change the endpoints of the node.
-	 */
-	public chnageEndpoints(data: EndpointData[]) {
-
-		this.endpoints = data;
-		this.endpoints.sort((a: EndpointData, b: EndpointData) => a.name.localeCompare(b.name));
-	}
-
-	/**
 	 * Return the posible end points.
 	 */
 	public possibleEndpoint(): EndpointData[] {
@@ -242,22 +240,75 @@ export class NodeData implements TopologyElement {
 		var possible: EndpointData[] = [];
 		if (this.model.component?.channels) {
 
-			CHANNEL: for (var channel of this.model.component.channels) {
-
-				for (var endpoint of this.endpoints) {
-
-					if (endpoint.endPoint.channel == channel.name) {
-
-						continue CHANNEL;
-					}
-				}
+			for (var channel of this.model.component.channels) {
 
 				var endpoint = EndpointData.with(this, channel);
 				possible.push(endpoint);
 			}
 		}
-
+		possible.sort((a: EndpointData, b: EndpointData) => a.name.localeCompare(b.name));
 		return possible;
+	}
+
+	/**
+	 * Modify the endpoint of the node.
+	 * 
+	 * @param newEndpoints the new endpoints.
+	 * 
+	 * @return true if the node is modified.  
+	 */
+	public changeEndpoints(newEndpoints: EndpointData[]): boolean {
+
+		var changed = false;
+		ENDPOINT_LOOP: for (var i = 0; i < this.endpoints.length; i++) {
+
+			const endpoint = this.endpoints[i];
+			for (var j = 0; j < newEndpoints.length; j++) {
+
+				const newEndpoint = newEndpoints[j]
+				if (newEndpoint.id === endpoint.id) {
+
+					newEndpoints.splice(j, 1);
+					continue ENDPOINT_LOOP;
+				}
+			}
+
+			this.endpoints.splice(i, 1);
+			changed = true;
+			i--;
+		}
+
+		for (var newEndpoint of newEndpoints) {
+
+			this.addEndpoint(newEndpoint);
+			changed = true;
+		}
+
+		return changed;
+	}
+
+	/**
+	 * Return the endpoint with the specified id.
+	 * 
+	 * @param id of the endpoint to return.
+	 * 
+	 * @return teh endpoint with the id or {@code null} if any has it.
+	 */
+	public getEndpointWith(id: string | null | undefined) {
+
+		if (id) {
+
+			for (var endpoint of this.endpoints) {
+
+				if (endpoint.id === id) {
+
+					return endpoint;
+				}
+			}
+
+		}
+
+		return null;
 	}
 
 }
@@ -536,6 +587,7 @@ export class TopologyData {
 		model.description = this.min.description;
 		model.nodes = [];
 		model.connections = [];
+
 		for (var node of this.nodes) {
 
 			model.nodes.push(node.model);

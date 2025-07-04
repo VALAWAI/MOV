@@ -23,12 +23,12 @@ export class Topology extends MinTopology {
 	 * A list of {@link TopologyNode} objects that represent the different VALAWAI
 	 * components that form the value aware application.
 	 */
-	public nodes: TopologyNode[] = [];
+	public nodes: TopologyNode[] | null = null;
 
 	/**
 	 * A list of {@link TopologyConnection} objects that define the possible
 	 * interactions between the VALAWAI components.
 	 */
-	public connections: TopologyConnection[] = [];
+	public connections: TopologyConnection[] | null = null;
 
 }

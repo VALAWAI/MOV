@@ -89,7 +89,7 @@ export class UpdateLibraryComponent implements OnInit {
 	/**
 	 * Check if the library has been refreshed.
 	 */
-	private checkIfLibraryHasBeenRefreshed(zeros: number = 0) {
+	private checkIfLibraryHasBeenRefreshed(zeros: number = 0, now: number = Math.floor(Date.now() / 1000)) {
 
 		this.api.getComponentsLibraryStatus().subscribe(
 			{
@@ -100,7 +100,7 @@ export class UpdateLibraryComponent implements OnInit {
 
 						newZeros = zeros + 1;
 
-					} else if (status.newestComponentTimestamp > 0 && status.oldestComponentTimestamp == status.newestComponentTimestamp) {
+					} else if (status.newestComponentTimestamp >= now && status.oldestComponentTimestamp / status.newestComponentTimestamp > 0.98) {
 						//finished to update
 						this.router.navigate(["/main/topology/design/components/search"]);
 					}
@@ -112,7 +112,7 @@ export class UpdateLibraryComponent implements OnInit {
 
 					} else {
 
-						setTimeout(() => this.checkIfLibraryHasBeenRefreshed(newZeros), this.conf.pollingTime);
+						setTimeout(() => this.checkIfLibraryHasBeenRefreshed(newZeros, now), this.conf.pollingTime);
 					}
 				},
 				error: err => this.messages.showMOVConnectionError(err)

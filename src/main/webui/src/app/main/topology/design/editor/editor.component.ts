@@ -241,6 +241,7 @@ export class TopologyEditorComponent implements OnInit {
 	private addNode(type: ComponentType, x: number, y: number) {
 
 		this.selectedElement = this.topology.addNodeWithType(type, x, y);
+		this.unsaved = true;
 		this.updatedGraph();
 	}
 
@@ -279,6 +280,7 @@ export class TopologyEditorComponent implements OnInit {
 
 		if (this.topology.removeNode(node.id)) {
 
+			this.unsaved = true;
 			if (this.selectedElement?.id == node.id) {
 
 				this.selectedElement = null;
@@ -357,6 +359,7 @@ export class TopologyEditorComponent implements OnInit {
 			&& this.topology.updateNodeModel(this.selectedElement.id, node)
 		) {
 
+			this.unsaved = true;
 			this.updatedGraph();
 		}
 
@@ -472,21 +475,18 @@ export class TopologyEditorComponent implements OnInit {
 	 */
 	public saveTopology() {
 
-		if (this.unsaved) {
+		this.storeModel().subscribe(
+			{
+				next: stored => {
 
-			this.storeModel().subscribe(
-				{
-					next: stored => {
-
-						if (stored) {
-							this.messages.showSuccess(
-								$localize`:Success message when the topology has been saved@@main_topology_editor_code_save-success-msg:Topology saved!`
-							);
-						}
+					if (stored) {
+						this.messages.showSuccess(
+							$localize`:Success message when the topology has been saved@@main_topology_editor_code_save-success-msg:Topology saved!`
+						);
 					}
 				}
-			);
-		}
+			}
+		);
 
 	}
 
@@ -496,7 +496,6 @@ export class TopologyEditorComponent implements OnInit {
 	public duplicateTopology() {
 
 	}
-
 
 	/**
 	 * Called when has changed the values of the topology.
@@ -517,6 +516,7 @@ export class TopologyEditorComponent implements OnInit {
 		var updated = this.topology.updateNodePosition(nodeId, point);
 		if (updated) {
 
+			this.unsaved = true;
 			var cloned = JSON.parse(JSON.stringify(updated.model));
 			this.selectedElement = new NodeData(cloned);
 		}
@@ -532,23 +532,24 @@ export class TopologyEditorComponent implements OnInit {
 			&& this.topology.updateConnectionModel(this.selectedElement.id, connection)
 		) {
 
+			this.unsaved = true;
 			this.updatedGraph();
 		}
 
 	}
 
 	/**
-	 * Called when has to add and endpoint into a node.
+	 * Called when has to edit and endpoint into a node.
 	 */
-	public addEndPointTo(node: NodeData) {
+	public editEndPointTo(node: NodeData) {
 
 		this.dialog.open(SelectNodeEndpointsDialog, { data: node }).afterClosed().subscribe(
 			{
 				next: (result: EndpointData[] | null) => {
 
-					if (result != null) {
+					if (result != null && node.changeEndpoints(result)) {
 
-						node.chnageEndpoints(result);
+						this.unsaved = true;
 						this.updatedGraph();
 					}
 				}
