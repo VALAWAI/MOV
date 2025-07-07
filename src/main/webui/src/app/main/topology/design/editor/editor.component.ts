@@ -12,8 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
 import {
-	EFConnectionBehavior,
-	EFMarkerType,
 	FCanvasComponent,
 	FExternalItemDirective,
 	FFlowModule,
@@ -35,7 +33,6 @@ import {
 	TopologyNode,
 	DesignTopologyConnection,
 	ComponentType,
-	Point,
 	MinTopology
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
@@ -132,9 +129,6 @@ export class TopologyEditorComponent implements OnInit {
 	 * This is true if the current topology is not saved.
 	 */
 	private unsaved: boolean = false;
-
-	public eConnectionBehaviour = EFConnectionBehavior;
-	protected readonly eMarkerType = EFMarkerType;
 
 	/**
 	 * Called when the window is resized.
@@ -571,6 +565,19 @@ export class TopologyEditorComponent implements OnInit {
 			this.updatedGraph();
 
 		}
+
+	}
+
+	/**
+	 * Check if an element is selected.
+	 */
+	public isSelected(element: TopologyElement | null | undefined): boolean {
+
+		if (this._selectedElement != null && element != null) {
+
+			return this._selectedElement.id == element.id;
+		}
+		return false;
 
 	}
 

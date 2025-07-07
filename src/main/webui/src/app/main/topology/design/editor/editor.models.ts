@@ -19,7 +19,7 @@ import {
 	ChannelSchema
 } from "@app/shared/mov-api";
 import { IPoint } from "@foblex/2d";
-import { FSelectionChangeEvent } from "@foblex/flow";
+import { EFConnectionType, FSelectionChangeEvent } from "@foblex/flow";
 
 /**
  * An element that can be selected.
@@ -323,6 +323,11 @@ export class ConnectionData implements TopologyElement {
 	 */
 	public id: string;
 
+	/**
+	 * This is {@code true} if it is a control connection.
+	 */
+	public isControl: boolean;
+
 
 	/**
 	 * Create the model
@@ -332,6 +337,14 @@ export class ConnectionData implements TopologyElement {
 	) {
 
 		this.id = 'connection_0';
+		if (this.model.target?.channel) {
+
+			this.isControl = this.isControl = this.model.target.channel.indexOf('/control/') > 0;
+
+		} else {
+
+			this.isControl = false;
+		}
 	}
 
 	/**
@@ -349,6 +362,23 @@ export class ConnectionData implements TopologyElement {
 
 		return this.model.target?.nodeTag + '_' + this.model.target?.channel;
 	}
+
+	/**
+	 * Return the type of connection.
+	 */
+	public get type(): EFConnectionType {
+
+		return EFConnectionType.BEZIER;
+	}
+
+	/**
+	 * Return the type of connection.
+	 */
+	public set type(type:EFConnectionType) {
+
+		
+	}
+
 
 }
 
@@ -705,6 +735,40 @@ export class TopologyData {
 			}
 		}
 		return this.addConnectionWithModel(newConnection)
+	}
+
+	/**
+	 * Return the color for a defined conneciton in the topology.
+	 */
+	public startColorFor(connection: ConnectionData, isSelected: boolean): string {
+
+		if (isSelected) {
+
+			if (connection.isControl) {
+
+				return 'var(--color-sky-800)';
+
+			} else {
+
+				return 'var(--color-indigo-800)';
+			}
+
+		} else if (connection.isControl) {
+
+			return 'var(--color-sky-400)';
+
+		} else {
+
+			return 'var(--color-indigo-400)';
+		}
+	}
+
+	/**
+	 * Return the color for a defined conneciton in the topology.
+	 */
+	public endColorFor(connection: ConnectionData, isSelected: boolean): string {
+
+		return this.startColorFor(connection, isSelected);
 	}
 
 }

@@ -13,6 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MessageComponent } from '@app/shared/messages';
 import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint } from '@app/shared/mov-api';
 import { TopologyConnectionEndpointEditorComponent } from './endpoint-editor.component';
+import { TopologyData } from './editor.models';
 
 
 
@@ -33,7 +34,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	 * The topology where the connection is defined.
 	 */
 	@Input()
-	public topology: Topology | null = null;
+	public topology: TopologyData | null = null;
 
 	/**
 	 * Notify when teh node has been updated.
@@ -52,14 +53,6 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 		}
 	);
 
-
-	/**
-	 *  Create the component.
-	 */
-	constructor(
-	) {
-
-	}
 
 	/**
 	 * Initialize the component.

@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MessageComponent } from '@app/shared/messages';
 import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
+import { TopologyData } from './editor.models';
 
 function channelOnTagValidator(control: AbstractControl): ValidationErrors | null {
 
@@ -50,7 +51,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	 * The topology where the endpoint is defined.
 	 */
 	@Input()
-	public topology: Topology | null = null;
+	public topology: TopologyData | null = null;
 
 	/**
 	 * Notify when the endpoint is valid.

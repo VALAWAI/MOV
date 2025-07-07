@@ -17,6 +17,10 @@ import { TopologyConnectionEndpoint } from './topology-connection-endpoint.model
  * @author VALAWAI
  */
 export class TopologyConnection {
+	
+	/**
+	 * 
+	 */
 
 	/**
 	 * The source of the connection, specifying the originating node's tag and the
@@ -29,7 +33,7 @@ export class TopologyConnection {
 	 * specific input channel where data is received.
 	 */
 	public target: TopologyConnectionEndpoint | null = null;
-
+	
 	/**
 	 * An optional code snippet or identifier used to transform messages from the
 	 * source channel's format to the target channel's expected format. Can be null
