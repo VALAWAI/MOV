@@ -189,7 +189,7 @@
 					@if(endpoint.isPublished){
 					<div class="grow rounded-lg p-2" fNodeOutput
 						[fOutputId]="endpoint.id" [fOutputMultiple]="true"
-						fOutputConnectableSide="right" fNodeOutlet class="right">
+						fOutputConnectableSide="right" fNodeOutlet>
 						<mat-icon color="primary" fontIcon="publish"></mat-icon>
 						{{endpoint.name}}
 					</div>
@@ -209,7 +209,8 @@
 				[fOutputId]="connection.sourceId" [fInputId]="connection.targetId"
 				[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
 				[fEndColor]="topology.endColorFor(connection,isSelected(connection))"
-				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}">
+				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
+				[fOffset]="30">
 			<svg viewBox="0 0 10 10" fMarker type="f-connection-marker-start"
 				[height]="10" [width]="10" [refX]="5" [refY]="5">
         <circle cx="5" cy="5" r="4" stroke="none"

@@ -25,6 +25,12 @@
 			*ngIf="connectionForm.controls.type.hasError('required')"
 			i18n="The error message if no type of connection is selected@@main_topology_design_connection-editor_type-required-error">You
 		must select a type of connection.</mat-error> </mat-form-field>
+		<mat-form-field> <mat-label
+			i18n="The label to edit the convertion code@@main_topology_design_connection-editor_convert-code-label">Convert
+		code</mat-label> <textarea matInput formControlName="convertCode"
+			placeholder="Write the function to convert the source message to the target message."
+			i18n-placeholder="The placeholder for the field to write the convertion code@@main_topology_design_connection-editor_convert-code-placeholder">
+			></textarea> </mat-form-field>
 	</form>
 
 </div>
