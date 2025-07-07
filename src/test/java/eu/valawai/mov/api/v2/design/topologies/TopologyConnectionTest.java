@@ -10,6 +10,7 @@ package eu.valawai.mov.api.v2.design.topologies;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphConnectionType;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphNode;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphNodeOutputConnection;
 import jakarta.validation.constraints.NotNull;
@@ -42,6 +43,7 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 		model.source = builder.nextModel();
 		model.target = builder.nextModel();
 		model.convertCode = ValueGenerator.nextPattern("//Convert {0}");
+		model.type = ValueGenerator.next(TopologyGraphConnectionType.values());
 	}
 
 	/**
@@ -63,6 +65,7 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 		model.target.nodeTag = output.targetTag;
 		model.target.channel = output.targetChannel;
 		model.convertCode = output.convertCode;
+		model.type = output.type;
 		return model;
 	}
 

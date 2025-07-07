@@ -121,6 +121,7 @@ public class UpdateTopology extends AbstractEntityOperator<Boolean, UpdateTopolo
 							output.targetTag = connection.target.nodeTag;
 							output.targetChannel = connection.target.channel;
 							output.convertCode = connection.convertCode;
+							output.type = connection.type;
 							graphNode.outputs.add(output);
 						}
 					}

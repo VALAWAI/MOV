@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v2.design.topologies;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphConnectionType;
 
 /**
  * Represents a directed connection between two nodes within a {@link Topology}.
@@ -46,5 +47,11 @@ public class TopologyConnection extends Model {
 	 */
 	@Schema(description = "An optional code or identifier for message transformation between source and target channels.")
 	public String convertCode;
+
+	/**
+	 * Explain how the connection has to be painted.
+	 */
+	@Schema(description = "Explain how the connection has to be painted.")
+	public TopologyGraphConnectionType type;
 
 }

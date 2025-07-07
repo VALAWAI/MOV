@@ -120,7 +120,8 @@ public class GetTopology extends AbstractEntityOperator<Topology, GetTopology> {
 								Projections.computed("target",
 										new Document("nodeTag", "$outputs.targetTag").append("channel",
 												"$outputs.targetChannel")),
-								Projections.computed("convertCode", "$outputs.convertCode"))));
+								Projections.computed("convertCode", "$outputs.convertCode"),
+								Projections.computed("type", "$outputs.type"))));
 
 		pipeline.add(Aggregates.facet(
 				new Facet("main", Aggregates.project(Projections.include("_id", "name", "description", "updatedAt"))),

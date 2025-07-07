@@ -94,6 +94,7 @@ public interface TopologyGraphEntities {
 									output.sourceChannel = channel.name;
 									output.targetTag = "node_" + (index + 1);
 									output.targetChannel = targetChannel.name;
+									output.type = ValueGenerator.next(TopologyGraphConnectionType.values());
 									node.outputs.add(output);
 									break;
 								}

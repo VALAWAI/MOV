@@ -53,4 +53,10 @@ public class TopologyGraphNodeOutputConnection extends Model {
 	 */
 	public String convertCode;
 
+	/**
+	 * The visual type of the connection. Thus how the connection is represented in
+	 * the UI.
+	 */
+	public TopologyGraphConnectionType type;
+
 }
