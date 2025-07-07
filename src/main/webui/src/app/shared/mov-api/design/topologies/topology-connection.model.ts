@@ -8,6 +8,7 @@
 
 import { TopologyConnectionEndpoint } from './topology-connection-endpoint.model';
 
+export type TopologyGraphConnectionType = 'STRAIGHT' | 'BEZIER' | 'SEGMENT';
 
 /**
  * Represents a directed connection between two nodes within a {@link Topology}.
@@ -17,10 +18,6 @@ import { TopologyConnectionEndpoint } from './topology-connection-endpoint.model
  * @author VALAWAI
  */
 export class TopologyConnection {
-	
-	/**
-	 * 
-	 */
 
 	/**
 	 * The source of the connection, specifying the originating node's tag and the
@@ -33,7 +30,7 @@ export class TopologyConnection {
 	 * specific input channel where data is received.
 	 */
 	public target: TopologyConnectionEndpoint | null = null;
-	
+
 	/**
 	 * An optional code snippet or identifier used to transform messages from the
 	 * source channel's format to the target channel's expected format. Can be null
@@ -41,5 +38,9 @@ export class TopologyConnection {
 	 */
 	public convertCode: string | null = null;
 
+	/**
+	 * Explain how the connection has to be painted.
+	 */
+	public type: TopologyGraphConnectionType | null = null;
 
 }

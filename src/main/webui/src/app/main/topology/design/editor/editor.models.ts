@@ -368,15 +368,38 @@ export class ConnectionData implements TopologyElement {
 	 */
 	public get type(): EFConnectionType {
 
-		return EFConnectionType.BEZIER;
+		if (this.model.type == 'BEZIER') {
+
+			return EFConnectionType.BEZIER;
+
+		} else if (this.model.type == 'SEGMENT') {
+
+			return EFConnectionType.SEGMENT;
+
+		} else {
+
+			return EFConnectionType.STRAIGHT;
+		}
 	}
 
 	/**
 	 * Return the type of connection.
 	 */
-	public set type(type:EFConnectionType) {
+	public set type(type: EFConnectionType) {
 
-		
+		if (type == EFConnectionType.BEZIER) {
+
+			this.model.type = 'BEZIER';
+
+		} else if (type == EFConnectionType.SEGMENT) {
+
+			this.model.type = 'SEGMENT';
+
+		} else {
+
+			this.model.type = 'STRAIGHT';
+		}
+
 	}
 
 

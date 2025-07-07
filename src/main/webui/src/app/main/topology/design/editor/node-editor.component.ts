@@ -187,6 +187,13 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy(): void {
 
+
+		if (this.nodeStatusSubscription != null) {
+
+			this.nodeStatusSubscription.unsubscribe();
+			this.nodeStatusSubscription = null;
+		}
+
 		if (this.levelChangeSubscription != null) {
 
 			this.levelChangeSubscription.unsubscribe();

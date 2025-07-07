@@ -8,12 +8,17 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MessageComponent } from '@app/shared/messages';
-import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint } from '@app/shared/mov-api';
+import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint, TopologyGraphConnectionType } from '@app/shared/mov-api';
 import { TopologyConnectionEndpointEditorComponent } from './endpoint-editor.component';
 import { TopologyData } from './editor.models';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { EFConnectionType } from '@foblex/flow';
+import { Subscription } from 'rxjs';
 
 
 
@@ -24,7 +29,10 @@ import { TopologyData } from './editor.models';
 		CommonModule,
 		MessageComponent,
 		ReactiveFormsModule,
-		TopologyConnectionEndpointEditorComponent
+		TopologyConnectionEndpointEditorComponent,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule
 	],
 	templateUrl: './connection-editor.component.html'
 })
@@ -49,21 +57,60 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 		{
 			source: new FormControl<TopologyConnectionEndpoint | null>(null),
 			target: new FormControl<TopologyConnectionEndpoint | null>(null),
-			convertCode: new FormControl<string | null>(null)
+			convertCode: new FormControl<string | null>(null),
+			type: new FormControl<TopologyGraphConnectionType | null>(null, Validators.required)
 		}
 	);
 
+	/**
+	 * The subscription to the changes of the connection form.
+	 */
+	public connectionStatusSubscription: Subscription | null = null;
+
+	/**
+	 * The the last valid connection.
+	 */
+	private lastValid: DesignTopologyConnection | null = null;
 
 	/**
 	 * Initialize the component.
 	 */
 	public ngOnInit(): void {
+
+		this.connectionStatusSubscription = this.connectionForm.statusChanges.subscribe(
+			{
+				next: status => {
+
+					if (status == 'VALID') {
+
+						var newConnection = new DesignTopologyConnection();
+						newConnection.source = this.connectionForm.controls.source.value || null;
+						newConnection.target = this.connectionForm.controls.target.value || null;
+						newConnection.convertCode = this.connectionForm.controls.convertCode.value || null;
+						newConnection.type = this.connectionForm.controls.type.value || null;
+
+						if (JSON.stringify(this.lastValid) != JSON.stringify(newConnection)) {
+
+							this.lastValid = newConnection;
+							this.connectionUpdated.emit(newConnection);
+						}
+					}
+				}
+			}
+		);
+
 	}
 
 	/**
 	 * Called whne the component is destroyed.
 	 */
 	public ngOnDestroy(): void {
+
+		if (this.connectionStatusSubscription != null) {
+
+			this.connectionStatusSubscription.unsubscribe();
+			this.connectionStatusSubscription = null;
+		}
 
 
 	}
@@ -78,12 +125,12 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 			{
 				source: connection?.source || null,
 				target: connection?.target || null,
-				convertCode: connection?.convertCode || null
+				convertCode: connection?.convertCode || null,
+				type: connection?.type || null
 			},
 			{
 				emitEvent: false
 			}
-
 		);
 
 	}
