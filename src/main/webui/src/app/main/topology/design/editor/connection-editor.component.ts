@@ -9,15 +9,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { MessageComponent } from '@app/shared/messages';
 import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint, TopologyGraphConnectionType } from '@app/shared/mov-api';
 import { TopologyConnectionEndpointEditorComponent } from './endpoint-editor.component';
 import { TopologyData } from './editor.models';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { EFConnectionType } from '@foblex/flow';
 import { Subscription } from 'rxjs';
 
 
@@ -27,7 +24,6 @@ import { Subscription } from 'rxjs';
 	selector: 'app-topology-connection-editor',
 	imports: [
 		CommonModule,
-		MessageComponent,
 		ReactiveFormsModule,
 		TopologyConnectionEndpointEditorComponent,
 		MatFormFieldModule,

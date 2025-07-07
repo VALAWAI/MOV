@@ -560,7 +560,7 @@ export class TopologyEditorComponent implements OnInit {
 
 		if (event.fInputId != null && event.fInputId != null) {
 
-			this.topology.addConnectionBetween(event.fInputId, event.fOutputId);
+			this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
 			this.unsaved = true;
 			this.updatedGraph();
 

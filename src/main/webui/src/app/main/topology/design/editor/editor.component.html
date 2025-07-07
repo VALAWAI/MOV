@@ -206,7 +206,7 @@
 			</div>
 			} @for(connection of topology.connections;track connection.id){ <f-connection
 				[fType]="connection.type" [fConnectionId]="connection.id"
-				[fInputId]="connection.sourceId" [fOutputId]="connection.targetId"
+				[fOutputId]="connection.sourceId" [fInputId]="connection.targetId"
 				[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
 				[fEndColor]="topology.endColorFor(connection,isSelected(connection))"
 				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}">

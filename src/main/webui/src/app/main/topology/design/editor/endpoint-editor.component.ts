@@ -8,23 +8,14 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-
-import { MessageComponent } from '@app/shared/messages';
-import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint } from '@app/shared/mov-api';
+import { TopologyConnectionEndpoint } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
 import { TopologyData } from './editor.models';
+import { ChannleToNamePipe } from './channel-to-name.pipe';
 
-function channelOnTagValidator(control: AbstractControl): ValidationErrors | null {
-
-	if (control.value == null || typeof control.value === 'string') {
-
-		return { 'required': true };
-	}
-	return null;
-}
 
 
 @Component({
@@ -32,10 +23,10 @@ function channelOnTagValidator(control: AbstractControl): ValidationErrors | nul
 	selector: 'app-topology-connection-endpoint-editor',
 	imports: [
 		CommonModule,
-		MessageComponent,
 		ReactiveFormsModule,
 		MatSelectModule,
-		MatFormFieldModule
+		MatFormFieldModule,
+		ChannleToNamePipe
 	],
 	templateUrl: './endpoint-editor.component.html'
 })
@@ -65,7 +56,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	public endpointForm = new FormGroup(
 		{
 			nodeTag: new FormControl<string | null>(null, Validators.required),
-			channel: new FormControl<string | null>(null, [Validators.required, channelOnTagValidator])
+			channel: new FormControl<string | null>(null, Validators.required)
 		}
 	);
 
@@ -75,16 +66,49 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	private nodeTagChangedSubscription: Subscription | null = null;
 
 	/**
+	 * The subscription to the changes of the endpoint form.
+	 */
+	public endpointStatusSubscription: Subscription | null = null;
+
+	/**
+	 * The the last valid endpoint.
+	 */
+	private lastValid: TopologyConnectionEndpoint | null = null;
+
+	/**
+	 * The name of the posible channels for the	selected node.
+	 */
+	public posibleChannels: string[] = [];
+
+
+	/**
 	 * Register to the changes in the node.
 	 */
 	public ngOnInit() {
 
+		this.endpointStatusSubscription = this.endpointForm.statusChanges.subscribe(
+			{
+				next: status => {
+
+					if (status == 'VALID') {
+
+						var newEndpoint = new TopologyConnectionEndpoint();
+						newEndpoint.nodeTag = this.endpointForm.controls.nodeTag.value || null;
+						newEndpoint.channel = this.endpointForm.controls.channel.value || null;
+						if (JSON.stringify(this.lastValid) != JSON.stringify(newEndpoint)) {
+
+							this.lastValid = newEndpoint;
+							this.endpointUpdated.emit(newEndpoint);
+						}
+					}
+				}
+			}
+		);
+
+
 		this.nodeTagChangedSubscription = this.endpointForm.controls.nodeTag.valueChanges.subscribe(
 			{
-				next: () => {
-					//Change the posible channles and the current selcted channel
-
-				}
+				next: () => this.updatePossibleChannels()
 			}
 		);
 	}
@@ -93,6 +117,12 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	 * Register to the changes in the node.
 	 */
 	public ngOnDestroy() {
+
+		if (this.endpointStatusSubscription != null) {
+
+			this.endpointStatusSubscription.unsubscribe();
+			this.endpointStatusSubscription = null;
+		}
 
 		if (this.nodeTagChangedSubscription != null) {
 
@@ -117,12 +147,40 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 			{
 				emitEvent: false
 			}
-
 		);
-
-
+		this.updatePossibleChannels();
 
 	}
 
+	/**
+	 * Define the posible channels that can be selected.
+	 */
+	private updatePossibleChannels() {
+
+		this.posibleChannels = [];
+		if (this.topology != null) {
+
+			var node = this.topology.getNodeWithId(this.endpointForm.controls.nodeTag.value);
+			if (node && node.model.component && node.model.component.channels) {
+
+				for (var channel of node.model.component.channels) {
+
+					if (channel.name && ((this.isSource && channel.publish != null) || (!this.isSource && channel.subscribe != null))) {
+
+						this.posibleChannels.push(channel.name);
+					}
+				}
+
+				this.posibleChannels.sort();
+			}
+
+		}
+
+		if (this.endpointForm.controls.channel.value != null && this.posibleChannels.indexOf(this.endpointForm.controls.channel.value) < 0) {
+
+			this.endpointForm.controls.channel.setErrors({ 'undefined': true });
+		}
+
+	}
 
 }

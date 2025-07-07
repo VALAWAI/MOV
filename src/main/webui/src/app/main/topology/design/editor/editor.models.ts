@@ -72,16 +72,8 @@ export class EndpointData implements TopologyElement {
 	) {
 
 		this.id = this.model.nodeTag + '_' + this.model.channel;
-		if (this.model.channel) {
-
-			const matches = /.+\/c[0|1|2]\/\w+\/([\w|\/]+)/ig.exec(this.model.channel);
-			if (matches && matches.length == 2) {
-
-				this.name = matches[1];
-				this.isData = this.name.startsWith('data');
-
-			}
-		}
+		this.name = EndpointData.channelToEndpointName(this.model.channel);
+		this.isData = this.name.startsWith('data');
 	}
 
 	/**
@@ -101,6 +93,24 @@ export class EndpointData implements TopologyElement {
 		data.description = channel.description;
 		data.isPublished = channel.publish != null;
 		return data;
+	}
+
+	/**
+	 * Return the name for the connection.
+	 */
+	public static channelToEndpointName(channel: string | null): string {
+		arguments
+
+		if (channel) {
+
+			const matches = /.+\/c[0|1|2]\/\w+\/([\w|\/]+)/ig.exec(channel);
+			if (matches && matches.length == 2) {
+
+				return matches[1];
+			}
+		}
+		return '';
+
 	}
 
 }
@@ -485,7 +495,7 @@ export class TopologyData {
 	/**
 	 * Return teh node associated to the specifried identifier.
 	 */
-	public getNodeWithId(id: string): NodeData | null {
+	public getNodeWithId(id: string | null | undefined): NodeData | null {
 
 		for (let node of this.nodes) {
 
@@ -501,7 +511,7 @@ export class TopologyData {
 	/**
 	 * Return teh connection associated to the specifried identifier.
 	 */
-	public getConnectionWithId(id: string): ConnectionData | null {
+	public getConnectionWithId(id: string | null | undefined): ConnectionData | null {
 
 		for (let connection of this.connections) {
 
@@ -757,6 +767,7 @@ export class TopologyData {
 				break;
 			}
 		}
+
 		return this.addConnectionWithModel(newConnection)
 	}
 
