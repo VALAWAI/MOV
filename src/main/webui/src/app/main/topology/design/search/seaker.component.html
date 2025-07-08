@@ -1,10 +1,66 @@
 <div
-	class="font-sans antialiased bg-gray-100 flex items-center justify-center min-h-screen">
-	<div
-		class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-		<h1 class="text-3xl font-extrabold text-gray-900 mb-4">Section
-			Under Development</h1>
-		<p class="text-gray-600 mb-6 text-lg">Thanks for your interest!
-			This section is still being built and isn't available yet.</p>
+	class="p-3 gap-7 flex flex-col items-center justify-center content-center">
+	<form [formGroup]="searchForm" class="w-full max-w-lg">
+		<mat-form-field class="w-full mb-4"> <mat-label
+			i18n="The label to ddefine the topology name or description to search@@main_topology_design_search_pattern-label">
+		Name or description:</mat-label> <input matInput type="text"
+			placeholder="Write topology name or description..."
+			i18n-placeholder="The placeholder to enter the pattern to match the topology to search@@main_topology_design_search_pattern-placeholder"
+			formControlName="pattern"> </mat-form-field>
+		<button mat-raised-button color="primary" class="w-full" type="submit"
+			(clcik)="updatePage()">Search</button>
+	</form>
+	<div class="max-w-5xl w-full flex flex-col gap-2">
+		@if(page && page.topologies && page.topologies.length > 0){
+
+		<table mat-table [dataSource]="page.topologies"
+			class="mat-elevation-z8">
+			<ng-container matColumnDef="name">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The name of the name column@@main_topology_design_search_name-column-label">
+				Name</th>
+			<td mat-cell *matCellDef="let topology">{{topology.name}}</td>
+			</ng-container>
+			<ng-container matColumnDef="description">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The name of the description column@@main_topology_design_search_description-column-label">
+				Description</th>
+			<td mat-cell *matCellDef="let topology">{{topology.description}}</td>
+			</ng-container>
+			<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef
+				i18n="The name of the actions column@@main_topology_design_search_actions-column-label">Actions</th>
+			<td mat-cell *matCellDef="let topology">
+				<button mat-icon-button aria-label="Topology menu"
+					[matMenuTriggerFor]="topologyMenu">
+					<mat-icon>more_vert</mat-icon>
+				</button> <mat-menu #topologyMenu="matMenu">
+				<button mat-menu-item routerLink="/main/topology/design/editor"
+					[queryParams]="{'topologyId':topology.id}">
+					<mat-icon color="primary">edit</mat-icon>
+					<span
+						i18n="The menu label to edit the topology@@main_topology_design_search_menu-edit-label">Edit</span>
+				</button>
+				<button mat-menu-item (click)="remove(topology)">
+					<mat-icon color="warn">delete</mat-icon>
+					<span
+						i18n="The menu label to delete the topology@@main_topology_design_search_menu-delete-label">Delete</span>
+				</button>
+				</mat-menu>
+			</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+		@if(pageIndex > 0 || page.total > 5){
+		<mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]"
+			[pageIndex]="pageIndex" [pageSize]="pageSize" [length]="page.total"
+			(page)="pageChanged($event)" aria-label="Select topology page"></mat-paginator>
+		} }@else{
+		<app-message type="WARN"
+			i18n="The message when no topologies found@@main_topology_design_search_any-found-msg">
+		No topology match the specified search parameters. </app-message>
+		}
 	</div>
 </div>

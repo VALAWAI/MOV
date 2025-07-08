@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
@@ -23,7 +23,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
-import { Observable, switchMap, of } from 'rxjs';
+import { Observable, switchMap, of, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
@@ -42,6 +42,7 @@ import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 import { MinTopologyEditorComponent } from './min-topology-editor.component';
 import { ConnectionData, EndpointData, NodeData, TopologyData, TopologyElement } from './editor.models';
 import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -63,7 +64,7 @@ import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 	styleUrl: './editor.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopologyEditorComponent implements OnInit {
+export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	/**
 	 *  The service over the main view. 
@@ -131,6 +132,17 @@ export class TopologyEditorComponent implements OnInit {
 	private unsaved: boolean = false;
 
 	/**
+	 * The active router.
+	 */
+	private route = inject(ActivatedRoute);
+
+	/**
+	 * The subscription to the chnageg of the query params.
+	 */
+	private queryParamSubsccriber: Subscription | null = null;
+
+
+	/**
 	 * Called when the window is resized.
 	 */
 	@HostListener('window:resize') windowResized() {
@@ -148,22 +160,51 @@ export class TopologyEditorComponent implements OnInit {
 		this.header.changeHeaderTitle($localize`:The header title for the topology editor@@main_topology_editor_code_page-title:Topology Editor`);
 		this.windowResized();
 
-		if (this.conf.editorAutoloadLastTopology) {
+		this.queryParamSubsccriber = this.route.queryParams.pipe(
+			switchMap(params => {
 
-			const id = this.conf.editorLastStoredTopologyId;
-			if (id) {
+				var topologyId = params['topologyId'] || null;
+				if (topologyId == null && this.conf.editorAutoloadLastTopology) {
 
-				this.api.getTopology(id).subscribe(
-					{
-						next: topology => this.changeTopology(topology),
-						error: err => {
+					topologyId = this.conf.editorLastStoredTopologyId;
+				}
+				if (topologyId != null) {
 
-							this.conf.editorLastStoredTopologyId = null;
-							console.error(err);
-						}
+					return this.api.getTopology(topologyId);
+
+				} else {
+
+					return of(null);
+				}
+			})
+
+		).subscribe(
+			{
+				next: topology => {
+
+					if (topology != null) {
+
+						this.conf.editorLastStoredTopologyId = topology.id;
+						this.changeTopology(topology);
 					}
-				);
+				},
+				error: err => {
+					this.messages.showMOVConnectionError(err);
+					this.conf.editorLastStoredTopologyId = null;
+				}
 			}
+		);
+	}
+
+	/**
+	 * Unsubscribe from the subscriptions.
+	 */
+	public ngOnDestroy() {
+
+		if (this.queryParamSubsccriber != null) {
+
+			this.queryParamSubsccriber.unsubscribe();
+			this.queryParamSubsccriber = null;
 		}
 	}
 

@@ -138,7 +138,7 @@
         <source>Component Library</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">57,62</context>
+          <context context-type="linenumber">57,61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
@@ -150,7 +150,7 @@
         <source>Library</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">63,65</context>
+          <context context-type="linenumber">62,64</context>
         </context-group>
         <note priority="1" from="description">The menu item to search for the components taht can be used in teh design</note>
       </trans-unit>
@@ -727,11 +727,75 @@ must select one topology to open.</source>
         </context-group>
         <note priority="1" from="description">OK label of the dialog to select the topology to load</note>
       </trans-unit>
+      <trans-unit id="main_topology_design_search_pattern-label" datatype="html">
+        <source> Name or description:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+        <note priority="1" from="description">The label to ddefine the topology name or description to search</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_pattern-placeholder" datatype="html">
+        <source>Write topology name or description...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+        <note priority="1" from="description">The placeholder to enter the pattern to match the topology to search</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_name-column-label" datatype="html">
+        <source> Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">The name of the name column</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_description-column-label" datatype="html">
+        <source> Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">33,38</context>
+        </context-group>
+        <note priority="1" from="description">The name of the description column</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_actions-column-label" datatype="html">
+        <source>Actions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">41,43</context>
+        </context-group>
+        <note priority="1" from="description">The name of the actions column</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_show-menu-label" datatype="html">
+        <source>Show</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">49,51</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to show a topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_delete-menu-label" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">52,57</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to delete a topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_search_any-found-msg" datatype="html">
+        <source> No topology match the specified search parameters. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
+          <context context-type="linenumber">65,67</context>
+        </context-group>
+        <note priority="1" from="description">The message when no topologies found</note>
+      </trans-unit>
       <trans-unit id="main_topology_design_seaker_code_page-title" datatype="html">
         <source>Defined topologies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>

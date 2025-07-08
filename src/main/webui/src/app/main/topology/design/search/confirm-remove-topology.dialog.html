@@ -1,0 +1,20 @@
+<h2 mat-dialog-title class="text-lg font-bold mb-4"
+	i18n="Title of the dialog to confirm to remove a topology@@main_topology_editor-dialog-confirm-remove-topology-title">
+	Remove Topology</h2>
+<mat-dialog-content class="text-gray-600 mb-4">
+<p class="text-lg"
+	i18n="Question of the dialog to confirm to remove a topology@@main_topology_editor-dialog-confirm-remove-topology-question">
+	Are you sure you want to remove the topology <span class="font-bold ">{{data.name}}</span>?
+	This action cannot be undone, and all associated data will be
+	permanently lost. Do you wish to proceed?
+</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+<button matButton color="warn" [mat-dialog-close]="false"
+	i18n="Cancel label of the dialog to confirm to remove a topology@@main_topology_editor-dialog-confirm-remove-topology-cancel-label">
+	No, do not remove it!</button>
+<button matButton color="primary" [mat-dialog-close]="true"
+	cdkFocusInitial
+	i18n="OK label of the dialog to confirm to remove a topology@@main_topology_editor-dialog-confirm-remove-topology-ok-label">
+	Yes, remove it!</button>
+</mat-dialog-actions>
