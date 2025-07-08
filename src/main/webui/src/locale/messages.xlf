@@ -2,631 +2,171 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-DV" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="main_components_abstract_code_get-error" datatype="html">
-        <source>Cannot get the component information</source>
+      <trans-unit id="main_config_code_page-title" datatype="html">
+        <source>Settings</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/abstract-component.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="sourcefile">src/app/main/config/config.component.ts</context>
+          <context context-type="linenumber">38</context>
         </context-group>
-        <note priority="1" from="description">The error message when can get the component</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_type-label" datatype="html">
-        <source> Type </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">7,8</context>
-        </context-group>
-        <note priority="1" from="description">Label to the field to select the type of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_type-required-error" datatype="html">
-        <source> You must select the type of component. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">12,14</context>
-        </context-group>
-        <note priority="1" from="description">Required error message for the type of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_name-label" datatype="html">
-        <source> Name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">15,17</context>
-        </context-group>
-        <note priority="1" from="description">Label to the field to write the component name to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_name-placeholder" datatype="html">
-        <source>Ex. c0_hello_world</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">16,17</context>
-        </context-group>
-        <note priority="1" from="description">The placeholder for the field to write the component name</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_name-required-error" datatype="html">
-        <source> You must write the name of component. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">20,22</context>
-        </context-group>
-        <note priority="1" from="description">Required error message for the name of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_name-pattern-error" datatype="html">
-        <source> The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <note priority="1" from="description">Pattern error message for the name of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_version-label" datatype="html">
-        <source> Version</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">26,28</context>
-        </context-group>
-        <note priority="1" from="description">Label to the field to write the component version to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_version-placeholder" datatype="html">
-        <source>Ex. c0_hello_world</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">27,28</context>
-        </context-group>
-        <note priority="1" from="description">The placeholder for the field to write the component version</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_version-required-error" datatype="html">
-        <source> You must write the version of component. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">31,33</context>
-        </context-group>
-        <note priority="1" from="description">Required error message for the version of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_version-pattern-error" datatype="html">
-        <source> The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-        <note priority="1" from="description">Pattern error message for the version of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_asyncapi-version-required-error" datatype="html">
-        <source> You must write the aync of component. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">41,44</context>
-        </context-group>
-        <note priority="1" from="description">Required error message for the asyncapi version of the component to register</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_register-action-label" datatype="html">
-        <source> Register</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
-          <context context-type="linenumber">45,47</context>
-        </context-group>
-        <note priority="1" from="description">Label of the button to register a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_code_page-title" datatype="html">
-        <source>Register a new component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-        <note priority="1" from="description">The header title for the register component page</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_code_error-message" datatype="html">
-        <source>Cananot register the component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
-          <context context-type="linenumber">149</context>
-        </context-group>
-        <note priority="1" from="description">The error message when canot register a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_register_code_success-message" datatype="html">
-        <source>Registered the new component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
-          <context context-type="linenumber">182</context>
-        </context-group>
-        <note priority="1" from="description">Success message when registered a new component</note>
-      </trans-unit>
-      <trans-unit id="main_components_search-label" datatype="html">
-        <source>Name or description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">7,10</context>
-        </context-group>
-        <note priority="1" from="description">The label of the field to match the name or desciption of the compponent</note>
-      </trans-unit>
-      <trans-unit id="main_components_order-by-label" datatype="html">
-        <source>Order by</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">12,14</context>
-        </context-group>
-        <note priority="1" from="description">The label to select the order of the components</note>
-      </trans-unit>
-      <trans-unit id="main_components_order-by-type" datatype="html">
-        <source>Type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">14,16</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by type</note>
-      </trans-unit>
-      <trans-unit id="main_components_order-by-name" datatype="html">
-        <source>Name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">16,18</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by name</note>
-      </trans-unit>
-      <trans-unit id="main_components_order-by-description" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">18,20</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by description</note>
-      </trans-unit>
-      <trans-unit id="main_components_order-by-reverse-label" datatype="html">
-        <source>In reverse order</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">22,24</context>
-        </context-group>
-        <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
-      </trans-unit>
-      <trans-unit id="main_components_types-label" datatype="html">
-        <source> Filter components by type: </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">25,27</context>
-        </context-group>
-        <note priority="1" from="description">The label to select the type of the component messages</note>
-      </trans-unit>
-      <trans-unit id="main_components_register-label" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">34,38</context>
-        </context-group>
-        <note priority="1" from="description">Label of the button to register a components</note>
-      </trans-unit>
-      <trans-unit id="main_components_type-header-label" datatype="html">
-        <source>Type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">44,48</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component type column header</note>
-      </trans-unit>
-      <trans-unit id="main_components_name-header-label" datatype="html">
-        <source>Name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">50,54</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component name column header</note>
-      </trans-unit>
-      <trans-unit id="main_components_description-header-label" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">56,60</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component description column header</note>
-      </trans-unit>
-      <trans-unit id="main_components_actions-header-label" datatype="html">
-        <source>Actions</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">62,64</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component actions column header</note>
-      </trans-unit>
-      <trans-unit id="main_components_show-menu-label" datatype="html">
-        <source>Show</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">70,72</context>
-        </context-group>
-        <note priority="1" from="description">The label of the menu to show a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister-menu-label" datatype="html">
-        <source>Unregister</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">73,75</context>
-        </context-group>
-        <note priority="1" from="description">The label of the menu to unregister a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_show-connections-label" datatype="html">
-        <source>Show connections</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">78,83</context>
-        </context-group>
-        <note priority="1" from="description">The label of the menu to show the connection to a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_no-components-found-warning-msg" datatype="html">
-        <source> No components found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
-          <context context-type="linenumber">89,93</context>
-        </context-group>
-        <note priority="1" from="description">The warning message when no components found</note>
-      </trans-unit>
-      <trans-unit id="main_components_code_page-title" datatype="html">
-        <source>Components</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
-          <context context-type="linenumber">117</context>
-        </context-group>
-        <note priority="1" from="description">The header title for the components </note>
-      </trans-unit>
-      <trans-unit id="main_components_show_go-back-label" datatype="html">
-        <source>Go to components</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
-          <context context-type="linenumber">9,12</context>
-        </context-group>
-        <note priority="1" from="description">The label of the button to go back to the components from the show component</note>
-      </trans-unit>
-      <trans-unit id="main_components_show_connections-label" datatype="html">
-        <source>Show connections</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
-          <context context-type="linenumber">14,16</context>
-        </context-group>
-        <note priority="1" from="description">The label of the button to show the component connections</note>
-      </trans-unit>
-      <trans-unit id="main_components_show_go-back-to-connection-label" datatype="html">
-        <source>Go to the connection</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
-          <context context-type="linenumber">18,21</context>
-        </context-group>
-        <note priority="1" from="description">The label of the button to go back to the connection that has this component</note>
-      </trans-unit>
-      <trans-unit id="main_components_show_code_page-title" datatype="html">
-        <source>Show Component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.ts</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-        <note priority="1" from="description">The header title for the show component</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister_question" datatype="html">
-        <source> Are you sure to unregister the component <x id="INTERPOLATION" equiv-text="{{component.name}}"/>?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
-          <context context-type="linenumber">12,13</context>
-        </context-group>
-        <note priority="1" from="description">The question to gurantee that the user is sure to unregister the component</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister_ok-label" datatype="html">
-        <source>Yes, unregister it!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
-          <context context-type="linenumber">16,19</context>
-        </context-group>
-        <note priority="1" from="description">The label of the button to accept to unregister a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister_cancel-label" datatype="html">
-        <source> No, do not unregister and go to the components</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
-          <context context-type="linenumber">20,23</context>
-        </context-group>
-        <note priority="1" from="description">The label of the button to no unregister the components</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister_code_page-title" datatype="html">
-        <source>Unregister Component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-        <note priority="1" from="description">The header title for the unregister component</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister_code_error-msg" datatype="html">
-        <source>Cannot unregister the component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
-          <context context-type="linenumber">80</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-        <note priority="1" from="description">The error message when cannot unregister a component</note>
-      </trans-unit>
-      <trans-unit id="main_components_unregister_code_success-msg" datatype="html">
-        <source>Unregistered the component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
-          <context context-type="linenumber">113</context>
-        </context-group>
-        <note priority="1" from="description">The success message when unregistered a component</note>
-      </trans-unit>
-      <trans-unit id="main_logs_search-mesage-label" datatype="html">
-        <source>Message</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">6,8</context>
-        </context-group>
-        <note priority="1" from="description">The label of the field to match the messages</note>
-      </trans-unit>
-      <trans-unit id="main_logs_search-component-label" datatype="html">
-        <source>Component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">9,11</context>
-        </context-group>
-        <note priority="1" from="description">The label of the field to match the components</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-label" datatype="html">
-        <source>Order by</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">13,14</context>
-        </context-group>
-        <note priority="1" from="description">The label to select the order of the logs</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-timestamp" datatype="html">
-        <source>Timestamp</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">15,17</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by timestamp</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-level" datatype="html">
-        <source>Level</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">17,19</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by level</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-message" datatype="html">
-        <source>Message</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">19,21</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by message</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-component-type" datatype="html">
-        <source>Component type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">21,23</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by component type</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-component-name" datatype="html">
-        <source>Component name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">23,25</context>
-        </context-group>
-        <note priority="1" from="description">The option to order by component name</note>
-      </trans-unit>
-      <trans-unit id="main_logs_order-by-reverse-label" datatype="html">
-        <source>In reverse order</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">27,29</context>
-        </context-group>
-        <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
-      </trans-unit>
-      <trans-unit id="main_logs_levels-label" datatype="html">
-        <source>Filter logs messages with level:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">30,31</context>
-        </context-group>
-        <note priority="1" from="description">The label to select the level of the log messages</note>
-      </trans-unit>
-      <trans-unit id="main_logs_component-types-label" datatype="html">
-        <source> Filter log messages by component type: </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">35,37</context>
-        </context-group>
-        <note priority="1" from="description">The label to select the type of the component of the log messages</note>
-      </trans-unit>
-      <trans-unit id="main_logs_timestamp-column-label" datatype="html">
-        <source>Time</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">45,46</context>
-        </context-group>
-        <note priority="1" from="description">The label of the column timestamp</note>
-      </trans-unit>
-      <trans-unit id="main_logs_level-column-label" datatype="html">
-        <source>Level</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">51,53</context>
-        </context-group>
-        <note priority="1" from="description">The label of the column level</note>
-      </trans-unit>
-      <trans-unit id="main_logs_message-column-label" datatype="html">
-        <source>Message</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">57,59</context>
-        </context-group>
-        <note priority="1" from="description">The label of the column message</note>
-      </trans-unit>
-      <trans-unit id="main_logs_payload-column-label" datatype="html">
-        <source>Payload</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">63,65</context>
-        </context-group>
-        <note priority="1" from="description">The label of the column payload</note>
-      </trans-unit>
-      <trans-unit id="main_logs_component-type-column-label" datatype="html">
-        <source>Component type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">73,76</context>
-        </context-group>
-        <note priority="1" from="description">The label of the column component type</note>
-      </trans-unit>
-      <trans-unit id="main_logs_component-name-column-label" datatype="html">
-        <source>Component name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.html</context>
-          <context context-type="linenumber">80,82</context>
-        </context-group>
-        <note priority="1" from="description">The label of the column component name</note>
-      </trans-unit>
-      <trans-unit id="main_logs_code_page-title" datatype="html">
-        <source>Logs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/logs.component.ts</context>
-          <context context-type="linenumber">123</context>
-        </context-group>
-        <note priority="1" from="description">The header title for the logs </note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-level-label" datatype="html">
-        <source>Level</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">4,7</context>
-        </context-group>
-        <note priority="1" from="description">The label of the log level attribute</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-message-label" datatype="html">
-        <source>Message</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">7,10</context>
-        </context-group>
-        <note priority="1" from="description">The label of the log message attribute</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-timestamp-label" datatype="html">
-        <source>Timestamp</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">10,12</context>
-        </context-group>
-        <note priority="1" from="description">The label of the log timestamp attribute</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-payload-label" datatype="html">
-        <source>Payload</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">13,14</context>
-        </context-group>
-        <note priority="1" from="description">The label of the payload of the log</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-component-label" datatype="html">
-        <source>Component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">16,17</context>
-        </context-group>
-        <note priority="1" from="description">The label of the payload of the compoennt</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-component-type-label" datatype="html">
-        <source>Type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">18,20</context>
-        </context-group>
-        <note priority="1" from="description">The label of the payload of the compoennt type</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-component-name-label" datatype="html">
-        <source>Name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">21,23</context>
-        </context-group>
-        <note priority="1" from="description">The label of the payload of the compoennt name</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-component-description-label" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">24,27</context>
-        </context-group>
-        <note priority="1" from="description">The label of the payload of the compoennt description</note>
-      </trans-unit>
-      <trans-unit id="main_logs_dialog-close" datatype="html">
-        <source>Close</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">30,33</context>
-        </context-group>
-        <note priority="1" from="description">Label of the button to close the log dialog</note>
+        <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>
       <trans-unit id="main_menu_status" datatype="html">
-        <source>Status</source>
+        <source>Dashboard</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">10,11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">45,46</context>
+          <context context-type="linenumber">94,97</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the status</note>
       </trans-unit>
-      <trans-unit id="main_menu_components" datatype="html">
-        <source>Components</source>
+      <trans-unit id="main_menu_live_status" datatype="html">
+        <source> Live Topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">13,15</context>
+          <context context-type="linenumber">15,17</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">47,49</context>
-        </context-group>
-        <note priority="1" from="description">The menu item to go to the components</note>
+        <note priority="1" from="description">The menu item that show the live status</note>
       </trans-unit>
-      <trans-unit id="main_menu_topology" datatype="html">
-        <source>Topology</source>
+      <trans-unit id="main_menu_design_status" datatype="html">
+        <source> Design Topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">16,18</context>
+          <context context-type="linenumber">21,24</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">49,51</context>
-        </context-group>
-        <note priority="1" from="description">The menu item to go to the topology</note>
+        <note priority="1" from="description">The menu item that show the design status</note>
       </trans-unit>
-      <trans-unit id="main_menu_logs" datatype="html">
-        <source>Logs</source>
+      <trans-unit id="main_menu_config" datatype="html">
+        <source>Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">19,21</context>
+          <context context-type="linenumber">25,27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">51,54</context>
+          <context context-type="linenumber">98,101</context>
         </context-group>
-        <note priority="1" from="description">The menu item to go to the logs</note>
+        <note priority="1" from="description">The menu item that go to the MOV configuration</note>
       </trans-unit>
-      <trans-unit id="main_menu-index" datatype="html">
-        <source>Index</source>
+      <trans-unit id="main_menu_help" datatype="html">
+        <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">42,44</context>
+          <context context-type="linenumber">30,33</context>
         </context-group>
-        <note priority="1" from="description">The menu index item</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">105,110</context>
+        </context-group>
+        <note priority="1" from="description">The menu item that go to the MOV help site</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-live-status" datatype="html">
+        <source>View Live Status</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">116,118</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology live status</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-live-components" datatype="html">
+        <source>Active Components</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">120,122</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology live components</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-live-connections" datatype="html">
+        <source>Live Connections</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">124,126</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology live connections</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-live-logs" datatype="html">
+        <source>Execution Logs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">46,50</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">127,133</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology live logs</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-design-editor" datatype="html">
+        <source>Editor</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">138,141</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology design editor</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-design-seaker" datatype="html">
+        <source>Defined Topologies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">143,145</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology design seaker</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-design-components" datatype="html">
+        <source>Component Library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">57,62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">146,153</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the topology design components</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-design-components-search" datatype="html">
+        <source>Library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">63,65</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to search for the components taht can be used in teh design</note>
+      </trans-unit>
+      <trans-unit id="main_menu_topology-design-components-update" datatype="html">
+        <source>Update library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">66,69</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to update for the components taht can be used in teh design</note>
       </trans-unit>
       <trans-unit id="main_menu-acknowledgement" datatype="html">
         <source>Acknowledgement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">56,58</context>
+          <context context-type="linenumber">153,155</context>
         </context-group>
         <note priority="1" from="description">The menu acknowledgement item</note>
       </trans-unit>
@@ -634,39 +174,39 @@
         <source> VALAWAI project is funded by the European Union under the European Innovation Council (EIC) research and innovation programme under Grant Agreement number 101070930.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">59,63</context>
+          <context context-type="linenumber">156,160</context>
         </context-group>
         <note priority="1" from="description">The acknowledgement text</note>
       </trans-unit>
-      <trans-unit id="main_menu-more" datatype="html">
-        <source>More</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">69,71</context>
-        </context-group>
-        <note priority="1" from="description">The menu more item</note>
-      </trans-unit>
       <trans-unit id="main_menu_project-web-page" datatype="html">
-        <source>Project web page</source>
+        <source> Project web page <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">173,175</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project web page</note>
       </trans-unit>
-      <trans-unit id="main_menu_project-twitter" datatype="html">
-        <source>Twitter</source>
+      <trans-unit id="main_menu_project-documentation-web-page" datatype="html">
+        <source> Project documentation <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">78,81</context>
+          <context context-type="linenumber">179,181</context>
+        </context-group>
+        <note priority="1" from="description">The menu item to go to the project documentation web page</note>
+      </trans-unit>
+      <trans-unit id="main_menu_project-twitter" datatype="html">
+        <source> Twitter <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/main.component.html</context>
+          <context context-type="linenumber">185,187</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project twitter</note>
       </trans-unit>
       <trans-unit id="main_menu_project-github" datatype="html">
-        <source>GitHub</source>
+        <source> GitHub <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">83,85</context>
+          <context context-type="linenumber">191,193</context>
         </context-group>
         <note priority="1" from="description">The menu item to go to the project GitHub</note>
       </trans-unit>
@@ -675,7 +215,7 @@
 				alt=&quot;VALAWAI logo&quot;&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
-          <context context-type="linenumber">90,93</context>
+          <context context-type="linenumber">199,202</context>
         </context-group>
         <note priority="1" from="description">The copyright text</note>
       </trans-unit>
@@ -711,10 +251,842 @@
         </context-group>
         <note priority="1" from="description">The header title for the status </note>
       </trans-unit>
+      <trans-unit id="main_topology_design_components_search_code_page-title" datatype="html">
+        <source>Components library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the comnfig page</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_show_code_page-title" datatype="html">
+        <source>Show components library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/show/show.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the comnfig page</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_update_explanation" datatype="html">
+        <source><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/> You&apos;re about to update the components that can be used in a topology with the very latest component information directly from its official <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/VALAWAI&quot; target=&quot;_blank&quot;
+				class=&quot;text-blue-600 hover:underline font-semibold&quot;&gt;"/>VALAWAI GitHub repository<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. This ensures you have access to the most recent features, bug fixes, and additions. <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/> When you click the update button below, this process will begin. Please be aware that it involves downloading and integrating a significant amount of data, so it <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>will take some time to complete<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. We appreciate your patience while we bring your library fully up to date. <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/update/update.component.html</context>
+          <context context-type="linenumber">6,21</context>
+        </context-group>
+        <note priority="1" from="description">The explanation of waht means update the components library</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_update_label" datatype="html">
+        <source>Start Update</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/update/update.component.html</context>
+          <context context-type="linenumber">25,29</context>
+        </context-group>
+        <note priority="1" from="description">The Label of the button to update the library</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_update_code_page-title" datatype="html">
+        <source>Update components library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/update/update.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the comnfig page</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_update_code_update-error-msg" datatype="html">
+        <source>Cannot update the components library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/update/update.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">The error message when can not update the library</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-save-before-change-title" datatype="html">
+        <source> Confirm Save Before Changing Topology</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-save-before-change.dialog.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+        <note priority="1" from="description">Title of the dialog to confirm to save before change the topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-save-before-change-question" datatype="html">
+        <source> You&apos;ve made changes to the current topology. If you don&apos;t save them, they will be lost. Do you want to save your changes before loading the new topology?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-save-before-change.dialog.html</context>
+          <context context-type="linenumber">7,13</context>
+        </context-group>
+        <note priority="1" from="description">Question of the dialog to confirm to save before change the topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-save-before-change-cancel-label" datatype="html">
+        <source> No, discard changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-save-before-change.dialog.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+        <note priority="1" from="description">Cancel label of the dialog to confirm to save before change the topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-save-before-change-ok-label" datatype="html">
+        <source> Yes, save changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-save-before-change.dialog.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+        <note priority="1" from="description">OK label of the dialog to confirm to save before change the topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_connection-editor_source-fieldset-label" datatype="html">
+        <source>Source:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">6,9</context>
+        </context-group>
+        <note priority="1" from="description">The legend to edit the source of the connection</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_connection-editor_target-fieldset-label" datatype="html">
+        <source>Target:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+        <note priority="1" from="description">The legend to edit the target of the connection</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_connection-editor_typee-label" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the type of connection</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_connection-editor_type-required-error" datatype="html">
+        <source>You must select a type of connection.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">27,29</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no type of connection is selected</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_connection-editor_convert-code-label" datatype="html">
+        <source>Convert code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+        <note priority="1" from="description">The label to edit the convertion code</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_connection-editor_convert-code-placeholder" datatype="html">
+        <source>Write the function to convert the source message to the target message.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+        <note priority="1" from="description">The placeholder for the field to write the convertion code</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-toolbar-zoon-in-menu" datatype="html">
+        <source>View</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to zoom in</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-help" datatype="html">
+        <source>Help</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">39,42</context>
+        </context-group>
+        <note priority="1" from="description">The menu item that go to the Editor help site</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-file-new" datatype="html">
+        <source>New topology</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">46,49</context>
+        </context-group>
+        <note priority="1" from="description">The menu item that create a new topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-file-open" datatype="html">
+        <source> Open... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">52,55</context>
+        </context-group>
+        <note priority="1" from="description">The menu item that save the current topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-file-save" datatype="html">
+        <source>Save topology</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">58,62</context>
+        </context-group>
+        <note priority="1" from="description">The menu item that save the current topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-add-node" datatype="html">
+        <source>Add node</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">66,68</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to add a node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-delete-node" datatype="html">
+        <source>Delete node</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">73,77</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to delete a node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-fit" datatype="html">
+        <source>Fit to Screen </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">89,91</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to fit</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-zoon-in" datatype="html">
+        <source>Zoom in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">95,98</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to zoom in</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-zoon-out" datatype="html">
+        <source>Zoom out</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">101,104</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to zoom in</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-toogle-grid" datatype="html">
+        <source>Toggle Grid</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">110,112</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to toogle grid</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-layouts" datatype="html">
+        <source>Layouts</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">114,118</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to change the layout</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_editor-menu-delete-node" datatype="html">
+        <source>Delete node</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">177,180</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to delete a node from the topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_editor-menu-edit-endpoint" datatype="html">
+        <source>Edit endpoint</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">184,188</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to edit an endpoint into a node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor_code_page-title" datatype="html">
+        <source>Topology Editor</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the topology editor</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor_code_save-success-msg" datatype="html">
+        <source>Topology saved!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
+          <context context-type="linenumber">479</context>
+        </context-group>
+        <note priority="1" from="description">Success message when the topology has been saved</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_endpoint-editor_node-label" datatype="html">
+        <source>Node</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">The label of the form field to edit the endpoimnt node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_endpoint-editor_node-required" datatype="html">
+        <source> &gt;You must select a node.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no node tag is selected</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_endpoint-editor_channel-label" datatype="html">
+        <source>Channel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+        <note priority="1" from="description">The label of the form field to edit the endpoimnt channel</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_endpoint-editor_channel-required" datatype="html">
+        <source> You must select a channel.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no channel is selected</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_endpoint-editor_channel-undefined" datatype="html">
+        <source> The channel is not posible in the slected node.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">The error message if the channel is not defined in the node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_editor_min_name" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/min-topology-editor.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the topology name</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-editor_min_name-required" datatype="html">
+        <source>You must write a name for the topology.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/min-topology-editor.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no topology name is defined</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_editor_min_description" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/min-topology-editor.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the topology description</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_level" datatype="html">
+        <source>Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the level</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_component" datatype="html">
+        <source>Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_component-required" datatype="html">
+        <source>You must select the component associated to the node.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no component is selected</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_component-learn-more" datatype="html">
+        <source> Learn more </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">27,32</context>
+        </context-group>
+        <note priority="1" from="description">Text to learn more about the selected omcponent in teh node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_position" datatype="html">
+        <source>Position:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+        <note priority="1" from="description">The legend to edit the node position</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_x" datatype="html">
+        <source>X</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">37,38</context>
+        </context-group>
+        <note priority="1" from="description">The label to edit the X position of the node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-editor_y" datatype="html">
+        <source>Y</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+        <note priority="1" from="description">The label to edit the Y position of the node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-dialog-title" datatype="html">
+        <source> Node Endpoints</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+        <note priority="1" from="description">Title of the dialog to select an endpoint for the node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-no-endpoint-error-msg" datatype="html">
+        <source>
+Any endpoint couldn&apos;t be selected. This is either because no endpoints
+exist or no component is selected for the node. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+        <note priority="1" from="description">Error message when does not exist any endpoint</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-select-message" datatype="html">
+        <source> Select one or more endpoints for the node from the list below.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="linenumber">11,14</context>
+        </context-group>
+        <note priority="1" from="description">The message to inform the user to select an endpoint</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-cancel-label" datatype="html">
+        <source> Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="linenumber">28,31</context>
+        </context-group>
+        <note priority="1" from="description">Cancel label of the dialog to select the node endpoints</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-ok-label" datatype="html">
+        <source> Use selected endpoints</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+        <note priority="1" from="description">OK label of the dialog to select the node endpoints</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-title" datatype="html">
+        <source> Select topology</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+        <note priority="1" from="description">Title of the dialog to select the topology to load</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-question" datatype="html">
+        <source> Select the topology to open:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+        <note priority="1" from="description">Question of the dialog to select the topology to load</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-name-label" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+        <note priority="1" from="description">The label for the topology name</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-name-placeholder" datatype="html">
+        <source>Write topology name...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+        <note priority="1" from="description">The placeholder for the field to write the topology name</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-required" datatype="html">
+        <source>You
+must select one topology to open.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no topology is selected</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-cancel-label" datatype="html">
+        <source> Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+        <note priority="1" from="description">Cancel label of the dialog to select the topology to load</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-topology-to-open-ok-label" datatype="html">
+        <source> Open it!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-topology-to-open.dialog.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+        <note priority="1" from="description">OK label of the dialog to select the topology to load</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_seaker_code_page-title" datatype="html">
+        <source>Defined topologies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the comnfig page</note>
+      </trans-unit>
+      <trans-unit id="main_components_abstract_code_get-error" datatype="html">
+        <source>Cannot get the component information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/abstract-component.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">The error message when can get the component</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_type-label" datatype="html">
+        <source> Type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+        <note priority="1" from="description">Label to the field to select the type of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_type-required-error" datatype="html">
+        <source> You must select the type of component. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+        <note priority="1" from="description">Required error message for the type of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-label" datatype="html">
+        <source> Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+        <note priority="1" from="description">Label to the field to write the component name to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-placeholder" datatype="html">
+        <source>Ex. c0_hello_world</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+        <note priority="1" from="description">The placeholder for the field to write the component name</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-required-error" datatype="html">
+        <source> You must write the name of component. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+        <note priority="1" from="description">Required error message for the name of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_name-pattern-error" datatype="html">
+        <source> The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Pattern error message for the name of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-label" datatype="html">
+        <source> Version</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="description">Label to the field to write the component version to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-placeholder" datatype="html">
+        <source>Ex. c0_hello_world</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+        <note priority="1" from="description">The placeholder for the field to write the component version</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-required-error" datatype="html">
+        <source> You must write the version of component. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+        <note priority="1" from="description">Required error message for the version of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_version-pattern-error" datatype="html">
+        <source> The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Pattern error message for the version of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_asyncapi-version-required-error" datatype="html">
+        <source> You must write the aync of component. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+        <note priority="1" from="description">Required error message for the asyncapi version of the component to register</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_register-action-label" datatype="html">
+        <source> Register</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
+          <context context-type="linenumber">45,47</context>
+        </context-group>
+        <note priority="1" from="description">Label of the button to register a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_page-title" datatype="html">
+        <source>Register a new component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the register component page</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_error-message" datatype="html">
+        <source>Cananot register the component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">The error message when canot register a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_register_code_success-message" datatype="html">
+        <source>Registered the new component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Success message when registered a new component</note>
+      </trans-unit>
+      <trans-unit id="main_components_search-label" datatype="html">
+        <source>Name or description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to match the name or desciption of the compponent</note>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-label" datatype="html">
+        <source>Order by</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the order of the components</note>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-type" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by type</note>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-name" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by name</note>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-description" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by description</note>
+      </trans-unit>
+      <trans-unit id="main_components_order-by-reverse-label" datatype="html">
+        <source>In reverse order</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+        <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
+      </trans-unit>
+      <trans-unit id="main_components_types-label" datatype="html">
+        <source> Filter components by type: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the type of the component messages</note>
+      </trans-unit>
+      <trans-unit id="main_components_register-label" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">34,38</context>
+        </context-group>
+        <note priority="1" from="description">Label of the button to register a components</note>
+      </trans-unit>
+      <trans-unit id="main_components_type-header-label" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">44,48</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component type column header</note>
+      </trans-unit>
+      <trans-unit id="main_components_name-header-label" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">50,54</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component name column header</note>
+      </trans-unit>
+      <trans-unit id="main_components_description-header-label" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">56,60</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component description column header</note>
+      </trans-unit>
+      <trans-unit id="main_components_actions-header-label" datatype="html">
+        <source>Actions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component actions column header</note>
+      </trans-unit>
+      <trans-unit id="main_components_show-menu-label" datatype="html">
+        <source>Show</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">70,72</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to show a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister-menu-label" datatype="html">
+        <source>Unregister</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">73,75</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to unregister a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_show-connections-label" datatype="html">
+        <source>Show connections</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">78,83</context>
+        </context-group>
+        <note priority="1" from="description">The label of the menu to show the connection to a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_no-components-found-warning-msg" datatype="html">
+        <source> No components found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
+          <context context-type="linenumber">89,93</context>
+        </context-group>
+        <note priority="1" from="description">The warning message when no components found</note>
+      </trans-unit>
+      <trans-unit id="main_components_code_page-title" datatype="html">
+        <source>Components</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the components </note>
+      </trans-unit>
+      <trans-unit id="main_components_show_go-back-label" datatype="html">
+        <source>Go to components</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.html</context>
+          <context context-type="linenumber">9,12</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to go back to the components from the show component</note>
+      </trans-unit>
+      <trans-unit id="main_components_show_connections-label" datatype="html">
+        <source>Show connections</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to show the component connections</note>
+      </trans-unit>
+      <trans-unit id="main_components_show_go-back-to-connection-label" datatype="html">
+        <source>Go to the connection</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.html</context>
+          <context context-type="linenumber">18,21</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to go back to the connection that has this component</note>
+      </trans-unit>
+      <trans-unit id="main_components_show_code_page-title" datatype="html">
+        <source>Show Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the show component</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_question" datatype="html">
+        <source> Are you sure to unregister the component <x id="INTERPOLATION" equiv-text="{{component.name}}"/>?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <note priority="1" from="description">The question to gurantee that the user is sure to unregister the component</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_ok-label" datatype="html">
+        <source>Yes, unregister it!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.html</context>
+          <context context-type="linenumber">16,19</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to accept to unregister a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_cancel-label" datatype="html">
+        <source> No, do not unregister and go to the components</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.html</context>
+          <context context-type="linenumber">20,23</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to no unregister the components</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_code_page-title" datatype="html">
+        <source>Unregister Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the unregister component</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_code_error-msg" datatype="html">
+        <source>Cannot unregister the component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">The error message when cannot unregister a component</note>
+      </trans-unit>
+      <trans-unit id="main_components_unregister_code_success-msg" datatype="html">
+        <source>Unregistered the component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">The success message when unregistered a component</note>
+      </trans-unit>
       <trans-unit id="main_topology_connections_abstract_code_get-error" datatype="html">
         <source>Cannot get the topology connection information</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/abstract-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/abstract-topology-connection.component.ts</context>
           <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">The error message when can get the connection</note>
@@ -722,7 +1094,7 @@
       <trans-unit id="main_topology_connections_change_question-enable-label" datatype="html">
         <source> Are you sure the enable the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">14,17</context>
         </context-group>
         <note priority="1" from="description">The label of the question button to enable a connection</note>
@@ -730,7 +1102,7 @@
       <trans-unit id="main_topology_connections_change_question-disable-label" datatype="html">
         <source> Are you sure the disable the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">19,22</context>
         </context-group>
         <note priority="1" from="description">The label of the question button to disable a connection</note>
@@ -738,7 +1110,7 @@
       <trans-unit id="main_topology_connections_change_question-remove-label" datatype="html">
         <source> Are you sure the remove the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">24,28</context>
         </context-group>
         <note priority="1" from="description">The label of the question button to remove a connection</note>
@@ -746,7 +1118,7 @@
       <trans-unit id="main_topology_connections_change_ok-enable-label" datatype="html">
         <source> Yes, enable the connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">34,36</context>
         </context-group>
         <note priority="1" from="description">The label of the ok button to enable a connection</note>
@@ -754,7 +1126,7 @@
       <trans-unit id="main_topology_connections_change_ok-disable-label" datatype="html">
         <source> Yes, disable the connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">37,39</context>
         </context-group>
         <note priority="1" from="description">The label of the ok button to disable a connection</note>
@@ -762,7 +1134,7 @@
       <trans-unit id="main_topology_connections_change_ok-remove-label" datatype="html">
         <source> Yes, remove the connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">40,44</context>
         </context-group>
         <note priority="1" from="description">The label of the ok button to remove a connection</note>
@@ -770,7 +1142,7 @@
       <trans-unit id="main_topology_connections_change_cancel-enable-label" datatype="html">
         <source> No, do not enable the connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">48,50</context>
         </context-group>
         <note priority="1" from="description">The label of the cancel button to enable a connection</note>
@@ -778,7 +1150,7 @@
       <trans-unit id="main_topology_connections_change_cancel-disable-label" datatype="html">
         <source> No, do not disable the connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">51,53</context>
         </context-group>
         <note priority="1" from="description">The label of the cancel button to disable a connection</note>
@@ -786,7 +1158,7 @@
       <trans-unit id="main_topology_connections_change_cancel-remove-label" datatype="html">
         <source> No, do not remove the connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">54,59</context>
         </context-group>
         <note priority="1" from="description">The label of the cancel button to remove a connection</note>
@@ -794,7 +1166,7 @@
       <trans-unit id="main_topology_connections_change_code_page-title" datatype="html">
         <source>Change topology connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">The header title for the unregister component</note>
@@ -802,15 +1174,15 @@
       <trans-unit id="main_topology_connections_change_error-message" datatype="html">
         <source>Cannot update the topology connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">125</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">159</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">The error message when cannot update the topology connection</note>
@@ -818,7 +1190,7 @@
       <trans-unit id="mmain_topology_connections_change_code_success-disable-msg" datatype="html">
         <source>Disabled the topology connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">The success message when the connection is disabled</note>
@@ -826,7 +1198,7 @@
       <trans-unit id="mmain_topology_connections_change_code_success-enable-msg" datatype="html">
         <source>Enabled the topology connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">The success message when the connection is enabled</note>
@@ -834,7 +1206,7 @@
       <trans-unit id="mmain_topology_connections_change_code_success-removed-msg" datatype="html">
         <source>Removed the topology connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">The success message when the connection is removed</note>
@@ -842,7 +1214,7 @@
       <trans-unit id="main_topology_connections_create_source-component-label" datatype="html">
         <source>Source component</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">4,5</context>
         </context-group>
         <note priority="1" from="description">The label of the source connection of the connection to create</note>
@@ -850,7 +1222,7 @@
       <trans-unit id="main_topology_connections_create_source-channel-label" datatype="html">
         <source>Source channel</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">13,14</context>
         </context-group>
         <note priority="1" from="description">The label of the source channel of the connection to create</note>
@@ -858,7 +1230,7 @@
       <trans-unit id="main_topology_connections_create_source-channel-required-error" datatype="html">
         <source> You must select a source channel. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
         <note priority="1" from="description">Error message when no defined the source channel for the new connection</note>
@@ -866,7 +1238,7 @@
       <trans-unit id="main_topology_connections_create_target-component-label" datatype="html">
         <source>Target component</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">18,19</context>
         </context-group>
         <note priority="1" from="description">The label of the target connection of the connection to create</note>
@@ -874,7 +1246,7 @@
       <trans-unit id="main_topology_connections_create_target-channel-label" datatype="html">
         <source>Target channel</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">27,28</context>
         </context-group>
         <note priority="1" from="description">The label of the target channel of the connection to create</note>
@@ -882,7 +1254,7 @@
       <trans-unit id="main_topology_connections_create_target-channel-required-error" datatype="html">
         <source> You must select a target channel. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">31,33</context>
         </context-group>
         <note priority="1" from="description">Error message when no defined the target channel for the new connection</note>
@@ -890,7 +1262,7 @@
       <trans-unit id="main_topology_connections_create_enabled-label" datatype="html">
         <source> Enable the connection </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">34,38</context>
         </context-group>
         <note priority="1" from="description">Label fro the check box to enable the connection to be created</note>
@@ -898,7 +1270,7 @@
       <trans-unit id="main_topology_connections_create_add-label" datatype="html">
         <source>Add connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">39,41</context>
         </context-group>
         <note priority="1" from="description">The label of the button to add the connection to create</note>
@@ -906,7 +1278,7 @@
       <trans-unit id="main_topology_connections_create_cancel-label" datatype="html">
         <source>Cancel</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">42,47</context>
         </context-group>
         <note priority="1" from="description">The label of the button to cancel the addition of a connection</note>
@@ -914,7 +1286,7 @@
       <trans-unit id="main_topology_connections_create_code_page-title" datatype="html">
         <source>Create topology connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">100</context>
         </context-group>
         <note priority="1" from="description">The header title for the create connection</note>
@@ -922,11 +1294,11 @@
       <trans-unit id="main_topology_connections_create_code_add-error" datatype="html">
         <source>Cannot add the new connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">163</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">272</context>
         </context-group>
         <note priority="1" from="description">Error message when cannot add a new connection</note>
@@ -934,7 +1306,7 @@
       <trans-unit id="main_topology_connections_create_code_add-success" datatype="html">
         <source>Added the new connection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">194</context>
         </context-group>
         <note priority="1" from="description">Success message when added a new connection</note>
@@ -942,7 +1314,7 @@
       <trans-unit id="main_topology_connections_search-pattern-label" datatype="html">
         <source> Source or target</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">7,9</context>
         </context-group>
         <note priority="1" from="description">The label of the field to match the source or target of the compponent</note>
@@ -950,7 +1322,7 @@
       <trans-unit id="main_topology_connections_order-by-label" datatype="html">
         <source>Order by</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">11,13</context>
         </context-group>
         <note priority="1" from="description">The label to select the order of the connections</note>
@@ -958,7 +1330,7 @@
       <trans-unit id="main_topology_connections_order-by-source" datatype="html">
         <source>Source</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">The option to order by source</note>
@@ -966,7 +1338,7 @@
       <trans-unit id="main_topology_connections_order-by-target" datatype="html">
         <source>Target</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">15,17</context>
         </context-group>
         <note priority="1" from="description">The option to order by target</note>
@@ -974,7 +1346,7 @@
       <trans-unit id="main_topology_connections_order-by-enabled" datatype="html">
         <source>Enabled</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
         <note priority="1" from="description">The option to order by enabled</note>
@@ -982,7 +1354,7 @@
       <trans-unit id="main_topology_connections_order-by-reverse-label" datatype="html">
         <source>In reverse order</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">21,25</context>
         </context-group>
         <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
@@ -990,7 +1362,7 @@
       <trans-unit id="main_topology_connections_create-label" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Create a new connection </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">28,31</context>
         </context-group>
         <note priority="1" from="description">Label of the button to create a new connections</note>
@@ -998,7 +1370,7 @@
       <trans-unit id="main_topology_connections_go-back-to-component-label" datatype="html">
         <source> Go to the component</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">34,38</context>
         </context-group>
         <note priority="1" from="description">Label of the button to go back to the component</note>
@@ -1006,7 +1378,7 @@
       <trans-unit id="main_topology_connections_source-header-label" datatype="html">
         <source>Source</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">43,47</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source column header</note>
@@ -1014,7 +1386,7 @@
       <trans-unit id="main_topology_connections_target-header-label" datatype="html">
         <source>Target</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">49,53</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target column header</note>
@@ -1022,7 +1394,7 @@
       <trans-unit id="main_topology_connections_enabled-header-label" datatype="html">
         <source>Enabled</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">55,57</context>
         </context-group>
         <note priority="1" from="description">The label of the connection enabled column header</note>
@@ -1030,7 +1402,7 @@
       <trans-unit id="main_topology_connections_actions-header-label" datatype="html">
         <source>Actions</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">63,66</context>
         </context-group>
         <note priority="1" from="description">The label of the connection actions column header</note>
@@ -1038,7 +1410,7 @@
       <trans-unit id="main_topology_connections_show-menu-label" datatype="html">
         <source>Show</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">71,73</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a connection</note>
@@ -1046,7 +1418,7 @@
       <trans-unit id="main_topology_connections_enable-menu-label" datatype="html">
         <source>Enable</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">75,77</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to enable a connection</note>
@@ -1054,7 +1426,7 @@
       <trans-unit id="main_topology_connections_disable-menu-label" datatype="html">
         <source>Disable</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">79,81</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to disable a connection</note>
@@ -1062,7 +1434,7 @@
       <trans-unit id="main_topology_connections_remove-menu-label" datatype="html">
         <source>Remove</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">83,88</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to remove a connection</note>
@@ -1070,7 +1442,7 @@
       <trans-unit id="main_connections_no-connections-found-warning-msg" datatype="html">
         <source> No connections found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">94,99</context>
         </context-group>
         <note priority="1" from="description">The warning message when no connections found</note>
@@ -1078,15 +1450,15 @@
       <trans-unit id="main_topology_connections_code_page-title" datatype="html">
         <source>Topology connections</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.ts</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">The header title for the connections component</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_show_enabled-label" datatype="html">
         <source>Enabled</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">6,8</context>
         </context-group>
         <note priority="1" from="description">The label of the connection enabled attribute</note>
@@ -1094,7 +1466,7 @@
       <trans-unit id="main_topology_connections_show_create-timestamp-label" datatype="html">
         <source>Created at</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">The label of the connection created attribute</note>
@@ -1102,7 +1474,7 @@
       <trans-unit id="main_topology_connections_show_update-timestamp-label" datatype="html">
         <source>Updated at</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
         <note priority="1" from="description">The label of the connection updated attribute</note>
@@ -1110,7 +1482,7 @@
       <trans-unit id="main_topology_connections_show_source-label" datatype="html">
         <source>Source</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">20,22</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source attribute</note>
@@ -1118,11 +1490,11 @@
       <trans-unit id="main_topology_connections_show_node-component-label" datatype="html">
         <source>Component</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">22,25</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">46,49</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source attribute</note>
@@ -1130,11 +1502,11 @@
       <trans-unit id="main_topology_connections_show_node-channel-label" datatype="html">
         <source>Channel</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">34,36</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">58,60</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source node channel</note>
@@ -1142,7 +1514,7 @@
       <trans-unit id="main_topology_connections_show_node-channel-publish-label" datatype="html">
         <source>Publish</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">40,42</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source node channel publish</note>
@@ -1150,7 +1522,7 @@
       <trans-unit id="main_topology_connections_show_target-label" datatype="html">
         <source>Target</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">44,46</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target attribute</note>
@@ -1158,7 +1530,7 @@
       <trans-unit id="main_topology_connections_show_node-channel-subscribe-label" datatype="html">
         <source>Subscribe</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">64,66</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target node channel subscribe</note>
@@ -1166,7 +1538,7 @@
       <trans-unit id="main_topology_connections_show_subscriptions-label" datatype="html">
         <source>Subscriptions</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">68,70</context>
         </context-group>
         <note priority="1" from="description">The label of the connection subscriptions attribute</note>
@@ -1174,7 +1546,7 @@
       <trans-unit id="main_topology_connections_show_go-back-label" datatype="html">
         <source>Go to connections</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">84,86</context>
         </context-group>
         <note priority="1" from="description">The label of the button to go back to the connections</note>
@@ -1182,7 +1554,7 @@
       <trans-unit id="main_topology_connections_show_go-back-to-component-connections-label" datatype="html">
         <source>Go to component connections</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">89,92</context>
         </context-group>
         <note priority="1" from="description">The label of the button to go back to the component connections</note>
@@ -1190,10 +1562,234 @@
       <trans-unit id="main_topology_connections_show_code_page-title" datatype="html">
         <source>Show topology conection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.ts</context>
           <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">The header title for the show topology connection</note>
+      </trans-unit>
+      <trans-unit id="main_logs_search-mesage-label" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to match the messages</note>
+      </trans-unit>
+      <trans-unit id="main_logs_search-component-label" datatype="html">
+        <source>Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to match the components</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-label" datatype="html">
+        <source>Order by</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the order of the logs</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-timestamp" datatype="html">
+        <source>Timestamp</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by timestamp</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-level" datatype="html">
+        <source>Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by level</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-message" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by message</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-component-type" datatype="html">
+        <source>Component type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by component type</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-component-name" datatype="html">
+        <source>Component name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+        <note priority="1" from="description">The option to order by component name</note>
+      </trans-unit>
+      <trans-unit id="main_logs_order-by-reverse-label" datatype="html">
+        <source>In reverse order</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">27,29</context>
+        </context-group>
+        <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
+      </trans-unit>
+      <trans-unit id="main_logs_levels-label" datatype="html">
+        <source>Filter logs messages with level:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the level of the log messages</note>
+      </trans-unit>
+      <trans-unit id="main_logs_component-types-label" datatype="html">
+        <source> Filter log messages by component type: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the type of the component of the log messages</note>
+      </trans-unit>
+      <trans-unit id="main_logs_timestamp-column-label" datatype="html">
+        <source>Time</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+        <note priority="1" from="description">The label of the column timestamp</note>
+      </trans-unit>
+      <trans-unit id="main_logs_level-column-label" datatype="html">
+        <source>Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+        <note priority="1" from="description">The label of the column level</note>
+      </trans-unit>
+      <trans-unit id="main_logs_message-column-label" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">57,59</context>
+        </context-group>
+        <note priority="1" from="description">The label of the column message</note>
+      </trans-unit>
+      <trans-unit id="main_logs_payload-column-label" datatype="html">
+        <source>Payload</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">63,65</context>
+        </context-group>
+        <note priority="1" from="description">The label of the column payload</note>
+      </trans-unit>
+      <trans-unit id="main_logs_component-type-column-label" datatype="html">
+        <source>Component type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">73,76</context>
+        </context-group>
+        <note priority="1" from="description">The label of the column component type</note>
+      </trans-unit>
+      <trans-unit id="main_logs_component-name-column-label" datatype="html">
+        <source>Component name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.html</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+        <note priority="1" from="description">The label of the column component name</note>
+      </trans-unit>
+      <trans-unit id="main_logs_code_page-title" datatype="html">
+        <source>Logs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/logs.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the logs </note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-level-label" datatype="html">
+        <source>Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+        <note priority="1" from="description">The label of the log level attribute</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-message-label" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+        <note priority="1" from="description">The label of the log message attribute</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-timestamp-label" datatype="html">
+        <source>Timestamp</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">The label of the log timestamp attribute</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-payload-label" datatype="html">
+        <source>Payload</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">The label of the payload of the log</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-label" datatype="html">
+        <source>Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+        <note priority="1" from="description">The label of the payload of the compoennt</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-type-label" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">The label of the payload of the compoennt type</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-name-label" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">The label of the payload of the compoennt name</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-component-description-label" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+        <note priority="1" from="description">The label of the payload of the compoennt description</note>
+      </trans-unit>
+      <trans-unit id="main_logs_dialog-close" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+        <note priority="1" from="description">Label of the button to close the log dialog</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_code_page-title" datatype="html">
+        <source>Live topology</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">The header title for the topology libe status</note>
       </trans-unit>
       <trans-unit id="shared_component_view_type-label" datatype="html">
         <source>Type</source>
@@ -1250,6 +1846,14 @@
           <context context-type="linenumber">29,32</context>
         </context-group>
         <note priority="1" from="description">The label of the component channel publish</note>
+      </trans-unit>
+      <trans-unit id="shared_messages_server-error-msg" datatype="html">
+        <source>Could not connect to the MOV, try again later.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/messages/messages.service.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Error message when can not connect with the MOV</note>
       </trans-unit>
       <trans-unit id="shared_not-found_title" datatype="html">
         <source>Page not found</source>
