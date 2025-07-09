@@ -22,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
 import { ComponentNameBeautifier } from '@app/shared/component/view';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
-import { ConfigService } from '@app/shared';
+import { ConfigService, toPattern } from '@app/shared';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -190,74 +190,16 @@ export class LogsComponent implements OnInit, OnDestroy {
 	private getPage(): Observable<LogRecordPage> {
 
 		var value = this.form.value;
-		var pattern = value.message;
-		if (pattern != null) {
+		var pattern = toPattern(value.message);
 
-			pattern = pattern.trim();
-			if (pattern.length == 0) {
-
-				pattern = null;
-
-			} else {
-
-				pattern = pattern.replace(/\*/, ".*");
-				pattern = "/.*" + pattern + ".*/i";
-			}
-
-		}
-
-		var component = value.component;
-		if (component != null) {
-
-			component = component.trim();
-			if (component.length == 0) {
-
-				component = null;
-
-			} else {
-
-				component = component.replace(/\*/, ".*");
-				component = "/.*" + component + ".*/i";
-			}
-
-		}
-		var type = null;
-		if (value.types != null && value.types.length > 0) {
-
-			type = value.types[0];
-			if (value.types.length > 1) {
-
-				type = "/" + type;
-				for (var i = 1; i < value.types.length; i++) {
-
-					type += "|" + value.types[i];
-				}
-
-				type += "/";
-
-			}
-		}
+		var component = toPattern(value.component);
+		var type = toPattern(value.types);
 		var orderBy = value.orderBy;
 		if (value.reverse) {
 
 			orderBy = "-" + orderBy;
 		}
-		var level = null;
-		if (value.levels != null && value.levels.length > 0) {
-
-			level = value.levels[0];
-			if (value.levels.length > 1) {
-
-				level = "/" + level;
-				for (var i = 1; i < value.levels.length; i++) {
-
-					level += "|" + value.levels[i];
-				}
-
-				level += "/";
-
-			}
-		}
+		var level = toPattern(value.levels);;
 		var offset = this.pageIndex * this.pageSize;
 		return this.mov.getLogRecordPage(pattern, level, component, type, orderBy, offset, this.pageSize);
 

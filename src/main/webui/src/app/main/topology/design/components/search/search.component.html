@@ -1,14 +1,25 @@
 <div
 	class="p-3 gap-7 flex flex-col items-center justify-center content-center">
-	<form [formGroup]="searchForm" class="w-full max-w-lg">
+	<form [formGroup]="searchForm" class="w-full max-w-lg flex flex-col">
+		<mat-form-field class="w-full mb-4"> <mat-label
+			i18n="The label to select the type for teh components to search@@main_component_design_search_type-label">
+		Type:</mat-label> <mat-select formControlName="types" multiple> <mat-select-trigger>
+		@for(type of searchForm.controls.types.value;track type;let isLast =
+		$last;let isFirst = $first) { @if( !isFirst){ @if( isLast){ &#38; }
+		@else{ , } } <span>{{type}}</span> } </mat-select-trigger> <mat-option value="C0"
+			i18n="The option to select a C0 component to search@@main_component_design_search_type-C0">C0:
+		Data extraction & task execution,</mat-option> <mat-option value="C1"
+			i18n="The option to select a C1 component to search@@main_component_design_search_type-C1">C1:
+		Data integration & decision-making</mat-option> <mat-option value="C2"
+			i18n="The option to select a C2 component to search@@main_component_design_search_type-C2">C2:
+		Value-based reasoning & alignment</mat-option> </mat-select> </mat-form-field>
 		<mat-form-field class="w-full mb-4"> <mat-label
 			i18n="The label to ddefine the component name or description to search@@main_component_design_search_pattern-label">
 		Name or description:</mat-label> <input matInput type="text"
 			placeholder="Write component name or description..."
 			i18n-placeholder="The placeholder to enter the pattern to match the component to search@@main_component_design_search_pattern-placeholder"
 			formControlName="pattern"> </mat-form-field>
-		<button mat-raised-button color="primary" class="w-full" type="submit"
-			(clcik)="updatePage()">Search</button>
+		<button matButton color="primary" type="submit" (click)="updatePage()">Search</button>
 	</form>
 	<div class="max-w-5xl w-full flex flex-col gap-2">
 		@if(page && page.components && page.components.length > 0){

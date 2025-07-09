@@ -23,7 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { ConfigService } from '@app/shared';
+import { ConfigService, toPattern } from '@app/shared';
 
 @Component({
 	standalone: true,
@@ -186,21 +186,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	private getPage(): Observable<MinComponentPage> {
 
 		var value = this.form.value;
-		var pattern = value.pattern;
-		if (pattern != null) {
-
-			pattern = pattern.trim();
-			if (pattern.length == 0) {
-
-				pattern = null;
-
-			} else {
-
-				pattern = pattern.replace(/\*/, ".*");
-				pattern = "/.*" + pattern + ".*/i";
-			}
-
-		}
+		var pattern = toPattern(value);
 		var orderBy = value.orderBy;
 		if (value.reverse) {
 

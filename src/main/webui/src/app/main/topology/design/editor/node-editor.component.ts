@@ -17,6 +17,7 @@ import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiServ
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { toPattern } from '@app/shared';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -229,20 +230,16 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	private updatePage() {
 
-		var pattern = "/.*";
+		var pattern: string | null = null;
 		var component = this.nodeForm.controls.component.value;
 		if (typeof component == 'string') {
 
-			if (component.length > 0) {
-
-				pattern += component.replaceAll(/\W/g, '.*') + ".*";
-			}
+			pattern = toPattern(component);
 
 		} else if (component?.name != null) {
 
-			pattern += component.name.replaceAll(/\W/g, '.*') + ".*";
+			pattern = toPattern(component.name);
 		}
-		pattern += "/i";
 		var type = this.nodeForm.controls.level.value;
 		this.api.getComponentDefinitionPage(pattern, type, "name", 0, 10).subscribe(
 			{

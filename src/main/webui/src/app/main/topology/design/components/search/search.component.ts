@@ -6,18 +6,22 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { toPattern } from '@app/shared';
 import { MessageComponent, MessagesService } from '@app/shared/messages';
-import { MovApiService, ComponentDefinitionPage, ComponentDefinition } from '@app/shared/mov-api';
+import { MovApiService, ComponentDefinitionPage, ComponentDefinition, ComponentType } from '@app/shared/mov-api';
 import { MainService } from 'src/app/main';
 
 /**
@@ -36,7 +40,9 @@ import { MainService } from 'src/app/main';
 		MatPaginatorModule,
 		MatMenuModule,
 		MessageComponent,
-		RouterModule
+		RouterModule,
+		MatButtonModule,
+		MatSelectModule
 	],
 	templateUrl: './search.component.html'
 })
@@ -72,6 +78,7 @@ export class SearchLibraryComponent implements OnInit {
 	 */
 	public searchForm = new FormGroup(
 		{
+			types: new FormControl<ComponentType[]>([]),
 			pattern: new FormControl<string | null>(null)
 		}
 	);
@@ -102,11 +109,11 @@ export class SearchLibraryComponent implements OnInit {
 	 */
 	public updatePage() {
 
-		var pattern: string = "/.*/i";
-		var type: string | null = null;
+		var pattern = toPattern(this.searchForm.controls.pattern.value);
+		var typePattern = toPattern(this.searchForm.controls.types.value);
 		var order = "+name,+desciption";
 		var offset = this.pageIndex * this.pageSize;
-		this.api.getComponentDefinitionPage(pattern, type, order, offset, this.pageSize).subscribe(
+		this.api.getComponentDefinitionPage(pattern, typePattern, order, offset, this.pageSize).subscribe(
 			{
 				next: page => this.page = page,
 				error: err => this.messages.showMOVConnectionError(err)

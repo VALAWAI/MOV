@@ -13,6 +13,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { toPattern } from "@app/shared";
 import { MessagesService } from "@app/shared/messages";
 import { MovApiService, MinTopology, MinTopologyPage } from "@app/shared/mov-api";
 import { Subscription } from "rxjs";
@@ -77,8 +78,7 @@ export class SelectTopologyToOpenDialog implements OnInit, OnDestroy {
 
 					if (value != null && typeof value === 'string') {
 
-						var pattern = "/.*";
-						pattern += value.replaceAll(/\W/g, '.*') + ".*/i";
+						var pattern = toPattern(value);;
 						this.api.getMinTopologyPage(pattern, "name", 0, 10).subscribe(
 							{
 								next: page => this.page = page,

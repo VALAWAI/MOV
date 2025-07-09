@@ -14,6 +14,7 @@ import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autoc
 import { MinComponent, MinComponentPage, MovApiService, Component as MOVComponent } from 'src/app/shared/mov-api';
 import { NgIf } from '@angular/common';
 import { MatLabel, MatOption } from '@angular/material/select';
+import { toPattern } from '@app/shared';
 
 
 export function requiredMinComponent(): ValidatorFn {
@@ -147,11 +148,11 @@ export class ComponentSelectorComponent implements OnInit, OnDestroy {
 		if (newValue && typeof newValue == 'object' && newValue.name != null) {
 
 			this.selectedComponent(newValue as MinComponent);
-			pattern = "/.*" + newValue.name + ".*/i";
+			pattern = toPattern(newValue.name);
 
 		} else if (typeof newValue == 'string') {
 
-			pattern = "/.*" + newValue + ".*/i";
+			pattern = toPattern(newValue);
 		}
 		this.mov.getMinComponentPage(pattern, null, this.hasPublishChannel, this.hasSubscribeChannel, "name", 0, 20).subscribe(
 			{

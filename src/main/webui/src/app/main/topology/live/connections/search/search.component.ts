@@ -22,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
-import { ConfigService } from '@app/shared';
+import { ConfigService, toPattern } from '@app/shared';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -200,21 +200,7 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 	private getPage(): Observable<MinConnectionPage> {
 
 		var value = this.form.value;
-		var pattern = value.pattern;
-		if (pattern != null) {
-
-			pattern = pattern.trim();
-			if (pattern.length == 0) {
-
-				pattern = null;
-
-			} else {
-
-				pattern = pattern.replace(/\*/, ".*");
-				pattern = "/.*" + pattern + ".*/i";
-			}
-
-		}
+		var pattern = toPattern(value.pattern);
 		var orderBy = value.orderBy;
 		if (value.reverse) {
 

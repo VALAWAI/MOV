@@ -22,6 +22,7 @@ import { MessageComponent, MessagesService } from '@app/shared/messages';
 import { MinTopology, MinTopologyPage, MovApiService } from '@app/shared/mov-api';
 import { MainService } from 'src/app/main';
 import { ConfirmRemoveTopologyDialog } from './confirm-remove-topology.dialog';
+import { toPattern } from '@app/shared';
 
 /**
  * Thei component allow to edit the seakerurtion of the MOV.
@@ -123,13 +124,7 @@ export class TopologySeakerComponent implements OnInit {
 	 */
 	public updatePage() {
 
-		var pattern = "/";
-		if (this.searchForm.controls.pattern.value) {
-
-			pattern += ".*" +
-				this.searchForm.controls.pattern.value.trim().replaceAll(/\W/, ".*");
-		}
-		pattern += ".*/i";
+		var pattern = toPattern(this.searchForm.controls.pattern.value);
 		var order = "+name,+description";
 		var offset = this.pageIndex * this.pageSize;
 		this.api.getMinTopologyPage(pattern, order, offset, this.pageSize).subscribe({
