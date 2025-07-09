@@ -53,7 +53,8 @@
 					<span
 						i18n="The menu label to edit the component@@main_component_design_search_menu-edit-label">Edit</span>
 				</button>
-				<button mat-menu-item (click)="remove(component)">
+				<button mat-menu-item
+					[routerLink]="['/main/topology/design/components',component.id,'remove']">
 					<mat-icon color="warn">delete</mat-icon>
 					<span
 						i18n="The menu label to delete the component@@main_component_design_search_menu-delete-label">Delete</span>

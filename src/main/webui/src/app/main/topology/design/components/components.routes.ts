@@ -25,6 +25,10 @@ export const COMPONENTS_LIBRARY_ROUTES: Routes = [
 				loadComponent: () => import('./edit').then(m => m.EditComponent)
 			},
 			{
+				path: ':id/remove',
+				loadComponent: () => import('./remove').then(m => m.RemoveComponent)
+			},
+			{
 				path: 'search',
 				loadComponent: () => import('./search').then(m => m.SearchLibraryComponent)
 			},

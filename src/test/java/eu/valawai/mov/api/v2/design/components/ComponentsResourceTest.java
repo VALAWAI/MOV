@@ -256,4 +256,33 @@ public class ComponentsResourceTest extends APITestCase {
 
 	}
 
+	/**
+	 * Should not delete an undefined component.
+	 *
+	 * @see ComponentsResource#removeComponentDefinition(org.bson.types.ObjectId)
+	 */
+	@Test
+	public void shouldNotDeleteUndefinedComponent() {
+
+		final var undefined = ComponentDefinitionEntities.undefined();
+		given().when().delete("/v2/design/components/" + undefined.toHexString()).then()
+				.statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Should delete a component.
+	 *
+	 * @see ComponentsResource#removeComponentDefinition(org.bson.types.ObjectId)
+	 */
+	@Test
+	public void shouldDeleteComponent() {
+
+		final var component = ComponentDefinitionEntities.minComponents(1).get(0);
+		given().when().delete("/v2/design/components/" + component.id.toHexString()).then()
+				.statusCode(Status.NO_CONTENT.getStatusCode());
+		this.assertItemNull(ComponentDefinitionEntity.findById(component.id));
+
+	}
+
 }

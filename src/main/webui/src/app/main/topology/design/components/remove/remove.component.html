@@ -1,0 +1,28 @@
+<div
+	class="p-3 gap-3 flex flex-col items-center justify-center content-center">
+	@if( component != null){
+	<div class="max-w-xl"
+		i18n="The mesage to inform of the result of the remove operation@@main_topology_design_components_remove_info-msg">
+		<p>
+			You're about to remove the <span class="font-bold">{{component.name}}</span>
+			component definition. Please be aware that this action <span
+				class="font-bold">cannot be undone</span>.
+		</p>
+		<p>Removing this component may also invalidate existing topologies
+			that currently reference it.</p>
+		<p class="font-bold">Are you sure you want to proceed with the
+			removal?</p>
+	</div>
+	<div class="flex flex-row">
+		<button mat-button color="primary"
+			[routerLink]="['/main/topology/design/components',component.id,'view']"
+			i18n="The label of the button to cancel the remove operation@@main_topology_design_components_remove_cancel-label">
+			No, keep it!</button>
+		<button mat-button color="warn" (click)="removeComponent()"
+			i18n="The label of the button to remove operation@@main_topology_design_components_remove_ok-label">
+			Yes, remove it!</button>
+	</div>
+	} @else{
+	<app-loading></app-loading>
+	}
+</div>

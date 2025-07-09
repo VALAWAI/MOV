@@ -126,11 +126,4 @@ export class SearchLibraryComponent implements OnInit {
 
 	}
 
-	/**
-	 * Called when want to remove a component.
-	 */
-	public remove(component: ComponentDefinition) {
-
-	}
-
 }

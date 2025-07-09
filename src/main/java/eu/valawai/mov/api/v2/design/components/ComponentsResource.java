@@ -15,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntity;
 import eu.valawai.mov.persistence.design.component.GetComponentDefinition;
 import eu.valawai.mov.persistence.design.component.GetComponentDefinitionPage;
 import eu.valawai.mov.persistence.design.component.GetComponentsLibraryStatus;
@@ -122,7 +123,7 @@ public class ComponentsResource {
 	 */
 	@Path("/{componentId:[0-9a-fA-F]{24}}")
 	@GET
-	@Operation(description = "Obtain some topologies.")
+	@Operation(description = "Get a component definition.")
 	@APIResponse(responseCode = "200", description = "The component definition associated to the identifier", content = {
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ComponentDefinition.class)) })
 	@APIResponse(responseCode = "400", description = "If not found a component definition associated to the identifier.")
@@ -139,6 +140,37 @@ public class ComponentsResource {
 			} else {
 
 				return Response.ok(component).build();
+			}
+
+		});
+
+	}
+
+	/**
+	 * Remove a component definition.
+	 *
+	 * @param componentId identifier of the component definition to remove.
+	 *
+	 * @return an empty content if the component has been removed.
+	 */
+	@Path("/{componentId:[0-9a-fA-F]{24}}")
+	@DELETE
+	@Operation(description = "Remove a component definition. This not remove its reference in the topologies.")
+	@APIResponse(responseCode = "204", description = "If the component definition has been removed")
+	@APIResponse(responseCode = "400", description = "If not found a component definition associated to the identifier.")
+	public Uni<Response> removeComponentDefinition(
+			@Parameter(description = "The identifier of the component definition to remove.") @PathParam("componentId") final @Valid @NotNull ObjectId componentId) {
+
+		return ComponentDefinitionEntity.delete("_id = ?1", componentId).map(removedCount -> {
+
+			if (removedCount == null || removedCount != 1l) {
+
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity("Not found a component definition associated to the path identifier.").build();
+
+			} else {
+
+				return Response.noContent().build();
 			}
 
 		});

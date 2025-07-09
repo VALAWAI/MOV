@@ -326,4 +326,14 @@ export class MovApiService {
 		return this.http.get<ComponentDefinition>(url);
 	}
 
+	/**
+	 * Remove a component definition.
+	 */
+	public removeComponentDefinition(id: string): Observable<any> {
+
+		var url = this.url('/v2/design/components', [id]);
+		return this.http.delete<any>(url);
+	}
+
+
 }
