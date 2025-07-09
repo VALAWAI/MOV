@@ -7,4 +7,4 @@
 */
 
 
-export { ShowLibraryComponent } from './show.component';
+export { EditComponent } from './edit.component';

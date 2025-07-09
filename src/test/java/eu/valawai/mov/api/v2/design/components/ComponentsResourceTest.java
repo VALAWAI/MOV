@@ -226,4 +226,34 @@ public class ComponentsResourceTest extends APITestCase {
 
 	}
 
+	/**
+	 * Should not get an undefined component.
+	 *
+	 * @see ComponentsResource#getComponentDefinition(org.bson.types.ObjectId)
+	 */
+	@Test
+	public void shouldNotGetUndefinedComponent() {
+
+		final var undefined = ComponentDefinitionEntities.undefined();
+		given().when().get("/v2/design/components/" + undefined.toHexString()).then()
+				.statusCode(Status.NOT_FOUND.getStatusCode());
+
+	}
+
+	/**
+	 * Should get a component.
+	 *
+	 * @see ComponentsResource#getComponentDefinition(org.bson.types.ObjectId)
+	 */
+	@Test
+	public void shouldGetComponent() {
+
+		final var component = ComponentDefinitionEntities.minComponents(1).get(0);
+		final var found = given().when().get("/v2/design/components/" + component.id.toHexString()).then()
+				.statusCode(Status.OK.getStatusCode()).extract().as(ComponentDefinition.class);
+		final var expected = ComponentDefinitionTest.from(component);
+		assertEquals(found, expected);
+
+	}
+
 }

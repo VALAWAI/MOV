@@ -8,12 +8,14 @@
 
 package eu.valawai.mov.api.v2.design.components;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import eu.valawai.mov.persistence.design.component.GetComponentDefinition;
 import eu.valawai.mov.persistence.design.component.GetComponentDefinitionPage;
 import eu.valawai.mov.persistence.design.component.GetComponentsLibraryStatus;
 import eu.valawai.mov.services.ComponenetLibraryService;
@@ -21,12 +23,14 @@ import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -106,6 +110,38 @@ public class ComponentsResource {
 	public Uni<Response> refreshComponentsLibrary() {
 
 		return this.libraryService.update().map(page -> Response.noContent().build());
+
+	}
+
+	/**
+	 * Get the information of a component definition.
+	 *
+	 * @param componentId identifier of the component definition to get.
+	 *
+	 * @return the component definition associated to the identifier.
+	 */
+	@Path("/{componentId:[0-9a-fA-F]{24}}")
+	@GET
+	@Operation(description = "Obtain some topologies.")
+	@APIResponse(responseCode = "200", description = "The component definition associated to the identifier", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ComponentDefinition.class)) })
+	@APIResponse(responseCode = "400", description = "If not found a component definition associated to the identifier.")
+	public Uni<Response> getComponentDefinition(
+			@Parameter(description = "The identifier of the component definition to return.") @PathParam("componentId") final @Valid @NotNull ObjectId componentId) {
+
+		return GetComponentDefinition.fresh().withId(componentId).execute().map(component -> {
+
+			if (component == null) {
+
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity("Not found a component definition associated to the path identifier.").build();
+
+			} else {
+
+				return Response.ok(component).build();
+			}
+
+		});
 
 	}
 

@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { LoadingComponent } from '@app/shared/loading';
 import { TimestampPipe } from '@app/shared/timestamp';
@@ -17,11 +17,10 @@ import { Component as MOVComponent } from 'src/app/shared/mov-api';
 	standalone: true,
 	selector: 'app-component-view',
 	imports: [
-		NgIf,
+		CommonModule,
 		LoadingComponent,
 		TimestampPipe,
-		NgxJsonViewerModule,
-		NgFor
+		NgxJsonViewerModule
 	],
 	templateUrl: './component-view.component.html',
 	styleUrl: './component-view.component.css'

@@ -87,7 +87,7 @@ public class TopologiesResource {
 	@GET
 	@Operation(description = "Obtain some topologies.")
 	@APIResponse(responseCode = "200", description = "The topology associated to the identifier", content = {
-			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MinTopologyPage.class)) })
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Topology.class)) })
 	@APIResponse(responseCode = "400", description = "If not found a topology associated to the identifier.")
 	public Uni<Response> getTopology(
 			@Parameter(description = "The identifier of the topology to return.") @PathParam("topologyId") final @Valid @NotNull ObjectId topologyId) {

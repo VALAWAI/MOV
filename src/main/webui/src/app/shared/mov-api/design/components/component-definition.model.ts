@@ -8,7 +8,7 @@
 
 import { ChannelSchema } from "../../components/channel-schema.model";
 import { ComponentType } from "../../components/component-type.model";
-import { VersionInfo } from './version.info.model';
+import { VersionInfo } from './version-info.model';
 
 
 /**

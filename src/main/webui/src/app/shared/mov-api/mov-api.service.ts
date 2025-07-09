@@ -25,6 +25,7 @@ import { Topology } from './design/topologies/topology.model';
 import { MinTopologyPage } from './design/topologies/min-topology-page.model';
 import { MinTopology } from './design/topologies/min-topology.model';
 import { ComponentsLibraryStatus } from './design/components/components-library-status.model';
+import { ComponentDefinition } from './design/components/component-definition.model';
 
 
 /**
@@ -314,6 +315,15 @@ export class MovApiService {
 
 		var url = this.url('/v2/design/components/library');
 		return this.http.get<ComponentsLibraryStatus>(url);
+	}
+
+	/**
+	 * Get some defined components.
+	 */
+	public getComponentDefinition(id: string): Observable<ComponentDefinition> {
+
+		var url = this.url('/v2/design/components', [id]);
+		return this.http.get<ComponentDefinition>(url);
 	}
 
 }

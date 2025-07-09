@@ -17,8 +17,12 @@ export const COMPONENTS_LIBRARY_ROUTES: Routes = [
 				loadComponent: () => import('./update').then(m => m.UpdateLibraryComponent)
 			},
 			{
-				path: ':id/show',
-				loadComponent: () => import('./show').then(m => m.ShowLibraryComponent)
+				path: ':id/view',
+				loadComponent: () => import('./view').then(m => m.ViewComponent)
+			},
+			{
+				path: ':id/edit',
+				loadComponent: () => import('./edit').then(m => m.EditComponent)
 			},
 			{
 				path: 'search',

@@ -1,0 +1,11 @@
+@if( version!=null){
+<div class="flex flex-row gap-1">
+	<div class="font-bold">{{version.name}}</div>
+	@if(version.since){
+	<div
+	class="italic text-gray-400"
+		i18n="The text that define since the version is released@@shared_version-info_since">(since
+		{{version.since*1000|date:'longDate'}})</div>
+	}
+</div>
+}

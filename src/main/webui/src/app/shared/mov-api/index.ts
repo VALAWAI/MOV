@@ -37,7 +37,8 @@ export { OneOfPayloadSchema } from './components/one-of-payload-schema.model';
 export { AnyOfPayloadSchema } from './components/any-of-payload-schema.model';
 export { AllOfPayloadSchema } from './components/all-of-payload-schema.model';
 
-export { VersionInfo } from './design/components/version.info.model';
+export { VersionInfo } from './design/components/version-info.model';
+export { VersionInfoToNamePipe } from './design/components/version-info.pipe';
 export { ComponentDefinition } from './design/components/component-definition.model';
 export { ComponentDefinitionPage } from './design/components/component-definition-page.model';
 export { ComponentsLibraryStatus } from './design/components/components-library-status.model';

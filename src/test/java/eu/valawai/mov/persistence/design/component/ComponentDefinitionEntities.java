@@ -215,4 +215,19 @@ public interface ComponentDefinitionEntities {
 		return find.map(c -> c == null ? 0 : c.updatedAt).await().atMost(Duration.ofSeconds(30));
 	}
 
+	/**
+	 * Return an identifier for a component that is not stored in the data base.
+	 *
+	 * @return the identifier of an undefined component
+	 */
+	public static ObjectId undefined() {
+
+		var id = ValueGenerator.nextObjectId();
+		while (ComponentDefinitionEntity.findById(id).await().indefinitely() != null) {
+
+			id = ValueGenerator.nextObjectId();
+		}
+		return id;
+	}
+
 }
