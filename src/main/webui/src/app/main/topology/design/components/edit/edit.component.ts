@@ -153,7 +153,11 @@ export class EditComponent extends AbstractComponentDefinitionComponent {
 			}
 			this.api.updateComponentDefinition(this.componentId!, component).subscribe(
 				{
-					next: () => this.router.navigate(['/main/topology/design/components', this.componentId, 'view']),
+					next: () => {
+
+						this.messages.showSuccess($localize`:The success mesage whne the componet has bene updated@@main_topology_design_components_edit_code_update-success-msg:Component definition updated!`);
+						this.router.navigate(['/main/topology/design/components', this.componentId, 'view']);
+					},
 					error: err => this.messages.showMOVConnectionError(err)
 				}
 			);
