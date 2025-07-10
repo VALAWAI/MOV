@@ -305,8 +305,7 @@ public class ComponenetLibraryService {
 	public void updateDocsLinkIn(ComponentDefinitionEntity entity, String readme) {
 
 		final var docsLinkPattern = Pattern.compile(
-				"(https://valawai.github.io/docs/components/" + entity.toString() + "/[^\\/\\s\\]\\)]+)",
-				Pattern.CASE_INSENSITIVE);
+				"(https://valawai.github.io/docs/components/c[0-2]/[\\w\\-\\.\\/]+)", Pattern.CASE_INSENSITIVE);
 		final var docsLinkMatcher = docsLinkPattern.matcher(readme);
 		if (docsLinkMatcher.find()) {
 

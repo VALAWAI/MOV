@@ -1,10 +1,61 @@
 <div
-	class="font-sans antialiased bg-gray-100 flex items-center justify-center min-h-screen">
-	<div
-		class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-		<h1 class="text-3xl font-extrabold text-gray-900 mb-4">Section
-			Under Development</h1>
-		<p class="text-gray-600 mb-6 text-lg">Thanks for your interest!
-			This section is still being built and isn't available yet.</p>
-	</div>
+	class="p-2 gap-7 flex flex-col items-center justify-center content-center">
+	<form [formGroup]="componentForm"
+		class="w-full h-full max-w-3xl flex flex-col justify-center items-center gap-3">
+		<mat-form-field class="w-full"> <mat-label
+			i18n="The label of the field to write the component type@@main_topology_design_components_edit_type">Type</mat-label>
+		<mat-select formControlName="type"> <mat-option
+			i18n="The option when no component type is selected@@main_topology_design-components_edit_type-undefined">Undefined</mat-option>
+		<mat-option value="C0"
+			i18n="The option to select a C0 component@@main_topology_design-components_edit_type-C0">C0:
+		Data extraction & task execution,</mat-option> <mat-option value="C1"
+			i18n="The option to select a C1 component@@main_topology_design-components_edit_type-C1">C1:
+		Data integration & decision-making</mat-option> <mat-option value="C2"
+			i18n="The option to select a C2 component@@main_topology_design-components_edit_type-C2">C2:
+		Value-based reasoning & alignment</mat-option> </mat-select>
+		@if(componentForm.controls.type.hasError('required')){ <mat-error
+			i18n="The error message if no component type is defined@@main_topology_design-components_edit_type-required">You
+		must select the component type.</mat-error> } </mat-form-field>
+		<mat-form-field class="w-full"> <mat-label
+			i18n="The label of the field to write the component name@@main_topology_design_components_edit_name-label">Name</mat-label>
+		<input matInput formControlName="name" class="w-full p-2">
+		@if(componentForm.controls.name.hasError('required')){ <mat-error
+			i18n="The error message if no component name is defined@@main_topology_design-components_edit_name-required">You
+		must write a name for the component.</mat-error> } </mat-form-field>
+		<mat-form-field class="w-full"> <mat-label
+			i18n="The label of the field to write the component description@@main_topology_design_components_edit_description-label">Description</mat-label>
+		<textarea matInput formControlName="description" class="w-full p-2"></textarea>
+		</mat-form-field>
+		<mat-form-field class="w-full"> <mat-label
+			i18n="The label of the field to write the component documentation link@@main_topology_design_components_edit_docs-link-label">Component
+		documentation</mat-label> <input matInput formControlName="docsLink"
+			class="w-full p-2">
+		@if(componentForm.controls.docsLink.hasError('pattern')){ <mat-error
+			i18n="The error message whne the docs link is not a vlaid URL@@main_topology_design-components_edit_docsLink-pattern-error">You
+		must write a valid URL.</mat-error> } </mat-form-field>
+
+		<mat-form-field class="w-full"> <mat-label
+			i18n="The label of the field to write the component documentation link@@main_topology_design_components_edit_docs-link-label">GitHub
+		URL</mat-label> <input matInput formControlName="gitHubLink" class="w-full p-2">
+		@if(componentForm.controls.gitHubLink.hasError('pattern')){ <mat-error
+			i18n="The error message whne the docs link is not a vlaid URL@@main_topology_design-components_edit_docs-link-pattern-error">You
+		must write a valid URL.</mat-error> } </mat-form-field>
+		<fieldSet
+			class=" w-full h-full fieldset border-base-300 rounded-box border p-4">
+			<legend class="text-left font-bold p-2"
+				i18n="The label to edit the component version@@main_topology_design_components_edit_version-label">
+				Version</legend>
+			<app-version-info-editor class="w-full" formControlName="version"></app-version-info-editor>
+		</fieldSet>
+		<fieldSet
+			class=" w-full h-full fieldset border-base-300 rounded-box border p-4">
+			<legend class="text-left font-bold p-2"
+				i18n="The label to edit the component api version@@main_topology_design_components_edit_api-version-label">
+				API Version</legend>
+			<app-version-info-editor class="w-full" formControlName="apiVersion"></app-version-info-editor>
+		</fieldSet>
+	</form>
+	<button mat-raised-button color="primary" type="submit"
+		(click)="doUpdate()"
+		i18n="The label to update the component information@@main_topology_design_components_edit_update-label">Update</button>
 </div>

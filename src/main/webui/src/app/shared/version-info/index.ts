@@ -8,3 +8,4 @@
 
 
 export { VersionInfoViewComponent } from './version-info-view.component';
+export { VersionInfoEditorComponent } from './version-info-editor.component';

@@ -1,0 +1,17 @@
+<form [formGroup]="versionForm"
+	class="flex flex-row gap-2 w-full h-full">
+	<mat-form-field> <mat-label
+		i18n="The label to write the version name@@shared_version-info_editor_name-label">Name</mat-label>
+	<input matInput formControlName="name" class="w-full p-2">
+	@if(versionForm.controls.name.hasError('required')){ <mat-error
+		i18n="The error message if no version name is defined@@shared_version-info_editor_name-required-error">You
+	must write a name for the version.</mat-error> }
+	@if(versionForm.controls.name.hasError('pattern')){ <mat-error
+		i18n="The error message if version not follow the patternd@@shared_version-info_editor_name-pattern-error">You
+	must write a valid version name. E.g. 1.0.3</mat-error> } </mat-form-field>
+	<mat-form-field> <mat-label
+		i18n="The label to write the version sincen@@shared_version-info__editorsince-label">Since</mat-label>
+	<input matInput formControlName="since" [matDatepicker]="sincePicker">
+	<mat-datepicker-toggle matIconSuffix [for]="sincePicker"></mat-datepicker-toggle>
+	<mat-datepicker #sincePicker></mat-datepicker> </mat-form-field>
+</form>
