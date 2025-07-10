@@ -63,6 +63,7 @@ public class ComponentDefinitionTest extends ModelTestCase<ComponentDefinition> 
 			}
 
 		}
+		model.updatedAt = ValueGenerator.nextPastTime();
 
 	}
 
@@ -91,6 +92,7 @@ public class ComponentDefinitionTest extends ModelTestCase<ComponentDefinition> 
 
 				model.channels = new ArrayList<>(entity.channels);
 			}
+			model.updatedAt = entity.updatedAt;
 		}
 		return model;
 	}

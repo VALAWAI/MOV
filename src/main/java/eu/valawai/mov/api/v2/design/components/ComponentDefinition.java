@@ -42,7 +42,7 @@ public class ComponentDefinition extends Model {
 	/**
 	 * The identifier of the component.
 	 */
-	@Schema(description = "The identifier of the component", readOnly = true, example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The identifier of the component", readOnly = true, examples = "000000000000000000000000", implementation = String.class)
 	@BsonProperty("_id")
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@JsonDeserialize(using = ObjectIdDeserializer.class)
@@ -99,5 +99,13 @@ public class ComponentDefinition extends Model {
 	 */
 	@Schema(description = "The channel associated to the component.")
 	public List<ChannelSchema> channels;
+
+	/**
+	 * The timestamp, represented as epoch seconds, indicating the last time this
+	 * component definition was updated or modified. This helps in tracking the
+	 * freshness of component information.
+	 */
+	@Schema(title = "The epoch time, in seconds, when this component definition was last updated.", readOnly = true)
+	public Long updatedAt;
 
 }

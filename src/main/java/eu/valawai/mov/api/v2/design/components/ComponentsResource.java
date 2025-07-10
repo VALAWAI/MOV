@@ -13,12 +13,14 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntity;
 import eu.valawai.mov.persistence.design.component.GetComponentDefinition;
 import eu.valawai.mov.persistence.design.component.GetComponentDefinitionPage;
 import eu.valawai.mov.persistence.design.component.GetComponentsLibraryStatus;
+import eu.valawai.mov.persistence.design.component.UpdateComponentDefinition;
 import eu.valawai.mov.services.ComponenetLibraryService;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
@@ -30,6 +32,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -174,6 +177,42 @@ public class ComponentsResource {
 			}
 
 		});
+
+	}
+
+	/**
+	 * Update a component definition.
+	 *
+	 * @param componentId identifier of the component definition to update.
+	 * @param component   information to put to the component definition.
+	 *
+	 * @return the updated component.
+	 */
+	@Path("/{componentId:[0-9a-fA-F]{24}}")
+	@PUT
+	@Operation(description = "Update a component definition.")
+	@APIResponse(responseCode = "200", description = "Return the updated component definition", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ComponentDefinition.class)) })
+	@APIResponse(responseCode = "400", description = "If not found a component definition associated to the identifier.")
+	@APIResponse(responseCode = "404", description = "If the component definition is not valid.")
+	public Uni<Response> updateComponentDefinition(
+			@Parameter(description = "The identifier of the component definition to update.") @PathParam("componentId") final @Valid @NotNull ObjectId componentId,
+			@RequestBody(description = "The data to update the component definition.", required = true, content = @Content(schema = @Schema(implementation = ComponentDefinition.class))) @Valid ComponentDefinition component) {
+
+		return UpdateComponentDefinition.fresh().withId(componentId).withComponentDefinition(component).execute()
+				.map(updated -> {
+
+					if (!updated) {
+
+						return Response.status(Response.Status.NOT_FOUND)
+								.entity("Not found a component definition associated to the path identifier.").build();
+
+					} else {
+
+						return Response.ok(component).build();
+					}
+
+				});
 
 	}
 

@@ -99,7 +99,8 @@ public class GetTopology extends AbstractEntityOperator<Topology, GetTopology> {
 								.append("gitHubLink", new Document("$first", "$components.repository.html_url"))
 								.append("version", new Document("$first", "$components.version"))
 								.append("apiVersion", new Document("$first", "$components.apiVersion"))
-								.append("channels", new Document("$first", "$components.channels"))))));
+								.append("channels", new Document("$first", "$components.channels"))
+								.append("updatedAt", new Document("$first", "$components.updatedAt"))))));
 
 		final var connectionsPipeline = new ArrayList<Bson>();
 		connectionsPipeline.add(Aggregates.project(Projections.include("_id", "nodes")));
