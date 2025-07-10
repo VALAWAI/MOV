@@ -32,7 +32,7 @@
 			<div class="italic">{{component.description}}</div>
 			@if(component.docsLink != null && component.gitHubLink != null){
 			<div class="italic"
-				i18n="The read more about the component in the docs and teh code@@main_topology_design_components_view_read-more-doc-and-code">
+				i18n="The read more about the component in the docs and the code@@main_topology_design_components_view_read-more-doc-and-code">
 				Detailed information about the component is available in the <a
 					[href]="component.docsLink" target="_blank"
 					class="text-blue-500 hover:text-blue-700">component
@@ -42,7 +42,7 @@
 			</div>
 			}@else if(component.docsLink != null){
 			<div class="italic"
-				i18n="The read more about the component in the docs and teh code@@main_topology_design_components_view_read-more-doc-and-code">
+				i18n="The read more about the component in the docs@@main_topology_design_components_view_read-more-at-doc">
 				Detailed information about the component is available in the <a
 					[href]="component.docsLink" target="_blank"
 					class="text-blue-500 hover:text-blue-700">component
@@ -50,7 +50,7 @@
 			</div>
 			}@else if(component.gitHubLink != null){
 			<div class="italic"
-				i18n="The read more about the component in the docs and teh code@@main_topology_design_components_view_read-more-doc-and-code">
+				i18n="The read more about the component in the code@@main_topology_design_components_view_read-more-in-code">
 				Detailed information about the component is available in the <a
 					[href]="component.gitHubLink" target="_blank"
 					class="text-blue-500 hover:text-blue-700">source code</a>.

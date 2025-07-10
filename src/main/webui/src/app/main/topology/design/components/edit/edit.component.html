@@ -31,14 +31,14 @@
 		documentation</mat-label> <input matInput formControlName="docsLink"
 			class="w-full p-2">
 		@if(componentForm.controls.docsLink.hasError('pattern')){ <mat-error
-			i18n="The error message whne the docs link is not a vlaid URL@@main_topology_design-components_edit_docsLink-pattern-error">You
+			i18n="The error message whne the docs link is not a valid URL@@main_topology_design-components_edit_docs-link-pattern-error">You
 		must write a valid URL.</mat-error> } </mat-form-field>
 
 		<mat-form-field class="w-full"> <mat-label
-			i18n="The label of the field to write the component documentation link@@main_topology_design_components_edit_docs-link-label">GitHub
+			i18n="The label of the field to write the component GitHub link@@main_topology_design_components_edit_github-link-label">GitHub
 		URL</mat-label> <input matInput formControlName="gitHubLink" class="w-full p-2">
 		@if(componentForm.controls.gitHubLink.hasError('pattern')){ <mat-error
-			i18n="The error message whne the docs link is not a vlaid URL@@main_topology_design-components_edit_docs-link-pattern-error">You
+			i18n="The error message whne the GitHub link is not a valid URL@@main_topology_design-components_edit_github-link-pattern-error">You
 		must write a valid URL.</mat-error> } </mat-form-field>
 		<fieldSet
 			class=" w-full h-full fieldset border-base-300 rounded-box border p-4">

@@ -251,19 +251,309 @@
         </context-group>
         <note priority="1" from="description">The header title for the status </note>
       </trans-unit>
+      <trans-unit id="main_topology_design_component_abstract_code_not-found-error" datatype="html">
+        <source>Component not found</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/abstract-component-definition.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">The error message when can not get the component definition</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_type" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the component type</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_type-undefined" datatype="html">
+        <source>Undefined</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">The option when no component type is selected</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_type-C0" datatype="html">
+        <source>C0: Data extraction &amp; task execution,</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+        <note priority="1" from="description">The option to select a C0 component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_type-C1" datatype="html">
+        <source>C1: Data integration &amp; decision-making</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">The option to select a C1 component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_type-C2" datatype="html">
+        <source>C2: Value-based reasoning &amp; alignment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+        <note priority="1" from="description">The option to select a C2 component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_type-required" datatype="html">
+        <source>You must select the component type.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no component type is defined</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_name-label" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the component name</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_name-required" datatype="html">
+        <source>You must write a name for the component.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no component name is defined</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_description-label" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the component description</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_docs-link-label" datatype="html">
+        <source>Component documentation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the component documentation link</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_docs-link-pattern-error" datatype="html">
+        <source>You must write a valid URL.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <note priority="1" from="description">The error message whne the docs link is not a valid URL</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_github-link-label" datatype="html">
+        <source>GitHub URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the component GitHub link</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_github-link-pattern-error" datatype="html">
+        <source>You must write a valid URL.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">42,45</context>
+        </context-group>
+        <note priority="1" from="description">The error message whne the GitHub link is not a valid URL</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_version-label" datatype="html">
+        <source> Version</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+        <note priority="1" from="description">The label to edit the component version</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_api-version-label" datatype="html">
+        <source> API Version</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+        <note priority="1" from="description">The label to edit the component api version</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_update-label" datatype="html">
+        <source>Update</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">60,61</context>
+        </context-group>
+        <note priority="1" from="description">The label to update the component information</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_code_page-title" datatype="html">
+        <source>Edit component definition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">The header title to edit a component definition</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_remove_info-msg" datatype="html">
+        <source><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/> You&apos;re about to remove the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
+				class=&quot;font-bold&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{component.name}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> component definition. Please be aware that this action <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
+				class=&quot;font-bold&quot;&gt;"/>cannot be undone<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>. <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Removing this component may also invalidate existing topologies that currently reference it.<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_PARAGRAPH_1" equiv-text="&lt;p class=&quot;font-bold&quot;&gt;"/>Are you sure you want to proceed with the removal?<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/remove/remove.component.html</context>
+          <context context-type="linenumber">7,16</context>
+        </context-group>
+        <note priority="1" from="description">The mesage to inform of the result of the remove operation</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_remove_cancel-label" datatype="html">
+        <source> No, keep it!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/remove/remove.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to cancel the remove operation</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_remove_ok-label" datatype="html">
+        <source> Yes, remove it!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/remove/remove.component.html</context>
+          <context context-type="linenumber">23,28</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to remove operation</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_remove_code_page-title" datatype="html">
+        <source>Remove component definition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/remove/remove.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">The header title to remove a component definition</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_remove_code_success-msg" datatype="html">
+        <source>The component definition has been removed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/remove/remove.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">The remove component message success mesage</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_type-label" datatype="html">
+        <source> Type:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+        <note priority="1" from="description">The label to select the type for teh components to search</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_type-C0" datatype="html">
+        <source>C0: Data extraction &amp; task execution,</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+        <note priority="1" from="description">The option to select a C0 component to search</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_type-C1" datatype="html">
+        <source>C1: Data integration &amp; decision-making</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">The option to select a C1 component to search</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_type-C2" datatype="html">
+        <source>C2: Value-based reasoning &amp; alignment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+        <note priority="1" from="description">The option to select a C2 component to search</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_pattern-label" datatype="html">
+        <source> Name or description:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">The label to ddefine the component name or description to search</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_pattern-placeholder" datatype="html">
+        <source>Write component name or description...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+        <note priority="1" from="description">The placeholder to enter the pattern to match the component to search</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_type-column-label" datatype="html">
+        <source> Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+        <note priority="1" from="description">The label of the type column</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_name-column-label" datatype="html">
+        <source> Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+        <note priority="1" from="description">The label of the name column</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_description-column-label" datatype="html">
+        <source> Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+        <note priority="1" from="description">The label of the description column</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_actions-column-label" datatype="html">
+        <source>Actions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">49,51</context>
+        </context-group>
+        <note priority="1" from="description">The label of the actions column</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_menu-view-label" datatype="html">
+        <source>View</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">59,62</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to view the component</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_menu-edit-label" datatype="html">
+        <source>Edit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">65,68</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to edit the component</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_menu-delete-label" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">71,77</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to delete the component</note>
+      </trans-unit>
+      <trans-unit id="main_component_design_search_any-found-msg" datatype="html">
+        <source> No component match the specified search parameters. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.html</context>
+          <context context-type="linenumber">87,90</context>
+        </context-group>
+        <note priority="1" from="description">The message when no components found</note>
+      </trans-unit>
       <trans-unit id="main_topology_design_components_search_code_page-title" datatype="html">
         <source>Components library</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/components/search/search.component.ts</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <note priority="1" from="description">The header title for the comnfig page</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_components_show_code_page-title" datatype="html">
-        <source>Show components library</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/components/show/show.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>
@@ -299,6 +589,101 @@
           <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">The error message when can not update the library</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_menu-edit-label" datatype="html">
+        <source>Edit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to edit the component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_menu-remove-label" datatype="html">
+        <source>Remove</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">27,32</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to remove the component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_read-more-doc-and-code" datatype="html">
+        <source> Detailed information about the component is available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+					[href]=&quot;component.docsLink&quot; target=&quot;_blank&quot;
+					class=&quot;text-blue-500 hover:text-blue-700&quot;&gt;"/>component documentation<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or view its <x id="START_LINK_1" equiv-text="&lt;a [href]=&quot;component.gitHubLink&quot;
+					target=&quot;_blank&quot; class=&quot;text-blue-500 hover:text-blue-700&quot;&gt;"/>source code<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">36,43</context>
+        </context-group>
+        <note priority="1" from="description">The read more about the component in the docs and the code</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_read-more-at-doc" datatype="html">
+        <source> Detailed information about the component is available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+					[href]=&quot;component.docsLink&quot; target=&quot;_blank&quot;
+					class=&quot;text-blue-500 hover:text-blue-700&quot;&gt;"/>component documentation<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">46,51</context>
+        </context-group>
+        <note priority="1" from="description">The read more about the component in the docs</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_read-more-in-code" datatype="html">
+        <source> Detailed information about the component is available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+					[href]=&quot;component.gitHubLink&quot; target=&quot;_blank&quot;
+					class=&quot;text-blue-500 hover:text-blue-700&quot;&gt;"/>source code<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">54,58</context>
+        </context-group>
+        <note priority="1" from="description">The read more about the component in the code</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_version-label" datatype="html">
+        <source>Version:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">61,64</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component version attribute</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_api-version-label" datatype="html">
+        <source>API version:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">68,72</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component API version attribute</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_channels-label" datatype="html">
+        <source> Channels </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component channels attribute</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_channel-subscribe-label" datatype="html">
+        <source>Subscribe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">87,90</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component channel subscribe</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_channel-publish-label" datatype="html">
+        <source>Publish</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
+          <context context-type="linenumber">92,98</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component channel publish</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_code_page-title" datatype="html">
+        <source>Component definition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">The header title to view a component definition</note>
       </trans-unit>
       <trans-unit id="main_topology_editor-dialog-confirm-save-before-change-title" datatype="html">
         <source> Confirm Save Before Changing Topology</source>
@@ -496,7 +881,7 @@
         <source>Topology Editor</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">The header title for the topology editor</note>
       </trans-unit>
@@ -504,7 +889,7 @@
         <source>Topology saved!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">479</context>
+          <context context-type="linenumber">520</context>
         </context-group>
         <note priority="1" from="description">Success message when the topology has been saved</note>
       </trans-unit>
@@ -727,6 +1112,39 @@ must select one topology to open.</source>
         </context-group>
         <note priority="1" from="description">OK label of the dialog to select the topology to load</note>
       </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-remove-topology-title" datatype="html">
+        <source> Remove Topology</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/confirm-remove-topology.dialog.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+        <note priority="1" from="description">Title of the dialog to confirm to remove a topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-remove-topology-question" datatype="html">
+        <source> Are you sure you want to remove the topology <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-bold &quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{data.name}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>? This action cannot be undone, and all associated data will be permanently lost. Do you wish to proceed?
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/confirm-remove-topology.dialog.html</context>
+          <context context-type="linenumber">7,11</context>
+        </context-group>
+        <note priority="1" from="description">Question of the dialog to confirm to remove a topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-remove-topology-cancel-label" datatype="html">
+        <source> No, do not remove it!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/confirm-remove-topology.dialog.html</context>
+          <context context-type="linenumber">15,18</context>
+        </context-group>
+        <note priority="1" from="description">Cancel label of the dialog to confirm to remove a topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-confirm-remove-topology-ok-label" datatype="html">
+        <source> Yes, remove it!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/confirm-remove-topology.dialog.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+        <note priority="1" from="description">OK label of the dialog to confirm to remove a topology</note>
+      </trans-unit>
       <trans-unit id="main_topology_design_search_pattern-label" datatype="html">
         <source> Name or description:</source>
         <context-group purpose="location">
@@ -747,7 +1165,7 @@ must select one topology to open.</source>
         <source> Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
-          <context context-type="linenumber">25,27</context>
+          <context context-type="linenumber">21,23</context>
         </context-group>
         <note priority="1" from="description">The name of the name column</note>
       </trans-unit>
@@ -755,7 +1173,7 @@ must select one topology to open.</source>
         <source> Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
-          <context context-type="linenumber">33,38</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <note priority="1" from="description">The name of the description column</note>
       </trans-unit>
@@ -763,31 +1181,31 @@ must select one topology to open.</source>
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
-          <context context-type="linenumber">41,43</context>
+          <context context-type="linenumber">32,34</context>
         </context-group>
         <note priority="1" from="description">The name of the actions column</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_search_show-menu-label" datatype="html">
-        <source>Show</source>
+      <trans-unit id="main_topology_design_search_menu-edit-label" datatype="html">
+        <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
-          <context context-type="linenumber">49,51</context>
+          <context context-type="linenumber">42,45</context>
         </context-group>
-        <note priority="1" from="description">The label of the menu to show a topology</note>
+        <note priority="1" from="description">The menu label to edit the topology</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_search_delete-menu-label" datatype="html">
+      <trans-unit id="main_topology_design_search_menu-delete-label" datatype="html">
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
-          <context context-type="linenumber">52,57</context>
+          <context context-type="linenumber">47,53</context>
         </context-group>
-        <note priority="1" from="description">The label of the menu to delete a topology</note>
+        <note priority="1" from="description">The menu label to delete the topology</note>
       </trans-unit>
       <trans-unit id="main_topology_design_search_any-found-msg" datatype="html">
         <source> No topology match the specified search parameters. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.html</context>
-          <context context-type="linenumber">65,67</context>
+          <context context-type="linenumber">63,66</context>
         </context-group>
         <note priority="1" from="description">The message when no topologies found</note>
       </trans-unit>
@@ -795,9 +1213,17 @@ must select one topology to open.</source>
         <source>Defined topologies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_seaker_code_success-remove-msg" datatype="html">
+        <source>The topology has been removed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/search/seaker.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">The success message when a topology is removed</note>
       </trans-unit>
       <trans-unit id="main_components_abstract_code_get-error" datatype="html">
         <source>Cannot get the component information</source>
@@ -1942,6 +2368,46 @@ must select one topology to open.</source>
           <context context-type="linenumber">15,19</context>
         </context-group>
         <note priority="1" from="description">Not found go home page</note>
+      </trans-unit>
+      <trans-unit id="shared_version-info_editor_name-label" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/version-info/version-info-editor.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">The label to write the version name</note>
+      </trans-unit>
+      <trans-unit id="shared_version-info_editor_name-required-error" datatype="html">
+        <source>You must write a name for the version.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/version-info/version-info-editor.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no version name is defined</note>
+      </trans-unit>
+      <trans-unit id="shared_version-info_editor_name-pattern-error" datatype="html">
+        <source>You must write a valid version name. E.g. 1.0.3</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/version-info/version-info-editor.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <note priority="1" from="description">The error message if version not follow the patternd</note>
+      </trans-unit>
+      <trans-unit id="shared_version-info__editorsince-label" datatype="html">
+        <source>Since</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/version-info/version-info-editor.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+        <note priority="1" from="description">The label to write the version sincen</note>
+      </trans-unit>
+      <trans-unit id="shared_version-info_since" datatype="html">
+        <source>(since <x id="INTERPOLATION" equiv-text="{{version.since*1000|date:&apos;longDate&apos;}}"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/version-info/version-info-view.component.html</context>
+          <context context-type="linenumber">8,11</context>
+        </context-group>
+        <note priority="1" from="description">The text that define since the version is released</note>
       </trans-unit>
     </body>
   </file>
