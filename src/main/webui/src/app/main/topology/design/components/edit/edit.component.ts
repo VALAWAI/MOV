@@ -7,17 +7,45 @@
 */
 
 import { Component, inject } from '@angular/core';
-import { ComponentDefinition, ComponentType, VersionInfo } from '@app/shared/mov-api';
+import { ChannelSchema, ComponentDefinition, ComponentType, VersionInfo } from '@app/shared/mov-api';
 import { MainService } from 'src/app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { VersionInfoEditorComponent } from '@app/shared/version-info';
+
+/**
+ * Check that the value is a vlaid JSON.
+ */
+export function jsonValidator(control: AbstractControl): ValidationErrors | null {
+
+	if (control.value) {
+
+		var value = control.value.trim();
+		if (value.length > 0) {
+
+			try {
+
+				var parsed = JSON.parse(control.value);
+				if (!Array.isArray(parsed)) {
+
+					return { json: true };
+				}
+
+			} catch (ignored) {
+
+				return { json: true };
+			}
+		}
+	}
+
+	return null;
+};
 
 /**
  * This is used to edit a defined component.
@@ -60,7 +88,8 @@ export class EditComponent extends AbstractComponentDefinitionComponent {
 			docsLink: new FormControl<string | null>(null, Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)),
 			gitHubLink: new FormControl<string | null>(null, Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)),
 			version: new FormControl<VersionInfo | null>(null),
-			apiVersion: new FormControl<VersionInfo | null>(null)
+			apiVersion: new FormControl<VersionInfo | null>(null),
+			channels: new FormControl<string | null>(null, jsonValidator)
 		}
 	);
 
@@ -77,7 +106,8 @@ export class EditComponent extends AbstractComponentDefinitionComponent {
 				docsLink: component.docsLink,
 				gitHubLink: component.gitHubLink,
 				version: component.version,
-				apiVersion: component.apiVersion
+				apiVersion: component.apiVersion,
+				channels: component.channels != null ? JSON.stringify(component.channels, null, 2) : null
 			},
 			{
 				emitEvent: false
@@ -113,6 +143,14 @@ export class EditComponent extends AbstractComponentDefinitionComponent {
 			component.gitHubLink = this.componentForm.controls.gitHubLink.value;
 			component.version = this.componentForm.controls.version.value;
 			component.apiVersion = this.componentForm.controls.apiVersion.value;
+			if (this.componentForm.controls.channels.value) {
+
+				var value = this.componentForm.controls.channels.value.trim();
+				if (value.length > 0) {
+
+					component.channels = JSON.parse(value) as ChannelSchema[];
+				}
+			}
 			this.api.updateComponentDefinition(this.componentId!, component).subscribe(
 				{
 					next: () => this.router.navigate(['/main/topology/design/components', this.componentId, 'view']),

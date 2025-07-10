@@ -8,7 +8,7 @@
 			i18n="The option when no component type is selected@@main_topology_design-components_edit_type-undefined">Undefined</mat-option>
 		<mat-option value="C0"
 			i18n="The option to select a C0 component@@main_topology_design-components_edit_type-C0">C0:
-		Data extraction & task execution,</mat-option> <mat-option value="C1"
+		Data extraction & task execution</mat-option> <mat-option value="C1"
 			i18n="The option to select a C1 component@@main_topology_design-components_edit_type-C1">C1:
 		Data integration & decision-making</mat-option> <mat-option value="C2"
 			i18n="The option to select a C2 component@@main_topology_design-components_edit_type-C2">C2:
@@ -54,6 +54,14 @@
 				API Version</legend>
 			<app-version-info-editor class="w-full" formControlName="apiVersion"></app-version-info-editor>
 		</fieldSet>
+		<mat-form-field class="w-full"> <mat-label
+			i18n="The label of the field to write the component channels@@main_topology_design_components_edit_channels-label">Channels</mat-label>
+		<textarea matInput formControlName="channels" class="w-full p-2"
+			rows="7"></textarea>
+		@if(componentForm.controls.channels.hasError('json')){ <mat-error
+			i18n="The error message when the channels is not a valid json array@@main_topology_design-components_edit_channels-json-error">You
+		must write a valid JSON array.</mat-error> } </mat-form-field>
+
 	</form>
 	<button mat-raised-button color="primary" type="submit"
 		(click)="doUpdate()"
