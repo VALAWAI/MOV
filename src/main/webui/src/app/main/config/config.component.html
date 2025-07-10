@@ -1,10 +1,30 @@
 <div
-	class="font-sans antialiased bg-gray-100 flex items-center justify-center min-h-screen">
-	<div
-		class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-		<h1 class="text-3xl font-extrabold text-gray-900 mb-4">Section
-			Under Development</h1>
-		<p class="text-gray-600 mb-6 text-lg">Thanks for your interest!
-			This section is still being built and isn't available yet.</p>
-	</div>
+	class="p-2 gap-7 flex flex-col items-center justify-center content-center">
+	<form [formGroup]="confForm" class="flex flex-col max-w-xl w-full gap-3">
+		<mat-form-field> <mat-label
+			i18n="The label of the editor of the polling time@@main_config_polling-time-label">Polling
+		time</mat-label> <input matInput formControlName="pollingTime" class="w-full p-2"
+			type="number"> <mat-hint
+			i18n="The hint of the polling time@@main_config_polling-time-hint">The
+		miliseconds to poll to the MOV API.</mat-hint>
+		@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+			i18n="The error message if no polling time is defined@@main_config_polling-time-required-error">The
+		polling time must be equals or more than 1000.</mat-error> } </mat-form-field>
+		<mat-form-field> <mat-label
+			i18n="The label of the editor of the polling iterations@@main_config_polling-iterations-label">Polling
+		iterations</mat-label> <input matInput formControlName="pollingIterations"
+			class="w-full p-2" type="number"> <mat-hint
+			i18n="The hint of the polling iterations@@main_config_polling-iterations-hint">The
+		number of times to polling before stopping.</mat-hint>
+		@if(confForm.controls.pollingIterations.hasError('min')){ <mat-error
+			i18n="The error message if no polling iterations is defined@@main_config_polling-iterations-required-error">The
+		polling iterations must be equals or more than 10.</mat-error> } </mat-form-field>
+		<mat-slide-toggle formControlName="editorShowGrid"
+			i18n="The label to show the grid in the editor@@main_config_editor-show-grid-label"
+			color="primary"> Show the grid in the editor. </mat-slide-toggle>
+		<mat-slide-toggle formControlName="editorAutoloadLastTopology"
+			i18n="The label to autoload the last topology on the editor@@main_config_editor-autoload-last-topology"
+			color="primary"> Autoload the last topology when
+		open the editor. </mat-slide-toggle>
+	</form>
 </div>

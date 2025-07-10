@@ -2,11 +2,75 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-DV" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="main_config_polling-time-label" datatype="html">
+        <source>Polling time</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+        <note priority="1" from="description">The label of the editor of the polling time</note>
+      </trans-unit>
+      <trans-unit id="main_config_polling-time-hint" datatype="html">
+        <source>The miliseconds to poll to the MOV API.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+        <note priority="1" from="description">The hint of the polling time</note>
+      </trans-unit>
+      <trans-unit id="main_config_polling-time-required-error" datatype="html">
+        <source>The polling time must be equals or more than 1000.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no polling time is defined</note>
+      </trans-unit>
+      <trans-unit id="main_config_polling-iterations-label" datatype="html">
+        <source>Polling iterations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+        <note priority="1" from="description">The label of the editor of the polling iterations</note>
+      </trans-unit>
+      <trans-unit id="main_config_polling-iterations-hint" datatype="html">
+        <source>The number of times to polling before stopping.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+        <note priority="1" from="description">The hint of the polling iterations</note>
+      </trans-unit>
+      <trans-unit id="main_config_polling-iterations-required-error" datatype="html">
+        <source>The polling iterations must be equals or more than 10.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no polling iterations is defined</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-show-grid-label" datatype="html">
+        <source> Show the grid in the editor. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+        <note priority="1" from="description">The label to show the grid in the editor</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-autoload-last-topology" datatype="html">
+        <source> Autoload the last topology when open the editor. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">27,30</context>
+        </context-group>
+        <note priority="1" from="description">The label to autoload the last topology on the editor</note>
+      </trans-unit>
       <trans-unit id="main_config_code_page-title" datatype="html">
         <source>Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>
@@ -276,7 +340,7 @@
         <note priority="1" from="description">The option when no component type is selected</note>
       </trans-unit>
       <trans-unit id="main_topology_design-components_edit_type-C0" datatype="html">
-        <source>C0: Data extraction &amp; task execution,</source>
+        <source>C0: Data extraction &amp; task execution</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
           <context context-type="linenumber">11,12</context>
@@ -379,11 +443,27 @@
         </context-group>
         <note priority="1" from="description">The label to edit the component api version</note>
       </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_channels-label" datatype="html">
+        <source>Channels</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">58,61</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the component channels</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-components_edit_channels-json-error" datatype="html">
+        <source>You must write a valid JSON array.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
+          <context context-type="linenumber">63,68</context>
+        </context-group>
+        <note priority="1" from="description">The error message when the channels is not a valid json array</note>
+      </trans-unit>
       <trans-unit id="main_topology_design_components_edit_update-label" datatype="html">
         <source>Update</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.html</context>
-          <context context-type="linenumber">60,61</context>
+          <context context-type="linenumber">68,69</context>
         </context-group>
         <note priority="1" from="description">The label to update the component information</note>
       </trans-unit>
@@ -391,9 +471,17 @@
         <source>Edit component definition</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <note priority="1" from="description">The header title to edit a component definition</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_edit_code_update-success-msg" datatype="html">
+        <source>Component definition updated!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/components/edit/edit.component.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">The success mesage whne the componet has bene updated</note>
       </trans-unit>
       <trans-unit id="main_topology_design_components_remove_info-msg" datatype="html">
         <source><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/> You&apos;re about to remove the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
