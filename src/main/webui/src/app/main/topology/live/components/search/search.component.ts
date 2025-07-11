@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MainService } from 'src/app/main';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -21,7 +21,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { ConfigService, toPattern } from '@app/shared';
 
@@ -29,7 +29,7 @@ import { ConfigService, toPattern } from '@app/shared';
 	standalone: true,
 	selector: 'app-components-search',
 	imports: [
-		NgIf,
+		CommonModule,
 		ReactiveFormsModule,
 		MatFormField,
 		MatLabel,
@@ -41,7 +41,6 @@ import { ConfigService, toPattern } from '@app/shared';
 		RouterLink,
 		MatIcon,
 		MatPaginator,
-		NgFor,
 		MatTableModule,
 		MatMenuModule,
 		MessageComponent
@@ -55,6 +54,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 	 * The columns to display.
 	 */
 	public displayedColumns: string[] = ['type', 'name', 'description', 'actions'];
+
+	/**
+	 * The form builder.
+	 */
+	private readonly fb = inject(FormBuilder);
 
 	/**
 	 * The component to manage the messages.
@@ -99,16 +103,20 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 
 	/**
-	 *  Create the component.
+	 * The service to teh main view.
 	 */
-	constructor(
-		private header: MainService,
-		private mov: MovApiService,
-		private fb: FormBuilder,
-		private conf: ConfigService
-	) {
+	private readonly header = inject(MainService);
 
-	}
+	/**
+	 * The service to interact withe the MOV.
+	 */
+	private readonly mov = inject(MovApiService);
+
+
+	/**
+	 * The APP configuration service.
+	 */
+	private readonly conf = inject(ConfigService);
 
 	/**
 	 * Initialize the component.
@@ -158,7 +166,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	 * Called when has to trat to update the page.
 	 */
 	private startUpdatePage() {
-
+		
 		if (this.pageSubscription != null) {
 
 			this.pageSubscription.unsubscribe();
@@ -170,7 +178,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		).subscribe(
 			{
 				next: page => {
-
+					
 					if (!MinComponentPage.equals(this.page, page)) {
 
 						this.page = page
@@ -184,9 +192,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 	 * Called to update the page.
 	 */
 	private getPage(): Observable<MinComponentPage> {
-
+		
 		var value = this.form.value;
-		var pattern = toPattern(value);
+		var pattern = toPattern(value.pattern);
 		var orderBy = value.orderBy;
 		if (value.reverse) {
 
