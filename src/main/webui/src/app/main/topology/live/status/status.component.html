@@ -1,10 +1,23 @@
 <div
-	class="font-sans antialiased bg-gray-100 flex items-center justify-center min-h-screen">
-	<div
-		class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-		<h1 class="text-3xl font-extrabold text-gray-900 mb-4">Section
-			Under Development</h1>
-		<p class="text-gray-600 mb-6 text-lg">Thanks for your interest!
-			This section is still being built and isn't available yet.</p>
+	class="p-1 flex flex-col md:flex-row flex-wrap gap-1 items-center justify-center content-center">
+	<div class="w-full h-full bg-gray-50">
+		<div [ngStyle]="{'height.px':height}"
+			class="w-sm sm:w-md md:w-full md:min-w-xl">
+			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)">
+			@if(conf.liveShowGrid$|async){ <f-background> <f-circle-pattern></f-circle-pattern>
+			</f-background> } <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
+			<f-canvas fZoom> @for(node of nodes;track node.id){
+			<div fNode [fNodeId]="node.id" fDragHandle
+				[fNodePosition]="node.position">
+				<div
+					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
+					<app-content-type-badge [type]="node.type"></app-content-type-badge>
+					<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
+				</div>
+
+			</div>
+			} </f-canvas> </f-flow>
+		</div>
 	</div>
+	<div class="w-full">Element</div>
 </div>

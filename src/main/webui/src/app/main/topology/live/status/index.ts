@@ -8,3 +8,4 @@
 
 
 export { StatusComponent } from './status.component';
+export { LiveNode } from './live-node.model';

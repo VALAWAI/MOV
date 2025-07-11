@@ -33,12 +33,4 @@ export class ComponentViewComponent {
 	@Input()
 	public component: MOVComponent | null = null;
 
-	/**
-	 * Create the component view.
-	 */
-	constructor() { }
-
-
-
-
 }

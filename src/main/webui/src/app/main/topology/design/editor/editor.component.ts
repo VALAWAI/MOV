@@ -43,6 +43,7 @@ import { MinTopologyEditorComponent } from './min-topology-editor.component';
 import { ConnectionData, EndpointData, NodeData, TopologyData, TopologyElement } from './editor.models';
 import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
+import { GraphModule } from '@app/shared/graph';
 
 
 @Component({
@@ -58,7 +59,8 @@ import { ActivatedRoute } from '@angular/router';
 		TopologyNodeEditorComponent,
 		TopologyConnectionEditorComponent,
 		MatDialogModule,
-		MinTopologyEditorComponent
+		MinTopologyEditorComponent,
+		GraphModule
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css',

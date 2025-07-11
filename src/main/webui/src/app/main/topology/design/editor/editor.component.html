@@ -156,53 +156,48 @@
 			<div fNode [fNodeId]="node.id" fDragHandle
 				[fNodePosition]="node.position"
 				(fNodePositionChange)="updatedNodePosition(node.id,$event)">
+				<app-component-type-node-container [type]="node.type"
+					[isSelected]="node.id === selectedElement?.id">
 				<div
-					class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg hover:border-2"
-					[ngClass]="{'border-indigo-800':node.type=='C0','border-purple-800':node.type=='C1','border-sky-800':node.type=='C2','border-4':node.id == selectedElement?.id}">
-					<div
-						class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
-						<div
-							class="p-1 rounded-sm text-white w-[24px] h-[24px] text-xs font-bold text-center"
-							[ngClass]="{'bg-indigo-600':node.type=='C0','bg-purple-600':node.type=='C1','bg-sky-600':node.type=='C2'}">
-							{{node.type}}</div>
-						<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
-						<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
-							<mat-icon class="text-xs">more_vert</mat-icon>
-						</button>
-						<mat-menu #nodeMenu="matMenu">
-						<button mat-menu-item (click)="deleteNode(node)">
-							<mat-icon color="warn">delete</mat-icon>
-							<span
-								i18n="The label of the menu to delete a node from the topology@@main_topology_design_editor-menu-delete-node">Delete
-								node</span>
-						</button>
-						<button mat-menu-item (click)="editEndPointTo(node)"
-							[ngClass]="{'!hidden':!node.hasChannels}">
-							<mat-icon color="primary">edit</mat-icon>
-							<span
-								i18n="The label of the menu to edit an endpoint into a node@@main_topology_design_editor-menu-edit-endpoint">Edit
-								endpoint</span>
-						</button>
-						</mat-menu>
-					</div>
-					@for(endpoint of node.endpoints;track endpoint.id){
-					@if(endpoint.isPublished){
-					<div class="grow rounded-lg p-2 gap-2" fNodeOutput
-						[fOutputId]="endpoint.id" [fOutputMultiple]="true"
-						fOutputConnectableSide="right" fNodeOutlet>
-						<mat-icon color="primary" fontIcon="publish"></mat-icon>
-						{{endpoint.name}}
-					</div>
-
-					} @else{
-					<div class="grow rounded-lg p-2 gap-2" fNodeInput
-						[fInputId]="endpoint.id" [fInputMultiple]="true"
-						fInputConnectableSide="left">
-						<mat-icon color="primary" fontIcon="download"></mat-icon>
-						{{endpoint.name}}
-					</div>
-					} }
+					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
+					<app-content-type-badge [type]="node.type"></app-content-type-badge>
+					<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
+					<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
+						<mat-icon class="text-xs">more_vert</mat-icon>
+					</button>
+					<mat-menu #nodeMenu="matMenu">
+					<button mat-menu-item (click)="deleteNode(node)">
+						<mat-icon color="warn">delete</mat-icon>
+						<span
+							i18n="The label of the menu to delete a node from the topology@@main_topology_design_editor-menu-delete-node">Delete
+							node</span>
+					</button>
+					<button mat-menu-item (click)="editEndPointTo(node)"
+						[ngClass]="{'!hidden':!node.hasChannels}">
+						<mat-icon color="primary">edit</mat-icon>
+						<span
+							i18n="The label of the menu to edit an endpoint into a node@@main_topology_design_editor-menu-edit-endpoint">Edit
+							endpoint</span>
+					</button>
+					</mat-menu>
 				</div>
+				@for(endpoint of node.endpoints;track endpoint.id){
+				@if(endpoint.isPublished){
+				<div class="grow rounded-lg p-2 gap-2" fNodeOutput
+					[fOutputId]="endpoint.id" [fOutputMultiple]="true"
+					fOutputConnectableSide="right" fNodeOutlet>
+					<mat-icon color="primary" fontIcon="publish"></mat-icon>
+					{{endpoint.name}}
+				</div>
+
+				} @else{
+				<div class="grow rounded-lg p-2 gap-2" fNodeInput
+					[fInputId]="endpoint.id" [fInputMultiple]="true"
+					fInputConnectableSide="left">
+					<mat-icon color="primary" fontIcon="download"></mat-icon>
+					{{endpoint.name}}
+				</div>
+				} } </app-component-type-node-container>
 			</div>
 			} @for(connection of topology.connections;track connection.id){ <f-connection
 				[fType]="connection.type" [fConnectionId]="connection.id"
@@ -210,9 +205,9 @@
 				[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
 				[fEndColor]="topology.endColorFor(connection,isSelected(connection))"
 				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
-				[fOffset]="30">
-			<svg viewBox="0 0 10 10" fMarker type="f-connection-marker-start"
-				[height]="10" [width]="10" [refX]="5" [refY]="5">
+				[fOffset]="30"> <svg viewBox="0 0 10 10" fMarker
+				type="f-connection-marker-start" [height]="10" [width]="10"
+				[refX]="5" [refY]="5">
         <circle cx="5" cy="5" r="4" stroke="none"
 					[ngClass]="{'fill-sky-400':connection.isControl,'fill-indigo-400':!connection.isControl}"></circle> 
         </svg> <svg viewBox="0 0 10 10" fMarker

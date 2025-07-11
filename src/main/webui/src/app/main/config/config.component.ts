@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ConfigService } from '@app/shared';
 import { MainService } from 'src/app/main';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { map, Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 /**
  * Thei component allow to edit the configurtion of the MOV.
@@ -61,7 +61,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
 			pollingTime: this.fb.control<number>(this.conf.pollingTime, Validators.min(1000)),
 			pollingIterations: this.fb.control<number>(this.conf.pollingIterations, Validators.min(10)),
 			editorShowGrid: this.fb.control<boolean>(this.conf.editorShowGrid),
-			editorAutoloadLastTopology: this.fb.control<boolean>(this.conf.editorAutoloadLastTopology)
+			editorAutoloadLastTopology: this.fb.control<boolean>(this.conf.editorAutoloadLastTopology),
+			liveShowGrid: this.fb.control<boolean>(this.conf.liveShowGrid)
 		}
 	);
 
@@ -76,6 +77,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 		this.subscribetoChangesTo(this.confForm.controls.pollingIterations, (value) => { this.conf.pollingIterations = value; });
 		this.subscribetoChangesTo(this.confForm.controls.editorShowGrid, (value) => { this.conf.editorShowGrid = value; });
 		this.subscribetoChangesTo(this.confForm.controls.editorAutoloadLastTopology, (value) => { this.conf.editorAutoloadLastTopology = value; });
+		this.subscribetoChangesTo(this.confForm.controls.liveShowGrid, (value) => { this.conf.liveShowGrid = value; });
 	}
 
 	/**

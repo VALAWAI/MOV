@@ -1,0 +1,29 @@
+/*
+  Copyright 2022-2026 VALAWAI
+
+  Use of this source code is governed by GNU General Public License version 3
+  license that can be found in the LICENSE file or at
+  https://opensource.org/license/gpl-3-0/
+*/
+
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { ComponentType } from 'src/app/shared/mov-api';
+
+@Component({
+	standalone: true,
+	selector: 'app-content-type-badge',
+	imports: [
+		CommonModule
+	],
+	templateUrl: './component-type-badge.component.html'
+})
+export class ComponentTypeBadgeComponent {
+
+	/**
+	 * The type of the component.
+	 */
+	@Input()
+	public type: ComponentType = 'C0';
+
+}

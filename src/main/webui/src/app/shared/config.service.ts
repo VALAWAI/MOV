@@ -43,6 +43,11 @@ export class ConfigService {
 	private editorLastStoredTopologyIdSubject: BehaviorSubject<string | null>;
 
 	/**
+	 * The subject to notify the changes on the live show grid.
+	 */
+	private liveShowGridSubject: BehaviorSubject<boolean>;
+
+	/**
 	 * Create the service.
 	 */
 	constructor() {
@@ -52,6 +57,7 @@ export class ConfigService {
 		this.pollingIterationsSubject = new BehaviorSubject<number>(this.pollingIterations);
 		this.editorAutoloadLastTopologySubject = new BehaviorSubject<boolean>(this.editorAutoloadLastTopology);
 		this.editorLastStoredTopologyIdSubject = new BehaviorSubject<string | null>(this.editorLastStoredTopologyId);
+		this.liveShowGridSubject = new BehaviorSubject<boolean>(this.liveShowGrid);
 	}
 
 	/**
@@ -198,6 +204,30 @@ export class ConfigService {
 			localStorage.removeItem('EDITOR_LAST_STORED__TOPOLOGY_ID');
 		}
 		this.editorLastStoredTopologyIdSubject.next(id);
+	}
+
+	/**
+	 * Return the observable of the live show grid. 
+	 */
+	public get liveShowGrid$(): Observable<boolean> {
+
+		return this.liveShowGridSubject.asObservable();
+	}
+
+	public get liveShowGrid(): boolean {
+
+		var item = localStorage.getItem('LIVE_SHOW_GRID');
+		return (item == null) || (item.toLowerCase() === 'true');
+	}
+
+	/**
+	 * Store the live show grid.
+	 */
+	public set liveShowGrid(view: boolean) {
+
+		localStorage.setItem('LIVE_SHOW_GRID', String(view));
+		this.liveShowGridSubject.next(view);
+
 	}
 
 }
