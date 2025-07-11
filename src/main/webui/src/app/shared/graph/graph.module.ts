@@ -11,16 +11,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
 import { ComponentTypeBadgeComponent } from './component-type-badge.component';
+import { DagreLayoutService } from './dagre-layout.service';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		ComponentTypeNodeContainerComponent,
-		ComponentTypeBadgeComponent
+		ComponentTypeBadgeComponent,
 	],
 	exports: [
 		ComponentTypeNodeContainerComponent,
-		ComponentTypeBadgeComponent
+		ComponentTypeBadgeComponent,
+	],
+	providers: [
+		DagreLayoutService
 	]
+
 })
 export class GraphModule { }

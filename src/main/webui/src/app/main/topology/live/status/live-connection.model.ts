@@ -10,47 +10,48 @@ import { IPoint } from "@foblex/2d";
 import { ComponentType, MinComponent } from '@app/shared/mov-api';
 
 /**
- * A node in the live topology.
+ * A connection in the live topology.
  */
-export class LiveNode {
+export class LiveConnection {
 
 	/**
-	 * Create the node.
+	 * Create the connection.
 	 */
 	constructor(
 		public component: MinComponent
 	) {
 
 	}
-	get width(): number {
-		throw new Error("Method not implemented.");
-	}
-	get height(): number {
+
+	/**
+	 * The idetifier of the source.
+	 */
+	get sourceId(): string {
 		throw new Error("Method not implemented.");
 	}
 
 	/**
-	 * 
-	*/
-	public updatePosition(x: number, y: number): void {
+	 * The idetifier of the target.
+	 */
+	get targetId(): string {
 		throw new Error("Method not implemented.");
 	}
 
 	/**
-	 * The identifier of the node.
+	 * The identifier of the connection.
 	 */
 	public get id(): string {
 
-		return this.component.id || 'node_0';
+		return this.component.id || 'connection_0';
 	}
 
 	/**
-	 * The position of the node.
+	 * The position of the connection.
 	 */
 	public position: IPoint = { x: 0, y: 0 };
 
 	/**
-	 * The name of the node.
+	 * The name of the connection.
 	 */
 	public get name(): string {
 
@@ -58,7 +59,7 @@ export class LiveNode {
 	}
 
 	/**
-	 * The type of the node.
+	 * The type of the connection.
 	 */
 	public get type(): ComponentType {
 

@@ -9,12 +9,14 @@
 			<f-canvas fZoom> @for(node of nodes;track node.id){
 			<div fNode [fNodeId]="node.id" fDragHandle
 				[fNodePosition]="node.position">
+				<app-component-type-node-container [type]="node.type"
+					[isSelected]="node.id === selected?.id">
 				<div
 					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 					<app-content-type-badge [type]="node.type"></app-content-type-badge>
 					<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
 				</div>
-
+				</app-component-type-node-container>
 			</div>
 			} </f-canvas> </f-flow>
 		</div>

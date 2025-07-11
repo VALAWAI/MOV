@@ -9,3 +9,4 @@
 export { GraphModule } from './graph.module';
 export { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
 export { ComponentTypeBadgeComponent } from './component-type-badge.component';
+export { DagreLayoutService } from './dagre-layout.service';

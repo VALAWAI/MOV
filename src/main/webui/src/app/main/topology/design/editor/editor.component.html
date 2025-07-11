@@ -114,7 +114,7 @@
 				i18n="The menu label to change the layout@@main_topology_editor-menu-layouts">Layouts</span>
 		</button>
 		</mat-menu>
-		<mat-menu #layoutsMenu="matMenu"> <!-- 
+		<mat-menu #layoutsMenu="matMenu">  
 		<button mat-menu-item (click)="changeLayout('horizontal')">
 			<span
 				i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
@@ -123,7 +123,7 @@
 			<span
 				i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
 		</button>
-		 --> </mat-menu>
+		  </mat-menu>
 	</div>
 	<ng-template #c0PreviewTemplate>
 	<div
@@ -157,7 +157,7 @@
 				[fNodePosition]="node.position"
 				(fNodePositionChange)="updatedNodePosition(node.id,$event)">
 				<app-component-type-node-container [type]="node.type"
-					[isSelected]="node.id === selectedElement?.id">
+					[isSelected]="node.id === selectedElement?.id" (width)="node.width=$event" (height)="node.height=$event">
 				<div
 					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 					<app-content-type-badge [type]="node.type"></app-content-type-badge>

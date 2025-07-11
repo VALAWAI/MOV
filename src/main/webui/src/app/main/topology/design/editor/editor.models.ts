@@ -126,6 +126,16 @@ export class NodeData implements TopologyElement {
 	public endpoints: EndpointData[] = [];
 
 	/**
+	 * The width of the node.
+	 */
+	public width: number = 100;
+
+	/**
+	 * The width of the node.
+	 */
+	public height: number = 100;
+
+	/**
 	 * Create the model
 	 */
 	constructor(
@@ -321,6 +331,14 @@ export class NodeData implements TopologyElement {
 		return null;
 	}
 
+	/**
+	 * Update the position.
+	 */
+	public updatePosition(x: number, y: number) {
+
+		this.position = { x: x, y: y };
+	}
+
 }
 
 /**
@@ -411,7 +429,6 @@ export class ConnectionData implements TopologyElement {
 		}
 
 	}
-
 
 }
 

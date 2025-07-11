@@ -16,7 +16,10 @@ import { LiveNode } from './live-node.model';
 import { GraphModule } from '@app/shared/graph/graph.module';
 import { Subscription, switchMap, timer } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
-import { MovApiService } from '@app/shared/mov-api';
+import { MinComponentPage, MovApiService } from '@app/shared/mov-api';
+import { DagreLayoutService } from '@app/shared/graph';
+import { LiveConnection } from './live-connection.model';
+
 
 /**
  * This compony show a graph with the current status of the topology managed by the MOV.
@@ -69,6 +72,11 @@ export class StatusComponent implements OnInit, OnDestroy {
 	public nodes: LiveNode[] = [];
 
 	/**
+	 * The connections of the graph.
+	 */
+	public connections: LiveConnection[] = [];
+
+	/**
 	 * The subscription to the polling process.
 	 */
 	private pullingSubscription: Subscription | null = null;
@@ -82,6 +90,16 @@ export class StatusComponent implements OnInit, OnDestroy {
 	 * Service to interact with the MOV.
 	 */
 	private readonly api = inject(MovApiService);
+
+	/**
+	 * The selected element.
+	 */
+	public selected: LiveNode | null = null;
+
+	/**
+	 * The serv ice to layout the graph.
+	 */
+	private readonly dagre = inject(DagreLayoutService);
 
 	/**
 	 * Called when the window is resized.
@@ -111,8 +129,28 @@ export class StatusComponent implements OnInit, OnDestroy {
 			)
 		).subscribe(
 			{
-				next: () => {
+				next: (page: MinComponentPage) => {
 
+					if (page.components) {
+
+						COMPONENT: for (var component of page.components) {
+
+							for (var node of this.nodes) {
+
+								if (node.id === component.id) {
+									arguments
+
+									continue COMPONENT;
+								}
+
+							}
+
+							var node = new LiveNode(component);
+							this.nodes.push(node);
+
+							// TO DO Layout again
+						}
+					}
 				},
 				error: err => this.messages.showMOVConnectionError(err)
 			}
@@ -173,8 +211,8 @@ export class StatusComponent implements OnInit, OnDestroy {
 	 */
 	public toogleGrid() {
 
-		this.conf.editorShowGrid = !this.conf.editorShowGrid;
-		this.fCanvas().redraw();
+		this.conf.liveShowGrid = !this.conf.liveShowGrid;
+		this.updatedGraph();
 	}
 
 	/**
@@ -193,9 +231,17 @@ export class StatusComponent implements OnInit, OnDestroy {
 	 */
 	public selectionChanged(event: FSelectionChangeEvent) {
 
+		this.selected = null;
 		if (event.fNodeIds.length > 0) {
 
 			const selectedNodeId = event.fNodeIds[0];
+			for (var node of this.nodes) {
+
+				if (node.id === selectedNodeId) {
+
+					this.selected = node;
+				}
+			}
 
 		} else if (event.fConnectionIds.length > 0) {
 
@@ -204,6 +250,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 		} else {
 
 		}
+		this.updatedGraph();
 	}
 
 }

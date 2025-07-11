@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^20.1.0",
     "@angular/platform-browser-dynamic": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@dagrejs/dagre": "^1.1.5",
     "@foblex/2d": "^1.2.1",
     "@foblex/drag-toolkit": "^1.1.1",
     "@foblex/flow": "^17.5.3",

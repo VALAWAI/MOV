@@ -43,7 +43,7 @@ import { MinTopologyEditorComponent } from './min-topology-editor.component';
 import { ConnectionData, EndpointData, NodeData, TopologyData, TopologyElement } from './editor.models';
 import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
-import { GraphModule } from '@app/shared/graph';
+import { DagreLayoutService, GraphModule } from '@app/shared/graph';
 
 
 @Component({
@@ -143,6 +143,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private queryParamSubsccriber: Subscription | null = null;
 
+	/**
+	 * The layout manager using dagre.
+	 */
+	private readonly dagre = inject(DagreLayoutService);
 
 	/**
 	 * Called when the window is resized.
@@ -621,6 +625,66 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			return this._selectedElement.id == element.id;
 		}
 		return false;
+
+	}
+
+	/**
+	 * Called when has to change the layout.
+	 */
+	public changeLayout(direction: 'horizontal' | 'vertical') {
+
+		this.dagre.createGraph().subscribe(
+			{
+				next: graph => {
+
+					var updated = false;
+					try {
+						debugger
+						if (direction == 'horizontal') {
+
+							graph.horizontal();
+
+						} else {
+
+							graph.vertical();
+						}
+						for (var node of this.topology.nodes) {
+
+							graph.addNode(node.id, node.width, node.height);
+						}
+						for (var connection of this.topology.connections) {
+
+							var sourceId = connection.model.source?.nodeTag || '';
+							var targetId = connection.model.target?.nodeTag || '';
+							graph.addEdge(sourceId, targetId);
+						}
+						if (graph.layout()) {
+
+							updated = true;
+							for (var node of this.topology.nodes) {
+
+								var point = graph.getPositionFor(node.id);
+								if (point != null) {
+
+									node.position = point;
+								}
+							}
+						}
+
+					} catch (err) {
+						updated = false;
+						console.error(err);
+					}
+
+					if (!updated) {
+
+						this.messages.showError(
+							$localize`:Error message when not apply the layout@@main_topology_editor_code_layout-error-msg:Cannot apply the layout.`
+						);
+					}
+				}
+			}
+		);
 
 	}
 

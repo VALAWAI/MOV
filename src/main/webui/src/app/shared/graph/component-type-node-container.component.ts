@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ComponentType } from 'src/app/shared/mov-api';
 
 @Component({
@@ -18,7 +18,7 @@ import { ComponentType } from 'src/app/shared/mov-api';
 	],
 	templateUrl: './component-type-node-container.component.html'
 })
-export class ComponentTypeNodeContainerComponent {
+export class ComponentTypeNodeContainerComponent implements AfterViewInit {
 
 	/**
 	 * The type of the component.
@@ -31,5 +31,36 @@ export class ComponentTypeNodeContainerComponent {
 	 */
 	@Input()
 	public isSelected: boolean = false;
+
+	/**
+	 * The reference element of the container.
+	 */
+	private readonly elementRef = inject(ElementRef);
+
+	/**
+	 * The width of he container.
+	 */
+	@Output()
+	public width = new EventEmitter<number>();
+
+	/**
+	 * The height of he container.
+	 */
+	@Output()
+	public height = new EventEmitter<number>();
+
+
+	/**
+	 * Initialize the component.
+	 */
+	public ngAfterViewInit() {
+
+		this.height.emit(
+			this.elementRef.nativeElement.offsetHeight
+		);
+		this.width.emit(
+			this.elementRef.nativeElement.offsetWidth
+		);
+	}
 
 }
