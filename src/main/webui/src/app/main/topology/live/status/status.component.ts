@@ -131,7 +131,9 @@ export class StatusComponent implements OnInit, OnDestroy {
 			{
 				next: (page: MinComponentPage) => {
 
-					if (page.components) {
+					var changed: boolean = false;
+					if (page.components != null && page.components.length > 0) {
+
 
 						COMPONENT: for (var component of page.components) {
 
@@ -147,9 +149,55 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 							var node = new LiveNode(component);
 							this.nodes.push(node);
-
-							// TO DO Layout again
+							changed = true;
 						}
+
+						NODE: for (var i = 0; i < this.nodes.length; i++) {
+
+							var nodeId = this.nodes[i].id;
+							for (var component of page.components) {
+
+								if (component.id === nodeId) {
+
+									continue NODE;
+								}
+
+							}
+
+							this.nodes.splice(i, 1);
+							i--;
+							changed = true;
+						}
+
+					} else {
+
+						this.nodes = [];
+						changed = true;
+
+					}
+
+					if (changed) {
+
+						this.dagre.createGraph().subscribe(
+							{
+								next: graph => {
+
+									graph.horizontal();
+									for (var node of this.nodes) {
+
+										graph.addNode(node.id, node.width, node.height);
+									}
+									graph.layout();
+									for (var node of this.nodes) {
+
+										node.position = graph.getPositionFor(node.id) || node.position;
+
+									}
+									this.updatedGraph();
+								}
+							}
+						);
+
 					}
 				},
 				error: err => this.messages.showMOVConnectionError(err)

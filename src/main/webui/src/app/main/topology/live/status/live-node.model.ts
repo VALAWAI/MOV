@@ -15,18 +15,28 @@ import { ComponentType, MinComponent } from '@app/shared/mov-api';
 export class LiveNode {
 
 	/**
+	 * The position of the node.
+	 */
+	public position: IPoint = { x: 0, y: 0 };
+
+	/**
+	 * The width of the node. 
+	 */
+	public width: number = 100;
+
+	/**
+	 * The height of the node.
+	 */
+	public height: number = 100;
+
+
+	/**
 	 * Create the node.
 	 */
 	constructor(
 		public component: MinComponent
 	) {
 
-	}
-	get width(): number {
-		throw new Error("Method not implemented.");
-	}
-	get height(): number {
-		throw new Error("Method not implemented.");
 	}
 
 	/**
@@ -44,10 +54,6 @@ export class LiveNode {
 		return this.component.id || 'node_0';
 	}
 
-	/**
-	 * The position of the node.
-	 */
-	public position: IPoint = { x: 0, y: 0 };
 
 	/**
 	 * The name of the node.

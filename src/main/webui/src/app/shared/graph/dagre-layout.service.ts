@@ -40,7 +40,8 @@ export class DagreGraph {
 	private graph = new dagre.graphlib.Graph({ directed: true, compound: true, multigraph: true });
 
 	/**
-	 * Create the default configuration with
+	 * Create the default configuration with the specified dirction.
+	 * Read more about it at: https://github.com/dagrejs/dagre/wiki#configuring-the-layout
 	 */
 	private configWithDirection(dir: string): dagre.GraphLabel {
 
