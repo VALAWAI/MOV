@@ -4,6 +4,7 @@
 		<div [ngStyle]="{'height.px':height}"
 			class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)">
+
 			@if(conf.liveShowGrid$|async){ <f-background> <f-circle-pattern></f-circle-pattern>
 			</f-background> } <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
 			<f-canvas fZoom> @for(node of nodes;track node.id){
@@ -17,9 +18,44 @@
 					<app-content-type-badge [type]="node.type"></app-content-type-badge>
 					<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
 				</div>
-				</app-component-type-node-container>
+				@for(endpoint of node.endpoints;track endpoint.id){
+				@if(endpoint.isSource){
+				<div class="grow rounded-lg p-2 gap-2" fNodeOutput
+					[fOutputId]="endpoint.id" [fOutputMultiple]="true"
+					fOutputConnectableSide="right" fNodeOutlet>
+					<mat-icon color="primary" fontIcon="publish"></mat-icon>
+					{{endpoint.name}}
+				</div>
+				} @else{
+				<div class="grow rounded-lg p-2 gap-2" fNodeInput
+					[fInputId]="endpoint.id" [fInputMultiple]="true"
+					fInputConnectableSide="left">
+					<mat-icon color="primary" fontIcon="download"></mat-icon>
+					{{endpoint.name}}
+				</div>
+				} } </app-component-type-node-container>
 			</div>
-			} </f-canvas> </f-flow>
+			} @for(connection of connections;track connection.id){ <f-connection
+				[fType]="'bezier'" [fConnectionId]="connection.id"
+				[fOutputId]="connection.sourceId" [fInputId]="connection.targetId"
+				[fStartColor]="colorFor(connection)"
+				[fEndColor]="colorFor(connection)"
+				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
+				[fOffset]="30"> <app-connection-markers
+				color="fill-sky-400" selectedColor="fill-red-800"></app-connection-markers> </f-connection> <!-- 
+			<app-graph-edge
+				[type]="conf.liveEdgeType" [id]="" [sourceId]="" [targetId]=""
+				[isSelected]="isSelected(connection)"
+				[color]="isSelected(connection)?'fill-sky-400':'fill-red-800'">
+				</app-graph-edge>
+			<f-connection
+				appGraphEdge ngProjectAs="f-connection" [type]="conf.liveEdgeType"
+				[fConnectionId]="connection.id" [fOutputId]="connection.sourceId"
+				[fInputId]="connection.targetId"
+				[isSelected]="isSelected(connection)"
+				[color]="isSelected(connection)?'fill-sky-400':'fill-red-800'">
+			</f-connection>
+			 --> } </f-canvas> <f-selection-area></f-selection-area> </f-flow>
 		</div>
 	</div>
 	<div class="w-full">Element</div>

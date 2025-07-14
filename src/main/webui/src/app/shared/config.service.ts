@@ -59,6 +59,16 @@ export class ConfigService {
 	private liveEdgeColorSubject: BehaviorSubject<string>;
 
 	/**
+	 * The subject to notify the changes on the live graph maximum nodes to show.
+	 */
+	private liveMaxNodesSubject: BehaviorSubject<number>;
+
+	/**
+	 * The subject to notify the changes on the live graph maximum edges to show.
+	 */
+	private liveMaxEdgesSubject: BehaviorSubject<number>;
+
+	/**
 	 * Create the service.
 	 */
 	constructor() {
@@ -71,6 +81,8 @@ export class ConfigService {
 		this.liveShowGridSubject = new BehaviorSubject<boolean>(this.liveShowGrid);
 		this.liveEdgeTypeSubject = new BehaviorSubject<EFConnectionType>(this.liveEdgeType);
 		this.liveEdgeColorSubject = new BehaviorSubject<string>(this.liveEdgeColor);
+		this.liveMaxNodesSubject = new BehaviorSubject<number>(this.liveMaxNodes);
+		this.liveMaxEdgesSubject = new BehaviorSubject<number>(this.liveMaxEdges);
 	}
 
 	/**
@@ -302,6 +314,72 @@ export class ConfigService {
 
 		localStorage.setItem('LIVE_EDGE_COLOR', String(color));
 		this.liveEdgeColorSubject.next(color);
+
+	}
+
+	/**
+	 * Return the observable of the live max nodes. 
+	 */
+	public get liveMaxNodes$(): Observable<number> {
+
+		return this.liveMaxNodesSubject.asObservable();
+	}
+
+	public get liveMaxNodes(): number {
+
+		var item = localStorage.getItem('LIVE_MAX_NODES');
+		if (item != null) {
+
+			var maxNodes = Number(item);
+			if (!isNaN(maxNodes)) {
+
+				return maxNodes;
+			}
+		}
+		return 100000;
+
+	}
+
+	/**
+	 * Store the live max nodes.
+	 */
+	public set liveMaxNodes(nodes: number) {
+
+		localStorage.setItem('LIVE_MAX_NODES', String(nodes));
+		this.liveMaxNodesSubject.next(nodes);
+
+	}
+
+	/**
+	 * Return the observable of the live max edges. 
+	 */
+	public get liveMaxEdges$(): Observable<number> {
+
+		return this.liveMaxEdgesSubject.asObservable();
+	}
+
+	public get liveMaxEdges(): number {
+
+		var item = localStorage.getItem('LIVE_MAX_EDGES');
+		if (item != null) {
+
+			var maxEdges = Number(item);
+			if (!isNaN(maxEdges)) {
+
+				return maxEdges;
+			}
+		}
+		return 100000;
+
+	}
+
+	/**
+	 * Store the live max edges.
+	 */
+	public set liveMaxEdges(edges: number) {
+
+		localStorage.setItem('LIVE_MAX_EDGES', String(edges));
+		this.liveMaxEdgesSubject.next(edges);
 
 	}
 

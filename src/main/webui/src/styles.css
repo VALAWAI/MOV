@@ -45,3 +45,7 @@ body {
 .mdc-notched-outline__notch {
   border-right: none;
 }
+
+.f-selection-area {
+	background-color: var(--bg-gray-800) !important;
+}

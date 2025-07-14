@@ -12,16 +12,23 @@ import { CommonModule } from '@angular/common';
 import { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
 import { ComponentTypeBadgeComponent } from './component-type-badge.component';
 import { DagreLayoutService } from './dagre-layout.service';
+import { GraphEdgeComponent } from './graph-edge.component';
+import { ConnectionMarkersComponent } from './connection-markers.component';
+
 
 @NgModule({
 	imports: [
 		CommonModule,
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
+		GraphEdgeComponent,
+		ConnectionMarkersComponent
 	],
 	exports: [
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
+		GraphEdgeComponent,
+		ConnectionMarkersComponent
 	],
 	providers: [
 		DagreLayoutService

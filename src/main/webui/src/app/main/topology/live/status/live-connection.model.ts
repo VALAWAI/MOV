@@ -6,8 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { IPoint } from "@foblex/2d";
-import { ComponentType, MinComponent } from '@app/shared/mov-api';
+import { MinConnection } from '@app/shared/mov-api';
 
 /**
  * A connection in the live topology.
@@ -18,7 +17,7 @@ export class LiveConnection {
 	 * Create the connection.
 	 */
 	constructor(
-		public component: MinComponent
+		public connection: MinConnection
 	) {
 
 	}
@@ -27,14 +26,15 @@ export class LiveConnection {
 	 * The idetifier of the source.
 	 */
 	get sourceId(): string {
-		throw new Error("Method not implemented.");
+
+		return this.connection.source || '';
 	}
 
 	/**
 	 * The idetifier of the target.
 	 */
 	get targetId(): string {
-		throw new Error("Method not implemented.");
+		return this.connection.target || '';
 	}
 
 	/**
@@ -42,28 +42,8 @@ export class LiveConnection {
 	 */
 	public get id(): string {
 
-		return this.component.id || 'connection_0';
+		return this.connection.id || 'connection_0';
 	}
 
-	/**
-	 * The position of the connection.
-	 */
-	public position: IPoint = { x: 0, y: 0 };
-
-	/**
-	 * The name of the connection.
-	 */
-	public get name(): string {
-
-		return this.component.name || '';
-	}
-
-	/**
-	 * The type of the connection.
-	 */
-	public get type(): ComponentType {
-
-		return this.component.type || 'C0';
-	}
 
 }

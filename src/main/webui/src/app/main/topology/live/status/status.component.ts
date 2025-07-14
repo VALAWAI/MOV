@@ -14,11 +14,12 @@ import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } 
 import { MainService } from 'src/app/main';
 import { LiveNode } from './live-node.model';
 import { GraphModule } from '@app/shared/graph/graph.module';
-import { Subscription, switchMap, timer } from 'rxjs';
+import { combineLatest, Subscription, switchMap, timer, toArray } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
-import { MinComponentPage, MovApiService } from '@app/shared/mov-api';
+import { MinComponentPage, MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { DagreLayoutService } from '@app/shared/graph';
 import { LiveConnection } from './live-connection.model';
+import { MatIconModule } from '@angular/material/icon';
 
 
 /**
@@ -30,7 +31,8 @@ import { LiveConnection } from './live-connection.model';
 	imports: [
 		CommonModule,
 		FFlowModule,
-		GraphModule
+		GraphModule,
+		MatIconModule
 	],
 	templateUrl: './status.component.html'
 })
@@ -94,7 +96,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 	/**
 	 * The selected element.
 	 */
-	public selected: LiveNode | null = null;
+	public selected: LiveNode | LiveConnection | null = null;
 
 	/**
 	 * The serv ice to layout the graph.
@@ -123,59 +125,17 @@ export class StatusComponent implements OnInit, OnDestroy {
 		this.pullingSubscription = timer(0, this.conf.pollingTime).pipe(
 			switchMap(
 				() => {
-
-					return this.api.getMinComponentPage(null, null, null, null, null, 0, 10000000)
+					return combineLatest([
+						this.api.getMinComponentPage(null, null, null, null, null, 0, this.conf.liveMaxNodes),
+						this.api.getMinConnectionPage(null, null, null, 0, this.conf.liveMaxEdges)]);
 				}
 			)
 		).subscribe(
 			{
-				next: (page: MinComponentPage) => {
+				next: (pages) => {
 
-					var changed: boolean = false;
-					if (page.components != null && page.components.length > 0) {
-
-
-						COMPONENT: for (var component of page.components) {
-
-							for (var node of this.nodes) {
-
-								if (node.id === component.id) {
-									arguments
-
-									continue COMPONENT;
-								}
-
-							}
-
-							var node = new LiveNode(component);
-							this.nodes.push(node);
-							changed = true;
-						}
-
-						NODE: for (var i = 0; i < this.nodes.length; i++) {
-
-							var nodeId = this.nodes[i].id;
-							for (var component of page.components) {
-
-								if (component.id === nodeId) {
-
-									continue NODE;
-								}
-
-							}
-
-							this.nodes.splice(i, 1);
-							i--;
-							changed = true;
-						}
-
-					} else {
-
-						this.nodes = [];
-						changed = true;
-
-					}
-
+					var changed = this.synchronizeNodes(pages[0], pages[1]);
+					changed = this.synchronizeConnections(pages[1]) || changed;
 					if (changed) {
 
 						this.dagre.createGraph().subscribe(
@@ -204,6 +164,114 @@ export class StatusComponent implements OnInit, OnDestroy {
 			}
 		);
 
+	}
+
+	/**
+	 * Called to synchonide the live nodes with the information from the MOV.
+	 */
+	private synchronizeNodes(foundNodes: MinComponentPage, foundEdges: MinConnectionPage): boolean {
+
+		var changed: boolean = false;
+		if (foundNodes.components != null && foundNodes.components.length > 0) {
+
+			COMPONENT: for (var component of foundNodes.components) {
+
+				for (var node of this.nodes) {
+
+					if (node.id === component.id) {
+
+						changed = node.updateEndpointsWith(foundEdges) || changed;
+						continue COMPONENT;
+					}
+
+				}
+
+				var node = new LiveNode(component);
+				node.updateEndpointsWith(foundEdges);
+				this.nodes.push(node);
+				changed = true;
+			}
+
+			NODE: for (var i = 0; i < this.nodes.length; i++) {
+
+				var nodeId = this.nodes[i].id;
+				for (var component of foundNodes.components) {
+
+					if (component.id === nodeId) {
+
+						continue NODE;
+					}
+
+				}
+
+				this.nodes.splice(i, 1);
+				i--;
+				changed = true;
+			}
+
+		} else if (this.nodes.length > 0) {
+
+			this.nodes = [];
+			changed = true;
+
+		}
+
+
+		return changed;
+
+	}
+
+	/**
+	 * Called to synchonide the live connections with the information from the MOV.
+	 */
+	private synchronizeConnections(page: MinConnectionPage): boolean {
+
+		var changed = false;
+		if (page.connections != null && page.connections.length > 0) {
+
+			PAGE: for (var connection of page.connections) {
+
+				for (var edge of this.connections) {
+
+					if (edge.id === connection.id) {
+
+						continue PAGE;
+					}
+
+				}
+
+				var edge = new LiveConnection(connection);
+				this.connections.push(edge);
+				changed = true;
+			}
+
+			CONNECTION: for (var i = 0; i < this.connections.length; i++) {
+
+				var connectionId = this.connections[i].id;
+				for (var connection of page.connections) {
+
+					if (connection.id === connectionId) {
+
+						continue CONNECTION;
+					}
+
+				}
+
+				this.connections.splice(i, 1);
+				i--;
+				changed = true;
+			}
+
+
+		} else if (this.connections.length > 0) {
+
+			this.connections = [];
+			changed = true;
+
+		}
+
+
+		return changed;
 	}
 
 	/**
@@ -294,11 +362,44 @@ export class StatusComponent implements OnInit, OnDestroy {
 		} else if (event.fConnectionIds.length > 0) {
 
 			const selectedConnectionId = event.fConnectionIds[0];
+			for (var edge of this.connections) {
 
-		} else {
+				if (edge.id === selectedConnectionId) {
 
+					this.selected = edge;
+				}
+			}
 		}
 		this.updatedGraph();
 	}
 
+	/**
+	 * Check if the elemenbt is selected.
+	 */
+	public isSelected(value: LiveNode | LiveConnection | null | undefined) {
+
+		if (value != null && this.selected != null) {
+
+			return this.selected.id === value.id;
+
+		} else {
+
+			return false;
+		}
+	}
+
+	/**
+	 * Return the color for a defined conneciton in the topology.
+	 */
+	public colorFor(connection: LiveConnection): string {
+
+		if (this.isSelected(connection)) {
+
+			return 'var(--color-red-800)';
+
+		} else {
+
+			return 'var(--color-sky-400)';
+		}
+	}
 }
