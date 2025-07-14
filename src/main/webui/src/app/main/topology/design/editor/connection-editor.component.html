@@ -19,9 +19,9 @@
 		<mat-form-field> <mat-label
 			i18n="The label to select the type of connection@@main_topology_design_connection-editor_typee-label">Type</mat-label>
 		<mat-select formControlName="type"> <mat-option
-			value="STRAIGHT">Draw a straight line.</mat-option> <mat-option
-			value="BEZIER">Draw a bezier curve.</mat-option> <mat-option
-			value="SEGMENT">Draw segements lines.</mat-option> </mat-select> <mat-error
+			value="STRAIGHT" i18n="Name for the straight edge type@@c_edge_type_straight">Draw a straight line.</mat-option> <mat-option
+			value="BEZIER" i18n="Name for the bezier edge type@@c_edge_type_bezier">Draw a bezier curve.</mat-option> <mat-option
+			value="SEGMENT" i18n="Name for the segments edge type@@c_edge_type_segments">Draw segements lines.</mat-option> </mat-select> <mat-error
 			*ngIf="connectionForm.controls.type.hasError('required')"
 			i18n="The error message if no type of connection is selected@@main_topology_design_connection-editor_type-required-error">You
 		must select a type of connection.</mat-error> </mat-form-field>
