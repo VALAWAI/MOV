@@ -7,6 +7,7 @@
 */
 
 import { Injectable } from '@angular/core';
+import { EFConnectionType } from '@foblex/flow';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
@@ -48,6 +49,16 @@ export class ConfigService {
 	private liveShowGridSubject: BehaviorSubject<boolean>;
 
 	/**
+	 * The type of edges in the live graph.
+	 */
+	private liveEdgeTypeSubject: BehaviorSubject<EFConnectionType>;
+
+	/**
+	 * The color of edges in the live graph.
+	 */
+	private liveEdgeColorSubject: BehaviorSubject<string>;
+
+	/**
 	 * Create the service.
 	 */
 	constructor() {
@@ -58,6 +69,8 @@ export class ConfigService {
 		this.editorAutoloadLastTopologySubject = new BehaviorSubject<boolean>(this.editorAutoloadLastTopology);
 		this.editorLastStoredTopologyIdSubject = new BehaviorSubject<string | null>(this.editorLastStoredTopologyId);
 		this.liveShowGridSubject = new BehaviorSubject<boolean>(this.liveShowGrid);
+		this.liveEdgeTypeSubject = new BehaviorSubject<EFConnectionType>(this.liveEdgeType);
+		this.liveEdgeColorSubject = new BehaviorSubject<string>(this.liveEdgeColor);
 	}
 
 	/**
@@ -227,6 +240,68 @@ export class ConfigService {
 
 		localStorage.setItem('LIVE_SHOW_GRID', String(view));
 		this.liveShowGridSubject.next(view);
+
+	}
+
+	/**
+	 * Return the observable of the live edge type. 
+	 */
+	public get liveEdgeType$(): Observable<EFConnectionType> {
+
+		return this.liveEdgeTypeSubject.asObservable();
+	}
+
+	public get liveEdgeType(): EFConnectionType {
+
+		var item = localStorage.getItem('LIVE_EDGE_TYPE');
+		if (item) {
+
+			item = item.toLowerCase();
+			if (item == EFConnectionType.SEGMENT) {
+
+				return EFConnectionType.SEGMENT;
+
+			} else if (item == EFConnectionType.STRAIGHT) {
+
+				return EFConnectionType.STRAIGHT;
+			}
+		}
+
+		return EFConnectionType.BEZIER;
+
+	}
+
+	/**
+	 * Store the live edge type.
+	 */
+	public set liveEdgeType(type: EFConnectionType) {
+
+		localStorage.setItem('LIVE_EDGE_TYPE', String(type));
+		this.liveEdgeTypeSubject.next(type);
+
+	}
+
+	/**
+	 * Return the observable of the live edge color. 
+	 */
+	public get liveEdgeColor$(): Observable<string> {
+
+		return this.liveEdgeColorSubject.asObservable();
+	}
+
+	public get liveEdgeColor(): string {
+
+		return localStorage.getItem('LIVE_EDGE_COLOR') || "#74d4ff";
+
+	}
+
+	/**
+	 * Store the live edge color.
+	 */
+	public set liveEdgeColor(color: string) {
+
+		localStorage.setItem('LIVE_EDGE_COLOR', String(color));
+		this.liveEdgeColorSubject.next(color);
 
 	}
 

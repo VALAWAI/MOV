@@ -1,8 +1,9 @@
 <div
 	class="p-2 gap-7 flex flex-col items-center justify-center content-center">
-	<form [formGroup]="confForm" class="flex flex-col max-w-xl w-full gap-3">
+	<form [formGroup]="confForm"
+		class="flex flex-col max-w-xl w-full gap-3">
 		<mat-form-field> <mat-label
-			i18n="The label of the editor of the polling time@@main_config_polling-time-label">Polling
+			i18n="The label of the polling time@@main_config_polling-time-label">Polling
 		time</mat-label> <input matInput formControlName="pollingTime" class="w-full p-2"
 			type="number"> <mat-hint
 			i18n="The hint of the polling time@@main_config_polling-time-hint">The
@@ -11,7 +12,7 @@
 			i18n="The error message if no polling time is defined@@main_config_polling-time-required-error">The
 		polling time must be equals or more than 1000.</mat-error> } </mat-form-field>
 		<mat-form-field> <mat-label
-			i18n="The label of the editor of the polling iterations@@main_config_polling-iterations-label">Polling
+			i18n="The label of the polling iterations@@main_config_polling-iterations-label">Polling
 		iterations</mat-label> <input matInput formControlName="pollingIterations"
 			class="w-full p-2" type="number"> <mat-hint
 			i18n="The hint of the polling iterations@@main_config_polling-iterations-hint">The
@@ -19,15 +20,68 @@
 		@if(confForm.controls.pollingIterations.hasError('min')){ <mat-error
 			i18n="The error message if no polling iterations is defined@@main_config_polling-iterations-required-error">The
 		polling iterations must be equals or more than 10.</mat-error> } </mat-form-field>
-		<mat-slide-toggle formControlName="editorShowGrid"
-			i18n="The label to show the grid in the editor@@main_config_editor-show-grid-label"
-			color="primary"> Show the grid in the editor. </mat-slide-toggle>
-		<mat-slide-toggle formControlName="editorAutoloadLastTopology"
-			i18n="The label to autoload the last topology on the editor@@main_config_editor-autoload-last-topology"
-			color="primary"> Autoload the last topology when
-		open the editor. </mat-slide-toggle>
-		<mat-slide-toggle formControlName="liveShowGrid"
-			i18n="The label to show the grid in the live@@main_config_live-show-grid-label"
-			color="primary"> Show the grid in the live. </mat-slide-toggle>
+		<fieldset class="w-full border-base-300 rounded-box border p-4 ">
+			<legend
+				i18n="The legend to edit the topology editor configuration@@main_config_topology-editor-legend"
+				class="p-2"> Topology editor</legend>
+			<div class="w-full flex flex-col gap-3">
+				<div
+					i18n="The desciprion of the topology editor configuration@@main_config_topology-editor-description">
+					In this section you can modify the parameters used into the <a
+						class="text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out"
+						routerLink="/main/topology/design/editor">topology editor</a>.
+				</div>
+				<mat-slide-toggle formControlName="editorShowGrid"
+					i18n="The label to show the grid in the editor@@main_config_editor-show-grid-label"
+					color="primary"> Show the grid in the editor. </mat-slide-toggle>
+				<mat-slide-toggle formControlName="editorAutoloadLastTopology"
+					i18n="The label to autoload the last topology on the editor@@main_config_editor-autoload-last-topology"
+					color="primary"> Autoload the last topology when
+				open the editor. </mat-slide-toggle>
+				<mat-form-field> <mat-label
+					i18n="The label of the editor of the polling time@@main_config_editor-last-topology-id-label">Last
+				topology identifier </mat-label> <input matInput
+					formControlName="editorLastStoredTopologyId" class="w-full p-2"
+					type="string">
+				@if(confForm.controls.editorLastStoredTopologyId.hasError('pattern')){
+				<mat-error
+					i18n="The error message if the last topology identifier is not a valid@@main_config_last-topology-id-pattern-error">The
+				identifier is not valid.</mat-error> } </mat-form-field>
+
+			</div>
+		</fieldset>
+
+		<fieldset class="w-full border-base-300 rounded-box border p-4 ">
+			<legend
+				i18n="The legend to edit the live graph configuration@@main_config_live-graph-legend"
+				class="p-2"> Live topology graph </legend>
+			<div class="w-full flex flex-col gap-3">
+				<div
+					i18n="The desciprion of the live graph configuration@@main_config_live-graph-description">
+					In this section you can modify the parameters used to draw the
+					graph of the <a
+						class="text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out"
+						routerLink="/main/topology/live/status">live topology</a>.
+				</div>
+				<mat-slide-toggle formControlName="liveShowGrid"
+					i18n="The label to show the grid in the live@@main_config_live-show-grid-label"
+					color="primary"> Show the grid in the live. </mat-slide-toggle>
+				<mat-form-field> <mat-label
+					i18n="The label of the live edge type@@main_config_editor-live-edge-type-label">Edge
+				type</mat-label> <mat-select formControlName="liveEdgeType"> <mat-option
+					value="straight"
+					i18n="Name for the straight edge type@@c_edge_type_straight">Draw
+				a straight line.</mat-option> <mat-option value="bezier"
+					i18n="Name for the bezier edge type@@c_edge_type_bezier">Draw
+				a bezier curve.</mat-option> <mat-option value="segment"
+					i18n="Name for the segments edge type@@c_edge_type_segments">Draw
+				segements lines.</mat-option> </mat-select> </mat-form-field>
+				<mat-form-field> <mat-label
+					i18n="The label of the live edge color@@main_config_live-edge-color-label">Edge
+				color </mat-label> <input matInput formControlName="liveEdgeColor"
+					class="w-full p-2" type="color"> </mat-form-field>
+
+			</div>
+		</fieldset>
 	</form>
 </div>

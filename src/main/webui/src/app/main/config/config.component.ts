@@ -15,6 +15,9 @@ import { ConfigService } from '@app/shared';
 import { MainService } from 'src/app/main';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
+import { RouterModule } from '@angular/router';
+import { EFConnectionType } from '@foblex/flow';
+import { MatSelectModule } from '@angular/material/select';
 
 /**
  * Thei component allow to edit the configurtion of the MOV.
@@ -27,7 +30,9 @@ import { Subscription } from 'rxjs';
 		ReactiveFormsModule,
 		MatFormFieldModule,
 		MatInputModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		RouterModule,
+		MatSelectModule
 	],
 	templateUrl: './config.component.html'
 })
@@ -62,7 +67,10 @@ export class ConfigComponent implements OnInit, OnDestroy {
 			pollingIterations: this.fb.control<number>(this.conf.pollingIterations, Validators.min(10)),
 			editorShowGrid: this.fb.control<boolean>(this.conf.editorShowGrid),
 			editorAutoloadLastTopology: this.fb.control<boolean>(this.conf.editorAutoloadLastTopology),
-			liveShowGrid: this.fb.control<boolean>(this.conf.liveShowGrid)
+			editorLastStoredTopologyId: this.fb.control<string | null>(this.conf.editorLastStoredTopologyId, Validators.pattern(/[0-9a-fA-F]{24}}/)),
+			liveShowGrid: this.fb.control<boolean>(this.conf.liveShowGrid),
+			liveEdgeType: this.fb.control<EFConnectionType>(this.conf.liveEdgeType),
+			liveEdgeColor: this.fb.control<string>(this.conf.liveEdgeColor),
 		}
 	);
 
@@ -78,6 +86,9 @@ export class ConfigComponent implements OnInit, OnDestroy {
 		this.subscribetoChangesTo(this.confForm.controls.editorShowGrid, (value) => { this.conf.editorShowGrid = value; });
 		this.subscribetoChangesTo(this.confForm.controls.editorAutoloadLastTopology, (value) => { this.conf.editorAutoloadLastTopology = value; });
 		this.subscribetoChangesTo(this.confForm.controls.liveShowGrid, (value) => { this.conf.liveShowGrid = value; });
+		this.subscribetoChangesTo(this.confForm.controls.editorLastStoredTopologyId, (value) => { this.conf.editorLastStoredTopologyId = value; });
+		this.subscribetoChangesTo(this.confForm.controls.liveEdgeType, (value) => { this.conf.liveEdgeType = value; });
+		this.subscribetoChangesTo(this.confForm.controls.liveEdgeColor, (value) => { this.conf.liveEdgeColor = value; });
 	}
 
 	/**
