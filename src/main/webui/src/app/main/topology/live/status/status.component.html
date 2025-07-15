@@ -16,7 +16,8 @@
 				<div
 					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 					<app-content-type-badge [type]="node.type"></app-content-type-badge>
-					<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
+					<div
+						class="grow text-wrap font-bold text-lg max-w-48 wrap-break-word">{{node.name}}</div>
 				</div>
 				@for(endpoint of node.endpoints;track endpoint.id){
 				@if(endpoint.isSource){
@@ -40,8 +41,7 @@
 				[fConnectionId]="connection.id" [fOutputId]="connection.sourceId"
 				[fInputId]="connection.targetId"
 				[fStartColor]="colorFor(connection)"
-				[fEndColor]="colorFor(connection)"
-				class="hover:stroke-7"
+				[fEndColor]="colorFor(connection)" class="hover:stroke-7"
 				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
 				[fOffset]="30"> <app-connection-markers
 				[color]="connection.isEnabled?'fill-sky-400':'fill-gray-200'"

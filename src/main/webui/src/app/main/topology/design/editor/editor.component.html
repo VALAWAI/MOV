@@ -162,7 +162,8 @@
 				<div
 					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 					<app-content-type-badge [type]="node.type"></app-content-type-badge>
-					<div class="grow text-wrap font-bold text-lg">{{node.name}}</div>
+					<div
+						class="grow text-wrap font-bold text-lg max-w-48 wrap-break-word">{{node.name}}</div>
 					<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
 						<mat-icon class="text-xs">more_vert</mat-icon>
 					</button>

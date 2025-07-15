@@ -47,8 +47,9 @@ export class DagreGraph {
 
 		return {
 			rankdir: dir,
-			nodesep: 200,
-			ranksep: 200,
+			nodesep: 250,
+			ranksep: 250,
+			edgesep: 250,
 			marginx: 150,
 			marginy: 150
 		} as dagre.GraphLabel;

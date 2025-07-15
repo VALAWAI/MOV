@@ -2,5 +2,5 @@
 <div
 	class="min-w-24 min-h-16 max-w-64 bg-white border rounded-lg hover:border-2"
 	[ngClass]="{'border-indigo-800':type=='C0','border-purple-800':type=='C1','border-sky-800':type=='C2','border-4':isSelected}">
-	<ng-content></ng-content>
+	<ng-content class="!max-w-64 !wrap-break-word"></ng-content>
 </div>
