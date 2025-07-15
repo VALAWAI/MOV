@@ -146,10 +146,14 @@ export class StatusComponent implements OnInit, OnDestroy {
 							{
 								next: graph => {
 
-									graph.horizontal();
+									graph.vertical();
 									for (var node of this.nodes) {
 
 										graph.addNode(node.id, node.width, node.height);
+									}
+									for (var connection of this.connections) {
+
+										graph.addEdge(connection.sourceNodeId, connection.targetNodeId);
 									}
 									graph.layout();
 									for (var node of this.nodes) {
@@ -245,6 +249,17 @@ export class StatusComponent implements OnInit, OnDestroy {
 				}
 
 				var edge = new LiveConnection(connection);
+				for (var node of this.nodes) {
+
+					if (node.isNodeChannel(edge.sourceId)) {
+
+						edge.sourceNodeId = node.id;
+					}
+					if (node.isNodeChannel(edge.targetId)) {
+
+						edge.targetNodeId = node.id;
+					}
+				}
 				this.connections.push(edge);
 				changed = true;
 			}

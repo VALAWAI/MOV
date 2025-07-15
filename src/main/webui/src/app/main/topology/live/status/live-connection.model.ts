@@ -14,6 +14,16 @@ import { MinConnection } from '@app/shared/mov-api';
 export class LiveConnection {
 
 	/**
+	 * The identifier of the source node of teh connection.
+	 */
+	public sourceNodeId: string = 'node_0';
+
+	/**
+	 * The identifier of the target node of teh connection.
+	 */
+	public targetNodeId: string = 'node_0';
+
+	/**
 	 * Create the connection.
 	 */
 	constructor(
@@ -34,7 +44,7 @@ export class LiveConnection {
 	 * The idetifier of the target.
 	 */
 	get targetId(): string {
-		
+
 		return this.connection.target || '';
 	}
 
@@ -50,7 +60,7 @@ export class LiveConnection {
 	 * Check if teh connection is enaled.
 	 */
 	get isEnabled(): boolean {
-		
+
 		return this.connection.enabled == true || false;
 	}
 
