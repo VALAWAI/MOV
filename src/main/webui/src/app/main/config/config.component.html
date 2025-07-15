@@ -77,10 +77,23 @@
 					i18n="Name for the segments edge type@@c_edge_type_segments">Draw
 				segements lines.</mat-option> </mat-select> </mat-form-field>
 				<mat-form-field> <mat-label
-					i18n="The label of the live edge color@@main_config_live-edge-color-label">Enabled
-				conneciton color </mat-label> <input matInput formControlName="liveEdgeColor"
-					class="w-full p-2" type="color"> </mat-form-field>
-
+					i18n="The label of the live max nodes@@main_config_live-max-nodes-label">Max
+				nodes </mat-label> <input matInput formControlName="liveMaxNodes"
+					class="w-full p-2" type="number"> <mat-hint
+					i18n="The hint of the polling time@@main_config_live-max-nodes-hint">The
+				maximum number of nodes to view in the graph.</mat-hint>
+				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+					i18n="The error message if no polling time is defined@@main_config_live-max-nodes-min-error">The
+				number of nodes can not be less than 100.</mat-error> } </mat-form-field>
+				<mat-form-field> <mat-label
+					i18n="The label of the live max edges@@main_config_live-max-edges-label">Max
+				edges </mat-label> <input matInput formControlName="liveMaxEdges"
+					class="w-full p-2" type="number"> <mat-hint
+					i18n="The hint of the polling time@@main_config_live-max-edges-hint">The
+				maximum number of edges to view in the graph.</mat-hint>
+				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+					i18n="The error message if no polling time is defined@@main_config_live-max-edges-min-error">The
+				number of edges can not be less than 100.</mat-error> } </mat-form-field>
 			</div>
 		</fieldset>
 	</form>

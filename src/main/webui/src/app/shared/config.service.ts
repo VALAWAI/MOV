@@ -54,11 +54,6 @@ export class ConfigService {
 	private liveEdgeTypeSubject: BehaviorSubject<EFConnectionType>;
 
 	/**
-	 * The color of edges in the live graph.
-	 */
-	private liveEdgeColorSubject: BehaviorSubject<string>;
-
-	/**
 	 * The subject to notify the changes on the live graph maximum nodes to show.
 	 */
 	private liveMaxNodesSubject: BehaviorSubject<number>;
@@ -80,7 +75,6 @@ export class ConfigService {
 		this.editorLastStoredTopologyIdSubject = new BehaviorSubject<string | null>(this.editorLastStoredTopologyId);
 		this.liveShowGridSubject = new BehaviorSubject<boolean>(this.liveShowGrid);
 		this.liveEdgeTypeSubject = new BehaviorSubject<EFConnectionType>(this.liveEdgeType);
-		this.liveEdgeColorSubject = new BehaviorSubject<string>(this.liveEdgeColor);
 		this.liveMaxNodesSubject = new BehaviorSubject<number>(this.liveMaxNodes);
 		this.liveMaxEdgesSubject = new BehaviorSubject<number>(this.liveMaxEdges);
 	}
@@ -293,29 +287,6 @@ export class ConfigService {
 
 	}
 
-	/**
-	 * Return the observable of the live edge color. 
-	 */
-	public get liveEdgeColor$(): Observable<string> {
-
-		return this.liveEdgeColorSubject.asObservable();
-	}
-
-	public get liveEdgeColor(): string {
-
-		return localStorage.getItem('LIVE_EDGE_COLOR') || "#74d4ff";
-
-	}
-
-	/**
-	 * Store the live edge color.
-	 */
-	public set liveEdgeColor(color: string) {
-
-		localStorage.setItem('LIVE_EDGE_COLOR', String(color));
-		this.liveEdgeColorSubject.next(color);
-
-	}
 
 	/**
 	 * Return the observable of the live max nodes. 

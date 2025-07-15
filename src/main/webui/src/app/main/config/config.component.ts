@@ -70,7 +70,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
 			editorLastStoredTopologyId: this.fb.control<string | null>(this.conf.editorLastStoredTopologyId, Validators.pattern(/[0-9a-fA-F]{24}}/)),
 			liveShowGrid: this.fb.control<boolean>(this.conf.liveShowGrid),
 			liveEdgeType: this.fb.control<EFConnectionType>(this.conf.liveEdgeType),
-			liveEdgeColor: this.fb.control<string>(this.conf.liveEdgeColor),
+			liveMaxNodes: this.fb.control<number>(this.conf.liveMaxNodes, Validators.min(100)),
+			liveMaxEdges: this.fb.control<number>(this.conf.liveMaxEdges, Validators.min(100)),
 		}
 	);
 
@@ -88,7 +89,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
 		this.subscribetoChangesTo(this.confForm.controls.liveShowGrid, (value) => { this.conf.liveShowGrid = value; });
 		this.subscribetoChangesTo(this.confForm.controls.editorLastStoredTopologyId, (value) => { this.conf.editorLastStoredTopologyId = value; });
 		this.subscribetoChangesTo(this.confForm.controls.liveEdgeType, (value) => { this.conf.liveEdgeType = value; });
-		this.subscribetoChangesTo(this.confForm.controls.liveEdgeColor, (value) => { this.conf.liveEdgeColor = value; });
+		this.subscribetoChangesTo(this.confForm.controls.liveMaxNodes, (value) => { this.conf.liveMaxNodes = value; });
+		this.subscribetoChangesTo(this.confForm.controls.liveMaxEdges, (value) => { this.conf.liveMaxEdges = value; });
 	}
 
 	/**
