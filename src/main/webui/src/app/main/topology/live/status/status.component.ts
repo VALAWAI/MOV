@@ -14,7 +14,7 @@ import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } 
 import { MainService } from 'src/app/main';
 import { LiveNode } from './live-node.model';
 import { GraphModule } from '@app/shared/graph/graph.module';
-import { combineLatest, Subscription, switchMap, timer, toArray } from 'rxjs';
+import { combineLatest, Subscription, switchMap, timer } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
 import { MinComponentPage, MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { DagreLayoutService } from '@app/shared/graph';

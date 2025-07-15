@@ -205,6 +205,7 @@
 				[fOutputId]="connection.sourceId" [fInputId]="connection.targetId"
 				[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
 				[fEndColor]="topology.endColorFor(connection,isSelected(connection))"
+				class="hover:stroke-7"
 				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
 				[fOffset]="30"> <app-connection-markers
 				[color]="connection.isControl?'fill-sky-400':'fill-indigo-400'"
