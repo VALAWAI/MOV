@@ -35,11 +35,8 @@
 		<div class="text-left">{{connection.source?.channel?.name}}</div>
 		<div class="text-left pl-7 col-span-2"
 			*ngIf="connection.source?.channel?.description">{{connection.source?.channel?.description}}</div>
-		<div class="text-left pl-11 font-bold"
-			*ngIf="connection.source?.channel?.publish"
-			i18n="The label of the connection source node channel publish@@main_topology_connections_show_node-channel-publish-label">Publish</div>
-		<ngx-json-viewer *ngIf="connection.source?.channel?.publish"
-			[json]="connection.source?.channel?.publish"></ngx-json-viewer>
+		<app-channels-view class="text-left pl-7 col-span-2"
+			[channels]="connection.source?.channel"></app-channels-view>
 		<div class="text-left font-bold col-span-2"
 			i18n="The label of the connection target attribute@@main_topology_connections_show_target-label">Target</div>
 		<div class="text-left pl-7 font-bold"
@@ -62,19 +59,21 @@
 		<div class="text-left pl-11 font-bold"
 			*ngIf="connection.target?.channel?.subscribe"
 			i18n="The label of the connection target node channel subscribe@@main_topology_connections_show_node-channel-subscribe-label">Subscribe</div>
-		<ngx-json-viewer *ngIf="connection.target?.channel?.subscribe"
-			[json]="connection.target?.channel?.subscribe"></ngx-json-viewer>
-		<div class="text-left font-bold col-span-2" *ngIf="connection.subscriptions"
+		<app-channels-view class="text-left pl-7 col-span-2"
+			[channels]="connection.target?.channel"></app-channels-view>
+		<div class="text-left font-bold col-span-2"
+			*ngIf="connection.subscriptions"
 			i18n="The label of the connection subscriptions attribute@@main_topology_connections_show_subscriptions-label">Subscriptions</div>
-		<div class="text-left pl-11 col-span-2" *ngIf="connection.subscriptions">
+		<div class="text-left pl-11 col-span-2"
+			*ngIf="connection.subscriptions">
 			<div *ngFor="let subscrition of connection.subscriptions">
 				{{subscrition.channel?.name}}
 				<button mat-icon-button color="primary"
-				[routerLink]="['/main/topology/live/components',subscrition.component?.id,'show']"
-				[queryParams]="{'connectionId':connection.id}">
-				<mat-icon>link</mat-icon>
-			</button>
-			</div> 
+					[routerLink]="['/main/topology/live/components',subscrition.component?.id,'show']"
+					[queryParams]="{'connectionId':connection.id}">
+					<mat-icon>link</mat-icon>
+				</button>
+			</div>
 		</div>
 	</div>
 	<div class="gap-3 flex flex-row">

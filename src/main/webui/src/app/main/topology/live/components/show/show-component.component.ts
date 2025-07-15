@@ -16,22 +16,22 @@ import { Subscription } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import { LoadingComponent } from '@app/shared/loading';
 import { ComponentViewComponent } from '@app/shared/component/view';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 
 @Component({
 	standalone: true,
-    selector: 'app-components-show',
-    imports: [
-		NgIf,
-        MatButton,
-        LoadingComponent,
+	selector: 'app-components-show',
+	imports: [
+		CommonModule,
+		MatButton,
+		LoadingComponent,
 		ComponentViewComponent,
 		AsyncPipe,
 		RouterLink
-    ],
-    templateUrl: './show-component.component.html',
-    styleUrl: './show-component.component.css'
+	],
+	templateUrl: './show-component.component.html',
+	styleUrl: './show-component.component.css'
 })
 export class ShowComponentComponent extends AbstractComponentComponent implements OnDestroy {
 

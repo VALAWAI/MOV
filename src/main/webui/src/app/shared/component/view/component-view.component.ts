@@ -6,11 +6,11 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { ChannelsViewComponent } from '@app/shared/channels-view';
 import { LoadingComponent } from '@app/shared/loading';
 import { TimestampPipe } from '@app/shared/timestamp';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { Component as MOVComponent } from 'src/app/shared/mov-api';
 
 @Component({
@@ -20,10 +20,9 @@ import { Component as MOVComponent } from 'src/app/shared/mov-api';
 		CommonModule,
 		LoadingComponent,
 		TimestampPipe,
-		NgxJsonViewerModule
+		ChannelsViewComponent
 	],
-	templateUrl: './component-view.component.html',
-	styleUrl: './component-view.component.css'
+	templateUrl: './component-view.component.html'
 })
 export class ComponentViewComponent {
 

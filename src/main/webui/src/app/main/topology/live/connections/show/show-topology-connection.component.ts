@@ -13,30 +13,28 @@ import { MovApiService } from 'src/app/shared/mov-api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
 import { Subscription } from 'rxjs';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { LoadingComponent } from '@app/shared/loading';
 import { TimestampPipe } from '@app/shared/timestamp';
+import { ChannelsViewComponent } from '@app/shared/channels-view';
 
 
 @Component({
 	standalone: true,
 	selector: 'app-topology-connections-show',
 	imports: [
-		NgIf,
+		CommonModule,
 		MatIcon,
 		RouterLink,
 		MatButton,
-		NgxJsonViewerModule,
-		NgFor,
 		LoadingComponent,
 		TimestampPipe,
-		AsyncPipe
+		AsyncPipe,
+		ChannelsViewComponent
 	],
-	templateUrl: './show-topology-connection.component.html',
-	styleUrls: ['./show-topology-connection.component.css']
+	templateUrl: './show-topology-connection.component.html'
 })
 export class ShowTopologyConnectionComponent extends AbstractTopologyConnectionComponent implements OnDestroy {
 

@@ -76,26 +76,7 @@
 			<legend class="text-left font-bold p-2"
 				i18n="The label of the component channels attribute@@main_topology_design_components_view_channels-label">
 				Channels </legend>
-			<div class="flex flex-col gap-2 w-full h-full">
-				@for(channel of component.channels;track channel.name){
-				<div
-					class="p-2 odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900/50 dark:even:bg-gray-950">
-					<div class="text-lg font-bold">{{channel.name}}</div>
-					<div class="italic pl-4">{{channel.description}}</div>
-					@if(channel.subscribe !=null){
-					<div class="font-bold pl-4"
-						i18n="The label of the component channel subscribe@@main_topology_design_components_view_channel-subscribe-label">Subscribe</div>
-					<ngx-json-viewer class="pl-6" [json]="channel.subscribe"></ngx-json-viewer>
-
-					} @else if(channel.publish !=null){
-					<div class="font-bold pl-4"
-						i18n="The label of the component channel publish@@main_topology_design_components_view_channel-publish-label">Publish</div>
-					<ngx-json-viewer class="pl-6" [json]="channel.publish"></ngx-json-viewer>
-
-					}
-				</div>
-				}
-			</div>
+			<app-channels-view [channels]="component.channels"></app-channels-view>
 		</fieldSet>
 		}
 	</div>

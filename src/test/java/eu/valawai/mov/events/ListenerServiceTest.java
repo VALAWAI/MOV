@@ -96,7 +96,7 @@ public class ListenerServiceTest extends MovEventTestCase {
 	 * @throws InterruptedException If the thread is interrupted.
 	 */
 	@Test
-	public void shoulNotOpenTwoTimesTheSameChanel() throws InterruptedException {
+	public void shoulNotOpenTwoTimesTheSameChannel() throws InterruptedException {
 
 		final var inputQueueName = ValueGenerator.nextPattern("queue_name_{0}");
 		this.listener.open(inputQueueName).subscribe().with(msg -> Log.error("Unexpected message"));

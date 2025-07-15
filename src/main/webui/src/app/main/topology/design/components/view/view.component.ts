@@ -11,13 +11,13 @@ import { ComponentDefinition } from '@app/shared/mov-api';
 import { MainService } from 'src/app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
 import { CommonModule } from '@angular/common';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { VersionInfoViewComponent } from '@app/shared/version-info/';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoadingComponent } from '@app/shared/loading';
+import { ChannelsViewComponent } from '@app/shared/channels-view';
 
 /**
  * This is used to show the detail of a component in the library.
@@ -27,13 +27,13 @@ import { LoadingComponent } from '@app/shared/loading';
 	selector: 'app-topology-design-component-view',
 	imports: [
 		CommonModule,
-		NgxJsonViewerModule,
 		VersionInfoViewComponent,
 		MatButtonModule,
 		MatIconModule,
 		RouterModule,
 		MatMenuModule,
-		LoadingComponent
+		LoadingComponent,
+		ChannelsViewComponent
 	],
 	templateUrl: './view.component.html'
 })
