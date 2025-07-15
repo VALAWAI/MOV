@@ -50,7 +50,7 @@
         <source>Cannot get the component information</source>
         <target state="translated">Cannot get the component information</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/abstract-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/abstract-component.component.ts</context>
           <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
@@ -58,7 +58,7 @@
         <source>Type</source>
         <target state="translated">Type</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">7,8</context>
         </context-group>
       </trans-unit>
@@ -66,7 +66,7 @@
         <source>You must select the type of component.</source>
         <target state="translated">You must select the type of component.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">12,14</context>
         </context-group>
       </trans-unit>
@@ -74,7 +74,7 @@
         <source>Name</source>
         <target state="translated">Name</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
@@ -82,7 +82,7 @@
         <source>You must write the name of component.</source>
         <target state="translated">You must write the name of component.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">20,22</context>
         </context-group>
       </trans-unit>
@@ -90,7 +90,7 @@
         <source>Version</source>
         <target state="translated">Version</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">26,28</context>
         </context-group>
       </trans-unit>
@@ -98,7 +98,7 @@
         <source>Ex. c0_hello_world</source>
         <target state="translated">Ex. c0_hello_world</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
@@ -106,7 +106,7 @@
         <source>You must write the version of component.</source>
         <target state="translated">You must write the version of component.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">31,33</context>
         </context-group>
       </trans-unit>
@@ -114,7 +114,7 @@
         <source>The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
         <target state="translated">The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
@@ -122,7 +122,7 @@
         <source>You must write the aync of component.</source>
         <target state="translated">You must write the aync of component.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">41,44</context>
         </context-group>
       </trans-unit>
@@ -130,7 +130,7 @@
         <source>Register</source>
         <target state="translated">Register</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">45,47</context>
         </context-group>
       </trans-unit>
@@ -138,7 +138,7 @@
         <source>Register a new component</source>
         <target state="translated">Register a new component</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
           <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
@@ -146,7 +146,7 @@
         <source>Cananot register the component</source>
         <target state="translated">Cannot register the component</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
           <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
@@ -154,7 +154,7 @@
         <source>The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
         <target state="translated">The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
@@ -162,7 +162,7 @@
         <source>Ex. c0_hello_world</source>
         <target state="translated">Ex. c0_hello_world</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit>

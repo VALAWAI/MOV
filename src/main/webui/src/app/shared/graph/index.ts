@@ -6,8 +6,9 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-export { GraphModule } from './graph.module';
-export { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
 export { ComponentTypeBadgeComponent } from './component-type-badge.component';
+export { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
+export { ConnectionMarkersComponent } from './connection-markers.component';
 export { DagreLayoutService } from './dagre-layout.service';
-export { GraphEdgeComponent } from './graph-edge.component';
+export { GraphModule } from './graph.module';
+export { ToConnectionTypePipe } from './to-connection-type.pipe';

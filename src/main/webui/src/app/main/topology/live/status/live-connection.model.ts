@@ -34,6 +34,7 @@ export class LiveConnection {
 	 * The idetifier of the target.
 	 */
 	get targetId(): string {
+		
 		return this.connection.target || '';
 	}
 
@@ -43,6 +44,14 @@ export class LiveConnection {
 	public get id(): string {
 
 		return this.connection.id || 'connection_0';
+	}
+
+	/**
+	 * Check if teh connection is enaled.
+	 */
+	get isEnabled(): boolean {
+		
+		return this.connection.enabled == true || false;
 	}
 
 

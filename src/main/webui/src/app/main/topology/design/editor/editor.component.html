@@ -114,7 +114,7 @@
 				i18n="The menu label to change the layout@@main_topology_editor-menu-layouts">Layouts</span>
 		</button>
 		</mat-menu>
-		<mat-menu #layoutsMenu="matMenu">  
+		<mat-menu #layoutsMenu="matMenu">
 		<button mat-menu-item (click)="changeLayout('horizontal')">
 			<span
 				i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
@@ -123,7 +123,7 @@
 			<span
 				i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
 		</button>
-		  </mat-menu>
+		</mat-menu>
 	</div>
 	<ng-template #c0PreviewTemplate>
 	<div
@@ -157,7 +157,8 @@
 				[fNodePosition]="node.position"
 				(fNodePositionChange)="updatedNodePosition(node.id,$event)">
 				<app-component-type-node-container [type]="node.type"
-					[isSelected]="node.id === selectedElement?.id" (width)="node.width=$event" (height)="node.height=$event">
+					[isSelected]="node.id === selectedElement?.id"
+					(width)="node.width=$event" (height)="node.height=$event">
 				<div
 					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
 					<app-content-type-badge [type]="node.type"></app-content-type-badge>
@@ -205,26 +206,10 @@
 				[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
 				[fEndColor]="topology.endColorFor(connection,isSelected(connection))"
 				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
-				[fOffset]="30"> <svg viewBox="0 0 10 10" fMarker
-				type="f-connection-marker-start" [height]="10" [width]="10"
-				[refX]="5" [refY]="5">
-        <circle cx="5" cy="5" r="4" stroke="none"
-					[ngClass]="{'fill-sky-400':connection.isControl,'fill-indigo-400':!connection.isControl}"></circle> 
-        </svg> <svg viewBox="0 0 10 10" fMarker
-				 [height]="10" [width]="10"
-				[refX]="5" [refY]="5">
-        <circle cx="5" cy="5" r="4" stroke="none"
-					[ngClass]="{'fill-sky-800':connection.isControl,'fill-indigo-800':!connection.isControl}"></circle>
-        </svg> <svg viewBox="0 0 6 6" fMarker type="f-connection-marker-end"
-				[height]="6" [width]="6" [refX]="6" [refY]="3">
-          <path d="M0,0 L6,3 0,6Z" stroke="none"
-					[ngClass]="{'fill-sky-400':connection.isControl,'fill-indigo-400':!connection.isControl}"></path>
-        </svg> <svg viewBox="0 0 6 6" fMarker
-				type="f-connection-selected-marker-end" [height]="6" [width]="6"
-				[refX]="6" [refY]="3">
-          <path d="M0,0 L6,3 0,6Z" stroke="none"
-					[ngClass]="{'fill-sky-800':connection.isControl,'fill-indigo-800':!connection.isControl}"></path>
-        </svg> </f-connection> } </f-canvas> </f-flow>
+				[fOffset]="30"> <app-connection-markers
+				[color]="connection.isControl?'fill-sky-400':'fill-indigo-400'"
+				[selectedColor]="connection.isControl?'fill-sky-800':'fill-indigo-800'"></app-connection-markers>
+			</f-connection> } </f-canvas> </f-flow>
 		</div>
 	</div>
 	<div class="lg:max-w-sm w-full p-2">

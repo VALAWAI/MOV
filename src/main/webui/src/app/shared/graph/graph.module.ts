@@ -12,8 +12,8 @@ import { CommonModule } from '@angular/common';
 import { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
 import { ComponentTypeBadgeComponent } from './component-type-badge.component';
 import { DagreLayoutService } from './dagre-layout.service';
-import { GraphEdgeComponent } from './graph-edge.component';
 import { ConnectionMarkersComponent } from './connection-markers.component';
+import { ToConnectionTypePipe } from './to-connection-type.pipe';
 
 
 @NgModule({
@@ -21,14 +21,14 @@ import { ConnectionMarkersComponent } from './connection-markers.component';
 		CommonModule,
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
-		GraphEdgeComponent,
-		ConnectionMarkersComponent
+		ConnectionMarkersComponent,
+		ToConnectionTypePipe
 	],
 	exports: [
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
-		GraphEdgeComponent,
-		ConnectionMarkersComponent
+		ConnectionMarkersComponent,
+		ToConnectionTypePipe
 	],
 	providers: [
 		DagreLayoutService

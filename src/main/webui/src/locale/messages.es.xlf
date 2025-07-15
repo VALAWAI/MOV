@@ -51,7 +51,7 @@
         <source>Cannot get the component information</source>
         <target state="translated">No se puede obtener la información del componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/abstract-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/abstract-component.component.ts</context>
           <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
@@ -59,7 +59,7 @@
         <source>Type</source>
         <target state="translated">Tipo</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">7,8</context>
         </context-group>
       </trans-unit>
@@ -67,7 +67,7 @@
         <source>You must select the type of component.</source>
         <target state="translated">Debe seleccionar el tipo de componente.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">12,14</context>
         </context-group>
       </trans-unit>
@@ -75,7 +75,7 @@
         <source>Name</source>
         <target state="translated">Nombre</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
@@ -83,7 +83,7 @@
         <source>Ex. c0_hello_world</source>
         <target state="translated">Por ejemplo: c0_hola_mundo</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit>
@@ -91,7 +91,7 @@
         <source>You must write the name of component.</source>
         <target state="translated">Debe escribir el nombre del componente.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">20,22</context>
         </context-group>
       </trans-unit>
@@ -99,7 +99,7 @@
         <source>Version</source>
         <target state="translated">Versión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">26,28</context>
         </context-group>
       </trans-unit>
@@ -107,7 +107,7 @@
         <source>Ex. c0_hello_world</source>
         <target state="translated">Por ejemplo: c0_hola_mundo</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
@@ -115,7 +115,7 @@
         <source>You must write the version of component.</source>
         <target state="translated">Debe escribir la versión del componente.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">31,33</context>
         </context-group>
       </trans-unit>
@@ -123,7 +123,7 @@
         <source>The version must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
         <target state="translated">La versión debe seguir el patrón<x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>\d+.\d+.\d+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
@@ -131,7 +131,7 @@
         <source>You must write the aync of component.</source>
         <target state="translated">Debe escribir el aync del componente.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">41,44</context>
         </context-group>
       </trans-unit>
@@ -139,7 +139,7 @@
         <source>Register</source>
         <target state="translated">Registros</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">45,47</context>
         </context-group>
       </trans-unit>
@@ -147,7 +147,7 @@
         <source>Register a new component</source>
         <target state="translated">Registrar un nuevo componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
           <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
@@ -155,7 +155,7 @@
         <source>Cananot register the component</source>
         <target state="translated">Cananot registrar el componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
           <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
@@ -163,7 +163,7 @@
         <source>Name or description</source>
         <target state="translated">Nombre o descripción</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">7,9</context>
         </context-group>
       </trans-unit>
@@ -171,7 +171,7 @@
         <source>Order by</source>
         <target state="translated">Ordenar por</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">11,13</context>
         </context-group>
       </trans-unit>
@@ -179,7 +179,7 @@
         <source>Type</source>
         <target state="translated">Tipo</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">13,15</context>
         </context-group>
       </trans-unit>
@@ -187,7 +187,7 @@
         <source>Name</source>
         <target state="translated">Nombre</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
@@ -195,7 +195,7 @@
         <source>Description</source>
         <target state="translated">Descripción</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
       </trans-unit>
@@ -203,7 +203,7 @@
         <source>In reverse order</source>
         <target state="translated">En orden inverso</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">21,23</context>
         </context-group>
       </trans-unit>
@@ -211,7 +211,7 @@
         <source>Filter components by type:</source>
         <target state="translated">Filtrar componentes por tipo:</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">24,26</context>
         </context-group>
       </trans-unit>
@@ -219,7 +219,7 @@
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
         <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Recargar </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">41,44</context>
         </context-group>
       </trans-unit>
@@ -227,7 +227,7 @@
         <source>Type</source>
         <target state="translated">Tipo</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">51,55</context>
         </context-group>
       </trans-unit>
@@ -235,7 +235,7 @@
         <source>Name</source>
         <target state="translated">Nombre</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">57,61</context>
         </context-group>
       </trans-unit>
@@ -243,7 +243,7 @@
         <source>Description</source>
         <target state="translated">Descripción</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">63,67</context>
         </context-group>
       </trans-unit>
@@ -251,7 +251,7 @@
         <source>Actions</source>
         <target state="translated">Acciones</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">69,71</context>
         </context-group>
       </trans-unit>
@@ -259,7 +259,7 @@
         <source>Show</source>
         <target state="translated">Mostrar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">77,79</context>
         </context-group>
       </trans-unit>
@@ -267,7 +267,7 @@
         <source>Unregister</source>
         <target state="translated">Dar de baja</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">80,82</context>
         </context-group>
       </trans-unit>
@@ -275,7 +275,7 @@
         <source>Show connections</source>
         <target state="translated">Mostrar todas las conexiones</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">85,90</context>
         </context-group>
       </trans-unit>
@@ -283,7 +283,7 @@
         <source>Components</source>
         <target state="translated">Componentes</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.ts</context>
           <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
@@ -291,7 +291,7 @@
         <source>Cannot obtain the components</source>
         <target state="translated">No se pueden obtener los componentes</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.ts</context>
           <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
@@ -299,7 +299,7 @@
         <source>Go to components</source>
         <target state="translated">Ir a componentes</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.html</context>
           <context context-type="linenumber">9,12</context>
         </context-group>
       </trans-unit>
@@ -307,7 +307,7 @@
         <source>Show connections</source>
         <target state="translated">Mostrar todas las conexiones</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.html</context>
           <context context-type="linenumber">14,16</context>
         </context-group>
       </trans-unit>
@@ -315,7 +315,7 @@
         <source>Go to the connection</source>
         <target state="translated">Ir a la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.html</context>
           <context context-type="linenumber">18,21</context>
         </context-group>
       </trans-unit>
@@ -323,7 +323,7 @@
         <source>Show Component</source>
         <target state="translated">Ver componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/show/show-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/show/show-component.component.ts</context>
           <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
@@ -331,7 +331,7 @@
         <source>Yes, unregister it!</source>
         <target state="translated">¡Sí, anular el registro!</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.html</context>
           <context context-type="linenumber">16,19</context>
         </context-group>
       </trans-unit>
@@ -339,7 +339,7 @@
         <source>Unregister Component</source>
         <target state="translated">Cancelar el registro del componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
           <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
@@ -347,7 +347,7 @@
         <source>Unregistered the component</source>
         <target state="translated">No registrado el componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
           <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
@@ -691,7 +691,7 @@
         <source>Cannot get the topology connection information</source>
         <target state="translated">No se puede obtener la información de conexión de la topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/abstract-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/abstract-topology-connection.component.ts</context>
           <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
@@ -699,7 +699,7 @@
         <source>Are you sure the disable the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
         <target state="translated">¿Está seguro de deshabilitar la conexión entre <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> y <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">19,22</context>
         </context-group>
       </trans-unit>
@@ -707,7 +707,7 @@
         <source>Cancel</source>
         <target state="translated">Cancelar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">42,47</context>
         </context-group>
       </trans-unit>
@@ -715,7 +715,7 @@
         <source>Yes, enable the connection</source>
         <target state="translated">Sí, habilitar la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">34,36</context>
         </context-group>
       </trans-unit>
@@ -723,7 +723,7 @@
         <source>Yes, disable the connection</source>
         <target state="translated">Sí, desactivar la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">37,39</context>
         </context-group>
       </trans-unit>
@@ -731,7 +731,7 @@
         <source>Yes, remove the connection</source>
         <target state="translated">Sí, eliminar la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">40,44</context>
         </context-group>
       </trans-unit>
@@ -739,7 +739,7 @@
         <source>No, do not enable the connection</source>
         <target state="translated">No, no habilitar la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">48,50</context>
         </context-group>
       </trans-unit>
@@ -747,7 +747,7 @@
         <source>No, do not disable the connection</source>
         <target state="translated">No, no deshabilitar la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">51,53</context>
         </context-group>
       </trans-unit>
@@ -755,7 +755,7 @@
         <source>No, do not remove the connection</source>
         <target state="translated">No, no retire la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">54,59</context>
         </context-group>
       </trans-unit>
@@ -763,7 +763,7 @@
         <source>Change topology connection</source>
         <target state="translated">Cambiar conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
@@ -771,15 +771,15 @@
         <source>Cannot update the topology connection</source>
         <target state="translated">No se puede actualizar la conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">125</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">159</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
@@ -787,7 +787,7 @@
         <source>Disabled the topology connection</source>
         <target state="translated">Desactivado la conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
@@ -795,7 +795,7 @@
         <source>Enabled the topology connection</source>
         <target state="translated">Habilitado la conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
@@ -803,7 +803,7 @@
         <source>Removed the topology connection</source>
         <target state="translated">Se ha eliminado la conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.ts</context>
           <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
@@ -811,7 +811,7 @@
         <source>Source component</source>
         <target state="translated">Componente fuente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">4,5</context>
         </context-group>
       </trans-unit>
@@ -819,7 +819,7 @@
         <source>Source channel</source>
         <target state="translated">Canal de Origen</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">13,14</context>
         </context-group>
       </trans-unit>
@@ -827,7 +827,7 @@
         <source>You must select a source channel.</source>
         <target state="translated">Debe seleccionar un canal de origen.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
       </trans-unit>
@@ -835,7 +835,7 @@
         <source>Target component</source>
         <target state="translated">Componente objetivo</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">18,19</context>
         </context-group>
       </trans-unit>
@@ -843,7 +843,7 @@
         <source>Target channel</source>
         <target state="translated">Canal de destino</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
@@ -851,7 +851,7 @@
         <source>You must select a target channel.</source>
         <target state="translated">Debe seleccionar un canal de destino.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">31,33</context>
         </context-group>
       </trans-unit>
@@ -859,7 +859,7 @@
         <source>Enable the connection</source>
         <target state="translated">Habilitar la conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">34,38</context>
         </context-group>
       </trans-unit>
@@ -867,7 +867,7 @@
         <source>Add connection</source>
         <target state="translated">Añadir conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.html</context>
           <context context-type="linenumber">39,41</context>
         </context-group>
       </trans-unit>
@@ -875,7 +875,7 @@
         <source>Added the new connection</source>
         <target state="translated">Se ha añadido la nueva conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
@@ -883,7 +883,7 @@
         <source>Source or target</source>
         <target state="translated">Origen o destino</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">7,9</context>
         </context-group>
       </trans-unit>
@@ -891,7 +891,7 @@
         <source>Order by</source>
         <target state="translated">Ordenar por</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">11,13</context>
         </context-group>
       </trans-unit>
@@ -899,7 +899,7 @@
         <source>Source</source>
         <target state="translated">Fuente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">13,15</context>
         </context-group>
       </trans-unit>
@@ -907,7 +907,7 @@
         <source>Target</source>
         <target state="translated">Destinó</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
@@ -915,7 +915,7 @@
         <source>Enabled</source>
         <target state="translated">Habilitado</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
       </trans-unit>
@@ -923,7 +923,7 @@
         <source>In reverse order</source>
         <target state="translated">En orden inverso</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">21,25</context>
         </context-group>
       </trans-unit>
@@ -931,7 +931,7 @@
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Create a new connection </source>
         <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Crear una nueva conexión </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">28,31</context>
         </context-group>
       </trans-unit>
@@ -939,7 +939,7 @@
         <source>Go to the component</source>
         <target state="translated">Ir al componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">41,44</context>
         </context-group>
       </trans-unit>
@@ -947,7 +947,7 @@
         <source>Source</source>
         <target state="translated">Fuente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">49,53</context>
         </context-group>
       </trans-unit>
@@ -955,7 +955,7 @@
         <source>Target</source>
         <target state="translated">Destinó</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">55,59</context>
         </context-group>
       </trans-unit>
@@ -963,7 +963,7 @@
         <source>Enabled</source>
         <target state="translated">Habilitado</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">61,63</context>
         </context-group>
       </trans-unit>
@@ -971,7 +971,7 @@
         <source>Actions</source>
         <target state="translated">Acciones</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">69,72</context>
         </context-group>
       </trans-unit>
@@ -979,7 +979,7 @@
         <source>Show</source>
         <target state="translated">Mostrar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">77,79</context>
         </context-group>
       </trans-unit>
@@ -987,7 +987,7 @@
         <source>Enable</source>
         <target state="translated">Habilitar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">81,83</context>
         </context-group>
       </trans-unit>
@@ -995,7 +995,7 @@
         <source>Disable</source>
         <target state="translated">Desactivar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">85,87</context>
         </context-group>
       </trans-unit>
@@ -1003,7 +1003,7 @@
         <source>Remove</source>
         <target state="translated">Eliminar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">89,94</context>
         </context-group>
       </trans-unit>
@@ -1011,7 +1011,7 @@
         <source>Topology connections</source>
         <target state="translated">Conexiones de la topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.ts</context>
           <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
@@ -1019,7 +1019,7 @@
         <source>Cannot obtain the topology connections</source>
         <target state="translated">No se pueden obtener las conexiones de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.ts</context>
           <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
@@ -1027,7 +1027,7 @@
         <source>Enabled</source>
         <target state="translated">Habilitado</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">6,8</context>
         </context-group>
       </trans-unit>
@@ -1035,7 +1035,7 @@
         <source>Created at</source>
         <target state="translated">Creado a las</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">13,15</context>
         </context-group>
       </trans-unit>
@@ -1043,7 +1043,7 @@
         <source>Updated at</source>
         <target state="translated">Actualizado a las</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">17,19</context>
         </context-group>
       </trans-unit>
@@ -1051,7 +1051,7 @@
         <source>Source</source>
         <target state="translated">Fuente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">20,22</context>
         </context-group>
       </trans-unit>
@@ -1059,11 +1059,11 @@
         <source>Component</source>
         <target state="translated">Componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">22,25</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">46,49</context>
         </context-group>
       </trans-unit>
@@ -1071,11 +1071,11 @@
         <source>Channel</source>
         <target state="translated">Canal</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">34,36</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">58,60</context>
         </context-group>
       </trans-unit>
@@ -1083,7 +1083,7 @@
         <source>Publish</source>
         <target state="translated">Publicar</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">40,42</context>
         </context-group>
       </trans-unit>
@@ -1091,7 +1091,7 @@
         <source>Target</source>
         <target state="translated">Destinó</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">44,46</context>
         </context-group>
       </trans-unit>
@@ -1099,7 +1099,7 @@
         <source>Subscribe</source>
         <target state="translated">Suscribir</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">64,66</context>
         </context-group>
       </trans-unit>
@@ -1107,7 +1107,7 @@
         <source>Subscriptions</source>
         <target state="translated">Suscripciones</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">68,70</context>
         </context-group>
       </trans-unit>
@@ -1115,7 +1115,7 @@
         <source>Go to connections</source>
         <target state="translated">Ir a conexiones</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">84,86</context>
         </context-group>
       </trans-unit>
@@ -1123,7 +1123,7 @@
         <source>Go to component connections</source>
         <target state="translated">Ir a conexiones de componentes</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
           <context context-type="linenumber">89,92</context>
         </context-group>
       </trans-unit>
@@ -1131,7 +1131,7 @@
         <source>Show topology conection</source>
         <target state="translated">Mostrar conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/show/show-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.ts</context>
           <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
@@ -1195,7 +1195,7 @@
         <source>The name must follow the pattern <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>. </source>
         <target state="translated">El nombre debe seguir el patrón <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>c[0|1|2]_\w+<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
@@ -1203,7 +1203,7 @@
         <source>Are you sure to unregister the component <x id="INTERPOLATION" equiv-text="{{component.name}}"/>?</source>
         <target state="translated">¿Seguro que desea cancelar el registro del componente<x id="INTERPOLATION" equiv-text="{{component.name}}"/>?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.html</context>
           <context context-type="linenumber">12,13</context>
         </context-group>
       </trans-unit>
@@ -1211,7 +1211,7 @@
         <source>No, do not unregister and go to the components</source>
         <target state="translated">No, no lo dés de baja y ves a los componentes</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.html</context>
           <context context-type="linenumber">20,23</context>
         </context-group>
       </trans-unit>
@@ -1219,11 +1219,11 @@
         <source>Cannot unregister the component</source>
         <target state="translated">No se puede cancelar el registro del componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
           <context context-type="linenumber">80</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/unregister/unregister-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/unregister/unregister-component.component.ts</context>
           <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
@@ -1247,7 +1247,7 @@
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
         <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Registrar un nuevo componente </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">34,37</context>
         </context-group>
       </trans-unit>
@@ -1255,7 +1255,7 @@
         <source>Create topology connection</source>
         <target state="translated">Crear conexión de topología</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
@@ -1263,11 +1263,11 @@
         <source>Cannot add the new connection</source>
         <target state="translated">No se puede añadir la nueva conexión</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">163</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/create/create-topology-connection.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/create/create-topology-connection.component.ts</context>
           <context context-type="linenumber">272</context>
         </context-group>
       </trans-unit>
@@ -1275,7 +1275,7 @@
         <source>Registered the new component</source>
         <target state="translated">Registrado el nuevo componente</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/components/register/register-component.component.ts</context>
+          <context context-type="sourcefile">src/app/main/topology/live/components/register/register-component.component.ts</context>
           <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
@@ -1299,7 +1299,7 @@
         <source>Are you sure the enable the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
         <target state="translated">¿Está seguro de habilitar la conexión entre <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> y <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">14,17</context>
         </context-group>
       </trans-unit>
@@ -1307,7 +1307,7 @@
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Reload </source>
         <target state="translated"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>refresh<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Recargar </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/search/search.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">35,38</context>
         </context-group>
       </trans-unit>
@@ -1315,7 +1315,7 @@
         <source>Are you sure the remove the connection between <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </source>
         <target state="translated">¿Está seguro de eliminar la conexión entre <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{connection.source?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> y <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION_1" equiv-text="{{connection.target?.channel?.name}}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/>? </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/connections/change/change-topology-connection.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/live/connections/change/change-topology-connection.component.html</context>
           <context context-type="linenumber">24,28</context>
         </context-group>
       </trans-unit>

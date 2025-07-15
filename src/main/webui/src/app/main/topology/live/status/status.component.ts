@@ -20,6 +20,8 @@ import { MinComponentPage, MinConnectionPage, MovApiService } from '@app/shared/
 import { DagreLayoutService } from '@app/shared/graph';
 import { LiveConnection } from './live-connection.model';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 
 /**
@@ -32,7 +34,9 @@ import { MatIconModule } from '@angular/material/icon';
 		CommonModule,
 		FFlowModule,
 		GraphModule,
-		MatIconModule
+		MatIconModule,
+		RouterModule,
+		MatButtonModule
 	],
 	templateUrl: './status.component.html'
 })
@@ -397,9 +401,40 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 			return 'var(--color-red-800)';
 
-		} else {
+		} else if (connection.isEnabled) {
 
 			return 'var(--color-sky-400)';
+
+		} else {
+
+			return 'var(--color-gray-200)';
 		}
 	}
+
+	/**
+	 * Return the selected node.
+	 */
+	public get selectedNode(): LiveNode | null {
+
+		if (this.selected != null && 'component' in this.selected) {
+
+			return this.selected as LiveNode;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return the selected connection.
+	 */
+	public get selectedConnection(): LiveConnection | null {
+
+		if (this.selected != null && 'connection' in this.selected) {
+
+			return this.selected as LiveConnection;
+		}
+
+		return null;
+	}
+
 }
