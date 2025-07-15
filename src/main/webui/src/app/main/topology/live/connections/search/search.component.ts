@@ -45,8 +45,7 @@ import { CommonModule } from '@angular/common';
 		MatTableModule,
 		MessageComponent
 	],
-	templateUrl: './search.component.html',
-	styleUrl: './search.component.css'
+	templateUrl: './search.component.html'
 })
 export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 

@@ -37,7 +37,7 @@
 	<div
 		*ngIf="page && page.components && page.components.length > 0;else noComponents">
 		<table mat-table [dataSource]="page.components"
-			class="mat-elevation-z8">
+			class="mat-elevation-z8 w-full max-w-3xl">
 
 			<ng-container matColumnDef="type">
 			<th mat-header-cell *matHeaderCellDef
@@ -48,7 +48,8 @@
 			<ng-container matColumnDef="name">
 			<th mat-header-cell *matHeaderCellDef
 				i18n="The label of the component name column header@@main_components_name-header-label">Name</th>
-			<td mat-cell *matCellDef="let element">{{element.name}}</td>
+			<td mat-cell *matCellDef="let element"
+				class="wrap-break-word max-w-32 sm:max-w-40 md:max-w-96">{{element.name}}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="description">

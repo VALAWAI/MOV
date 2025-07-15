@@ -1,5 +1,5 @@
 <div
-	class="p-3 gap-7 w-full flex flex-col items-center justify-center content-center"
+	class="p-3 gap-7 flex flex-col items-center justify-center content-center"
 	[formGroup]="form">
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
 		<mat-form-field class="text-left col-span-2"> <mat-label
@@ -36,18 +36,20 @@
 	<div
 		*ngIf="page && page.connections && page.connections.length > 0;else noConnections">
 		<table mat-table [dataSource]="page.connections"
-			class="mat-elevation-z8">
+			class="mat-elevation-z8 w-full max-w-3xl">
 
 			<ng-container matColumnDef="source">
 			<th mat-header-cell *matHeaderCellDef
 				i18n="The label of the connection source column header@@main_topology_connections_source-header-label">Source</th>
-			<td mat-cell *matCellDef="let element">{{element.source}}</td>
+			<td mat-cell *matCellDef="let element"
+				class="wrap-break-word max-w-32 sm:max-w-40 md:max-w-96">{{element.source}}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="target">
 			<th mat-header-cell *matHeaderCellDef
 				i18n="The label of the connection target column header@@main_topology_connections_target-header-label">Target</th>
-			<td mat-cell *matCellDef="let element">{{element.target}}</td>
+			<td mat-cell *matCellDef="let element"
+				class="wrap-break-word max-w-32 sm:max-w-40 md:max-w-96">{{element.target}}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="enabled">

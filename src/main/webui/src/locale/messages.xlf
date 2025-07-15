@@ -6,15 +6,15 @@
         <source>Polling time</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">6,7</context>
+          <context context-type="linenumber">7</context>
         </context-group>
-        <note priority="1" from="description">The label of the editor of the polling time</note>
+        <note priority="1" from="description">The label of the polling time</note>
       </trans-unit>
       <trans-unit id="main_config_polling-time-hint" datatype="html">
         <source>The miliseconds to poll to the MOV API.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">9,10</context>
+          <context context-type="linenumber">10,11</context>
         </context-group>
         <note priority="1" from="description">The hint of the polling time</note>
       </trans-unit>
@@ -22,7 +22,7 @@
         <source>The polling time must be equals or more than 1000.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">12,14</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">The error message if no polling time is defined</note>
       </trans-unit>
@@ -30,15 +30,15 @@
         <source>Polling iterations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">15,16</context>
+          <context context-type="linenumber">16,17</context>
         </context-group>
-        <note priority="1" from="description">The label of the editor of the polling iterations</note>
+        <note priority="1" from="description">The label of the polling iterations</note>
       </trans-unit>
       <trans-unit id="main_config_polling-iterations-hint" datatype="html">
         <source>The number of times to polling before stopping.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">18,19</context>
+          <context context-type="linenumber">19,20</context>
         </context-group>
         <note priority="1" from="description">The hint of the polling iterations</note>
       </trans-unit>
@@ -46,15 +46,33 @@
         <source>The polling iterations must be equals or more than 10.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">22,24</context>
         </context-group>
         <note priority="1" from="description">The error message if no polling iterations is defined</note>
+      </trans-unit>
+      <trans-unit id="main_config_topology-editor-legend" datatype="html">
+        <source> Topology editor</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <note priority="1" from="description">The legend to edit the topology editor configuration</note>
+      </trans-unit>
+      <trans-unit id="main_config_topology-editor-description" datatype="html">
+        <source> In this section you can modify the parameters used into the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+						class=&quot;text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out&quot;
+						routerLink=&quot;/main/topology/design/editor&quot;&gt;"/>topology editor<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">30,34</context>
+        </context-group>
+        <note priority="1" from="description">The desciprion of the topology editor configuration</note>
       </trans-unit>
       <trans-unit id="main_config_editor-show-grid-label" datatype="html">
         <source> Show the grid in the editor. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">36,38</context>
         </context-group>
         <note priority="1" from="description">The label to show the grid in the editor</note>
       </trans-unit>
@@ -62,15 +80,109 @@
         <source> Autoload the last topology when open the editor. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">27,30</context>
+          <context context-type="linenumber">39,42</context>
         </context-group>
         <note priority="1" from="description">The label to autoload the last topology on the editor</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-last-topology-id-label" datatype="html">
+        <source>Last topology identifier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+        <note priority="1" from="description">The label of the editor of the polling time</note>
+      </trans-unit>
+      <trans-unit id="main_config_last-topology-id-pattern-error" datatype="html">
+        <source>The identifier is not valid.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">49,54</context>
+        </context-group>
+        <note priority="1" from="description">The error message if the last topology identifier is not a valid</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-graph-legend" datatype="html">
+        <source> Live topology graph </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">57,60</context>
+        </context-group>
+        <note priority="1" from="description">The legend to edit the live graph configuration</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-graph-description" datatype="html">
+        <source> In this section you can modify the parameters used to draw the graph of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+						class=&quot;text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out&quot;
+						routerLink=&quot;/main/topology/live/status&quot;&gt;"/>live topology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">61,66</context>
+        </context-group>
+        <note priority="1" from="description">The desciprion of the live graph configuration</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-show-grid-label" datatype="html">
+        <source> Show the grid in the live. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+        <note priority="1" from="description">The label to show the grid in the live</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-live-edge-type-label" datatype="html">
+        <source>Edge type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">71,72</context>
+        </context-group>
+        <note priority="1" from="description">The label of the live edge type</note>
+      </trans-unit>
+      <trans-unit id="c_edge_type_straight" datatype="html">
+        <source>Draw a straight line.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">74,75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+        <note priority="1" from="description">Name for the straight edge type</note>
+      </trans-unit>
+      <trans-unit id="c_edge_type_bezier" datatype="html">
+        <source>Draw a bezier curve.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">76,77</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+        <note priority="1" from="description">Name for the bezier edge type</note>
+      </trans-unit>
+      <trans-unit id="c_edge_type_segments" datatype="html">
+        <source>Draw segements lines.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">78,79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+        <note priority="1" from="description">Name for the segments edge type</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-edge-color-label" datatype="html">
+        <source>Enabled conneciton color </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">81,82</context>
+        </context-group>
+        <note priority="1" from="description">The label of the live edge color</note>
       </trans-unit>
       <trans-unit id="main_config_code_page-title" datatype="html">
         <source>Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>
@@ -745,25 +857,9 @@
         <source> Channels </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
-          <context context-type="linenumber">78,80</context>
+          <context context-type="linenumber">78,82</context>
         </context-group>
         <note priority="1" from="description">The label of the component channels attribute</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_components_view_channel-subscribe-label" datatype="html">
-        <source>Subscribe</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
-          <context context-type="linenumber">87,90</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component channel subscribe</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_components_view_channel-publish-label" datatype="html">
-        <source>Publish</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/components/view/view.component.html</context>
-          <context context-type="linenumber">92,98</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component channel publish</note>
       </trans-unit>
       <trans-unit id="main_topology_design_components_view_code_page-title" datatype="html">
         <source>Component definition</source>
@@ -949,11 +1045,27 @@
         </context-group>
         <note priority="1" from="description">The menu label to change the layout</note>
       </trans-unit>
+      <trans-unit id="main_topology_editor-menu-layout-horizontal" datatype="html">
+        <source>Horizontal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">120,124</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to change the layout to horizontal</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-layout-vertical" datatype="html">
+        <source>Vertical</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">124,130</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to change the layout to vertical</note>
+      </trans-unit>
       <trans-unit id="main_topology_design_editor-menu-delete-node" datatype="html">
         <source>Delete node</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">177,180</context>
+          <context context-type="linenumber">174,177</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to delete a node from the topology</note>
       </trans-unit>
@@ -961,7 +1073,7 @@
         <source>Edit endpoint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">184,188</context>
+          <context context-type="linenumber">181,186</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to edit an endpoint into a node</note>
       </trans-unit>
@@ -969,7 +1081,7 @@
         <source>Topology Editor</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">The header title for the topology editor</note>
       </trans-unit>
@@ -977,9 +1089,17 @@
         <source>Topology saved!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">520</context>
+          <context context-type="linenumber">526</context>
         </context-group>
         <note priority="1" from="description">Success message when the topology has been saved</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor_code_layout-error-msg" datatype="html">
+        <source>Cannot apply the layout.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
+          <context context-type="linenumber">682</context>
+        </context-group>
+        <note priority="1" from="description">Error message when not apply the layout</note>
       </trans-unit>
       <trans-unit id="main_topology_design_endpoint-editor_node-label" datatype="html">
         <source>Node</source>
@@ -1573,7 +1693,7 @@ must select one topology to open.</source>
         <source>Components</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <note priority="1" from="description">The header title for the components </note>
       </trans-unit>
@@ -2029,7 +2149,7 @@ must select one topology to open.</source>
         <source>Topology connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">The header title for the connections component</note>
       </trans-unit>
@@ -2073,7 +2193,7 @@ must select one topology to open.</source>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">46,49</context>
+          <context context-type="linenumber">43,46</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source attribute</note>
       </trans-unit>
@@ -2085,23 +2205,15 @@ must select one topology to open.</source>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">58,60</context>
+          <context context-type="linenumber">55,57</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source node channel</note>
-      </trans-unit>
-      <trans-unit id="main_topology_connections_show_node-channel-publish-label" datatype="html">
-        <source>Publish</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">40,42</context>
-        </context-group>
-        <note priority="1" from="description">The label of the connection source node channel publish</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_show_target-label" datatype="html">
         <source>Target</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">44,46</context>
+          <context context-type="linenumber">41,43</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target attribute</note>
       </trans-unit>
@@ -2109,7 +2221,7 @@ must select one topology to open.</source>
         <source>Subscribe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">64,66</context>
+          <context context-type="linenumber">61,64</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target node channel subscribe</note>
       </trans-unit>
@@ -2117,7 +2229,7 @@ must select one topology to open.</source>
         <source>Subscriptions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">68,70</context>
+          <context context-type="linenumber">66,69</context>
         </context-group>
         <note priority="1" from="description">The label of the connection subscriptions attribute</note>
       </trans-unit>
@@ -2125,7 +2237,7 @@ must select one topology to open.</source>
         <source>Go to connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">83,85</context>
         </context-group>
         <note priority="1" from="description">The label of the button to go back to the connections</note>
       </trans-unit>
@@ -2133,7 +2245,7 @@ must select one topology to open.</source>
         <source>Go to component connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.html</context>
-          <context context-type="linenumber">89,92</context>
+          <context context-type="linenumber">88,91</context>
         </context-group>
         <note priority="1" from="description">The label of the button to go back to the component connections</note>
       </trans-unit>
@@ -2141,7 +2253,7 @@ must select one topology to open.</source>
         <source>Show topology conection</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/show/show-topology-connection.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">The header title for the show topology connection</note>
       </trans-unit>
@@ -2317,7 +2429,7 @@ must select one topology to open.</source>
         <source>Payload</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">13,14</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">The label of the payload of the log</note>
       </trans-unit>
@@ -2325,7 +2437,7 @@ must select one topology to open.</source>
         <source>Component</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">17,19</context>
         </context-group>
         <note priority="1" from="description">The label of the payload of the compoennt</note>
       </trans-unit>
@@ -2333,7 +2445,7 @@ must select one topology to open.</source>
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">20,22</context>
         </context-group>
         <note priority="1" from="description">The label of the payload of the compoennt type</note>
       </trans-unit>
@@ -2341,7 +2453,7 @@ must select one topology to open.</source>
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">24,26</context>
         </context-group>
         <note priority="1" from="description">The label of the payload of the compoennt name</note>
       </trans-unit>
@@ -2349,7 +2461,7 @@ must select one topology to open.</source>
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">24,27</context>
+          <context context-type="linenumber">28,31</context>
         </context-group>
         <note priority="1" from="description">The label of the payload of the compoennt description</note>
       </trans-unit>
@@ -2357,23 +2469,103 @@ must select one topology to open.</source>
         <source>Close</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/logs/show-log.dialog.html</context>
-          <context context-type="linenumber">30,33</context>
+          <context context-type="linenumber">34,37</context>
         </context-group>
         <note priority="1" from="description">Label of the button to close the log dialog</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_component-type-label" datatype="html">
+        <source>Type:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">54,57</context>
+        </context-group>
+        <note priority="1" from="description">The label of the selected component type attribute</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_component-name-label" datatype="html">
+        <source>Name:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">57,60</context>
+        </context-group>
+        <note priority="1" from="description">The label of the selected component name attribute</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_component-description-label" datatype="html">
+        <source>Description:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+        <note priority="1" from="description">The label of the selected component description attribute</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_more-info-about-selected-node-button-label" datatype="html">
+        <source>More info</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">67,73</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to go to get more information about the live component</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_selected-connection-source-id-label" datatype="html">
+        <source>Source:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">73,76</context>
+        </context-group>
+        <note priority="1" from="description">The label of the selected connection source identifier</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_selected-connection-target-id-label" datatype="html">
+        <source>Target:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">76,79</context>
+        </context-group>
+        <note priority="1" from="description">The label of the selected connection target identifier</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_selected-connection-is:enabled-label" datatype="html">
+        <source>Enabled:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">79,83</context>
+        </context-group>
+        <note priority="1" from="description">The label of the selected connection is enabled</note>
+      </trans-unit>
+      <trans-unit id="main_topology_live_status_more-info-about-selected-connection-button-label" datatype="html">
+        <source>More info</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
+          <context context-type="linenumber">92,97</context>
+        </context-group>
+        <note priority="1" from="description">The label of the button to go to get more information about the selected live connection</note>
       </trans-unit>
       <trans-unit id="main_topology_live_status_code_page-title" datatype="html">
         <source>Live topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/status/status.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">The header title for the topology libe status</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_channel-subscribe-label" datatype="html">
+        <source>Subscribe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/channels-view/channels-view.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component channel subscribe</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_components_view_channel-publish-label" datatype="html">
+        <source>Publish</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/channels-view/channels-view.component.html</context>
+          <context context-type="linenumber">14,19</context>
+        </context-group>
+        <note priority="1" from="description">The label of the component channel publish</note>
       </trans-unit>
       <trans-unit id="shared_component_view_type-label" datatype="html">
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">5,7</context>
+          <context context-type="linenumber">8,10</context>
         </context-group>
         <note priority="1" from="description">The label of the component type attribute</note>
       </trans-unit>
@@ -2381,7 +2573,7 @@ must select one topology to open.</source>
         <source>Version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">8,11</context>
+          <context context-type="linenumber">11,13</context>
         </context-group>
         <note priority="1" from="description">The label of the component version attribute</note>
       </trans-unit>
@@ -2389,7 +2581,7 @@ must select one topology to open.</source>
         <source>API version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">12,15</context>
+          <context context-type="linenumber">15,18</context>
         </context-group>
         <note priority="1" from="description">The label of the component API version attribute</note>
       </trans-unit>
@@ -2397,7 +2589,7 @@ must select one topology to open.</source>
         <source>Since</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">15,17</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
         <note priority="1" from="description">The label of the component since attribute</note>
       </trans-unit>
@@ -2405,25 +2597,9 @@ must select one topology to open.</source>
         <source> Channels </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">20,22</context>
+          <context context-type="linenumber">23,25</context>
         </context-group>
         <note priority="1" from="description">The label of the component channels attribute</note>
-      </trans-unit>
-      <trans-unit id="shared_component_view_component-channel-subscribe-label" datatype="html">
-        <source>Subscribe</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">26,28</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component channel subscribe</note>
-      </trans-unit>
-      <trans-unit id="shared_component_view_component-channel-publish-label" datatype="html">
-        <source>Publish</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/component/view/component-view.component.html</context>
-          <context context-type="linenumber">29,32</context>
-        </context-group>
-        <note priority="1" from="description">The label of the component channel publish</note>
       </trans-unit>
       <trans-unit id="shared_messages_server-error-msg" datatype="html">
         <source>Could not connect to the MOV, try again later.</source>

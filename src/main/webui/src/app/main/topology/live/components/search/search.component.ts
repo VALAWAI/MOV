@@ -45,8 +45,7 @@ import { ConfigService, toPattern } from '@app/shared';
 		MatMenuModule,
 		MessageComponent
 	],
-	templateUrl: './search.component.html',
-	styleUrl: './search.component.css'
+	templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
@@ -166,7 +165,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	 * Called when has to trat to update the page.
 	 */
 	private startUpdatePage() {
-		
+
 		if (this.pageSubscription != null) {
 
 			this.pageSubscription.unsubscribe();
@@ -178,7 +177,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		).subscribe(
 			{
 				next: page => {
-					
+
 					if (!MinComponentPage.equals(this.page, page)) {
 
 						this.page = page
@@ -192,7 +191,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	 * Called to update the page.
 	 */
 	private getPage(): Observable<MinComponentPage> {
-		
+
 		var value = this.form.value;
 		var pattern = toPattern(value.pattern);
 		var orderBy = value.orderBy;
