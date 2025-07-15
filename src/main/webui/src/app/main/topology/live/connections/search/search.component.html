@@ -23,13 +23,13 @@
 	<div class="gap-3 flex flex-row justify-center content-center">
 		<button
 			i18n="Label of the button to create a new connections@@main_topology_connections_create-label"
-			routerLink="/main/topology/connections/create" mat-raised-button
+			routerLink="/main/topology/live/connections/create" mat-raised-button
 			color="primary" class="max-w-72">
 			<mat-icon>add</mat-icon>
 			Create a new connection
 		</button>
 		<button *ngIf="componentId!=null" mat-raised-button color="primary"
-			[routerLink]="['/main/components',componentId,'show']"
+			[routerLink]="['/main/topology/live/components',componentId,'show']"
 			i18n="Label of the button to go back to the component@@main_topology_connections_go-back-to-component-label">
 			Go to the component</button>
 	</div>
@@ -68,18 +68,18 @@
 				</button> <mat-menu #connectionMenu="matMenu">
 				<button mat-menu-item
 					i18n="The label of the menu to show a connection@@main_topology_connections_show-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'show']">Show</button>
+					[routerLink]="['/main/topology/live/connections',element.id,'show']">Show</button>
 				<button mat-menu-item *ngIf="!element.enabled"
 					i18n="The label of the menu to enable a connection@@main_topology_connections_enable-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'change']"
+					[routerLink]="['/main/topology/live/connections',element.id,'change']"
 					[queryParams]="{'action':'enable'}">Enable</button>
 				<button mat-menu-item *ngIf="element.enabled"
 					i18n="The label of the menu to disable a connection@@main_topology_connections_disable-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'change']"
+					[routerLink]="['/main/topology/live/connections',element.id,'change']"
 					[queryParams]="{'action':'disable'}">Disable</button>
 				<button mat-menu-item
 					i18n="The label of the menu to remove a connection@@main_topology_connections_remove-menu-label"
-					[routerLink]="['/main/topology/connections',element.id,'change']"
+					[routerLink]="['/main/topology/live/connections',element.id,'change']"
 					[queryParams]="{'action':'remove'}">Remove</button>
 				</mat-menu>
 			</td>

@@ -57,7 +57,7 @@ export abstract class AbstractTopologyConnectionComponent implements OnInit {
 
 								this.messages.showError($localize`:The error message when can get the connection@@main_topology_connections_abstract_code_get-error:Cannot get the topology connection information`);
 								console.error(err);
-								this.router.navigate(["/main/topology/connections"]);
+								this.router.navigate(["/main/topology/live/connections"]);
 								return EMPTY;
 							})
 						);

@@ -111,7 +111,7 @@ export class UnregisterComponentComponent extends AbstractComponentComponent {
 					error: () => {
 
 						this.messages.showSuccess($localize`:The success message when unregistered a component@@main_components_unregister_code_success-msg:Unregistered the component`);
-						this.router.navigate(["/main/components"]);
+						this.router.navigate(["/main/topology/live/components"]);
 
 					}
 				}

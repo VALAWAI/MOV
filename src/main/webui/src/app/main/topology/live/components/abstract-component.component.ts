@@ -57,7 +57,7 @@ export abstract class AbstractComponentComponent implements OnInit {
 
 								this.messages.showError($localize`:The error message when can get the component@@main_components_abstract_code_get-error:Cannot get the component information`);
 								console.error(err);
-								this.router.navigate(["/main/components"]);
+								this.router.navigate(["/main/topology/live/components"]);
 								return EMPTY;
 							})
 						);

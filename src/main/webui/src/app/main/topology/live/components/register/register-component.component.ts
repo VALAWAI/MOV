@@ -180,7 +180,7 @@ export class RegisterComponentComponent implements OnInit {
 
 													this.registering = false;
 													this.messages.showSuccess($localize`:Success message when registered a new component@@main_components_register_code_success-message:Registered the new component`);
-													this.router.navigate(['/main/components', page.components[0].id, 'show']);
+													this.router.navigate(['/main/topology/live/components', page.components[0].id, 'show']);
 
 												} else {
 

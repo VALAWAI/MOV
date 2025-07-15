@@ -192,7 +192,7 @@ export class CreateTopologyConnectionComponent implements OnInit {
 
 														this.adding = false;
 														this.messages.showSuccess($localize`:Success message when added a new connection@@main_topology_connections_create_code_add-success:Added the new connection`);
-														this.router.navigate(['/main/topology/connections', page.connections[0].id, 'show']);
+														this.router.navigate(['/main/topology/live/connections', page.connections[0].id, 'show']);
 
 													} else {
 

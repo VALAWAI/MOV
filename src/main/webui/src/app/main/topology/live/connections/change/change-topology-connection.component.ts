@@ -145,13 +145,13 @@ export class ChangeTopologyConnectionComponent extends AbstractTopologyConnectio
 
 							this.changing = false;
 							this.messages.showSuccess($localize`:The success message when the connection is disabled@@mmain_topology_connections_change_code_success-disable-msg:Disabled the topology connection`);
-							this.router.navigate(["/main/topology/connections"]);
+							this.router.navigate(["/main/topology/live/connections"]);
 
 						} else if (this.action == 'ENABLE' && updated.enabled) {
 
 							this.changing = false;
 							this.messages.showSuccess($localize`:The success message when the connection is enabled@@mmain_topology_connections_change_code_success-enable-msg:Enabled the topology connection`);
-							this.router.navigate(["/main/topology/connections"]);
+							this.router.navigate(["/main/topology/live/connections"]);
 
 						} else if (iter == 0) {
 
@@ -169,7 +169,7 @@ export class ChangeTopologyConnectionComponent extends AbstractTopologyConnectio
 						if (this.action == 'REMOVE') {
 
 							this.messages.showSuccess($localize`:The success message when the connection is removed@@mmain_topology_connections_change_code_success-removed-msg:Removed the topology connection`);
-							this.router.navigate(["/main/topology/connections"]);
+							this.router.navigate(["/main/topology/live/connections"]);
 
 						} else {
 

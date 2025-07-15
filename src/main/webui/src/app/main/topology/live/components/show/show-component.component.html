@@ -4,16 +4,16 @@
 	<app-component-view [component]="component"></app-component-view>
 	<div class="gap-3 flex flex-row">
 		<button mat-raised-button color="primary"
-			routerLink="/main/components"
+			routerLink="/main/topology/live/components"
 			i18n="The label of the button to go back to the components from the show component@@main_components_show_go-back-label">Go
 			to components</button>
 		<button mat-raised-button color="primary"
-			routerLink="/main/topology/connections"
+			routerLink="/main/topology/live/connections"
 			[queryParams]="{'componentId':component.id}"
 			i18n="The label of the button to show the component connections@@main_components_show_connections-label">Show
 			connections</button>
 		<button *ngIf="connectionId!=null" mat-raised-button color="primary"
-			[routerLink]="['/main/topology/connections',connectionId,'show']"
+			[routerLink]="['/main/topology/live/connections',connectionId,'show']"
 			i18n="The label of the button to go back to the connection that has this component@@main_components_show_go-back-to-connection-label">Go
 			to the connection</button>
 	</div>
