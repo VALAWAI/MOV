@@ -160,4 +160,13 @@ public interface ComponentEntities {
 
 	}
 
+	/**
+	 * Remove all the component entities.
+	 */
+	public static void clear() {
+
+		ComponentEntity.deleteAll().await().atMost(Duration.ofSeconds(30));
+
+	}
+
 }
