@@ -15,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import eu.valawai.mov.api.Model;
 
 /**
- * Contains information of a live topology
+ * Contains information of a live topology.
  *
  * @author VALAWAI
  */

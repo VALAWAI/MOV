@@ -53,7 +53,7 @@ public class LiveTopologyComponentOutConnection extends Model {
 	 * The list of nodes that will notify when a message pass thought this
 	 * connection.
 	 */
-	@Schema(title = "")
+	@Schema(title = "The list of nodes that will notify when a message pass through this connection.")
 	public List<LiveTopologyConnectionEndpoint> notifications;
 
 }

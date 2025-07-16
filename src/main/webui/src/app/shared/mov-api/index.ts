@@ -6,7 +6,6 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-
 export { MovApiService } from './mov-api.service';
 export { Info } from './info.model';
 export { HealthInfo, HealthStatus, HealthCheck } from './health-info.model';
@@ -50,3 +49,8 @@ export { TopologyConnectionEndpoint } from './design/topologies/topology-connect
 export { TopologyNode } from './design/topologies/topology-node.model';
 export { MinTopology } from './design/topologies/min-topology.model';
 export { MinTopologyPage } from './design/topologies/min-topology-page.model';
+
+export { LiveTopology } from './live/topologies/live-topology.model';
+export { LiveTopologyComponent } from './live/topologies/live-topology-component.model';
+export { LiveTopologyComponentOutConnection } from './live/topologies/live-topology-component-out-connection.model';
+export { LiveTopologyConnectionEndpoint } from './live/topologies/live-topology-connection-endpoint.model';

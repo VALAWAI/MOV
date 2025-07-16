@@ -17,7 +17,7 @@ import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 
 /**
- * A node that form part of a{@link LiveTopology}.
+ * A node that form part of a {@link LiveTopology}.
  *
  * @see LiveTopology
  * @see ComponentEntity
@@ -29,7 +29,7 @@ import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 public class LiveTopologyComponent extends MinComponent {
 
 	/**
-	 * The connections that exit from this node
+	 * The connections that exit from this node.
 	 */
 	@Schema(title = "The connections that exit from this node.")
 	public List<LiveTopologyComponentOutConnection> connections;

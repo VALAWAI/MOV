@@ -26,6 +26,7 @@ import { MinTopologyPage } from './design/topologies/min-topology-page.model';
 import { MinTopology } from './design/topologies/min-topology.model';
 import { ComponentsLibraryStatus } from './design/components/components-library-status.model';
 import { ComponentDefinition } from './design/components/component-definition.model';
+import { LiveTopology } from './live/topologies/live-topology.model';
 
 
 /**
@@ -344,5 +345,20 @@ export class MovApiService {
 		return this.http.put<ComponentDefinition>(url, component);
 	}
 
+	/**
+	 * Get teh live topology. 
+	 */
+	public getLiveTopology(offset: number = 0, limit: number = 100): Observable<LiveTopology> {
+
+		var url = this.url('/v2/live/topologies');
+		return this.http.get<LiveTopology>(
+			url,
+			this.optionsWithParams(
+				{
+					offset: offset, limit: limit
+				}
+			)
+		);
+	}
 
 }
