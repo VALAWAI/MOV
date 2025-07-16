@@ -10,9 +10,14 @@ package eu.valawai.mov.persistence.live.components;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.v2.live.topologies.LiveTopology;
+import eu.valawai.mov.api.v2.live.topologies.LiveTopologyComponentTest;
 import eu.valawai.mov.api.v2.live.topologies.LiveTopologyTest;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
@@ -29,14 +34,84 @@ import io.quarkus.test.junit.QuarkusTest;
 public class GetLiveTopologyTest extends MovPersistenceTestCase {
 
 	/**
+	 * Clear all the databases.
+	 */
+	@BeforeEach
+	public void clear() {
+
+		TopologyConnectionEntities.clear();
+		ComponentEntities.clear();
+	}
+
+	/**
 	 * Should get the live topology.
 	 */
 	@Test
 	public void shouldGetEmptyLiveTopology() {
 
-		ComponentEntities.clear();
 		final var found = this.assertItemNotNull(GetLiveTopology.fresh().execute());
-		final var expected = LiveTopologyTest.current();
+		assertEquals(new LiveTopology(), found);
+
+	}
+
+	/**
+	 * Should get the live topology with only component.
+	 */
+	@Test
+	public void shouldGetLiveTopologyWithOnlyComponents() {
+
+		final var expected = new LiveTopology();
+		expected.components = new ArrayList<>();
+		final var component = ComponentEntities.nextComponent();
+		expected.components.add(LiveTopologyComponentTest.from(component));
+
+		final var finishedComponent = ComponentEntities.nextComponent();
+		finishedComponent.finishedTime = ValueGenerator.nextPastTime();
+		this.assertItemNotNull(finishedComponent.update());
+
+		var found = this.assertItemNotNull(GetLiveTopology.fresh().withOffset(1).withLimit(10).execute());
+		assertEquals(new LiveTopology(), found);
+
+		found = this.assertItemNotNull(GetLiveTopology.fresh().withOffset(0).withLimit(10).execute());
+		LiveTopologyTest.sort(found);
+		assertEquals(expected, found);
+
+	}
+
+	/**
+	 * Should get the live topology with only component.
+	 */
+	@Test
+	public void shouldGetLiveTopologyWithConnectionsWithoutNotifications() {
+
+		TopologyConnectionEntities.nextTopologyConnection(0);
+
+		final var deletedComponent = TopologyConnectionEntities.nextTopologyConnection(2);
+		deletedComponent.deletedTimestamp = ValueGenerator.nextPastTime();
+		this.assertItemNotNull(deletedComponent.update());
+
+		final var found = this.assertItemNotNull(GetLiveTopology.fresh().withOffset(0).withLimit(10).execute());
+		LiveTopologyTest.sort(found);
+		final var expected = LiveTopologyTest.current(0, 10);
+		assertEquals(expected, found);
+
+	}
+
+	/**
+	 * Should get the live topology with only component.
+	 */
+	@Test
+	public void shouldGetLiveTopologyWithConnectionsWithNotifications() {
+
+		TopologyConnectionEntities.nextTopologyConnection(3);
+
+		final var deletedComponent = TopologyConnectionEntities.nextTopologyConnection(0);
+		deletedComponent.deletedTimestamp = ValueGenerator.nextPastTime();
+		this.assertItemNotNull(deletedComponent.update());
+
+		final var found = this.assertItemNotNull(GetLiveTopology.fresh().withOffset(0).withLimit(100).execute());
+		LiveTopologyTest.sort(found);
+		final var expected = LiveTopologyTest.current(0, 100);
 		assertEquals(expected, found);
 
 	}
@@ -55,14 +130,12 @@ public class GetLiveTopologyTest extends MovPersistenceTestCase {
 		component.finishedTime = ValueGenerator.nextPastTime();
 		this.assertItemNotNull(component.update());
 
-		final var found = this.assertItemNotNull(GetLiveTopology.fresh().execute());
-		final var expected = LiveTopologyTest.current();
+		final var offset = 1;
+		final var limit = 5;
+		final var found = this.assertItemNotNull(GetLiveTopology.fresh().withOffset(offset).withLimit(limit).execute());
 		LiveTopologyTest.sort(found);
 
-//		for (var i = 0; i < expected.components.size(); i++) {
-//			assertEquals(expected.components.get(i), found.components.get(i));
-//		}
-
+		final var expected = LiveTopologyTest.current(offset, limit);
 		assertEquals(expected, found);
 
 	}

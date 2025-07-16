@@ -29,22 +29,12 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
-public abstract class AbstractGetMinPage<T, O extends AbstractGetMinPage<T, O>> extends AbstractEntityOperator<T, O> {
+public abstract class AbstractGetMinPage<T, O extends AbstractGetMinPage<T, O>> extends AbstractPaginatedQuery<T, O> {
 
 	/**
 	 * The order in with the model has returned.
 	 */
 	protected String order;
-
-	/**
-	 * The offset to the first model to return.
-	 */
-	protected int offset = 0;
-
-	/**
-	 * The number maximum of models to return.
-	 */
-	protected int limit = 10;
 
 	/**
 	 * The field name to store the models of the page.
@@ -72,32 +62,6 @@ public abstract class AbstractGetMinPage<T, O extends AbstractGetMinPage<T, O>> 
 	public O withOrder(final String order) {
 
 		this.order = order;
-		return this.operator();
-	}
-
-	/**
-	 * The index of the first element to return.
-	 *
-	 * @param offset of the first element to return.
-	 *
-	 * @return this operator.
-	 */
-	public O withOffset(final int offset) {
-
-		this.offset = offset;
-		return this.operator();
-	}
-
-	/**
-	 * The number maximum of elements in the page to return.
-	 *
-	 * @param limit of size of the page elements to return.
-	 *
-	 * @return this operator.
-	 */
-	public O withLimit(final int limit) {
-
-		this.limit = limit;
 		return this.operator();
 	}
 

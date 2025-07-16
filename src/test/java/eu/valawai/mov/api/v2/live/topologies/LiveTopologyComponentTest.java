@@ -94,6 +94,15 @@ public class LiveTopologyComponentTest extends AbstractMinComponentTestCase<Live
 					final var connection = LiveTopologyComponentOutConnectionTest.from(connectionEntity);
 					model.connections.add(connection);
 				}
+				model.connections.sort((c1, c2) -> {
+					var cmp = c1.id.compareTo(c2.id);
+					if (cmp == 0) {
+
+						cmp = c1.channel.compareTo(c2.channel);
+					}
+					return cmp;
+				});
+
 			}
 
 			return model;

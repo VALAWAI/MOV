@@ -295,8 +295,14 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = Math.min(expected.offset + limit, expected.logs.size());
+		if (max > expected.offset) {
 
-		expected.logs = expected.logs.subList(expected.offset, max);
+			expected.logs = expected.logs.subList(expected.offset, max);
+
+		} else {
+
+			expected.logs = new ArrayList<>();
+		}
 
 		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withComponnetPattern("/" + pattern + "/")
 				.withOrder("component.type,-component.name,component.description,timestamp").withOffset(expected.offset)
@@ -344,8 +350,14 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = Math.min(expected.offset + limit, expected.logs.size());
+		if (max > expected.offset) {
 
-		expected.logs = expected.logs.subList(expected.offset, max);
+			expected.logs = expected.logs.subList(expected.offset, max);
+
+		} else {
+
+			expected.logs = new ArrayList<>();
+		}
 
 		final var page = this.assertExecutionNotNull(GetLogRecordPage.fresh().withComponnetType(type)
 				.withOrder("-component.name,component.description,timestamp").withOffset(expected.offset)
@@ -403,7 +415,14 @@ public class GetLogRecordPageTest extends MasterOfValawaiTestCase {
 		final var limit = ValueGenerator.rnd().nextInt(5, 11);
 		final var max = Math.min(expected.offset + limit, expected.logs.size());
 
-		expected.logs = expected.logs.subList(expected.offset, max);
+		if (max > expected.offset) {
+
+			expected.logs = expected.logs.subList(expected.offset, max);
+
+		} else {
+
+			expected.logs = new ArrayList<>();
+		}
 
 		final var page = this.assertExecutionNotNull(
 				GetLogRecordPage.fresh().withComponnetType(type).withComponnetPattern("/" + pattern + "/")

@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
+import io.quarkus.mongodb.FindOptions;
 import io.quarkus.mongodb.reactive.ReactiveMongoCollection;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
@@ -58,16 +60,19 @@ public class LiveTopologyTest extends ModelTestCase<LiveTopology> {
 	/**
 	 * Return the current live topology.
 	 *
+	 * @param offset the index of the first live topology component to return.
+	 * @param limit  the maximum number of live topology components to return.
+	 *
 	 * @return the current live topology.
 	 */
-	public static LiveTopology current() {
+	public static LiveTopology current(int offset, int limit) {
 
 		final var model = new LiveTopology();
 
 		final ReactiveMongoCollection<ComponentEntity> collection = ComponentEntity.mongoCollection();
-		final Uni<List<ComponentEntity>> find = collection
-				.find(Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null))).collect()
-				.asList();
+		final var query = Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null));
+		final var options = new FindOptions().skip(offset).limit(limit).sort(Sorts.ascending("_id"));
+		final Uni<List<ComponentEntity>> find = collection.find(query, options).collect().asList();
 		final var entities = find.subscribe().withSubscriber(UniAssertSubscriber.create())
 				.awaitItem(Duration.ofSeconds(30)).getItem();
 		if (entities != null && !entities.isEmpty()) {
@@ -78,6 +83,7 @@ public class LiveTopologyTest extends ModelTestCase<LiveTopology> {
 				final var component = LiveTopologyComponentTest.from(entity);
 				model.components.add(component);
 			}
+			model.components.sort((c1, c2) -> c1.id.compareTo(c2.id));
 		}
 		return model;
 
@@ -97,12 +103,28 @@ public class LiveTopologyTest extends ModelTestCase<LiveTopology> {
 
 				if (component.connections != null) {
 
-					component.connections.sort((c1, c2) -> c1.id.compareTo(c2.id));
+					component.connections.sort((c1, c2) -> {
+						var cmp = c1.id.compareTo(c2.id);
+						if (cmp == 0) {
+
+							cmp = c1.channel.compareTo(c2.channel);
+						}
+						return cmp;
+					});
+
 					for (final var connection : component.connections) {
 
 						if (connection.notifications != null) {
 
-							connection.notifications.sort((c1, c2) -> c1.id.compareTo(c2.id));
+							connection.notifications.sort((c1, c2) -> {
+								var cmp = c1.id.compareTo(c2.id);
+								if (cmp == 0) {
+
+									cmp = c1.channel.compareTo(c2.channel);
+								}
+								return cmp;
+							});
+
 						}
 					}
 				}

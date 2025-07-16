@@ -245,4 +245,13 @@ public interface TopologyConnectionEntities {
 
 	}
 
+	/**
+	 * Remove all the component entities.
+	 */
+	public static void clear() {
+
+		TopologyConnectionEntity.deleteAll().await().atMost(Duration.ofSeconds(30));
+
+	}
+
 }

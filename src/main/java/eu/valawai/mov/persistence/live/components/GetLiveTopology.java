@@ -18,11 +18,10 @@ import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Variable;
+import com.mongodb.client.model.Sorts;
 
 import eu.valawai.mov.api.v2.live.topologies.LiveTopology;
-import eu.valawai.mov.persistence.AbstractEntityOperator;
-import eu.valawai.mov.persistence.Bsons;
+import eu.valawai.mov.persistence.AbstractPaginatedQuery;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.smallrye.mutiny.Uni;
 
@@ -35,7 +34,7 @@ import io.smallrye.mutiny.Uni;
  *
  * @author VALAWAI
  */
-public class GetLiveTopology extends AbstractEntityOperator<LiveTopology, GetLiveTopology> {
+public class GetLiveTopology extends AbstractPaginatedQuery<LiveTopology, GetLiveTopology> {
 
 	/**
 	 * Create the operation.
@@ -62,24 +61,14 @@ public class GetLiveTopology extends AbstractEntityOperator<LiveTopology, GetLiv
 		final var pipeline = new ArrayList<Bson>();
 		pipeline.add(
 				Aggregates.match(Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null))));
+		pipeline.add(Aggregates.sort(Sorts.ascending("_id")));
+		pipeline.add(Aggregates.skip(this.offset));
+		pipeline.add(Aggregates.limit(this.limit));
 		pipeline.add(Aggregates.project(Projections.include("_id", "type", "name", "description")));
-		pipeline.add(Aggregates.lookup(TopologyConnectionEntity.COLLECTION_NAME,
-				Arrays.asList(new Variable<>("componentId", "$_id")),
-				Arrays.asList(
-						Aggregates.match(Filters.and(Document.parse("""
-								      {
-								        "$expr": [
-								          {
-								            "$eq": [
-								              "$source.componentId",
-								              "$$componentId"
-								            ]
-								          }
-								        ]
-								      }
-								"""),
-								Filters.or(Filters.exists("deletedTimestamp", false),
-										Filters.eq("deletedTimestamp", null)))),
+
+		final var connectionsPipline = Arrays
+				.asList(Aggregates.match(
+						Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null))),
 						Aggregates.project(Projections.fields(Projections.computed("channel", "$source.channelName"),
 								Projections.computed("target", new Document("_id", "$target.componentId")
 										.append("channel", "$target.channelName").append("enabled", "$enabled")),
@@ -108,9 +97,11 @@ public class GetLiveTopology extends AbstractEntityOperator<LiveTopology, GetLiv
 										    		"else": "$notifications"
 										    	}
 										    }
-										"""))))
-
-				), "connections"));
+										""")))));
+		pipeline.add(new Document("$lookup",
+				new Document("from", TopologyConnectionEntity.COLLECTION_NAME).append("localField", "_id")
+						.append("foreignField", "source.componentId").append("pipeline", connectionsPipline)
+						.append("as", "connections")));
 		pipeline.add(Aggregates.project(Projections.fields(Projections.include("_id", "type", "name", "description"),
 				Projections.computed("connections", Document.parse("""
 						    {
@@ -133,7 +124,7 @@ public class GetLiveTopology extends AbstractEntityOperator<LiveTopology, GetLiv
 				    	}
 				    }
 				"""))));
-		System.err.println(Bsons.toString(pipeline));
+
 		return ComponentEntity.mongoCollection().aggregate(pipeline, LiveTopology.class).collect().first().onItem()
 				.ifNull().continueWith(() -> new LiveTopology());
 	}

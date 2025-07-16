@@ -89,6 +89,15 @@ public class LiveTopologyComponentOutConnectionTest extends ModelTestCase<LiveTo
 					notification.enabled = true;
 					model.notifications.add(notification);
 				}
+				model.notifications.sort((c1, c2) -> {
+					var cmp = c1.id.compareTo(c2.id);
+					if (cmp == 0) {
+
+						cmp = c1.channel.compareTo(c2.channel);
+					}
+					return cmp;
+				});
+
 			}
 
 			return model;
