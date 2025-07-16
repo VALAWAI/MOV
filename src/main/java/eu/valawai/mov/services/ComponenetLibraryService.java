@@ -120,21 +120,22 @@ public class ComponenetLibraryService {
 						.store();
 				return null;
 
-			}).onItem().invoke(foundRepositories -> {
+			}).subscribe().with(foundRepositories -> {
 
 				if (foundRepositories == null || foundRepositories.isEmpty()) {
 					// No more components to update
 					AddLog.fresh().withInfo().withMessage("Updated the components library").store();
 					this.configService
 							.setProperty(MOVSettings.COMPONENTS_LIBRARY_LAST_UPDATE, String.valueOf(TimeManager.now()))
-							.await().indefinitely();
+							.subscribe().with(setted -> {
+							});
 
 				} else {
 
 					this.udateInBackground(foundRepositories, newOffset);
 				}
 
-			}).await().indefinitely();
+			});
 
 		} else {
 
@@ -177,7 +178,7 @@ public class ComponenetLibraryService {
 							.withMessage("Cannot update the component of {0}.", repository.html_url).store();
 					return null;
 
-				}).onItem().invoke(() -> this.udateInBackground(repositories, pageOffset)).await().indefinitely();
+				}).subscribe().with(any -> this.udateInBackground(repositories, pageOffset));
 			}
 		}
 	}
