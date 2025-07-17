@@ -37,11 +37,14 @@
 				} } </app-component-type-node-container>
 
 				} @else{
-				<div
-					class="rounded-full border-2 border-sky-800 bg-white-400 w-32 h-32"
+				<div class="rounded-full border-2 w-4 h-4 hover:stroke-7"
+					[ngClass]="{'border-red-400 bg-red-800':isSelected(node),'border-sky-800 bg-white-400':!isSelected(node)}"
 					fNodeOutput fNodeInput [fInputId]="node.endpoints[0].id"
 					[fInputMultiple]="true" [fOutputId]="node.endpoints[1].id"
-					[fOutputMultiple]="true" fNodeOutlet></div>
+					[fOutputMultiple]="true" fNodeOutlet
+					fInputConnectableSide="top"
+					fOutputConnectableSide="bottom"
+					></div>
 				}
 			</div>
 			} @for(connection of connections;track connection.id){ <f-connection
@@ -57,13 +60,6 @@
 				selectedColor="fill-red-800"></app-connection-markers> </f-connection> } </f-canvas> </f-flow>
 		</div>
 	</div>
-	@for(node of nodes;track node.id){ @for(endpoint of
-	node.endpoints;track endpoint.id){
-
-	<div>{{node.id}} -> {{endpoint.isSource}} -> {{endpoint.id}}</div>
-	} } @for(connection of connections;track connection.id){
-	<div>{{connection.source.id}} -> {{connection.target.id}}</div>
-	}
 	<!-- 
 	@if(selectedNode != null){
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
