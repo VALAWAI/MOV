@@ -164,37 +164,37 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 			for (var component of this.topology.components) {
 
-				var node = StatusNode.createComponentNode(this.nodes.length, component);
-				this.nodes.push(node);
+				var node = this.searchOrCreateNode(component.id!);
+				node.updateWith(component);
 
 				if (component.connections != null) {
 
 					for (var outConnection of component.connections) {
 
-						var sourceEndpoint = new StatusEndpoint(component.id!, outConnection.channel!, true);
-						node.endpoints.push(sourceEndpoint);
+						var sourceEndpoint = node.searchOrCreateSEndpointFor(outConnection.channel, true);
 
 						if (outConnection.notifications != null && outConnection.notifications.length > 0) {
 
-							var notificationNode = StatusNode.createNotificationNode(this.nodes.length, outConnection);
-							this.nodes.push(notificationNode);
+							var notificationNode = this.searchOrCreateNode(outConnection.id!);
 
-							var connectionToNotification = new StatusConnection(sourceEndpoint, notificationNode.endpoints[0]);
+							var connectionToNotification = new StatusConnection(sourceEndpoint,
+								notificationNode.searchOrCreateSEndpointFor(null, false));
 							connectionToNotification.enabled = outConnection.target!.enabled;
 							this.connections.push(connectionToNotification);
 
-							sourceEndpoint = notificationNode.endpoints[1];
-
+							sourceEndpoint = notificationNode.searchOrCreateSEndpointFor(null, true);
 							for (var notification of outConnection.notifications) {
 
-								var targetEndpoint = new StatusEndpoint(notification.id!, notification.channel!, false);
+								var targetNode = this.searchOrCreateNode(notification.id!);
+								var targetEndpoint = targetNode.searchOrCreateSEndpointFor(notification.channel!, false);
 								var connection = new StatusConnection(sourceEndpoint, targetEndpoint);
 								connection.enabled = notification.enabled;
 								this.connections.push(connection);
 							}
 						}
 
-						var targetEndpoint = new StatusEndpoint(outConnection.target!.id!, outConnection.target!.channel!, false);
+						var targetNode = this.searchOrCreateNode(outConnection.target!.id!);
+						var targetEndpoint = targetNode.searchOrCreateSEndpointFor(outConnection.target!.channel!, false);
 						var connection = new StatusConnection(sourceEndpoint, targetEndpoint);
 						connection.enabled = outConnection.target!.enabled;
 						this.connections.push(connection);
@@ -207,6 +207,23 @@ export class StatusComponent implements OnInit, OnDestroy {
 		}
 
 		setTimeout(() => this.updateLayoutGraph(), 1);
+
+	}
+
+	/**
+	 * Search for a node of create it.
+	 */
+	private searchOrCreateNode(id: string) {
+
+		var node = this.nodes.find(node => node.id == id) || null;
+		if (node == null) {
+
+			node = new StatusNode(id);
+			this.nodes.push(node);
+			node.position = { x: 200 * this.nodes.length, y: 200 * this.nodes.length };
+		}
+
+		return node;
 
 	}
 

@@ -39,8 +39,9 @@
 				} @else{
 				<div
 					class="rounded-full border-2 border-sky-800 bg-white-400 w-32 h-32"
-					fNodeOutput fNodeInput [fInputId]="node.id" [fInputMultiple]="true"
-					[fOutputId]="node.id" [fOutputMultiple]="true" fNodeOutlet></div>
+					fNodeOutput fNodeInput [fInputId]="node.endpoints[0].id"
+					[fInputMultiple]="true" [fOutputId]="node.endpoints[1].id"
+					[fOutputMultiple]="true" fNodeOutlet></div>
 				}
 			</div>
 			} @for(connection of connections;track connection.id){ <f-connection
@@ -56,6 +57,13 @@
 				selectedColor="fill-red-800"></app-connection-markers> </f-connection> } </f-canvas> </f-flow>
 		</div>
 	</div>
+	@for(node of nodes;track node.id){ @for(endpoint of
+	node.endpoints;track endpoint.id){
+
+	<div>{{node.id}} -> {{endpoint.isSource}} -> {{endpoint.id}}</div>
+	} } @for(connection of connections;track connection.id){
+	<div>{{connection.source.id}} -> {{connection.target.id}}</div>
+	}
 	<!-- 
 	@if(selectedNode != null){
 	<div class="max-w-3xl grid grid-cols-2 gap-3">

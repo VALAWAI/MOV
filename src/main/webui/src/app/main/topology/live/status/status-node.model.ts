@@ -59,20 +59,31 @@ export class StatusNode {
 	/**
 	 * Create a new node for a compoennt.
 	 */
-	public static createComponentNode(position: number, model: LiveTopologyComponent): StatusNode {
+	public updateWith(model: LiveTopologyComponent) {
+
+		this.type = model.type;
+		this.name = model.name;
+		if (this.name != null && this.name.match(/c[0|1|2]_.+/i) != null) {
+
+			this.name = this.name.substring(3);
+		}
+	}
 
 
-		var node = new StatusNode(model.id!);
-		node.position = { x: 200 * position, y: 200 * position };
-		node.type = model.type;
-		node.name = model.name;
-		if (node.name != null && node.name.match(/c[0|1|2]_.+/i) != null) {
-			arguments
+	/**
+	 * Return the endpoint for the specified channel.
+	 */
+	public searchOrCreateSEndpointFor(channel: string | null, isSource: boolean): StatusEndpoint {
 
-			node.name = node.name!.substring(3);
+		var endpoint = this.endpoints.find(e => e.isSource == isSource && e.channel === channel) || null;
+		if (endpoint == null) {
+
+			endpoint = new StatusEndpoint(this.id, channel, isSource);
+			this.endpoints.push(endpoint);
 		}
 
-		return node;
+		return endpoint;
+
 	}
 
 	/**
