@@ -4,12 +4,12 @@
 		<div [ngStyle]="{'height.px':height}"
 			class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)">
-
 			@if(conf.liveShowGrid$|async){ <f-background> <f-circle-pattern></f-circle-pattern>
 			</f-background> } <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
 			<f-canvas fZoom> @for(node of nodes;track node.id){
 			<div fNode [fNodeId]="node.id" fDragHandle
 				[fNodePosition]="node.position">
+				@if(node.type != null){
 				<app-component-type-node-container [type]="node.type"
 					[isSelected]="node.id === selected?.id" (width)="node.width=$event"
 					(height)="node.height=$event">
@@ -35,19 +35,28 @@
 					{{endpoint.name}}
 				</div>
 				} } </app-component-type-node-container>
+
+				} @else{
+				<div
+					class="rounded-full border-2 border-sky-800 bg-white-400 w-32 h-32"
+					fNodeOutput fNodeInput [fInputId]="node.id" [fInputMultiple]="true"
+					[fOutputId]="node.id" [fOutputMultiple]="true" fNodeOutlet></div>
+				}
 			</div>
 			} @for(connection of connections;track connection.id){ <f-connection
 				[fType]="conf.liveEdgeType$ | async | toConnectionType"
-				[fConnectionId]="connection.id" [fOutputId]="connection.sourceId"
-				[fInputId]="connection.targetId"
-				[fStartColor]="colorFor(connection)"
-				[fEndColor]="colorFor(connection)" class="hover:stroke-7"
+				[fConnectionId]="connection.id" [fOutputId]="connection.source.id"
+				[fInputId]="connection.target.id"
+				[fStartColor]="connection.color(isSelected(connection))"
+				[fEndColor]="connection.color(isSelected(connection))"
+				class="hover:stroke-7"
 				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
 				[fOffset]="30"> <app-connection-markers
-				[color]="connection.isEnabled?'fill-sky-400':'fill-gray-200'"
+				[color]="connection.enabled?'fill-sky-400':'fill-gray-200'"
 				selectedColor="fill-red-800"></app-connection-markers> </f-connection> } </f-canvas> </f-flow>
 		</div>
 	</div>
+	<!-- 
 	@if(selectedNode != null){
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
 		<div class="text-left font-bold"
@@ -93,5 +102,5 @@
 		</button>
 	</div>
 	}
-
+	 -->
 </div>

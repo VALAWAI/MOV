@@ -14,14 +14,17 @@ import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } 
 import { MainService } from 'src/app/main';
 import { LiveNode } from './live-node.model';
 import { GraphModule } from '@app/shared/graph/graph.module';
-import { combineLatest, Subscription, switchMap, timer } from 'rxjs';
+import { combineLatest, Subscription, switchMap, timer, retry } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
-import { MinComponentPage, MinConnectionPage, MovApiService } from '@app/shared/mov-api';
+import { LiveTopology, MinComponentPage, MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { DagreLayoutService } from '@app/shared/graph';
 import { LiveConnection } from './live-connection.model';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { StatusNode } from './status-node.model';
+import { StatusConnection } from './status-connection.model';
+import { StatusEndpoint } from './status-endpoint.model';
 
 
 /**
@@ -73,14 +76,19 @@ export class StatusComponent implements OnInit, OnDestroy {
 	private readonly ref = inject(ChangeDetectorRef);
 
 	/**
+	 * The live topology.
+	 */
+	private topology: LiveTopology = new LiveTopology();
+
+	/**
 	 * The nodes of the graph.
 	 */
-	public nodes: LiveNode[] = [];
+	public nodes: StatusNode[] = [];
 
 	/**
 	 * The connections of the graph.
 	 */
-	public connections: LiveConnection[] = [];
+	public connections: StatusConnection[] = [];
 
 	/**
 	 * The subscription to the polling process.
@@ -100,7 +108,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 	/**
 	 * The selected element.
 	 */
-	public selected: LiveNode | LiveConnection | null = null;
+	public selected: StatusNode | StatusConnection | null = null;
 
 	/**
 	 * The serv ice to layout the graph.
@@ -126,172 +134,119 @@ export class StatusComponent implements OnInit, OnDestroy {
 		this.header.changeHeaderTitle($localize`:The header title for the topology libe status@@main_topology_live_status_code_page-title:Live topology`);
 		this.windowResized();
 
+
 		this.pullingSubscription = timer(0, this.conf.pollingTime).pipe(
-			switchMap(
-				() => {
-					return combineLatest([
-						this.api.getMinComponentPage(null, null, null, null, null, 0, this.conf.liveMaxNodes),
-						this.api.getMinConnectionPage(null, null, null, 0, this.conf.liveMaxEdges)]);
-				}
-			)
+			switchMap(() => this.api.getLiveTopology(0, this.conf.liveMaxNodes)),
+			retry()
 		).subscribe(
 			{
-				next: (pages) => {
+				next: topology => {
 
-					var changed = this.synchronizeNodes(pages[0], pages[1]);
-					changed = this.synchronizeConnections(pages[1]) || changed;
-					if (changed) {
+					if (JSON.stringify(this.topology) != JSON.stringify(topology)) {
+						// updated topology
+						this.topology = topology;
+						this.synchronizeGraphWithTopology();
+					}
+				}
+			}
+		);
+	}
 
-						this.dagre.createGraph().subscribe(
-							{
-								next: graph => {
 
-									graph.vertical();
-									for (var node of this.nodes) {
+	/**
+	 * Synchnoze the graph to match the topology.
+	 */
+	private synchronizeGraphWithTopology() {
 
-										graph.addNode(node.id, node.width, node.height);
-									}
-									for (var connection of this.connections) {
+		this.nodes = [];
+		this.connections = [];
+		if (this.topology.components != null) {
 
-										graph.addEdge(connection.sourceNodeId, connection.targetNodeId);
-									}
-									graph.layout();
-									for (var node of this.nodes) {
+			for (var component of this.topology.components) {
 
-										node.position = graph.getPositionFor(node.id) || node.position;
+				var node = StatusNode.createComponentNode(this.nodes.length, component);
+				this.nodes.push(node);
 
-									}
-									this.updatedGraph();
-								}
+				if (component.connections != null) {
+
+					for (var outConnection of component.connections) {
+
+						var sourceEndpoint = new StatusEndpoint(component.id!, outConnection.channel!, true);
+						node.endpoints.push(sourceEndpoint);
+
+						if (outConnection.notifications != null && outConnection.notifications.length > 0) {
+
+							var notificationNode = StatusNode.createNotificationNode(this.nodes.length, outConnection);
+							this.nodes.push(notificationNode);
+
+							var connectionToNotification = new StatusConnection(sourceEndpoint, notificationNode.endpoints[0]);
+							connectionToNotification.enabled = outConnection.target!.enabled;
+							this.connections.push(connectionToNotification);
+
+							sourceEndpoint = notificationNode.endpoints[1];
+
+							for (var notification of outConnection.notifications) {
+
+								var targetEndpoint = new StatusEndpoint(notification.id!, notification.channel!, false);
+								var connection = new StatusConnection(sourceEndpoint, targetEndpoint);
+								connection.enabled = notification.enabled;
+								this.connections.push(connection);
 							}
-						);
+						}
+
+						var targetEndpoint = new StatusEndpoint(outConnection.target!.id!, outConnection.target!.channel!, false);
+						var connection = new StatusConnection(sourceEndpoint, targetEndpoint);
+						connection.enabled = outConnection.target!.enabled;
+						this.connections.push(connection);
+					}
+
+					node.endpoints.sort((e1, e2) => e1.compareTo(e2));
+				}
+			}
+
+		}
+
+		setTimeout(() => this.updateLayoutGraph(), 1);
+
+	}
+
+	/**
+	 * Apply layout iver the graph.
+	 */
+	private updateLayoutGraph() {
+
+		this.dagre.createGraph().subscribe(
+			{
+				next: graph => {
+
+					graph.vertical();
+					for (var node of this.nodes) {
+
+						graph.addNode(node.id, node.width, node.height);
+					}
+					for (var connection of this.connections) {
+
+						graph.addEdge(connection.source.nodeId, connection.target.nodeId);
+					}
+					graph.layout();
+					for (var node of this.nodes) {
+
+						var newPosiiton = graph.getPositionFor(node.id);
+						if (newPosiiton != null) {
+
+							node.position = newPosiiton;
+						}
 
 					}
-				},
-				error: err => this.messages.showMOVConnectionError(err)
+					this.fCanvas().resetScaleAndCenter(true);
+					this.updatedGraph();
+				}
 			}
 		);
 
-	}
-
-	/**
-	 * Called to synchonide the live nodes with the information from the MOV.
-	 */
-	private synchronizeNodes(foundNodes: MinComponentPage, foundEdges: MinConnectionPage): boolean {
-
-		var changed: boolean = false;
-		if (foundNodes.components != null && foundNodes.components.length > 0) {
-
-			COMPONENT: for (var component of foundNodes.components) {
-
-				for (var node of this.nodes) {
-
-					if (node.id === component.id) {
-
-						changed = node.updateEndpointsWith(foundEdges) || changed;
-						continue COMPONENT;
-					}
-
-				}
-
-				var node = new LiveNode(component);
-				node.updateEndpointsWith(foundEdges);
-				this.nodes.push(node);
-				changed = true;
-			}
-
-			NODE: for (var i = 0; i < this.nodes.length; i++) {
-
-				var nodeId = this.nodes[i].id;
-				for (var component of foundNodes.components) {
-
-					if (component.id === nodeId) {
-
-						continue NODE;
-					}
-
-				}
-
-				this.nodes.splice(i, 1);
-				i--;
-				changed = true;
-			}
-
-		} else if (this.nodes.length > 0) {
-
-			this.nodes = [];
-			changed = true;
-
-		}
-
-
-		return changed;
 
 	}
 
-	/**
-	 * Called to synchonide the live connections with the information from the MOV.
-	 */
-	private synchronizeConnections(page: MinConnectionPage): boolean {
-
-		var changed = false;
-		if (page.connections != null && page.connections.length > 0) {
-
-			PAGE: for (var connection of page.connections) {
-
-				for (var edge of this.connections) {
-
-					if (edge.id === connection.id) {
-
-						continue PAGE;
-					}
-
-				}
-
-				var edge = new LiveConnection(connection);
-				for (var node of this.nodes) {
-
-					if (node.isNodeChannel(edge.sourceId)) {
-
-						edge.sourceNodeId = node.id;
-					}
-					if (node.isNodeChannel(edge.targetId)) {
-
-						edge.targetNodeId = node.id;
-					}
-				}
-				this.connections.push(edge);
-				changed = true;
-			}
-
-			CONNECTION: for (var i = 0; i < this.connections.length; i++) {
-
-				var connectionId = this.connections[i].id;
-				for (var connection of page.connections) {
-
-					if (connection.id === connectionId) {
-
-						continue CONNECTION;
-					}
-
-				}
-
-				this.connections.splice(i, 1);
-				i--;
-				changed = true;
-			}
-
-
-		} else if (this.connections.length > 0) {
-
-			this.connections = [];
-			changed = true;
-
-		}
-
-
-		return changed;
-	}
 
 	/**
 	 * Unsubscribe.
@@ -370,24 +325,12 @@ export class StatusComponent implements OnInit, OnDestroy {
 		if (event.fNodeIds.length > 0) {
 
 			const selectedNodeId = event.fNodeIds[0];
-			for (var node of this.nodes) {
-
-				if (node.id === selectedNodeId) {
-
-					this.selected = node;
-				}
-			}
+			this.selected = this.nodes.find(node => node.id == selectedNodeId) || null;
 
 		} else if (event.fConnectionIds.length > 0) {
 
 			const selectedConnectionId = event.fConnectionIds[0];
-			for (var edge of this.connections) {
-
-				if (edge.id === selectedConnectionId) {
-
-					this.selected = edge;
-				}
-			}
+			this.selected = this.connections.find(connection => connection.id == selectedConnectionId) || null;
 		}
 		this.updatedGraph();
 	}
@@ -395,7 +338,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 	/**
 	 * Check if the elemenbt is selected.
 	 */
-	public isSelected(value: LiveNode | LiveConnection | null | undefined) {
+	public isSelected(value: StatusNode | StatusConnection | null | undefined) {
 
 		if (value != null && this.selected != null) {
 
@@ -407,49 +350,31 @@ export class StatusComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	/**
-	 * Return the color for a defined conneciton in the topology.
-	 */
-	public colorFor(connection: LiveConnection): string {
 
-		if (this.isSelected(connection)) {
-
-			return 'var(--color-red-800)';
-
-		} else if (connection.isEnabled) {
-
-			return 'var(--color-sky-400)';
-
-		} else {
-
-			return 'var(--color-gray-200)';
-		}
-	}
-
-	/**
-	 * Return the selected node.
-	 */
-	public get selectedNode(): LiveNode | null {
-
-		if (this.selected != null && 'component' in this.selected) {
-
-			return this.selected as LiveNode;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Return the selected connection.
-	 */
-	public get selectedConnection(): LiveConnection | null {
-
-		if (this.selected != null && 'connection' in this.selected) {
-
-			return this.selected as LiveConnection;
-		}
-
-		return null;
-	}
+	//	/**
+	//	 * Return the selected node.
+	//	 */
+	//	public get selectedNode(): LiveNode | null {
+	//
+	//		if (this.selected != null && 'component' in this.selected) {
+	//
+	//			return this.selected as LiveNode;
+	//		}
+	//
+	//		return null;
+	//	}
+	//
+	//	/**
+	//	 * Return the selected connection.
+	//	 */
+	//	public get selectedConnection(): LiveConnection | null {
+	//
+	//		if (this.selected != null && 'connection' in this.selected) {
+	//
+	//			return this.selected as LiveConnection;
+	//		}
+	//
+	//		return null;
+	//	}
 
 }

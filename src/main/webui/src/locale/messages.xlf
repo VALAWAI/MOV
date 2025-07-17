@@ -170,19 +170,59 @@
         </context-group>
         <note priority="1" from="description">Name for the segments edge type</note>
       </trans-unit>
-      <trans-unit id="main_config_live-edge-color-label" datatype="html">
-        <source>Enabled conneciton color </source>
+      <trans-unit id="main_config_live-max-nodes-label" datatype="html">
+        <source>Max nodes </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
           <context context-type="linenumber">81,82</context>
         </context-group>
-        <note priority="1" from="description">The label of the live edge color</note>
+        <note priority="1" from="description">The label of the live max nodes</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-max-nodes-hint" datatype="html">
+        <source>The maximum number of nodes to view in the graph.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">84,85</context>
+        </context-group>
+        <note priority="1" from="description">The hint of the polling time</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-max-nodes-min-error" datatype="html">
+        <source>The number of nodes can not be less than 100.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">87,89</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no polling time is defined</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-max-edges-label" datatype="html">
+        <source>Max edges </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">90,91</context>
+        </context-group>
+        <note priority="1" from="description">The label of the live max edges</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-max-edges-hint" datatype="html">
+        <source>The maximum number of edges to view in the graph.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">93,94</context>
+        </context-group>
+        <note priority="1" from="description">The hint of the polling time</note>
+      </trans-unit>
+      <trans-unit id="main_config_live-max-edges-min-error" datatype="html">
+        <source>The number of edges can not be less than 100.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">96,100</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no polling time is defined</note>
       </trans-unit>
       <trans-unit id="main_config_code_page-title" datatype="html">
         <source>Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>
@@ -1065,7 +1105,7 @@
         <source>Delete node</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">174,177</context>
+          <context context-type="linenumber">175,178</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to delete a node from the topology</note>
       </trans-unit>
@@ -1073,7 +1113,7 @@
         <source>Edit endpoint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">181,186</context>
+          <context context-type="linenumber">182,187</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to edit an endpoint into a node</note>
       </trans-unit>
@@ -1637,7 +1677,7 @@ must select one topology to open.</source>
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">50,54</context>
+          <context context-type="linenumber">50,52</context>
         </context-group>
         <note priority="1" from="description">The label of the component name column header</note>
       </trans-unit>
@@ -1645,7 +1685,7 @@ must select one topology to open.</source>
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">56,60</context>
+          <context context-type="linenumber">57,61</context>
         </context-group>
         <note priority="1" from="description">The label of the component description column header</note>
       </trans-unit>
@@ -1653,7 +1693,7 @@ must select one topology to open.</source>
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">62,64</context>
+          <context context-type="linenumber">63,65</context>
         </context-group>
         <note priority="1" from="description">The label of the component actions column header</note>
       </trans-unit>
@@ -1661,7 +1701,7 @@ must select one topology to open.</source>
         <source>Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">70,72</context>
+          <context context-type="linenumber">71,73</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a component</note>
       </trans-unit>
@@ -1669,7 +1709,7 @@ must select one topology to open.</source>
         <source>Unregister</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">74,76</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to unregister a component</note>
       </trans-unit>
@@ -1677,7 +1717,7 @@ must select one topology to open.</source>
         <source>Show connections</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">78,83</context>
+          <context context-type="linenumber">79,84</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show the connection to a component</note>
       </trans-unit>
@@ -1685,7 +1725,7 @@ must select one topology to open.</source>
         <source> No components found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
-          <context context-type="linenumber">89,93</context>
+          <context context-type="linenumber">90,94</context>
         </context-group>
         <note priority="1" from="description">The warning message when no components found</note>
       </trans-unit>
@@ -2077,7 +2117,7 @@ must select one topology to open.</source>
         <source>Source</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">43,47</context>
+          <context context-type="linenumber">43,45</context>
         </context-group>
         <note priority="1" from="description">The label of the connection source column header</note>
       </trans-unit>
@@ -2085,7 +2125,7 @@ must select one topology to open.</source>
         <source>Target</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">49,53</context>
+          <context context-type="linenumber">50,52</context>
         </context-group>
         <note priority="1" from="description">The label of the connection target column header</note>
       </trans-unit>
@@ -2093,7 +2133,7 @@ must select one topology to open.</source>
         <source>Enabled</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">55,57</context>
+          <context context-type="linenumber">57,59</context>
         </context-group>
         <note priority="1" from="description">The label of the connection enabled column header</note>
       </trans-unit>
@@ -2101,7 +2141,7 @@ must select one topology to open.</source>
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">63,66</context>
+          <context context-type="linenumber">65,68</context>
         </context-group>
         <note priority="1" from="description">The label of the connection actions column header</note>
       </trans-unit>
@@ -2109,7 +2149,7 @@ must select one topology to open.</source>
         <source>Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">73,75</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to show a connection</note>
       </trans-unit>
@@ -2117,7 +2157,7 @@ must select one topology to open.</source>
         <source>Enable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">75,77</context>
+          <context context-type="linenumber">77,79</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to enable a connection</note>
       </trans-unit>
@@ -2125,7 +2165,7 @@ must select one topology to open.</source>
         <source>Disable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">79,81</context>
+          <context context-type="linenumber">81,83</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to disable a connection</note>
       </trans-unit>
@@ -2133,7 +2173,7 @@ must select one topology to open.</source>
         <source>Remove</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">83,88</context>
+          <context context-type="linenumber">85,90</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to remove a connection</note>
       </trans-unit>
@@ -2141,7 +2181,7 @@ must select one topology to open.</source>
         <source> No connections found that meet the specified requirements. Consider reviewing your filtering conditions or expanding your search parameters.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
-          <context context-type="linenumber">94,99</context>
+          <context context-type="linenumber">96,101</context>
         </context-group>
         <note priority="1" from="description">The warning message when no connections found</note>
       </trans-unit>
