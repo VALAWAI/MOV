@@ -12,20 +12,19 @@ import { ConfigService } from '@app/shared';
 import { PointExtensions } from '@foblex/2d';
 import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
 import { MainService } from 'src/app/main';
-import { LiveNode } from './live-node.model';
 import { GraphModule } from '@app/shared/graph/graph.module';
-import { combineLatest, Subscription, switchMap, timer, retry } from 'rxjs';
+import { Subscription, switchMap, timer, retry } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
-import { LiveTopology, MinComponentPage, MinConnectionPage, MovApiService } from '@app/shared/mov-api';
+import { LiveTopology, LiveTopologyComponent, MovApiService } from '@app/shared/mov-api';
 import { DagreLayoutService } from '@app/shared/graph';
-import { LiveConnection } from './live-connection.model';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { StatusNode } from './status-node.model';
 import { StatusConnection } from './status-connection.model';
-import { StatusEndpoint } from './status-endpoint.model';
 
+
+export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'COMPONENT_TO_COMPONENT' | 'COMPONENT_TO_NOTIFICATION' | 'NOTIFICATION_TO_COMPONENT' | 'NONE';
 
 /**
  * This compony show a graph with the current status of the topology managed by the MOV.
@@ -367,6 +366,50 @@ export class StatusComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * Return the selected element type.
+	 */
+	public get selectedType(): SelectedType {
+
+		if (this.selected != null) {
+
+			if ('position' in this.selected) {
+
+				if (this.selected.name != null) {
+
+					return 'COMPONENT';
+
+				} else {
+
+					return 'NOTIFICATION';
+				}
+
+			} else if (this.selected.source.channel == null) {
+
+				return 'NOTIFICATION_TO_COMPONENT';
+
+			} else if (this.selected.target.channel == null) {
+
+				return 'COMPONENT_TO_NOTIFICATION';
+
+			} else {
+
+				return 'COMPONENT_TO_COMPONENT';
+			}
+
+		}
+
+		return 'NONE';
+	}
+
+
+	/**
+	 * Return teh selected component.
+	 */
+	public get selectedLiveTopologyComponent(): LiveTopologyComponent {
+
+		return this.topology.components!.find(c => c.id == this.selected!.id)!;
+	}
 
 	//	/**
 	//	 * Return the selected node.
