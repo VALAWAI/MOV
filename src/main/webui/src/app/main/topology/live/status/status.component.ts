@@ -13,9 +13,9 @@ import { PointExtensions } from '@foblex/2d';
 import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
 import { MainService } from 'src/app/main';
 import { GraphModule } from '@app/shared/graph/graph.module';
-import { Subscription, switchMap, timer, retry } from 'rxjs';
+import { Subscription, switchMap, timer, retry, throwError } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
-import { LiveTopology, LiveTopologyComponent, MovApiService } from '@app/shared/mov-api';
+import { LiveTopology, LiveTopologyComponent, LiveTopologyComponentOutConnection, MovApiService } from '@app/shared/mov-api';
 import { DagreLayoutService } from '@app/shared/graph';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
@@ -24,7 +24,7 @@ import { StatusNode } from './status-node.model';
 import { StatusConnection } from './status-connection.model';
 
 
-export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'COMPONENT_TO_COMPONENT' | 'COMPONENT_TO_NOTIFICATION' | 'NOTIFICATION_TO_COMPONENT' | 'NONE';
+export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFICATION_CONNECTION' | 'NONE';
 
 /**
  * This compony show a graph with the current status of the topology managed by the MOV.
@@ -163,38 +163,38 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 			for (var component of this.topology.components) {
 
-				var node = this.searchOrCreateNode(component.id!);
+				var node = this.searchOrCreateNode(component);
 				node.updateWith(component);
 
 				if (component.connections != null) {
 
 					for (var outConnection of component.connections) {
 
-						var sourceEndpoint = node.searchOrCreateSEndpointFor(outConnection.channel, true);
+						var sourceEndpoint = node.searchOrCreateEndpointFor(outConnection.channel, true);
 
 						if (outConnection.notifications != null && outConnection.notifications.length > 0) {
 
-							var notificationNode = this.searchOrCreateNode(outConnection.id!);
+							var notificationNode = this.searchOrCreateNode(outConnection!);
 
 							var connectionToNotification = new StatusConnection(sourceEndpoint,
-								notificationNode.searchOrCreateSEndpointFor(null, false));
+								notificationNode.searchOrCreateEndpointFor(null, false), outConnection);
 							connectionToNotification.enabled = outConnection.target!.enabled;
 							this.connections.push(connectionToNotification);
 
-							sourceEndpoint = notificationNode.searchOrCreateSEndpointFor(null, true);
+							sourceEndpoint = notificationNode.searchOrCreateEndpointFor(null, true);
 							for (var notification of outConnection.notifications) {
 
 								var targetNode = this.searchOrCreateNode(notification.id!);
-								var targetEndpoint = targetNode.searchOrCreateSEndpointFor(notification.channel!, false);
-								var connection = new StatusConnection(sourceEndpoint, targetEndpoint);
+								var targetEndpoint = targetNode.searchOrCreateEndpointFor(notification.channel!, false);
+								var connection = new StatusConnection(sourceEndpoint, targetEndpoint, outConnection);
 								connection.enabled = notification.enabled;
 								this.connections.push(connection);
 							}
 						}
 
 						var targetNode = this.searchOrCreateNode(outConnection.target!.id!);
-						var targetEndpoint = targetNode.searchOrCreateSEndpointFor(outConnection.target!.channel!, false);
-						var connection = new StatusConnection(sourceEndpoint, targetEndpoint);
+						var targetEndpoint = targetNode.searchOrCreateEndpointFor(outConnection.target!.channel!, false);
+						var connection = new StatusConnection(sourceEndpoint, targetEndpoint, outConnection);
 						connection.enabled = outConnection.target!.enabled;
 						this.connections.push(connection);
 					}
@@ -212,9 +212,9 @@ export class StatusComponent implements OnInit, OnDestroy {
 	/**
 	 * Search for a node of create it.
 	 */
-	private searchOrCreateNode(id: string) {
+	private searchOrCreateNode(id: string | LiveTopologyComponent | LiveTopologyComponentOutConnection): StatusNode {
 
-		var node = this.nodes.find(node => node.id == id) || null;
+		var node = this.nodes.find(node => node.equalId(id)) || null;
 		if (node == null) {
 
 			node = new StatusNode(id);
@@ -384,17 +384,15 @@ export class StatusComponent implements OnInit, OnDestroy {
 					return 'NOTIFICATION';
 				}
 
-			} else if (this.selected.source.channel == null) {
+			} else if (this.selected.target.channel == this.selected.model.target!.channel
+				|| this.selected.source.channel == this.selected.model.channel
+			) {
 
-				return 'NOTIFICATION_TO_COMPONENT';
-
-			} else if (this.selected.target.channel == null) {
-
-				return 'COMPONENT_TO_NOTIFICATION';
+				return 'CONNECTION';
 
 			} else {
 
-				return 'COMPONENT_TO_COMPONENT';
+				return 'NOTIFICATION_CONNECTION';
 			}
 
 		}
@@ -402,39 +400,20 @@ export class StatusComponent implements OnInit, OnDestroy {
 		return 'NONE';
 	}
 
-
 	/**
 	 * Return teh selected component.
 	 */
 	public get selectedLiveTopologyComponent(): LiveTopologyComponent {
 
-		return this.topology.components!.find(c => c.id == this.selected!.id)!;
+		return (this.selected! as StatusNode).model as LiveTopologyComponent;
 	}
 
-	//	/**
-	//	 * Return the selected node.
-	//	 */
-	//	public get selectedNode(): LiveNode | null {
-	//
-	//		if (this.selected != null && 'component' in this.selected) {
-	//
-	//			return this.selected as LiveNode;
-	//		}
-	//
-	//		return null;
-	//	}
-	//
-	//	/**
-	//	 * Return the selected connection.
-	//	 */
-	//	public get selectedConnection(): LiveConnection | null {
-	//
-	//		if (this.selected != null && 'connection' in this.selected) {
-	//
-	//			return this.selected as LiveConnection;
-	//		}
-	//
-	//		return null;
-	//	}
+	/**
+	 * Obtain the sledcted status connection.
+	 */
+	public get selectedStatusConnection(): StatusConnection {
+
+		return this.selected! as StatusConnection;
+	}
 
 }

@@ -54,13 +54,45 @@ export class StatusNode {
 	/**
 	 * Create the node.
 	 */
-	constructor(public id: string) { }
+	constructor(public model: string | LiveTopologyComponent | LiveTopologyComponentOutConnection) { }
+
+	/**
+	 * Get the node identifier.
+	 */
+	public get id(): string {
+
+		if (typeof this.model === 'string') {
+
+			return this.model;
+
+		} else {
+
+			return this.model.id!;
+		}
+
+	}
+
+	/**
+	 * Check if 
+	*/
+	public equalId(id: string | LiveTopologyComponent | LiveTopologyComponentOutConnection): boolean {
+
+		if (typeof id === 'string') {
+
+			return this.id == id;
+
+		} else {
+
+			return this.id! == id.id;
+		}
+	}
 
 	/**
 	 * Create a new node for a compoennt.
 	 */
 	public updateWith(model: LiveTopologyComponent) {
 
+		this.model = model;
 		this.type = model.type;
 		this.name = model.name;
 		if (this.name != null && this.name.match(/c[0|1|2]_.+/i) != null) {
@@ -73,7 +105,7 @@ export class StatusNode {
 	/**
 	 * Return the endpoint for the specified channel.
 	 */
-	public searchOrCreateSEndpointFor(channel: string | null, isSource: boolean): StatusEndpoint {
+	public searchOrCreateEndpointFor(channel: string | null, isSource: boolean): StatusEndpoint {
 
 		var endpoint = this.endpoints.find(e => e.isSource == isSource && e.channel === channel) || null;
 		if (endpoint == null) {

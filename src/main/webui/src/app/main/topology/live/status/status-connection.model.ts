@@ -6,6 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { LiveTopologyComponentOutConnection } from "@app/shared/mov-api";
 import { StatusEndpoint } from "./status-endpoint.model";
 
 
@@ -22,7 +23,7 @@ export class StatusConnection {
 	/**
 	 * Create the connection.
 	 */
-	constructor(public source: StatusEndpoint, public target: StatusEndpoint) {
+	constructor(public source: StatusEndpoint, public target: StatusEndpoint, public model: LiveTopologyComponentOutConnection) {
 
 	}
 

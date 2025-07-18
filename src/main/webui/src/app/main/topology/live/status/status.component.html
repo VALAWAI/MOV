@@ -35,10 +35,9 @@
 					{{endpoint.name}}
 				</div>
 				} } </app-component-type-node-container>
-
 				} @else{
-				<div class="rounded-full border-2 w-4 h-4 hover:stroke-7"
-					[ngClass]="{'border-red-400 bg-red-800':isSelected(node),'border-sky-800 bg-white-400':!isSelected(node)}"
+				<div class="rounded-full border-2 w-6 h-6 hover:stroke-7"
+					[ngClass]="{'border-red-400 bg-red-800':isSelected(node),'border-sky-400 bg-sky-400':!isSelected(node)}"
 					fNodeOutput fNodeInput [fInputId]="node.endpoints[0].id"
 					[fInputMultiple]="true" [fOutputId]="node.endpoints[1].id"
 					[fOutputMultiple]="true" fNodeOutlet fInputConnectableSide="top"
@@ -78,61 +77,64 @@
 		</button>
 	</div>
 	} @case('NOTIFICATION'){
-	<div>NOTIFICATION</div>
-	} @case('COMPONENT_TO_COMPONENT'){
-	<div>COMPONENT_TO_COMPONENT</div>
-	} @case('COMPONENT_TO_NOTIFICATION'){
-	<div>COMPONENT_TO_NOTIFICATION</div>
-	} @case('NOTIFICATION_TO_COMPONENT'){
-	<div>NOTIFICATION_TO_COMPONENT</div>
-	} @default{
-	<!-- NONE selected -->
-	} }
-	<!-- 
-	@if(selectedNode != null){
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
-		<div class="text-left font-bold"
-			i18n="The label of the selected component type attribute@@main_topology_live_status_component-type-label">Type:</div>
-		<div class="text-left">{{selectedNode.component.type}}</div>
-		<div class="text-left font-bold"
-			i18n="The label of the selected component name attribute@@main_topology_live_status_component-name-label">Name:</div>
-		<div class="text-left">{{selectedNode.component.name}}</div>
-		<div class="text-left font-bold"
-			i18n="The label of the selected component description attribute@@main_topology_live_status_component-description-label">Description:</div>
-		<div class="text-left">{{selectedNode.component.description}}</div>
-		<button class="col-span-2" matButton color="primary"
-			[routerLink]="['/main/topology/live/components',selectedNode.component!.id!,'show']">
-			<mat-icon>info</mat-icon>
-			<span
-				i18n="The label of the button to go to get more information about the live component@@main_topology_live_status_more-info-about-selected-node-button-label">More
-				info</span>
-		</button>
+		<div class="col-span-2">Notify to the following channels:</div>
+
 	</div>
-	}@else if(selectedConnection!=null ){
+	} @case('CONNECTION'){
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
 		<div class="text-left font-bold"
 			i18n="The label of the selected connection source identifier@@main_topology_live_status_selected-connection-source-id-label">Source:</div>
-		<div class="text-left">{{selectedConnection.sourceId}}</div>
+		<div class="text-left">{{selectedStatusConnection.model.channel}}</div>
 		<div class="text-left font-bold"
 			i18n="The label of the selected connection target identifier@@main_topology_live_status_selected-connection-target-id-label">Target:</div>
-		<div class="text-left">{{selectedConnection.targetId}}</div>
+		<div class="text-left">{{selectedStatusConnection.model.target!.channel}}</div>
 		<div class="text-left font-bold"
 			i18n="The label of the selected connection is enabled@@main_topology_live_status_selected-connection-is:enabled-label">Enabled:</div>
 		<div class="text-left">
-			@if(selectedConnection.isEnabled){
+			@if(selectedStatusConnection.enabled){
 			<mat-icon color="primary">wifi_on</mat-icon>
 			}@else{
 			<mat-icon color="warn">wifi_off</mat-icon>
 			}
 		</div>
 		<button class="col-span-2" matButton color="primary"
-			[routerLink]="['/main/topology/live/connections',selectedConnection.connection.id,'show']">
+			[routerLink]="['/main/topology/live/connections',selectedStatusConnection.model.id,'show']">
 			<mat-icon>info</mat-icon>
 			<span
 				i18n="The label of the button to go to get more information about the selected live connection@@main_topology_live_status_more-info-about-selected-connection-button-label">More
 				info</span>
 		</button>
 	</div>
-	}
-	 -->
+	} @case('NOTIFICATION_CONNECTION'){
+	<div class="max-w-3xl grid grid-cols-2 gap-3">
+		<div class="text-left font-bold"
+			i18n="The label of the selected connection source identifier@@main_topology_live_status_selected-connection-source-id-label">Source:</div>
+		<div class="text-left">{{selectedStatusConnection.target.channel}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the selected connection source identifier@@main_topology_live_status_selected-connection-source-id-label">Source:</div>
+		<div class="text-left">{{selectedStatusConnection.model.channel}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the selected connection target identifier@@main_topology_live_status_selected-connection-target-id-label">Target:</div>
+		<div class="text-left">{{selectedStatusConnection.model.target!.channel}}</div>
+		<div class="text-left font-bold"
+			i18n="The label of the selected connection is enabled@@main_topology_live_status_selected-connection-is:enabled-label">Enabled:</div>
+		<div class="text-left">
+			@if(selectedStatusConnection.enabled){
+			<mat-icon color="primary">wifi_on</mat-icon>
+			}@else{
+			<mat-icon color="warn">wifi_off</mat-icon>
+			}
+		</div>
+		<button class="col-span-2" matButton color="primary"
+			[routerLink]="['/main/topology/live/connections',selectedStatusConnection.model.id,'show']">
+			<mat-icon>info</mat-icon>
+			<span
+				i18n="The label of the button to go to get more information about the selected live connection@@main_topology_live_status_more-info-about-selected-connection-button-label">More
+				info</span>
+		</button>
+	</div>
+	} @default{
+	<!-- NONE selected -->
+	} }
 </div>
