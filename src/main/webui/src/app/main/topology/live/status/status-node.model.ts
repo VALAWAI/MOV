@@ -119,18 +119,25 @@ export class StatusNode {
 	}
 
 	/**
-	 * Create a new node used to send the notifications.
+	 * Obtain the model of a connection defined in the node.
 	 */
-	public static createNotificationNode(position: number, model: LiveTopologyComponentOutConnection): StatusNode {
+	public searchLiveTopologyComponentOutConnectionWith(id: string): LiveTopologyComponentOutConnection | null {
 
+		if (typeof this.model === 'object' && 'connections' in this.model) {
 
-		var node = new StatusNode(model.id!);
-		node.position = { x: 200 * position, y: 200 * position };
-		var target = new StatusEndpoint(node.id, null, false);
-		node.endpoints.push(target);
-		var source = new StatusEndpoint(node.id, null, true);
-		node.endpoints.push(source);
-		return node;
+			return this.model.connections!.find(c => c.id == id) || null;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return the endpoint for the specified channel.
+	 */
+	public searchEndpointByChannel(channel: string): StatusEndpoint | null {
+
+		return this.endpoints.find(e => e.channel === channel) || null;
+
 	}
 
 

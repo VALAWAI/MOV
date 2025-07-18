@@ -22,6 +22,8 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { StatusNode } from './status-node.model';
 import { StatusConnection } from './status-connection.model';
+import { NotificationConnectionDetailComponent } from './notification-connection-detail.component';
+import { ConnectionDetailComponent } from './connection-detail.component';
 
 
 export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFICATION_CONNECTION' | 'NONE';
@@ -31,14 +33,16 @@ export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFI
  */
 @Component({
 	standalone: true,
-	selector: 'app-status',
+	selector: 'app-live-topology-status',
 	imports: [
 		CommonModule,
 		FFlowModule,
 		GraphModule,
 		MatIconModule,
 		RouterModule,
-		MatButtonModule
+		MatButtonModule,
+		NotificationConnectionDetailComponent,
+		ConnectionDetailComponent
 	],
 	templateUrl: './status.component.html'
 })
@@ -414,6 +418,22 @@ export class StatusComponent implements OnInit, OnDestroy {
 	public get selectedStatusConnection(): StatusConnection {
 
 		return this.selected! as StatusConnection;
+	}
+
+	/**
+	 * Finc for the LiveTopologyComponent thyat has the specified connection.
+	 */
+	public findLiveTopologyComponentWithConnection(id: string): LiveTopologyComponent | null {
+
+		return this.topology.components!.find(component => {
+
+			if (component.connections != null) {
+
+				return component.connections.find(c => c.id == id) != null;
+			}
+			return false;
+
+		}) || null;
 	}
 
 }
