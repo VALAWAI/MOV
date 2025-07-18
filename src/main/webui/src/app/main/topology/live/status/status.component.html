@@ -60,10 +60,8 @@
 	@switch(selectedType){ @case('COMPONENT'){
 	<app-node-detail [node]="selectedStatusNode"></app-node-detail>
 	} @case('NOTIFICATION'){
-	<div class="max-w-3xl grid grid-cols-2 gap-3">
-		<div class="col-span-2">Notify to the following channels:</div>
-
-	</div>
+	<app-notification-node-detail [nodes]="nodes"
+		[node]="selectedStatusNode"></app-notification-node-detail>
 	} @case('CONNECTION'){
 	<app-connection-detail [nodes]="nodes"
 		[connection]="selectedStatusConnection"></app-connection-detail>

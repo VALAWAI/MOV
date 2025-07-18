@@ -11,6 +11,7 @@ import { Directive, Injectable, Input } from '@angular/core';
 import { StatusConnection } from './status-connection.model';
 import { StatusNode } from './status-node.model';
 import { StatusEndpoint } from './status-endpoint.model';
+import { LiveTopologyComponentOutConnection } from '@app/shared/mov-api';
 
 /**
  * This compony show a graph with the current status of the topology managed by the MOV.
@@ -78,13 +79,21 @@ export abstract class AbstractConnectionDetailComponent {
 
 		if (this._nodes.length > 0 && this._connection != null) {
 
-			this.source = this._nodes.find(node => node.searchLiveTopologyComponentOutConnectionWith(this._connection!.model!.id!) != null)!;
-			this.sourceEndPoint = this.source.searchEndpointByChannel(this._connection!.model!.channel!)!;
-			this.target = this._nodes.find(node => node.id == this._connection!.model!.target!.id)!;
-			this.targetEndPoint = this.target.searchEndpointByChannel(this._connection!.model!.target!.channel!)!;
+			this.updateDataWith(this._connection.model!);
 		}
 	}
 
+	/**
+	 * Obtain the data to show on the details.
+	 */
+	protected updateDataWith(connection: LiveTopologyComponentOutConnection) {
+
+		this.source = this._nodes.find(node => node.searchLiveTopologyComponentOutConnectionWith(connection.id!) != null)!;
+		this.sourceEndPoint = this.source.searchEndpointByChannel(connection.channel!)!;
+		this.target = this._nodes.find(node => node.id == connection.target!.id)!;
+		this.targetEndPoint = this.target.searchEndpointByChannel(connection.target!.channel!)!;
+		
+	}
 
 	/**
 	 * Return the connectin identifier.

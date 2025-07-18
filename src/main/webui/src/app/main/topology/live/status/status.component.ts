@@ -25,6 +25,7 @@ import { StatusConnection } from './status-connection.model';
 import { NotificationConnectionDetailComponent } from './notification-connection-detail.component';
 import { ConnectionDetailComponent } from './connection-detail.component';
 import { NodeDetailComponent } from './node-detail.component';
+import { NotificationNodeDetailComponent } from './notification-node-detail.component';
 
 
 export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFICATION_CONNECTION' | 'NONE';
@@ -44,7 +45,8 @@ export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFI
 		MatButtonModule,
 		NotificationConnectionDetailComponent,
 		ConnectionDetailComponent,
-		NodeDetailComponent
+		NodeDetailComponent,
+		NotificationNodeDetailComponent
 	],
 	templateUrl: './status.component.html'
 })

@@ -1,0 +1,21 @@
+<div class="p-3 max-w-5xl text-lg"
+	i18n="The mesage that is the detail of a notification node@@main_topology_live_status_notification-node-detail_msg">
+	This node groups notifications sent to components about messages
+	passing through the <a
+		class="font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200"
+		[routerLink]="['/main/topology/live/connections',connectionId,'show']">connection</a>
+	from <a
+		class="font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200"
+		[routerLink]="['/main/topology/live/components',sourceId,'show']">
+		{{sourceName}}</a> (on channel
+	<code
+		class="bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono">
+		{{sourceChannel}}</code>
+	) to <a
+		class="font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200"
+		[routerLink]="['/main/topology/live/components',targetId,'show']">
+		{{targetName}}</a> (on channel
+	<code
+		class="bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono">{{targetChannel}}</code>
+	).
+</div>
