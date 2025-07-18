@@ -24,6 +24,7 @@ import { StatusNode } from './status-node.model';
 import { StatusConnection } from './status-connection.model';
 import { NotificationConnectionDetailComponent } from './notification-connection-detail.component';
 import { ConnectionDetailComponent } from './connection-detail.component';
+import { NodeDetailComponent } from './node-detail.component';
 
 
 export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFICATION_CONNECTION' | 'NONE';
@@ -42,7 +43,8 @@ export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFI
 		RouterModule,
 		MatButtonModule,
 		NotificationConnectionDetailComponent,
-		ConnectionDetailComponent
+		ConnectionDetailComponent,
+		NodeDetailComponent
 	],
 	templateUrl: './status.component.html'
 })
@@ -405,14 +407,6 @@ export class StatusComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Return teh selected component.
-	 */
-	public get selectedLiveTopologyComponent(): LiveTopologyComponent {
-
-		return (this.selected! as StatusNode).model as LiveTopologyComponent;
-	}
-
-	/**
 	 * Obtain the sledcted status connection.
 	 */
 	public get selectedStatusConnection(): StatusConnection {
@@ -421,19 +415,11 @@ export class StatusComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Finc for the LiveTopologyComponent thyat has the specified connection.
+	 * Obtain the sledcted status connection.
 	 */
-	public findLiveTopologyComponentWithConnection(id: string): LiveTopologyComponent | null {
+	public get selectedStatusNode(): StatusNode {
 
-		return this.topology.components!.find(component => {
-
-			if (component.connections != null) {
-
-				return component.connections.find(c => c.id == id) != null;
-			}
-			return false;
-
-		}) || null;
+		return this.selected! as StatusNode;
 	}
 
 }

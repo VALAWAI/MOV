@@ -140,5 +140,17 @@ export class StatusNode {
 
 	}
 
+	/**
+	 * The description of the node.
+	 */
+	public get description(): string | null {
+
+		if (typeof this.model === 'object' && 'description' in this.model) {
+
+			return this.model.description;
+		}
+
+		return null;
+	}
 
 }

@@ -12,9 +12,7 @@ import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
 import { MatIconModule } from '@angular/material/icon';
 import { AbstractConnectionDetailComponent } from './abstract-connection-detail.component';
-/**
- * This compony show a graph with the current status of the topology managed by the MOV.
- */
+
 @Component({
 	standalone: true,
 	selector: 'app-notification-connection-detail',

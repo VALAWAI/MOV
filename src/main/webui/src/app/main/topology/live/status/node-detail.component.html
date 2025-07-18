@@ -1,0 +1,15 @@
+<div class="p-3 max-w-5xl text-lg">
+	<p
+		i18n="The mesage that is the detail of a status node@@main_topology_live_status_node-detail_msg">
+		This <a
+			class="font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200"
+			[routerLink]="['/main/topology/live/components',node?.id,'show']">node</a>
+		is a
+		<app-content-type-badge [type]="node?.type"></app-content-type-badge>
+		<span class="italic text-gray-500"> @switch(node?.type){
+			@case('C0'){ (Data extraction & task execution) } @case('C1'){ (Data
+			integration & decision-making) } @default{ (Value-based reasoning &
+			alignment) } } </span> named as <span class="font-bold">{{node?.name}}</span>.
+	</p>
+	<p>{{node?.description}}</p>
+</div>

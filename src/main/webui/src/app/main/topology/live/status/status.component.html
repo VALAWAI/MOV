@@ -58,24 +58,7 @@
 		</div>
 	</div>
 	@switch(selectedType){ @case('COMPONENT'){
-	<div class="max-w-3xl grid grid-cols-2 gap-3">
-		<div class="text-left font-bold"
-			i18n="The label of the selected component type attribute@@main_topology_live_status_component-type-label">Type:</div>
-		<div class="text-left">{{selectedLiveTopologyComponent.type}}</div>
-		<div class="text-left font-bold"
-			i18n="The label of the selected component name attribute@@main_topology_live_status_component-name-label">Name:</div>
-		<div class="text-left">{{selectedLiveTopologyComponent.name}}</div>
-		<div class="text-left font-bold"
-			i18n="The label of the selected component description attribute@@main_topology_live_status_component-description-label">Description:</div>
-		<div class="text-left">{{selectedLiveTopologyComponent.description}}</div>
-		<button class="col-span-2" matButton color="primary"
-			[routerLink]="['/main/topology/live/components',selectedLiveTopologyComponent.id!,'show']">
-			<mat-icon>info</mat-icon>
-			<span
-				i18n="The label of the button to go to get more information about the live component@@main_topology_live_status_more-info-about-selected-node-button-label">More
-				info</span>
-		</button>
-	</div>
+	<app-node-detail [node]="selectedStatusNode"></app-node-detail>
 	} @case('NOTIFICATION'){
 	<div class="max-w-3xl grid grid-cols-2 gap-3">
 		<div class="col-span-2">Notify to the following channels:</div>
