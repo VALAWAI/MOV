@@ -6,5 +6,4 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-
-export { TopologyEditorComponent } from './editor.component';
+export { TopologyEditorComponent ,leaveEditorGuard} from './editor.component';

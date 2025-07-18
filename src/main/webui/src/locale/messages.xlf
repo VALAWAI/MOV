@@ -1137,7 +1137,7 @@
         <source>Cannot apply the layout.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">682</context>
+          <context context-type="linenumber">685</context>
         </context-group>
         <note priority="1" from="description">Error message when not apply the layout</note>
       </trans-unit>
@@ -2513,75 +2513,75 @@ must select one topology to open.</source>
         </context-group>
         <note priority="1" from="description">Label of the button to close the log dialog</note>
       </trans-unit>
-      <trans-unit id="main_topology_live_status_component-type-label" datatype="html">
-        <source>Type:</source>
+      <trans-unit id="main_topology_live_status_connection-detail_msg" datatype="html">
+        <source> This <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/connections&apos;,connectionId,&apos;show&apos;]&quot;&gt;"/>connection<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/><x id="START_BLOCK_IF" equiv-text="@if(enabled){"/> is enabled <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon color=&quot;primary&quot;&gt;"/>wifi_on<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/><x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else{"/> is disabled <x id="START_TAG_MAT_ICON_1" ctype="x-mat_icon_1" equiv-text="&lt;mat-icon color=&quot;warn&quot;&gt;"/>wifi_off<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/><x id="CLOSE_BLOCK_ELSE" equiv-text="}"/> and it go from <x id="START_LINK_1" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,sourceId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION" equiv-text="{{sourceName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/> <x id="INTERPOLATION_1" equiv-text="{{sourceChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> ) to <x id="START_LINK_2" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,targetId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION_2" equiv-text="{{targetName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/><x id="INTERPOLATION_3" equiv-text="{{targetChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> ).
+</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">54,57</context>
+          <context context-type="sourcefile">src/app/main/topology/live/status/connection-detail.component.html</context>
+          <context context-type="linenumber">3,25</context>
         </context-group>
-        <note priority="1" from="description">The label of the selected component type attribute</note>
+        <note priority="1" from="description">The detail mesage of a status connection</note>
       </trans-unit>
-      <trans-unit id="main_topology_live_status_component-name-label" datatype="html">
-        <source>Name:</source>
+      <trans-unit id="main_topology_live_status_node-detail_msg" datatype="html">
+        <source> This <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+			class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+			[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,node?.id,&apos;show&apos;]&quot;&gt;"/>node<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a <x id="START_TAG_APP_CONTENT_TYPE_BADGE" ctype="x-app_content_type_badge" equiv-text="&lt;app-content-type-badge [type]=&quot;node?.type&quot;&gt;"/><x id="CLOSE_TAG_APP_CONTENT_TYPE_BADGE" ctype="x-app_content_type_badge" equiv-text="&lt;/app-content-type-badge&gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;italic text-gray-500&quot;&gt;"/><x id="START_BLOCK_CASE" equiv-text="@case(&apos;C0&apos;){"/> (Data extraction &amp; task execution) <x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_1" equiv-text="@case(&apos;C1&apos;){"/> (Data integration &amp; decision-making) <x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_DEFAULT" equiv-text="@default{"/> (Value-based reasoning &amp; alignment) <x id="CLOSE_BLOCK_DEFAULT" equiv-text="}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> named as <x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span class=&quot;font-bold&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{node?.name}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>. </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">57,60</context>
+          <context context-type="sourcefile">src/app/main/topology/live/status/node-detail.component.html</context>
+          <context context-type="linenumber">4,14</context>
         </context-group>
-        <note priority="1" from="description">The label of the selected component name attribute</note>
+        <note priority="1" from="description">The mesage that is the detail of a status node</note>
       </trans-unit>
-      <trans-unit id="main_topology_live_status_component-description-label" datatype="html">
-        <source>Description:</source>
+      <trans-unit id="main_topology_live_status_notification-connection-detail_msg" datatype="html">
+        <source> This <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/connections&apos;,connectionId,&apos;show&apos;]&quot;&gt;"/>connection<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/><x id="START_BLOCK_IF" equiv-text="@if(enabled){"/> is enabled <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon color=&quot;primary&quot;&gt;"/>wifi_on<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/><x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else{"/> is disabled <x id="START_TAG_MAT_ICON_1" ctype="x-mat_icon_1" equiv-text="&lt;mat-icon color=&quot;warn&quot;&gt;"/>wifi_off<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/><x id="CLOSE_BLOCK_ELSE" equiv-text="}"/> and it monitors the message flow from <x id="START_LINK_1" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,sourceId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION" equiv-text="{{sourceName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/> <x id="INTERPOLATION_1" equiv-text="{{sourceChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> ) to <x id="START_LINK_2" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,targetId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION_2" equiv-text="{{targetName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/><x id="INTERPOLATION_3" equiv-text="{{targetChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> ). Its purpose is to notify <x id="START_LINK_3" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,notificationId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION_4" equiv-text="{{notificationName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> on channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/><x id="INTERPOLATION_5" equiv-text="{{notificationChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> when these messages occur.
+</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">60,62</context>
+          <context context-type="sourcefile">src/app/main/topology/live/status/notification-connection-detail.component.html</context>
+          <context context-type="linenumber">3,31</context>
         </context-group>
-        <note priority="1" from="description">The label of the selected component description attribute</note>
+        <note priority="1" from="description">The mesage that is the detail of a notification connection</note>
       </trans-unit>
-      <trans-unit id="main_topology_live_status_more-info-about-selected-node-button-label" datatype="html">
-        <source>More info</source>
+      <trans-unit id="main_topology_live_status_notification-node-detail_msg" datatype="html">
+        <source> This node groups notifications sent to components about messages passing through the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/connections&apos;,connectionId,&apos;show&apos;]&quot;&gt;"/>connection<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> from <x id="START_LINK_1" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,sourceId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION" equiv-text="{{sourceName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (on channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/> <x id="INTERPOLATION_1" equiv-text="{{sourceChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> ) to <x id="START_LINK_2" equiv-text="&lt;a
+		class=&quot;font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200&quot;
+		[routerLink]=&quot;[&apos;/main/topology/live/components&apos;,targetId,&apos;show&apos;]&quot;&gt;"/> <x id="INTERPOLATION_2" equiv-text="{{targetName}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (on channel <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code
+		class=&quot;bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono&quot;&gt;"/><x id="INTERPOLATION_3" equiv-text="{{targetChannel}}"/><x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> ).
+</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">67,73</context>
+          <context context-type="sourcefile">src/app/main/topology/live/status/notification-node-detail.component.html</context>
+          <context context-type="linenumber">3,21</context>
         </context-group>
-        <note priority="1" from="description">The label of the button to go to get more information about the live component</note>
-      </trans-unit>
-      <trans-unit id="main_topology_live_status_selected-connection-source-id-label" datatype="html">
-        <source>Source:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">73,76</context>
-        </context-group>
-        <note priority="1" from="description">The label of the selected connection source identifier</note>
-      </trans-unit>
-      <trans-unit id="main_topology_live_status_selected-connection-target-id-label" datatype="html">
-        <source>Target:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">76,79</context>
-        </context-group>
-        <note priority="1" from="description">The label of the selected connection target identifier</note>
-      </trans-unit>
-      <trans-unit id="main_topology_live_status_selected-connection-is:enabled-label" datatype="html">
-        <source>Enabled:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">79,83</context>
-        </context-group>
-        <note priority="1" from="description">The label of the selected connection is enabled</note>
-      </trans-unit>
-      <trans-unit id="main_topology_live_status_more-info-about-selected-connection-button-label" datatype="html">
-        <source>More info</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/live/status/status.component.html</context>
-          <context context-type="linenumber">92,97</context>
-        </context-group>
-        <note priority="1" from="description">The label of the button to go to get more information about the selected live connection</note>
+        <note priority="1" from="description">The mesage that is the detail of a notification node</note>
       </trans-unit>
       <trans-unit id="main_topology_live_status_code_page-title" datatype="html">
         <source>Live topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/status/status.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">The header title for the topology libe status</note>
       </trans-unit>

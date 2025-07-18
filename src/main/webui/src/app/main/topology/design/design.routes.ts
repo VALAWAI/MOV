@@ -7,6 +7,7 @@
 */
 
 import { Routes } from '@angular/router';
+import { leaveEditorGuard } from './editor';
 
 export const DESIGN_ROUTES: Routes = [
 	{
@@ -14,7 +15,8 @@ export const DESIGN_ROUTES: Routes = [
 		children: [
 			{
 				path: 'editor',
-				loadComponent: () => import('./editor').then(m => m.TopologyEditorComponent)
+				loadComponent: () => import('./editor').then(m => m.TopologyEditorComponent),
+				canDeactivate: [leaveEditorGuard]
 			},
 			{
 				path: 'search',

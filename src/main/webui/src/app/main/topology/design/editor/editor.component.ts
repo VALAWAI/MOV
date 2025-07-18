@@ -24,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
 import { Observable, switchMap, of, Subscription } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
 import {
@@ -44,7 +44,7 @@ import { ConnectionData, EndpointData, NodeData, TopologyData, TopologyElement }
 import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DagreLayoutService, GraphModule } from '@app/shared/graph';
-
+import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@angular/router';
 
 @Component({
 	standalone: true,
@@ -537,6 +537,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public duplicateTopology() {
 
+		var cloned = JSON.parse(JSON.stringify(this.topology));
+		cloned.id = null;
+		this.changeTopology(cloned);
 	}
 
 	/**
@@ -639,7 +642,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 					var updated = false;
 					try {
-						debugger
+
 						if (direction == 'horizontal') {
 
 							graph.horizontal();
@@ -688,4 +691,65 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	}
 
+	/**
+	 * Check if has changes to be saved.
+	 */
+	public hasUnsavedChanges() {
+
+		return this.unsaved;
+	}
+
+	/**
+	 * Check if has changes to be saved.
+	 */
+	public storeBeforeLeave(): Observable<boolean> {
+
+		return this.dialog.open(ConfirmSaveBeforeChangeDialog).afterClosed()
+			.pipe(
+				switchMap(
+					result => {
+
+						if (result) {
+
+							return this.storeModel().pipe(
+								tap(
+									stored => {
+
+										if (!stored) {
+
+											this.messages.showError(
+												$localize`:Error message when store before leave@@main_topology_editor_code_error-store-before-leave:Cannot store the topology.`
+											);
+
+										} else {
+
+											this.messages.showSuccess(
+												$localize`:Success message when store before leave@@main_topology_editor_code_sucees-store-before-leave:Topology has been saved.`
+											);
+										}
+									}
+								)
+							);
+
+						} else {
+
+							return of(true);
+						}
+					}
+				)
+			);
+
+	}
+
 }
+
+/**
+ * The function to check if cna leave the editor.
+  */
+export const leaveEditorGuard: CanDeactivateFn<TopologyEditorComponent> = (component: TopologyEditorComponent, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState: RouterStateSnapshot) => {
+
+	return component.hasUnsavedChanges()
+		? component.storeBeforeLeave()
+		: true;
+};
+
