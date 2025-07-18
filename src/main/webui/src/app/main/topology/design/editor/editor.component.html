@@ -57,6 +57,11 @@
 				i18n="The menu item that save the current topology@@main_topology_editor-menu-file-save">Save
 				topology</span>
 		</button>
+		<button mat-menu-item (click)="duplicateTopology()">
+			<mat-icon>content_copy</mat-icon>
+			<span
+				i18n="The menu item that duplicate the current topology@@main_topology_editor-menu-file-clone">Duplicate</span>
+		</button>
 		</mat-menu>
 		<mat-menu #editMenu="matMenu">
 		<button mat-menu-item [matMenuTriggerFor]="addNodeMenu">

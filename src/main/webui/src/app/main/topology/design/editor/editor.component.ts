@@ -447,6 +447,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		} else {
 
 			this.topology = new TopologyData(newTopology);
+			this.unsaved = this.topology.model.id == null;
 			this.selectedElement = null;
 			this.fit();
 			this.updatedGraph();
@@ -537,9 +538,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public duplicateTopology() {
 
-		var cloned = JSON.parse(JSON.stringify(this.topology));
+		var cloned = JSON.parse(JSON.stringify(this.topology.model));
 		cloned.id = null;
 		this.changeTopology(cloned);
+
 	}
 
 	/**
