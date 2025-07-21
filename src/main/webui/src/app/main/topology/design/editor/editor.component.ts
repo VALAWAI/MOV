@@ -18,7 +18,8 @@ import {
 	FSelectionChangeEvent,
 	FCreateNodeEvent,
 	FFlowComponent,
-	FCreateConnectionEvent
+	FCreateConnectionEvent,
+	FZoomDirective
 } from '@foblex/flow';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -129,6 +130,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public height = 100;
 
 	/**
+	 * The height of the component.
+	 */
+	public width = 100;
+
+	/**
 	 * This is true if the current topology is not saved.
 	 */
 	private unsaved: boolean = false;
@@ -149,11 +155,17 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	private readonly dagre = inject(DagreLayoutService);
 
 	/**
+	 * The component that do zooms.
+	 */
+	private fZoomDirective = viewChild.required(FZoomDirective);
+
+	/**
 	 * Called when the window is resized.
 	 */
 	@HostListener('window:resize') windowResized() {
 
 		this.height = window.innerHeight - 200;
+		this.width = window.innerWidth - 20;
 		const canvas = this.fCanvas();
 		canvas.redrawWithAnimation()
 	}
@@ -229,7 +241,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public zoomIn() {
 
-		this.rescale(1.35)
+		this.fZoomDirective().zoomIn();
 	}
 
 	/**
@@ -237,18 +249,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public zoomOut() {
 
-		this.rescale(0.65)
-	}
-
-	/**
-	 * Called whne the scale has changed.
-	 */
-	private rescale(factor: number) {
-
-		const canvas = this.fCanvas();
-		var scale = factor * canvas.getScale();
-		canvas.setScale(scale, PointExtensions.initialize());
-		canvas.redrawWithAnimation()
+		this.fZoomDirective().zoomOut();
 	}
 
 	/**

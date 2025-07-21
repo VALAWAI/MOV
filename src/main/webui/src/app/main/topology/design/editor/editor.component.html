@@ -1,160 +1,11 @@
 <div
-	class="p-1 flex flex-col md:flex-row flex-wrap gap-1 items-center justify-center content-center">
-	<div class="bg-gray-200 grow-0 flex flex-row flex-wrap md:flex-col">
-		<button class="p-2" fExternalItem [fPreview]="c0PreviewTemplate"
-			fData="C0">
-			<div class="border border-indigo-500 text-indigo-500">C0</div>
-		</button>
-		<button class="p-2" fExternalItem [fPreview]="c1PreviewTemplate"
-			fData="C1">
-			<div class="border border-purple-500 text-purple-500">C1</div>
-		</button>
-		<button class="p-2" fExternalItem [fPreview]="c2PreviewTemplate"
-			fData="C2">
-			<div class="border border-slky-500 text-sky-500">C2</div>
-		</button>
-		<button mat-icon-button color="primary" (click)="fit()">
-			<mat-icon>aspect_ratio</mat-icon>
-		</button>
-		<button mat-icon-button color="primary" (click)="zoomIn()">
-			<mat-icon>zoom_in</mat-icon>
-		</button>
-		<button mat-icon-button color="primary" (click)="zoomOut()">
-			<mat-icon>zoom_out</mat-icon>
-		</button>
-		<button mat-icon-button color="primary"
-			[matMenuTriggerFor]="editorMenu">
-			<mat-icon>more_horiz</mat-icon>
-		</button>
-		<mat-menu #editorMenu="matMenu">
-		<button mat-menu-item [matMenuTriggerFor]="fileMenu">File</button>
-		<button mat-menu-item [matMenuTriggerFor]="editMenu">Edit</button>
-		<button mat-menu-item
-			i18n="The label of the menu to zoom in@@main_topology_editor-toolbar-zoon-in-menu"
-			[matMenuTriggerFor]="viewMenu">View</button>
-		<a
-			href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
-			target="_blank">
-			<button mat-menu-item
-				i18n="The menu item that go to the Editor help site@@main_topology_editor-menu-help">Help</button>
-		</a> </mat-menu>
-		<mat-menu #fileMenu="matMenu">
-		<button mat-menu-item (click)="changeTopology()">
-			<mat-icon>note_add</mat-icon>
-			<span
-				i18n="The menu item that create a new topology@@main_topology_editor-menu-file-new">New
-				topology</span>
-		</button>
-		<button mat-menu-item (click)="openTopology()">
-			<mat-icon>folder_open</mat-icon>
-			<span
-				i18n="The menu item that save the current topology@@main_topology_editor-menu-file-open">
-				Open... </span>
-		</button>
-		<button mat-menu-item (click)="saveTopology()">
-			<mat-icon>save</mat-icon>
-			<span
-				i18n="The menu item that save the current topology@@main_topology_editor-menu-file-save">Save
-				topology</span>
-		</button>
-		<button mat-menu-item (click)="duplicateTopology()">
-			<mat-icon>content_copy</mat-icon>
-			<span
-				i18n="The menu item that duplicate the current topology@@main_topology_editor-menu-file-clone">Duplicate</span>
-		</button>
-		</mat-menu>
-		<mat-menu #editMenu="matMenu">
-		<button mat-menu-item [matMenuTriggerFor]="addNodeMenu">
-			<mat-icon color="primary">add</mat-icon>
-			<span
-				i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add
-				node</span>
-		</button>
-		<button mat-menu-item [matMenuTriggerFor]="deleteNodeMenu"
-			[disabled]="topology.nodes.length==0">
-			<mat-icon color="warn">delete</mat-icon>
-			<span
-				i18n="The menu label to delete a node@@main_topology_editor-menu-delete-node">Delete
-				node</span>
-		</button>
-		</mat-menu>
-		<mat-menu #addNodeMenu="matMenu">
-		<button mat-menu-item (click)="addNodeByType('C0')">C0</button>
-		<button mat-menu-item (click)="addNodeByType('C1')">C1</button>
-		<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
-		</mat-menu>
-		<mat-menu #deleteNodeMenu="matMenu"> @for(node of
-		topology.nodes;track node.id){
-		<button mat-menu-item (click)="deleteNode(node)">{{node.typeName}}</button>
-		} </mat-menu>
-		<mat-menu #viewMenu="matMenu">
-		<button mat-menu-item (click)="fit()">
-			<mat-icon>aspect_ratio</mat-icon>
-			<span i18n="The menu label to fit@@main_topology_editor-menu-fit">Fit
-				to Screen </span>
-		</button>
-		<button mat-menu-item (click)="zoomIn()">
-			<mat-icon>zoom_in</mat-icon>
-			<span
-				i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-in">Zoom
-				in</span>
-		</button>
-		<button mat-menu-item (click)="zoomOut()">
-			<mat-icon>zoom_out</mat-icon>
-			<span
-				i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-out">Zoom
-				out</span>
-		</button>
-		<button mat-menu-item (click)="toogleGrid()">
-			<!-- The icon is the reverse because the action what to do the reverse of the current status -->
-			<mat-icon *ngIf="showGrid$ | async; else gridOff">grid_off
-			</mat-icon>
-			<ng-template #gridOff> <mat-icon>grid_on</mat-icon> </ng-template>
-			<span
-				i18n="The menu label to toogle grid@@main_topology_editor-menu-toogle-grid">Toggle
-				Grid</span>
-		</button>
-		<button mat-menu-item [matMenuTriggerFor]="layoutsMenu">
-			<span
-				i18n="The menu label to change the layout@@main_topology_editor-menu-layouts">Layouts</span>
-		</button>
-		</mat-menu>
-		<mat-menu #layoutsMenu="matMenu">
-		<button mat-menu-item (click)="changeLayout('horizontal')">
-			<span
-				i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
-		</button>
-		<button mat-menu-item (click)="changeLayout('vertical')">
-			<span
-				i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
-		</button>
-		</mat-menu>
-	</div>
-	<ng-template #c0PreviewTemplate>
-	<div
-		class="border border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
-		<div>C0</div>
-	</div>
-	</ng-template>
-	<ng-template #c1PreviewTemplate>
-	<div
-		class="border border-purple-500 text-purple-500 flex flex flex-col items-center justify-center content-center">
-		<div>C1</div>
-	</div>
-	</ng-template>
-	<ng-template #c2PreviewTemplate>
-	<div
-		class="border border-sky-500 text-sky-500 flex flex flex-col items-center justify-center content-center">
-		<div>C2</div>
-	</div>
-	</ng-template>
-	<div class="grow bg-gray-50">
-		<div [ngStyle]="{'height.px':height}"
-			class="w-sm sm:w-md md:w-full md:min-w-xl">
+	class="flex flex-col gap-3 items-center justify-center content-center">
+	<div class="relative grow bg-gray-50 w-gull h-full">
+		<div [ngStyle]="{'height.px':height,'width.px':width}">
 			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)"
 				(fCreateNode)="onNodeAdded($event)"
-				(fCreateConnection)="onConnectionAdded($event)"> <f-background
-				*ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
+				(fCreateConnection)="onConnectionAdded($event)" class="w-full">
+			<f-background *ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
 			</f-background> <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
 			<f-canvas fZoom> <f-connection-for-create></f-connection-for-create>
 			@for(node of topology.nodes;track node.id){
@@ -217,6 +68,160 @@
 				[color]="connection.isControl?'fill-sky-400':'fill-indigo-400'"
 				[selectedColor]="connection.isControl?'fill-sky-800':'fill-indigo-800'"></app-connection-markers>
 			</f-connection> } </f-canvas> </f-flow>
+		</div>
+		<!-- TOOLBAR -->
+		<div class="absolute top-2 end-2">
+			<button mat-icon-button color="primary" (click)="zoomIn()">
+				<mat-icon>zoom_in</mat-icon>
+			</button>
+			<button mat-icon-button color="primary" (click)="zoomOut()">
+				<mat-icon>zoom_out</mat-icon>
+			</button>
+			<button mat-icon-button color="primary" (click)="fit()">
+				<mat-icon>aspect_ratio</mat-icon>
+			</button>
+			<button mat-icon-button color="primary"
+				[matMenuTriggerFor]="editorMenu">
+				<mat-icon>more_vert</mat-icon>
+			</button>
+			<mat-menu #editorMenu="matMenu">
+			<button mat-menu-item [matMenuTriggerFor]="fileMenu">File</button>
+			<button mat-menu-item [matMenuTriggerFor]="editMenu">Edit</button>
+			<button mat-menu-item
+				i18n="The label of the menu to zoom in@@main_topology_editor-toolbar-zoon-in-menu"
+				[matMenuTriggerFor]="viewMenu">View</button>
+			<a
+				href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
+				target="_blank">
+				<button mat-menu-item
+					i18n="The menu item that go to the Editor help site@@main_topology_editor-menu-help">Help</button>
+			</a> </mat-menu>
+			<mat-menu #fileMenu="matMenu">
+			<button mat-menu-item (click)="changeTopology()">
+				<mat-icon>note_add</mat-icon>
+				<span
+					i18n="The menu item that create a new topology@@main_topology_editor-menu-file-new">New
+					topology</span>
+			</button>
+			<button mat-menu-item (click)="openTopology()">
+				<mat-icon>folder_open</mat-icon>
+				<span
+					i18n="The menu item that save the current topology@@main_topology_editor-menu-file-open">
+					Open... </span>
+			</button>
+			<button mat-menu-item (click)="saveTopology()">
+				<mat-icon>save</mat-icon>
+				<span
+					i18n="The menu item that save the current topology@@main_topology_editor-menu-file-save">Save
+					topology</span>
+			</button>
+			<button mat-menu-item (click)="duplicateTopology()">
+				<mat-icon>content_copy</mat-icon>
+				<span
+					i18n="The menu item that duplicate the current topology@@main_topology_editor-menu-file-clone">Duplicate</span>
+			</button>
+			</mat-menu>
+			<mat-menu #editMenu="matMenu">
+			<button mat-menu-item [matMenuTriggerFor]="addNodeMenu">
+				<mat-icon color="primary">add</mat-icon>
+				<span
+					i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add
+					node</span>
+			</button>
+			<button mat-menu-item [matMenuTriggerFor]="deleteNodeMenu"
+				[disabled]="topology.nodes.length==0">
+				<mat-icon color="warn">delete</mat-icon>
+				<span
+					i18n="The menu label to delete a node@@main_topology_editor-menu-delete-node">Delete
+					node</span>
+			</button>
+			</mat-menu>
+			<mat-menu #addNodeMenu="matMenu">
+			<button mat-menu-item (click)="addNodeByType('C0')">C0</button>
+			<button mat-menu-item (click)="addNodeByType('C1')">C1</button>
+			<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
+			</mat-menu>
+			<mat-menu #deleteNodeMenu="matMenu"> @for(node of
+			topology.nodes;track node.id){
+			<button mat-menu-item (click)="deleteNode(node)">{{node.typeName}}</button>
+			} </mat-menu>
+			<mat-menu #viewMenu="matMenu">
+			<button mat-menu-item (click)="fit()">
+				<mat-icon>aspect_ratio</mat-icon>
+				<span i18n="The menu label to fit@@main_topology_editor-menu-fit">Fit
+					to Screen </span>
+			</button>
+			<button mat-menu-item (click)="zoomIn()">
+				<mat-icon>zoom_in</mat-icon>
+				<span
+					i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-in">Zoom
+					in</span>
+			</button>
+			<button mat-menu-item (click)="zoomOut()">
+				<mat-icon>zoom_out</mat-icon>
+				<span
+					i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-out">Zoom
+					out</span>
+			</button>
+			<button mat-menu-item (click)="toogleGrid()">
+				<!-- The icon is the reverse because the action what to do the reverse of the current status -->
+				<mat-icon *ngIf="showGrid$ | async; else gridOff">grid_off
+				</mat-icon>
+				<ng-template #gridOff> <mat-icon>grid_on</mat-icon> </ng-template>
+				<span
+					i18n="The menu label to toogle grid@@main_topology_editor-menu-toogle-grid">Toggle
+					Grid</span>
+			</button>
+			<button mat-menu-item [matMenuTriggerFor]="layoutsMenu">
+				<span
+					i18n="The menu label to change the layout@@main_topology_editor-menu-layouts">Layouts</span>
+			</button>
+			</mat-menu>
+			<mat-menu #layoutsMenu="matMenu">
+			<button mat-menu-item (click)="changeLayout('horizontal')">
+				<span
+					i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
+			</button>
+			<button mat-menu-item (click)="changeLayout('vertical')">
+				<span
+					i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
+			</button>
+			</mat-menu>
+		</div>
+		<!-- PALETE -->
+		<div class="absolute start-2 top-2/5">
+			<div class="flex flex-col">
+				<button class="p-2" fExternalItem [fPreview]="c0PreviewTemplate"
+					fData="C0">
+					<div class="border border-indigo-500 text-indigo-500">C0</div>
+				</button>
+				<button class="p-2" fExternalItem [fPreview]="c1PreviewTemplate"
+					fData="C1">
+					<div class="border border-purple-500 text-purple-500">C1</div>
+				</button>
+				<button class="p-2" fExternalItem [fPreview]="c2PreviewTemplate"
+					fData="C2">
+					<div class="border border-slky-500 text-sky-500">C2</div>
+				</button>
+				<ng-template #c0PreviewTemplate>
+				<div
+					class="border border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
+					<div>C0</div>
+				</div>
+				</ng-template>
+				<ng-template #c1PreviewTemplate>
+				<div
+					class="border border-purple-500 text-purple-500 flex flex flex-col items-center justify-center content-center">
+					<div>C1</div>
+				</div>
+				</ng-template>
+				<ng-template #c2PreviewTemplate>
+				<div
+					class="border border-sky-500 text-sky-500 flex flex flex-col items-center justify-center content-center">
+					<div>C2</div>
+				</div>
+				</ng-template>
+			</div>
 		</div>
 	</div>
 	<div class="lg:max-w-sm w-full p-2">
