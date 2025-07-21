@@ -164,8 +164,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	@HostListener('window:resize') windowResized() {
 
-		this.height = window.innerHeight - 200;
-		this.width = window.innerWidth - 20;
+		this.height = Math.max(200, window.innerHeight - 200);
+		this.width = window.innerWidth;
+		if (this.width > 640) {
+
+			this.width -= 340;
+		}
 		const canvas = this.fCanvas();
 		canvas.redrawWithAnimation()
 	}

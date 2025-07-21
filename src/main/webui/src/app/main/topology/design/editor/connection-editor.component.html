@@ -1,36 +1,35 @@
-<div class="w-full h-full">
-	<form [formGroup]="connectionForm" class="flex flex-col gap-3">
-		<fieldset
-			class="fieldset border-base-300 rounded-box w-xs border p-4 w-full">
-			<legend class="p-2 font-bold"
-				i18n="The legend to edit the source of the connection@@main_topology_design_connection-editor_source-fieldset-label">Source:</legend>
-			<app-topology-connection-endpoint-editor class="w-full"
-				[isSource]="true" [topology]="topology"
-				[endpoint]="connectionForm.controls.source.value"></app-topology-connection-endpoint-editor>
-		</fieldset>
-		<fieldset
-			class="fieldset border-base-300 rounded-box w-xs border p-4 w-full">
-			<legend class="p-2 font-bold"
-				i18n="The legend to edit the target of the connection@@main_topology_design_connection-editor_target-fieldset-label">Target:</legend>
-			<app-topology-connection-endpoint-editor class="w-full"
-				[isSource]="false" [topology]="topology"
-				[endpoint]="connectionForm.controls.target.value"></app-topology-connection-endpoint-editor>
-		</fieldset>
-		<mat-form-field> <mat-label
-			i18n="The label to select the type of connection@@main_topology_design_connection-editor_typee-label">Type</mat-label>
-		<mat-select formControlName="type"> <mat-option
-			value="STRAIGHT" i18n="Name for the straight edge type@@c_edge_type_straight">Draw a straight line.</mat-option> <mat-option
-			value="BEZIER" i18n="Name for the bezier edge type@@c_edge_type_bezier">Draw a bezier curve.</mat-option> <mat-option
-			value="SEGMENT" i18n="Name for the segments edge type@@c_edge_type_segments">Draw segements lines.</mat-option> </mat-select> <mat-error
-			*ngIf="connectionForm.controls.type.hasError('required')"
-			i18n="The error message if no type of connection is selected@@main_topology_design_connection-editor_type-required-error">You
-		must select a type of connection.</mat-error> </mat-form-field>
-		<mat-form-field> <mat-label
-			i18n="The label to edit the convertion code@@main_topology_design_connection-editor_convert-code-label">Convert
-		code</mat-label> <textarea matInput formControlName="convertCode"
-			placeholder="Write the function to convert the source message to the target message."
-			i18n-placeholder="The placeholder for the field to write the convertion code@@main_topology_design_connection-editor_convert-code-placeholder">
+<form class="flex flex-col gap-2" [formGroup]="connectionForm">
+	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
+		<legend class="p-2 font-bold"
+			i18n="The legend to edit the source of the connection@@main_topology_design_connection-editor_source-fieldset-label">Source:</legend>
+		<app-topology-connection-endpoint-editor class="w-full"
+			[isSource]="true" [topology]="topology"
+			[endpoint]="connectionForm.controls.source.value"></app-topology-connection-endpoint-editor>
+	</fieldset>
+	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
+		<legend class="p-2 font-bold"
+			i18n="The legend to edit the target of the connection@@main_topology_design_connection-editor_target-fieldset-label">Target:</legend>
+		<app-topology-connection-endpoint-editor class="w-full"
+			[isSource]="false" [topology]="topology"
+			[endpoint]="connectionForm.controls.target.value"></app-topology-connection-endpoint-editor>
+	</fieldset>
+	<mat-form-field> <mat-label
+		i18n="The label to select the type of connection@@main_topology_design_connection-editor_typee-label">Type</mat-label>
+	<mat-select formControlName="type"> <mat-option
+		value="STRAIGHT"
+		i18n="Name for the straight edge type@@c_edge_type_straight">Draw
+	a straight line.</mat-option> <mat-option value="BEZIER"
+		i18n="Name for the bezier edge type@@c_edge_type_bezier">Draw
+	a bezier curve.</mat-option> <mat-option value="SEGMENT"
+		i18n="Name for the segments edge type@@c_edge_type_segments">Draw
+	segements lines.</mat-option> </mat-select> <mat-error
+		*ngIf="connectionForm.controls.type.hasError('required')"
+		i18n="The error message if no type of connection is selected@@main_topology_design_connection-editor_type-required-error">You
+	must select a type of connection.</mat-error> </mat-form-field>
+	<mat-form-field> <mat-label
+		i18n="The label to edit the convertion code@@main_topology_design_connection-editor_convert-code-label">Convert
+	code</mat-label> <textarea matInput formControlName="convertCode"
+		placeholder="Write the function to convert the source message to the target message."
+		i18n-placeholder="The placeholder for the field to write the convertion code@@main_topology_design_connection-editor_convert-code-placeholder">
 			></textarea> </mat-form-field>
-	</form>
-
-</div>
+</form>
