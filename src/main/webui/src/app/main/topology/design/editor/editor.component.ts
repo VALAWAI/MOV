@@ -7,7 +7,16 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	HostListener,
+	inject,
+	OnDestroy,
+	OnInit,
+	viewChild
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
@@ -24,7 +33,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from '@app/shared';
-import { Observable, switchMap, of, Subscription } from 'rxjs';
+import { Observable, switchMap, of, Subscription, timer } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
@@ -145,9 +154,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	private route = inject(ActivatedRoute);
 
 	/**
-	 * The subscription to the chnageg of the query params.
+	 * The subscription to the query params.
 	 */
-	private queryParamSubsccriber: Subscription | null = null;
+	private queryParamSubscription: Subscription | null = null;
 
 	/**
 	 * The layout manager using dagre.
@@ -160,11 +169,16 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	private fZoomDirective = viewChild.required(FZoomDirective);
 
 	/**
+	 * The subscription to the autosave action.
+	 */
+	private autoscaeSubscription: Subscription | null = null;
+
+	/**
 	 * Called when the window is resized.
 	 */
 	@HostListener('window:resize') windowResized() {
 
-		this.height = Math.max(200, window.innerHeight - 200);
+		this.height = Math.max(200, window.innerHeight - 125);
 		this.width = window.innerWidth;
 		if (this.width > 640) {
 
@@ -182,7 +196,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.header.changeHeaderTitle($localize`:The header title for the topology editor@@main_topology_editor_code_page-title:Topology Editor`);
 		this.windowResized();
 
-		this.queryParamSubsccriber = this.route.queryParams.pipe(
+		this.queryParamSubscription = this.route.queryParams.pipe(
 			switchMap(params => {
 
 				var topologyId = params['topologyId'] || null;
@@ -216,6 +230,19 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
+
+		this.autoscaeSubscription = timer(this.conf.editorAutosaveTime, this.conf.editorAutosaveTime).subscribe(
+			{
+				next: () => {
+
+					if (this.unsaved) {
+
+						this.saveTopology();
+					}
+
+				}
+			}
+		);
 	}
 
 	/**
@@ -223,10 +250,15 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy() {
 
-		if (this.queryParamSubsccriber != null) {
+		if (this.queryParamSubscription != null) {
 
-			this.queryParamSubsccriber.unsubscribe();
-			this.queryParamSubsccriber = null;
+			this.queryParamSubscription.unsubscribe();
+			this.queryParamSubscription = null;
+		}
+		if (this.autoscaeSubscription != null) {
+
+			this.autoscaeSubscription.unsubscribe();
+			this.autoscaeSubscription = null;
 		}
 	}
 

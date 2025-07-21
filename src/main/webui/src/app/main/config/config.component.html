@@ -47,6 +47,15 @@
 				<mat-error
 					i18n="The error message if the last topology identifier is not a valid@@main_config_last-topology-id-pattern-error">The
 				identifier is not valid.</mat-error> } </mat-form-field>
+				<mat-form-field> <mat-label
+					i18n="The label of the editor autosave time@@main_config_editor-autosave-time-label">Autosave
+				time </mat-label> <input matInput formControlName="editorAutosaveTime"
+					class="w-full p-2" type="number"> <mat-hint
+					i18n="The hint of the editor atuosave time@@main_config_editor-autosave-time-hint">The
+				time (in ms) that the editor must wait before autosave the editing
+				topology.</mat-hint> @if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+					i18n="The error message if autosave timi is not reach the minimum@@main_config_editor-autosave-time-min-error">The
+				autosave time can not be less than 1000 ms.</mat-error> } </mat-form-field>
 
 			</div>
 		</fieldset>
@@ -83,17 +92,8 @@
 					i18n="The hint of the polling time@@main_config_live-max-nodes-hint">The
 				maximum number of nodes to view in the graph.</mat-hint>
 				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
-					i18n="The error message if no polling time is defined@@main_config_live-max-nodes-min-error">The
+					i18n="The error message if the number of nodes not reach the minimum@@main_config_live-max-nodes-min-error">The
 				number of nodes can not be less than 100.</mat-error> } </mat-form-field>
-				<mat-form-field> <mat-label
-					i18n="The label of the live max edges@@main_config_live-max-edges-label">Max
-				edges </mat-label> <input matInput formControlName="liveMaxEdges"
-					class="w-full p-2" type="number"> <mat-hint
-					i18n="The hint of the polling time@@main_config_live-max-edges-hint">The
-				maximum number of edges to view in the graph.</mat-hint>
-				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
-					i18n="The error message if no polling time is defined@@main_config_live-max-edges-min-error">The
-				number of edges can not be less than 100.</mat-error> } </mat-form-field>
 			</div>
 		</fieldset>
 	</form>

@@ -58,10 +58,11 @@ export class ConfigService {
 	 */
 	private liveMaxNodesSubject: BehaviorSubject<number>;
 
+
 	/**
-	 * The subject to notify the changes on the live graph maximum edges to show.
+	 * The subject to notify the changes on the editor autosave time.
 	 */
-	private liveMaxEdgesSubject: BehaviorSubject<number>;
+	private editorAutosaveTimeSubject: BehaviorSubject<number>;
 
 	/**
 	 * Create the service.
@@ -76,7 +77,7 @@ export class ConfigService {
 		this.liveShowGridSubject = new BehaviorSubject<boolean>(this.liveShowGrid);
 		this.liveEdgeTypeSubject = new BehaviorSubject<EFConnectionType>(this.liveEdgeType);
 		this.liveMaxNodesSubject = new BehaviorSubject<number>(this.liveMaxNodes);
-		this.liveMaxEdgesSubject = new BehaviorSubject<number>(this.liveMaxEdges);
+		this.editorAutosaveTimeSubject = new BehaviorSubject<number>(this.editorAutosaveTime);
 	}
 
 	/**
@@ -321,36 +322,40 @@ export class ConfigService {
 
 	}
 
-	/**
-	 * Return the observable of the live max edges. 
-	 */
-	public get liveMaxEdges$(): Observable<number> {
 
-		return this.liveMaxEdgesSubject.asObservable();
+	/**
+	 * Return the observable of the editor autosave time. 
+	 */
+	public get editorAutosaveTime$(): Observable<number> {
+
+		return this.editorAutosaveTimeSubject.asObservable();
 	}
 
-	public get liveMaxEdges(): number {
+	/**
+	 * Return the time in milliseconds that the editor must wait before autosave.
+	 */
+	public get editorAutosaveTime(): number {
 
-		var item = localStorage.getItem('LIVE_MAX_EDGES');
+		var item = localStorage.getItem('EDITOR_AUTOSAVE_TIME');
 		if (item != null) {
 
-			var maxEdges = Number(item);
-			if (!isNaN(maxEdges)) {
+			var time = Number(item);
+			if (!isNaN(time)) {
 
-				return maxEdges;
+				return time;
 			}
 		}
-		return 100000;
+		return 7000;
 
 	}
 
 	/**
-	 * Store the live max edges.
+	 * Store the  editor autosave time.
 	 */
-	public set liveMaxEdges(edges: number) {
+	public set editorAutosaveTime(time: number) {
 
-		localStorage.setItem('LIVE_MAX_EDGES', String(edges));
-		this.liveMaxEdgesSubject.next(edges);
+		localStorage.setItem('EDITOR_AUTOSAVE_TIME', String(time));
+		this.editorAutosaveTimeSubject.next(time);
 
 	}
 
