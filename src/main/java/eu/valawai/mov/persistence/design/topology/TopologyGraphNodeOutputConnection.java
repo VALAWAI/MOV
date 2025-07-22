@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.persistence.design.topology;
 
+import java.util.List;
+
 import eu.valawai.mov.api.Model;
 
 /**
@@ -58,5 +60,25 @@ public class TopologyGraphNodeOutputConnection extends Model {
 	 * the UI.
 	 */
 	public TopologyGraphConnectionType type;
+
+	/**
+	 * The component that must be notified when a message passes through this
+	 * connection.
+	 */
+	public List<TopologyGraphConnectionNotification> notifications;
+
+	/**
+	 * The X-coordinate of the notification node's position within the graphical
+	 * representation of the topology. This typically represents its horizontal
+	 * placement.
+	 */
+	public Double notificationX;
+
+	/**
+	 * The Y-coordinate of the notification node's position within the graphical
+	 * representation of the topology. This typically represents its vertical
+	 * placement.
+	 */
+	public Double notificationY;
 
 }

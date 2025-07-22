@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 
@@ -28,7 +29,8 @@ import { Subscription } from 'rxjs';
 		TopologyConnectionEndpointEditorComponent,
 		MatFormFieldModule,
 		MatInputModule,
-		MatSelectModule
+		MatSelectModule,
+		MatSlideToggleModule
 	],
 	templateUrl: './connection-editor.component.html'
 })
@@ -54,7 +56,8 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 			source: new FormControl<TopologyConnectionEndpoint | null>(null),
 			target: new FormControl<TopologyConnectionEndpoint | null>(null),
 			convertCode: new FormControl<string | null>(null),
-			type: new FormControl<TopologyGraphConnectionType | null>(null, Validators.required)
+			type: new FormControl<TopologyGraphConnectionType | null>(null, Validators.required),
+			notifications: new FormControl<boolean>(true, Validators.required),
 		}
 	);
 
@@ -129,6 +132,14 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
+	}
+
+	/**
+	 * Check if the connection can have notifications.
+	 */
+	public notificationAllowed(): boolean {
+
+		return true;
 	}
 
 

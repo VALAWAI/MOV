@@ -21,6 +21,8 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.UnwindOptions;
 
 import eu.valawai.mov.api.v2.design.topologies.Topology;
+import eu.valawai.mov.api.v2.design.topologies.TopologyConnection;
+import eu.valawai.mov.api.v2.design.topologies.TopologyNode;
 import eu.valawai.mov.persistence.AbstractEntityOperator;
 import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntity;
 import io.smallrye.mutiny.Uni;
@@ -30,6 +32,10 @@ import io.smallrye.mutiny.Uni;
  *
  * @see Topology
  * @see TopologyGraphEntity
+ * @see TopologyNode
+ * @see TopologyConnection
+ * @see TopologyGraphNode
+ * @see TopologyGraphNodeOutputConnection
  *
  * @author VALAWAI
  */
@@ -122,7 +128,57 @@ public class GetTopology extends AbstractEntityOperator<Topology, GetTopology> {
 										new Document("nodeTag", "$outputs.targetTag").append("channel",
 												"$outputs.targetChannel")),
 								Projections.computed("convertCode", "$outputs.convertCode"),
-								Projections.computed("type", "$outputs.type"))));
+								Projections.computed("type", "$outputs.type"),
+								Projections.computed("notificationPosition", Document.parse("""
+										{
+										    "$cond": {
+										        "if": {
+										            "$and": [
+										                {
+										                    "$ne": [
+										                        {
+										                            "$ifNull": [
+										                                "$outputs.notificationX",
+										                                null
+										                            ]
+										                        },
+										                        null
+										                    ]
+										                },
+										                {
+										                    "$ne": [
+										                        {
+										                            "$ifNull": [
+										                                "$outputs.notificationY",
+										                                null
+										                            ]
+										                        },
+										                        null
+										                    ]
+										                }
+										            ]
+										        },
+										        "then": {
+										            "x": "$outputs.notificationX",
+										            "y": "$outputs.notificationY"
+										        },
+										        "else": null
+										    }
+										}
+										""")), Projections.computed("notifications", Document.parse("""
+										{
+										     "$map":{
+										       "input":"$outputs.notifications",
+										       "as":"notification",
+										       "in": {
+										         "target":{
+										           "nodeTag":"$$notification.targetTag",
+										           "channel":"$$notification.targetChannel"
+										         },
+										         "convertCode":"$$notification.convertCode"
+										       }
+										     }
+										 }""")))));
 
 		pipeline.add(Aggregates.facet(
 				new Facet("main", Aggregates.project(Projections.include("_id", "name", "description", "updatedAt"))),

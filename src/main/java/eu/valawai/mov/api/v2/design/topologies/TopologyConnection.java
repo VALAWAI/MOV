@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v2.design.topologies;
 
+import java.util.List;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
@@ -54,4 +56,16 @@ public class TopologyConnection extends Model {
 	@Schema(description = "Explain how the connection has to be painted.")
 	public TopologyGraphConnectionType type;
 
+	/**
+	 * The list of nodes that will be notified when a message pass through this
+	 * connection.
+	 */
+	@Schema(description = "The list of nodes that will be notified when a message pass through this connection.")
+	public List<TopologyConnectionNotification> notifications;
+
+	/**
+	 * The position of the notification node.
+	 */
+	@Schema(description = "The position of the notification node.")
+	public Point notificationPosition;
 }

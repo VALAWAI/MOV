@@ -32,4 +32,12 @@
 		placeholder="Write the function to convert the source message to the target message."
 		i18n-placeholder="The placeholder for the field to write the convertion code@@main_topology_design_connection-editor_convert-code-placeholder">
 			></textarea> </mat-form-field>
+	@if(notificationAllowed()){
+	<mat-slide-toggle color="primary" formControlName="notifications"
+		i18n="The label of the slide toggle to activate the notifications@@main_topology_design_connection-editor_notification-toggle-label">Notifications</mat-slide-toggle>
+	@if(connectionForm.controls.notifications.value == true){ position X Y
+
+	} }
+
+
 </form>

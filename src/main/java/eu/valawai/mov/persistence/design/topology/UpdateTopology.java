@@ -122,6 +122,24 @@ public class UpdateTopology extends AbstractEntityOperator<Boolean, UpdateTopolo
 							output.targetChannel = connection.target.channel;
 							output.convertCode = connection.convertCode;
 							output.type = connection.type;
+
+							if (connection.notificationPosition != null) {
+
+								output.notificationX = connection.notificationPosition.x;
+								output.notificationY = connection.notificationPosition.y;
+							}
+							if (connection.notifications != null) {
+
+								output.notifications = new ArrayList<>();
+								for (final var notification : connection.notifications) {
+
+									final var graphNotification = new TopologyGraphConnectionNotification();
+									graphNotification.targetTag = notification.target.nodeTag;
+									graphNotification.targetChannel = notification.target.channel;
+									graphNotification.convertCode = notification.convertCode;
+									output.notifications.add(graphNotification);
+								}
+							}
 							graphNode.outputs.add(output);
 						}
 					}

@@ -46,6 +46,16 @@ public class ConnectionNodeDefinedValidator implements ConstraintValidator<Conne
 
 					return false;
 				}
+				if (connection.notifications != null) {
+
+					for (final var notification : connection.notifications) {
+
+						if (!defined.contains(notification.target.nodeTag)) {
+
+							return false;
+						}
+					}
+				}
 			}
 		}
 

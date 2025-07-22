@@ -21,6 +21,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import eu.valawai.mov.ValueGenerator;
+import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntities;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
@@ -67,14 +68,17 @@ public interface TopologyGraphEntities {
 		entity.description = "Description of '" + entity.name + "'.";
 		entity.updatedAt = nextPastTime();
 		entity.nodes = new ArrayList<>();
-		final var components = ComponentDefinitionEntities.minComponents(5).subList(0, 5);
-		for (final var component : components) {
+		var notifications = 0;
+		var connections = 0;
+		do {
 
 			final var node = new TopologyGraphNode();
+			final var component = ComponentDefinitionEntities.nextComponentDefinition();
 			node.componentRef = component.id;
 			node.tag = "node_" + (entity.nodes.size() + 1);
 			node.x = rnd().nextDouble(0.0d, 400.0d);
 			node.y = rnd().nextDouble(0.0d, 400.0d);
+			entity.nodes.add(node);
 			if (component.channels != null) {
 
 				node.outputs = new ArrayList<>();
@@ -82,20 +86,63 @@ public interface TopologyGraphEntities {
 
 					if (channel.publish != null) {
 
-						final var index = rnd().nextInt(0, components.size());
-						final var target = components.get(index);
+						final var target = ComponentDefinitionEntities.nextComponentDefinition();
 						if (target.channels != null) {
 
 							for (final var targetChannel : target.channels) {
 
 								if (targetChannel.subscribe != null) {
 
+									final var targetNode = new TopologyGraphNode();
+									targetNode.componentRef = target.id;
+									targetNode.tag = "node_" + (entity.nodes.size() + 1);
+									targetNode.x = rnd().nextDouble(0.0d, 400.0d);
+									targetNode.y = rnd().nextDouble(0.0d, 400.0d);
+									entity.nodes.add(targetNode);
+
 									final var output = new TopologyGraphNodeOutputConnection();
 									output.sourceChannel = channel.name;
-									output.targetTag = "node_" + (index + 1);
+									output.targetTag = targetNode.tag;
 									output.targetChannel = targetChannel.name;
 									output.type = ValueGenerator.next(TopologyGraphConnectionType.values());
+									if (component.type != ComponentType.C2 && target.type != ComponentType.C2) {
+
+										output.notifications = new ArrayList<>();
+										output.notificationX = rnd().nextDouble(0.0d, 400.0d);
+										output.notificationY = rnd().nextDouble(0.0d, 400.0d);
+										final var maxNotifications = rnd().nextInt(1, 3);
+										do {
+											final var notificationNode = ComponentDefinitionEntities
+													.nextComponentDefinitionWithType(ComponentType.C2);
+											if (notificationNode.channels != null) {
+
+												for (final var notificationChannel : notificationNode.channels) {
+
+													if (notificationChannel.subscribe != null) {
+
+														final var c2Node = new TopologyGraphNode();
+														c2Node.componentRef = notificationNode.id;
+														c2Node.tag = "node_" + (entity.nodes.size() + 1);
+														c2Node.x = rnd().nextDouble(0.0d, 400.0d);
+														c2Node.y = rnd().nextDouble(0.0d, 400.0d);
+														entity.nodes.add(c2Node);
+
+														final var notificaiton = new TopologyGraphConnectionNotification();
+														notificaiton.targetTag = c2Node.tag;
+														notificaiton.targetChannel = notificationChannel.name;
+														output.notifications.add(notificaiton);
+														notifications++;
+														break;
+													}
+												}
+											}
+
+										} while (output.notifications.size() < maxNotifications);
+
+									}
+
 									node.outputs.add(output);
+									connections++;
 									break;
 								}
 							}
@@ -103,9 +150,8 @@ public interface TopologyGraphEntities {
 					}
 				}
 			}
-			entity.nodes.add(node);
 
-		}
+		} while (entity.nodes.size() < 6 || notifications < 3 || connections < 6);
 
 		final var stored = entity.persist().onFailure().recoverWithItem(error -> {
 

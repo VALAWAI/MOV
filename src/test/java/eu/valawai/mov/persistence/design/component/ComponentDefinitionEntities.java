@@ -66,8 +66,22 @@ public interface ComponentDefinitionEntities {
 	 */
 	public static ComponentDefinitionEntity nextComponentDefinition() {
 
+		final var type = next(ComponentType.values());
+		return nextComponentDefinitionWithType(type);
+
+	}
+
+	/**
+	 * Create a new component.
+	 *
+	 * @param type for the component
+	 *
+	 * @return the created component.
+	 */
+	public static ComponentDefinitionEntity nextComponentDefinitionWithType(ComponentType type) {
+
 		final ComponentDefinitionEntity entity = new ComponentDefinitionEntity();
-		entity.type = next(ComponentType.values());
+		entity.type = type;
 		entity.name = nextPattern("Component {0}");
 		entity.description = "Description of '" + entity.name + "'.";
 		final var normalizedName = entity.name.toLowerCase().replaceAll("\\W", "_");

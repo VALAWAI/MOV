@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
+import eu.valawai.mov.ValueGenerator;
+
 /**
  * Test the {@link ConnectionNodeDefinedValidator}.
  *
@@ -61,10 +63,10 @@ public class ConnectionNodeDefinedValidatorTest {
 	}
 
 	/**
-	 * Should not be .
+	 * Should not be valid a topology with undefined source node tag.
 	 */
 	@Test
-	public void shouldUndefinedConnectionsdNodesInTopologyBeInvalid() {
+	public void shouldConnectionsdWithUndefinedSourceBeInvalid() {
 
 		final var topology = new Topology();
 		topology.nodes = new ArrayList<>();
@@ -77,11 +79,64 @@ public class ConnectionNodeDefinedValidatorTest {
 
 		topology.connections = new ArrayList<>();
 		final var connectionBuilder = new TopologyConnectionTest();
+		final var connection = connectionBuilder.nextModel();
+		connection.source.nodeTag = ValueGenerator.nextPattern("undefined_{0}");
+		connection.target.nodeTag = ValueGenerator.next(topology.nodes).tag;
+		connection.notifications = null;
+		topology.connections.add(connection);
+		assertFalse(this.validator.isValid(topology, null));
+	}
+
+	/**
+	 * Should not be valid a topology with undefined target node tag.
+	 */
+	@Test
+	public void shouldConnectionsdWithUndefinedTargetBeInvalid() {
+
+		final var topology = new Topology();
+		topology.nodes = new ArrayList<>();
+		final var nodeBuilder = new TopologyNodeTest();
 		for (var i = 0; i < 10; i++) {
 
-			final var connection = connectionBuilder.nextModel();
-			topology.connections.add(connection);
+			final var node = nodeBuilder.nextModel();
+			topology.nodes.add(node);
 		}
+
+		topology.connections = new ArrayList<>();
+		final var connectionBuilder = new TopologyConnectionTest();
+		final var connection = connectionBuilder.nextModel();
+		connection.target.nodeTag = ValueGenerator.nextPattern("undefined_{0}");
+		connection.source.nodeTag = ValueGenerator.next(topology.nodes).tag;
+		connection.notifications = null;
+		topology.connections.add(connection);
+		assertFalse(this.validator.isValid(topology, null));
+	}
+
+	/**
+	 * Should not be valid a topology with an undefined notification target node
+	 * tag.
+	 */
+	@Test
+	public void shouldConnectionsdWithUndefinedNotificationTargetBeInvalid() {
+
+		final var topology = new Topology();
+		topology.nodes = new ArrayList<>();
+		final var nodeBuilder = new TopologyNodeTest();
+		for (var i = 0; i < 10; i++) {
+
+			final var node = nodeBuilder.nextModel();
+			topology.nodes.add(node);
+		}
+
+		topology.connections = new ArrayList<>();
+		final var connectionBuilder = new TopologyConnectionTest();
+		final var connection = connectionBuilder.nextModel();
+		connection.source.nodeTag = ValueGenerator.next(topology.nodes).tag;
+		connection.target.nodeTag = ValueGenerator.next(topology.nodes).tag;
+		connection.notifications = new ArrayList<>();
+		connection.notifications.add(new TopologyConnectionNotificationTest().nextModel());
+		connection.notifications.get(0).target.nodeTag = ValueGenerator.nextPattern("undefined_{0}");
+		topology.connections.add(connection);
 		assertFalse(this.validator.isValid(topology, null));
 	}
 
@@ -107,6 +162,13 @@ public class ConnectionNodeDefinedValidatorTest {
 			final var connection = connectionBuilder.nextModel();
 			connection.source.nodeTag = topology.nodes.get(i % 10).tag;
 			connection.target.nodeTag = topology.nodes.get((i + 1) % 10).tag;
+			if (connection.notifications != null) {
+
+				for (final var notification : connection.notifications) {
+
+					notification.target.nodeTag = ValueGenerator.next(topology.nodes).tag;
+				}
+			}
 			topology.connections.add(connection);
 		}
 		assertTrue(this.validator.isValid(topology, null));

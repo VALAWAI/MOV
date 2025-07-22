@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v2.design.topologies;
 
+import java.util.ArrayList;
+
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphConnectionType;
@@ -44,6 +46,18 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 		model.target = builder.nextModel();
 		model.convertCode = ValueGenerator.nextPattern("//Convert {0}");
 		model.type = ValueGenerator.next(TopologyGraphConnectionType.values());
+
+		final int max = ValueGenerator.rnd().nextInt(0, 10);
+		if (max > 0) {
+
+			model.notifications = new ArrayList<>(max);
+			final var notificationBuilder = new TopologyConnectionNotificationTest();
+			for (int i = 0; i < max; i++) {
+
+				final var notification = notificationBuilder.nextModel();
+				model.notifications.add(notification);
+			}
+		}
 	}
 
 	/**
@@ -66,6 +80,24 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 		model.target.channel = output.targetChannel;
 		model.convertCode = output.convertCode;
 		model.type = output.type;
+
+		if (output.notificationX != null && output.notificationY != null) {
+
+			model.notificationPosition = new Point();
+			model.notificationPosition.x = output.notificationX;
+			model.notificationPosition.y = output.notificationY;
+		}
+
+		if (output.notifications != null) {
+
+			model.notifications = new ArrayList<>(output.notifications.size());
+			for (final var outNotification : output.notifications) {
+
+				final var notification = TopologyConnectionNotificationTest.from(outNotification);
+				model.notifications.add(notification);
+			}
+
+		}
 		return model;
 	}
 
