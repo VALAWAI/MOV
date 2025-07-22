@@ -6,6 +6,8 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { TopologyConnectionNotification } from './iopology-connection-notification.model';
+import { Point } from './point.model';
 import { TopologyConnectionEndpoint } from './topology-connection-endpoint.model';
 
 export type TopologyGraphConnectionType = 'STRAIGHT' | 'BEZIER' | 'SEGMENT';
@@ -42,5 +44,17 @@ export class TopologyConnection {
 	 * Explain how the connection has to be painted.
 	 */
 	public type: TopologyGraphConnectionType | null = null;
+
+	/**
+	 * The list of nodes that will be notified when a message pass through this
+	 * connection.
+	 */
+	public notifications: TopologyConnectionNotification[] | null = null;
+
+	/**
+	 * The position of the notification node.
+	 */
+	public notificationPosition: Point | null = null;
+
 
 }

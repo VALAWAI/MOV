@@ -33,8 +33,8 @@ public class TopologyConnectionNotification extends Model {
 
 	/**
 	 * An optional code snippet or identifier used to transform the notification's
-	 * content from its original format to the format expected by the
-	 * {@code targetChannel}. Can be null or empty if no transformation is required.
+	 * content from its original format to the format expected by the target
+	 * channel. Can be null or empty if no transformation is required.
 	 */
 	@Schema(description = "An optional code or identifier for transforming the notification's content to the target channel's format.")
 	public String convertCode;
