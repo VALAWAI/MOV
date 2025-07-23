@@ -201,6 +201,36 @@ export class EditorTopology {
 	}
 
 	/**
+	 * Return a copuy of the topology.
+	 */
+	public get model(): Topology {
+
+		var model = new Topology();
+		model.id = this.topology.id;
+		model.name = this.topology.name;
+		model.description = this.topology.description;
+		model.nodes = [];
+		for (var node of this.nodes) {
+
+			if (node.isTopologyNode) {
+
+				model.nodes.push(node.topologyNode);
+
+			}
+		}
+		model.connections = [];
+		for (var connection of this.connections) {
+
+			if (connection.source.channel != null) {
+
+				model.connections.push(connection.model);
+			}
+		}
+
+		return model;
+	}
+
+	/**
 	 * Called when want to update the endppoint of a node.
 	 */
 	public synchronizeNodeEndpoints(node: EditorNode, newEndpoints: EditorEndpoint[]): UpdateTopologyNodeEvent {

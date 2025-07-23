@@ -182,10 +182,19 @@ export class EditorNode {
 	}
 
 	/**
-	 * return the connection used as model in the node.
+	 * Return the connection used as model in the node.
 	 */
 	public get connectionModel(): DesignTopologyConnection {
 
 		return this.model as DesignTopologyConnection;
 	}
+
+	/**
+	 * Return the node used as model in the node.
+	 */
+	public get topologyNode(): TopologyNode {
+
+		return this.model as TopologyNode;
+	}
+
 } 

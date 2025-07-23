@@ -640,29 +640,29 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 							graph.vertical();
 						}
-						//						for (var node of this.topology.nodes) {
-						//
-						//							graph.addNode(node.id, node.width, node.height);
-						//						}
-						//						for (var connection of this.topology.connections) {
-						//
-						//							var sourceId = connection.model.source?.nodeTag || '';
-						//							var targetId = connection.model.target?.nodeTag || '';
-						//							graph.addEdge(sourceId, targetId);
-						//						}
-						//						if (graph.layout()) {
-						//
-						//							updated = true;
-						//							for (var node of this.topology.nodes) {
-						//
-						//								var point = graph.getPositionFor(node.id);
-						//								if (point != null) {
-						//
-						//									node.position = point;
-						//								}
-						//							}
-						//						}
-						//
+						for (var node of this.topology.nodes) {
+
+							graph.addNode(node.id, node.width, node.height);
+						}
+						for (var connection of this.topology.connections) {
+
+							var sourceId = connection.model.source?.nodeTag || '';
+							var targetId = connection.model.target?.nodeTag || '';
+							graph.addEdge(sourceId, targetId);
+						}
+						if (graph.layout()) {
+
+							updated = true;
+							for (var node of this.topology.nodes) {
+
+								var point = graph.getPositionFor(node.id);
+								if (point != null) {
+
+									node.position = point;
+								}
+							}
+						}
+
 					} catch (err) {
 						updated = false;
 						console.error(err);
