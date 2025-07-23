@@ -13,8 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TopologyConnectionEndpoint } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
-import { TopologyData } from './editor.models';
 import { ChannleToNamePipe } from './channel-to-name.pipe';
+import { EditorTopology } from './editor-topology.model';
 
 
 
@@ -42,7 +42,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	 * The topology where the endpoint is defined.
 	 */
 	@Input()
-	public topology: TopologyData | null = null;
+	public topology: EditorTopology | null = null;
 
 	/**
 	 * Notify when the endpoint is valid.
@@ -160,7 +160,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 		this.posibleChannels = [];
 		if (this.topology != null) {
 
-			var node = this.topology.getNodeWithId(this.endpointForm.controls.nodeTag.value);
+			var node = this.topology.nodes.find(n => n.id == this.endpointForm.controls.nodeTag.value);
 			if (node && node.model.component && node.model.component.channels) {
 
 				for (var channel of node.model.component.channels) {

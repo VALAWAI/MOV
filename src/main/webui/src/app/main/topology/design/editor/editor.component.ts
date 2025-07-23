@@ -32,7 +32,7 @@ import {
 } from '@foblex/flow';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { ConfigService } from '@app/shared';
+import { ConfigService, ToCssVariablePipe } from '@app/shared';
 import { Observable, switchMap, of, Subscription, timer } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { TopologyNodeEditorComponent } from './node-editor.component';
@@ -76,10 +76,10 @@ import { EditorService } from './editor.service';
 		MatDialogModule,
 		MinTopologyEditorComponent,
 		GraphModule,
-		EditorModule
+		EditorModule,
+		ToCssVariablePipe
 	],
 	templateUrl: './editor.component.html',
-	styleUrl: './editor.component.css',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopologyEditorComponent implements OnInit, OnDestroy {
@@ -544,7 +544,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called when the selected connection has changed.
 	 */
-	public updatedSelectedConnection(connection: DesignTopologyConnection) {
+	public updatedTopologyConnection(model: DesignTopologyConnection) {
 
 		/*
 		if (this.selectedElement != null
@@ -720,6 +720,33 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		if (node != null && node.hasComponent) {
 
 			return node.model as TopologyNode;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return the selected connection.
+	 */
+	public get selectedEditorConnection(): EditorConnection | null {
+
+		if (this.selected && 'source' in this.selected) {
+
+			return this.selected as EditorConnection;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return the selected connection.
+	 */
+	public get selectedTopologyConnection(): DesignTopologyConnection | null {
+
+		var connection = this.selectedEditorConnection;
+		if (connection != null && 'source' in connection.model) {
+
+			return connection.model as DesignTopologyConnection;
 		}
 
 		return null;

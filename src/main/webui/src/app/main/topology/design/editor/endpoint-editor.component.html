@@ -3,7 +3,7 @@
 		<mat-form-field> <mat-label
 			i18n="The label of the form field to edit the endpoimnt node@@main_topology_design_endpoint-editor_node-label">Node</mat-label>
 		<mat-select formControlName="nodeTag"> @for(node of
-		topology?.nodes;track node.id){ <mat-option [value]="node.id">{{node.typeName}}</mat-option>
+		topology?.nodes;track node.id){ <mat-option [value]="node.id">{{node.name}}</mat-option>
 		} </mat-select> <mat-error
 			*ngIf="endpointForm.controls.nodeTag.hasError('required')"
 			i18n="The error message if no node tag is selected@@main_topology_design_endpoint-editor_node-required">

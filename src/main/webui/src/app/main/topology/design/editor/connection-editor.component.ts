@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NotificationChangedEvent } from './notification-changed.event';
+import { EditorTopology } from './editor-topology.model';
 
 
 
@@ -41,7 +42,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	 * The topology where the connection is defined.
 	 */
 	@Input()
-	public topology: TopologyData | null = null;
+	public topology: EditorTopology | null = null;
 
 	/**
 	 * Notify when the node has been updated.
@@ -125,8 +126,8 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 
 					if (value) {
 
-						var source = this.topology?.getNodeWithId(this.connectionForm.controls.source.value?.nodeTag);
-						var target = this.topology?.getNodeWithId(this.connectionForm.controls.target.value?.nodeTag);
+						var source = this.topology?.nodes.find(n => n.id == this.connectionForm.controls.source.value?.nodeTag);
+						var target = this.topology?.nodes.find(n => n.id == this.connectionForm.controls.target.value?.nodeTag);
 						var x = ((source?.position.x || 0) + (target?.position.x || 0)) / 2.0;
 						this.connectionForm.controls.notificationX.setValue(x);
 						var y = ((source?.position.y || 0) + (target?.position.y || 0)) / 2.0;

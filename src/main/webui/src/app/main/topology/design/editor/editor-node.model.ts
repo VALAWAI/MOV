@@ -54,18 +54,6 @@ export class EditorNode {
 
 	}
 
-	/**
-	 * Return the identifier of the node.
-	 */
-	public set id(id: string) {
-
-		if (this.hasComponent) {
-
-			this.model.tag = id;
-
-		}
-
-	}
 
 	/**
 	 * Chck if the node has a component.
@@ -127,6 +115,22 @@ export class EditorNode {
 
 		return 'component' in this.model && this.model.component != null
 			&& this.model.component.channels != null && this.model.component.channels.length > 0;
+	}
+
+	/**
+	 * Get a endpoint or create it if not exist.
+	 */
+	public searchEndpointOrCreate(channel: string, isSource: boolean): EditorEndpoint {
+
+		var endpoint = this.endpoints.find(e => e.channel == channel && e.isSource == isSource);
+		if (endpoint == null) {
+
+			endpoint = new EditorEndpoint(this.id, channel, isSource);
+			this.endpoints.push(endpoint);
+		}
+
+		return endpoint;
+
 	}
 
 } 

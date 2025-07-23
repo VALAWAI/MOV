@@ -6,9 +6,10 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { MinTopology, Topology } from "@app/shared/mov-api";
+import { MinTopology, Topology, TopologyConnectionEndpoint } from "@app/shared/mov-api";
 import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
+import { EditorEndpoint } from "./editor-endpoint.model";
 
 /**
  * Define the topology that is editing into the editor.
@@ -79,17 +80,31 @@ export class EditorTopology {
 			for (var topologyNode of this.topology.nodes) {
 
 				var node = new EditorNode(topologyNode);
-				node.id = 'node_' + this.nodes.length;
 				this.nodes.push(node);
 			}
 		}
 
+		if (this.topology.connections != null) {
+
+			for (var topologyConnection of this.topology.connections) {
+
+				var source = this.nodes.find(n => n.id == topologyConnection.source!.nodeTag)!;
+				var sourceEndpoint = source.searchEndpointOrCreate(topologyConnection.source!.channel!, true);
+
+				var target = this.nodes.find(n => n.id == topologyConnection.target!.nodeTag)!;
+				var targetEndpoint = target.searchEndpointOrCreate(topologyConnection.target!.channel!, false);
+
+
+				var connection = new EditorConnection(topologyConnection, sourceEndpoint, targetEndpoint);
+				connection.id = 'connection_' + this.connections.length;
+				this.connections.push(connection);
+
+			}
+
+		}
 
 		this.unsaved = this.topology.id != null;
 	}
-	
-	/**
-	 * 
-	 */
+
 
 } 

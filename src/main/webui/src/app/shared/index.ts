@@ -7,6 +7,7 @@
 */
 
 export { ConfigService } from './config.service';
+export { ToCssVariablePipe } from './to-css-var.pipe';
 
 
 /**

@@ -62,19 +62,18 @@
 			<!-- Notification node -->
 			}
 		</div>
-		} @for(connection of topology.connections;track connection.id){ <!--
-		 <f-connection
-			[fType]="connection.type" [fConnectionId]="connection.id"
-			[fOutputId]="connection.sourceId" [fInputId]="connection.targetId"
-			[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
-			[fEndColor]="topology.endColorFor(connection,isSelected(connection))"
+		} @for(connection of topology.connections;track connection.id){ <f-connection
+			[fType]="connection.type|toConnectionType"
+			[fConnectionId]="connection.id" [fOutputId]="connection.source.id"
+			[fInputId]="connection.target.id"
+			[fStartColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"
+			[fEndColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"
 			class="hover:stroke-7"
-			[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
+			[ngClass]="{'stroke-3':connection.id==selected?.id,'stroke-2':connection.id!=selected?.id}"
 			[fOffset]="30"> <app-connection-markers
-			[color]="connection.isControl?'fill-sky-400':'fill-indigo-400'"
-			[selectedColor]="connection.isControl?'fill-sky-800':'fill-indigo-800'"></app-connection-markers>
-		</f-connection>
-		--> } </f-canvas> </f-flow>
+			[color]="connection.fillColorFor(false)"
+			[selectedColor]="connection.fillColorFor(true)"></app-connection-markers>
+		</f-connection> } </f-canvas> </f-flow>
 		<!-- TOOLBAR -->
 		<div class="absolute top-2 end-2">
 			<button mat-icon-button color="primary" (click)="zoomIn()">
@@ -235,19 +234,10 @@
 		} @else if( selectedTopologyNode != null){
 		<app-topology-node-editor [node]="selectedTopologyNode"
 			(nodeUpdated)="updatedTopologyNode($event)"></app-topology-node-editor>
-		<!-- 
-		<app-topology-node-editor [node]="selectedNode.model"
-			(nodeUpdated)="updatedSelectedNode($event)"></app-topology-node-editor>
-			 -->
-		}
-		<!-- 
-		@else if(isConnectionSelected()){
-
+		} @else if( selectedTopologyConnection != null){ 
 		<app-topology-connection-editor
-			[connection]="selectedConnection?.model" [topology]="topology"
-			(connectionUpdated)="updatedSelectedConnection($event)"></app-topology-connection-editor>
-			
-		} @else {
+			[connection]="selectedTopologyConnection" [topology]="topology"
+			(connectionUpdated)="updatedTopologyConnection($event)"></app-topology-connection-editor>
 		}
 		 -->
 	</div>
