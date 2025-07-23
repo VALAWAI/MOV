@@ -34,7 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService, ToCssVariablePipe } from '@app/shared';
 import { Observable, switchMap, of, Subscription, timer } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
 import {
@@ -42,15 +42,13 @@ import {
 	Topology,
 	TopologyNode,
 	DesignTopologyConnection,
-	ComponentType,
-	MinTopology
+	ComponentType
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 import { MinTopologyEditorComponent } from './min-topology-editor.component';
-import { ConnectionData, EndpointData, NodeData, TopologyData, TopologyElement } from './editor.models';
 import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DagreLayoutService, GraphModule } from '@app/shared/graph';
@@ -60,6 +58,8 @@ import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorModule } from './editor.module';
 import { EditorService } from './editor.service';
+import { EditorEndpoint } from './editor-endpoint.model';
+import { ConfirmRemoveEndpointsDialog } from './confirm-remove-endpoints.dialog';
 
 @Component({
 	standalone: true,
@@ -503,6 +503,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 					)
 				);
 		*/
+		this.topology.unsaved = false;
 		return of(true);
 
 	}
@@ -565,18 +566,104 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		this.dialog.open(SelectNodeEndpointsDialog, { data: node }).afterClosed().subscribe(
 			{
-				next: (result: EndpointData[] | null) => {
+				next: (result: EditorEndpoint[] | null) => {
 
-					/*
-					if (result != null && node.changeEndpoints(result)) {
+					if (result != null) {
 
-						//this.unsaved = true;
-						this.updatedGraph();
+						var removedEndpoints: EditorEndpoint[] = [];
+						for (var i = 0; i < node.endpoints.length; i++) {
+
+							var index = result.findIndex(e => e.channel === node.endpoints[i].channel);
+							if (index < 0) {
+								// removed endpoint
+								removedEndpoints.push(node.endpoints.splice(i, 1)[0]);
+								i--;
+
+							} else {
+
+								result.splice(i, 1);
+							}
+						}
+
+
+						if (removedEndpoints.length > 0 || result.length > 0) {
+
+
+							var removedNodes: EditorNode[] = [];
+							var removedConnections: EditorConnection[] = [];
+							for (var i = 0; i < removedEndpoints.length; i++) {
+
+
+								var id = removedEndpoints[i].id;
+								for (var j = 0; j < this.topology.connections.length; j++) {
+
+									const connection = this.topology.connections[j];
+									if (connection.source.id == id || connection.target.id == id) {
+										// The connection must be removed
+										removedConnections.push(this.topology.connections.splice(i, 1)[0]);
+										i--;
+									}
+
+									if (connection.model.notificationPosition != null) {
+
+										for (var k = 0; k < this.topology.nodes.length; k++) {
+
+											if (this.topology.nodes[k].isNotificationNodeOf(connection)) {
+
+												var notificationNode = this.topology.nodes.splice(k, 1)[0];
+												removedNodes.push(notificationNode);
+												removedEndpoints.push(...notificationNode.endpoints);
+												break;
+											}
+										}
+									}
+								}
+
+							}
+
+							if (removedConnections.length > 0) {
+
+								this.dialog.open(ConfirmRemoveEndpointsDialog, { data: removedConnections })
+									.afterClosed().subscribe(
+										{
+											next: ok => {
+
+												if (ok === true) {
+
+													this.updateNodeEndpoints(node, result);
+
+												} else {
+
+													node.endpoints.push(...removedEndpoints);
+													node.endpoints.sort((e1, e2) => e1.channel!.localeCompare(e2.channel!));
+													this.topology.connections.push(...removedConnections);
+													this.topology.nodes.push(...removedNodes);
+
+												}
+											}
+										}
+									);
+
+							} else {
+
+								this.updateNodeEndpoints(node, result);
+							}
+						}
 					}
-					*/
 				}
 			}
 		);
+
+	}
+
+	/**
+	 * Called when has to update the node endpoints.
+	 */
+	private updateNodeEndpoints(node: EditorNode, result: EditorEndpoint[]) {
+
+		node.endpoints.push(...result);
+		node.endpoints.sort((e1, e2) => e1.channel!.localeCompare(e2.channel!));
+		this.updatedGraph();
 
 	}
 
@@ -717,7 +804,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public get selectedTopologyNode(): TopologyNode | null {
 
 		var node = this.selectedEditorNode;
-		if (node != null && node.hasComponent) {
+		if (node != null && node.isTopologyNode) {
 
 			return node.model as TopologyNode;
 		}

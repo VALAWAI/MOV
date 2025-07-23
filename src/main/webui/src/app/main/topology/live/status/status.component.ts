@@ -13,7 +13,7 @@ import { PointExtensions } from '@foblex/2d';
 import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
 import { MainService } from 'src/app/main';
 import { GraphModule } from '@app/shared/graph/graph.module';
-import { Subscription, switchMap, timer, retry, throwError } from 'rxjs';
+import { Subscription, switchMap, timer, retry } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
 import { LiveTopology, LiveTopologyComponent, LiveTopologyComponentOutConnection, MovApiService } from '@app/shared/mov-api';
 import { DagreLayoutService } from '@app/shared/graph';

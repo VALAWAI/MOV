@@ -89,7 +89,34 @@ export class EditorTopology {
 			for (var topologyConnection of this.topology.connections) {
 
 				var source = this.nodes.find(n => n.id == topologyConnection.source!.nodeTag)!;
-				var sourceEndpoint = source.searchEndpointOrCreate(topologyConnection.source!.channel!, true);
+				var sourceEndpoint = source.searchEndpointOrCreate(topologyConnection.source!.channel, true);
+
+				if (topologyConnection.notificationPosition != null) {
+
+					var target = new EditorNode(topologyConnection);
+					this.nodes.push(target);
+					var targetEndpoint = target.searchEndpointOrCreate(null, true);
+
+					var connection = new EditorConnection(topologyConnection, sourceEndpoint, targetEndpoint);
+					connection.id = 'connection_' + this.connections.length;
+					this.connections.push(connection);
+					sourceEndpoint = target.searchEndpointOrCreate(null, false);
+
+					if (topologyConnection.notifications != null) {
+
+						for (var notification of topologyConnection.notifications) {
+
+							var target = this.nodes.find(n => n.id == notification.target!.nodeTag)!;
+							var targetEndpoint = target.searchEndpointOrCreate(notification.target!.channel!, false);
+
+							connection = new EditorConnection(topologyConnection, sourceEndpoint, targetEndpoint);
+							connection.id = 'connection_' + this.connections.length;
+							this.connections.push(connection);
+						}
+
+					}
+
+				}
 
 				var target = this.nodes.find(n => n.id == topologyConnection.target!.nodeTag)!;
 				var targetEndpoint = target.searchEndpointOrCreate(topologyConnection.target!.channel!, false);

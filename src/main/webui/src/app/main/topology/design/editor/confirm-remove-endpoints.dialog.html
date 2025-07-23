@@ -1,0 +1,29 @@
+<h2 mat-dialog-title class="text-lg font-bold mb-4"
+	i18n="Title of the dialog to confirm remove endpoints@@main_topology_editor-dialog-confirm-remove-endpoints-title">
+	Confirm remove End-points</h2>
+<mat-dialog-content class="text-gray-600 mb-4">
+<p class="text-lg"
+	i18n="Question of the dialog to confirm remove endpoints@@main_topology_editor-dialog-confirm-remove-endpoints-question">
+	Be aware that removing these node endpoints will also cause the
+	following connections to be removed:</p>
+<ul class="list-disc p-2 list-inline">
+	@for(connection of data;track connection.id){
+	<li class="ms-8" >From <span class="font-bold">@if(connection.source.channel==null){
+			Notification Node }@else{ {{connection.source.channel}}
+			}</span> to <span class="font-bold">@if(connection.target.channel==null){
+			Notification Node }@else{ {{connection.target.channel}}
+			}</span>.
+	</li> }
+</ul>
+<p class="font-bold">Do you are sure to proceed with the removal
+	process, which includes these connections?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+<button matButton color="warn" [mat-dialog-close]="false"
+	i18n="Cancel label of the dialog to confirm remove endpoints@@main_topology_editor-dialog-confirm-remove-endpoints-cancel-label">
+	No, discard removal</button>
+<button matButton color="primary" [mat-dialog-close]="true"
+	cdkFocusInitial
+	i18n="OK label of the dialog to confirm remove endpoints@@main_topology_editor-dialog-confirm-remove-endpoints-ok-label">
+	Yes, remove them</button>
+</mat-dialog-actions>

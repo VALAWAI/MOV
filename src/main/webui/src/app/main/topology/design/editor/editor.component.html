@@ -12,7 +12,7 @@
 		<div fNode [fNodeId]="node.id" fDragHandle
 			[fNodePosition]="node.position"
 			(fNodePositionChange)="editorService.nodePositionChange(node.id,$event)">
-			@if(node.hasComponent){
+			@if(node.isTopologyNode){
 			<!-- Component node -->
 			<app-component-type-node-container [type]="node.type"
 				[isSelected]="node.id === selected?.id" (width)="node.width=$event"
@@ -47,7 +47,7 @@
 				[fOutputId]="endpoint.id" [fOutputMultiple]="true"
 				fOutputConnectableSide="right" fNodeOutlet>
 				<mat-icon color="primary" fontIcon="publish"></mat-icon>
-				{{endpoint.name}}
+				{{endpoint.channel|toChannelName}}
 			</div>
 
 			} @else{
@@ -55,11 +55,23 @@
 				[fInputId]="endpoint.id" [fInputMultiple]="true"
 				fInputConnectableSide="left">
 				<mat-icon color="primary" fontIcon="download"></mat-icon>
-				{{endpoint.name}}
+				{{endpoint.channel|toChannelName}}
 			</div>
 			} } </app-component-type-node-container>
 			}@else{
 			<!-- Notification node -->
+			<div class="rounded-full border-2 w-6 h-6 hover:stroke-7 relative"
+				[ngClass]="{'border-red-400 bg-red-800':node.id === selected?.id,'border-sky-400 bg-sky-400':node.id !== selected?.id}">
+				<div fNodeInput [fInputId]="node.fisrtEndPointWithIsSource(true).id"
+					[fInputMultiple]="true" fInputConnectableSide="top"></div>
+				<div fNodeOutput
+					[fOutputId]="node.fisrtEndPointWithIsSource(false).id"
+					[fOutputMultiple]="true" fOutputConnectableSide="bottom"></div>
+				<div fNodeOutlet
+					class="absolute top-5 start-4 text-sky-800 border border-sky-800 rounded-full text-sm">
+					<mat-icon class="scale-75">arrow_downward</mat-icon>
+				</div>
+			</div>
 			}
 		</div>
 		} @for(connection of topology.connections;track connection.id){ <f-connection
@@ -234,11 +246,10 @@
 		} @else if( selectedTopologyNode != null){
 		<app-topology-node-editor [node]="selectedTopologyNode"
 			(nodeUpdated)="updatedTopologyNode($event)"></app-topology-node-editor>
-		} @else if( selectedTopologyConnection != null){ 
+		} @else if( selectedTopologyConnection != null){
 		<app-topology-connection-editor
 			[connection]="selectedTopologyConnection" [topology]="topology"
 			(connectionUpdated)="updatedTopologyConnection($event)"></app-topology-connection-editor>
 		}
-		 -->
 	</div>
 </div>

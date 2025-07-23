@@ -25,14 +25,14 @@
 					[fOutputId]="endpoint.id" [fOutputMultiple]="true"
 					fOutputConnectableSide="right" fNodeOutlet>
 					<mat-icon color="primary" fontIcon="publish"></mat-icon>
-					{{endpoint.name}}
+					{{endpoint.channel|toChannelName}}
 				</div>
 				} @else{
 				<div class="grow rounded-lg p-2 gap-2" fNodeInput
 					[fInputId]="endpoint.id" [fInputMultiple]="true"
 					fInputConnectableSide="left">
 					<mat-icon color="primary" fontIcon="download"></mat-icon>
-					{{endpoint.name}}
+					{{endpoint.channel|toChannelName}}
 				</div>
 				} } </app-component-type-node-container>
 				} @else{

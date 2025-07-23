@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
 import { MatIconModule } from '@angular/material/icon';
 import { AbstractConnectionDetailComponent } from './abstract-connection-detail.component';
+import { GraphModule } from '@app/shared/graph';
 
 @Component({
 	standalone: true,
@@ -19,7 +20,8 @@ import { AbstractConnectionDetailComponent } from './abstract-connection-detail.
 	imports: [
 		CommonModule,
 		RouterModule,
-		MatIconModule
+		MatIconModule,
+		GraphModule
 	],
 	templateUrl: './notification-connection-detail.component.html'
 })
@@ -66,7 +68,7 @@ export class NotificationConnectionDetailComponent extends AbstractConnectionDet
 	 */
 	public get notificationChannel(): string {
 
-		return this._connection?.target?.name || '';
+		return this._connection?.target?.channel || '';
 
 	}
 

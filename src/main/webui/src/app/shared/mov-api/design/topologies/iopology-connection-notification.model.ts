@@ -7,6 +7,7 @@
 */
 
 import { TopologyConnectionEndpoint } from "./topology-connection-endpoint.model";
+import { TopologyGraphConnectionType } from "./topology-connection.model";
 
 
 /**
@@ -31,5 +32,10 @@ export class TopologyConnectionNotification {
 	 */
 	public convertCode: string | null = null;
 
-	
+	/**
+	 * Explain how the connection has to be painted.
+	 */
+	public type: TopologyGraphConnectionType | null = null;
+
+
 }

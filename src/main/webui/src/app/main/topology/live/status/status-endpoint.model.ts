@@ -17,11 +17,6 @@ export class StatusEndpoint {
 	 */
 	public id: string;
 
-	/**
-	 * The name of the endpoint.
-	 */
-	public name: string | null;
-
 
 	/**
 	 * Create the endppoint.
@@ -32,27 +27,19 @@ export class StatusEndpoint {
 		public isSource: boolean
 	) {
 
-		this.name = null;
 		this.id = nodeId;
 		if (channel != null) {
 
 			this.id += "_" + channel;
-			var matches = channel.match(/^valawai\/c(0|1|2)\/\w+\/(.+)$/);
-			if (matches != null) {
 
-				this.name = matches[2];
-			}
+		} else if (isSource) {
+
+			this.id += "_output";
 
 		} else {
 
-			if (isSource) {
+			this.id += "_input";
 
-				this.id += "_output";
-
-			} else {
-
-				this.id += "_input";
-			}
 
 		}
 
@@ -63,20 +50,20 @@ export class StatusEndpoint {
 	 */
 	public compareTo(other: StatusEndpoint): number {
 
-		if (this.name != null) {
+		if (this.channel != null) {
 
-			if (other.name == null) {
+			if (other.channel == null) {
 
-				return this.name.localeCompare('');
+				return this.channel.localeCompare('');
 
 			} else {
 
-				return this.name.localeCompare(other.name);
+				return this.channel.localeCompare(other.channel);
 			}
 
-		} else if (other.name != null) {
+		} else if (other.channel != null) {
 
-			return ''.localeCompare(other.name);
+			return ''.localeCompare(other.channel);
 
 		} else {
 

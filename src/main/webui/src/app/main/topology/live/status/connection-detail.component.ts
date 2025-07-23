@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AbstractConnectionDetailComponent } from './abstract-connection-detail.component';
+import { GraphModule } from '@app/shared/graph';
 
 @Component({
 	standalone: true,
@@ -18,7 +19,8 @@ import { AbstractConnectionDetailComponent } from './abstract-connection-detail.
 	imports: [
 		CommonModule,
 		RouterModule,
-		MatIconModule
+		MatIconModule,
+		GraphModule
 	],
 	templateUrl: './connection-detail.component.html'
 })

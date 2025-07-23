@@ -7,7 +7,7 @@
 */
 
 
-import { Directive, Injectable, Input } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { StatusConnection } from './status-connection.model';
 import { StatusNode } from './status-node.model';
 import { StatusEndpoint } from './status-endpoint.model';
@@ -92,7 +92,7 @@ export abstract class AbstractConnectionDetailComponent {
 		this.sourceEndPoint = this.source.searchEndpointByChannel(connection.channel!)!;
 		this.target = this._nodes.find(node => node.id == connection.target!.id)!;
 		this.targetEndPoint = this.target.searchEndpointByChannel(connection.target!.channel!)!;
-		
+
 	}
 
 	/**
@@ -127,7 +127,7 @@ export abstract class AbstractConnectionDetailComponent {
 	 */
 	public get sourceChannel(): string {
 
-		return this.sourceEndPoint?.name || this._connection?.model?.channel || '';
+		return this.sourceEndPoint?.channel || this._connection?.model?.channel || '';
 
 	}
 
@@ -154,7 +154,7 @@ export abstract class AbstractConnectionDetailComponent {
 	 */
 	public get targetChannel(): string {
 
-		return this.targetEndPoint?.name || this._connection?.model?.target?.channel || '';
+		return this.targetEndPoint?.channel || this._connection?.model?.target?.channel || '';
 
 	}
 

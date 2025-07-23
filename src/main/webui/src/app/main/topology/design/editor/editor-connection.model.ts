@@ -33,7 +33,7 @@ export class EditorConnection {
 	) {
 
 	}
-
+	
 
 	/**
 	 * The type of the connection.

@@ -57,4 +57,26 @@ export function toPattern(value: string[] | string | null | undefined): string |
 
 	return null;
 
-} 
+}
+
+/**
+ * Convert a string to a pattern for search.
+ */
+export function toChannelName(value: string | null | undefined): string | null {
+
+	if (value != null) {
+
+		var matches = value.match(/^valawai\/c(0|1|2)\/\w+\/(.+)$/);
+		if (matches != null) {
+
+			return matches[2];
+
+		} else {
+
+			return value;
+		}
+	}
+
+	return null;
+
+}  

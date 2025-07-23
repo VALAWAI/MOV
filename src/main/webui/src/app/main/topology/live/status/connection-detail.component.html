@@ -13,12 +13,12 @@
 		{{sourceName}}</a> (channel
 	<code
 		class="bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono">
-		{{sourceChannel}}</code>
+		{{sourceChannel|toChannelName}}</code>
 	) to <a
 		class="font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200"
 		[routerLink]="['/main/topology/live/components',targetId,'show']">
 		{{targetName}}</a> (channel
 	<code
-		class="bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono">{{targetChannel}}</code>
+		class="bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-sm font-mono">{{targetChannel|toChannelName}}</code>
 	).
 </div>

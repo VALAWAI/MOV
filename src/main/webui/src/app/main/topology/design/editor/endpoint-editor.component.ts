@@ -161,7 +161,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 		if (this.topology != null) {
 
 			var node = this.topology.nodes.find(n => n.id == this.endpointForm.controls.nodeTag.value);
-			if (node && node.model.component && node.model.component.channels) {
+			if (node && 'component' in node.model && node.model.component && node.model.component.channels) {
 
 				for (var channel of node.model.component.channels) {
 

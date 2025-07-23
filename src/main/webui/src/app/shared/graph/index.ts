@@ -12,3 +12,4 @@ export { ConnectionMarkersComponent } from './connection-markers.component';
 export { DagreLayoutService } from './dagre-layout.service';
 export { GraphModule } from './graph.module';
 export { ToConnectionTypePipe } from './to-connection-type.pipe';
+export { ToChannelNamePipe } from './to-channel-name.pipe';

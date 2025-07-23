@@ -14,6 +14,7 @@ import { ComponentTypeBadgeComponent } from './component-type-badge.component';
 import { DagreLayoutService } from './dagre-layout.service';
 import { ConnectionMarkersComponent } from './connection-markers.component';
 import { ToConnectionTypePipe } from './to-connection-type.pipe';
+import { ToChannelNamePipe } from './to-channel-name.pipe';
 
 
 @NgModule({
@@ -22,13 +23,15 @@ import { ToConnectionTypePipe } from './to-connection-type.pipe';
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
 		ConnectionMarkersComponent,
-		ToConnectionTypePipe
+		ToConnectionTypePipe,
+		ToChannelNamePipe
 	],
 	exports: [
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
 		ConnectionMarkersComponent,
-		ToConnectionTypePipe
+		ToConnectionTypePipe,
+		ToChannelNamePipe
 	],
 	providers: [
 		DagreLayoutService

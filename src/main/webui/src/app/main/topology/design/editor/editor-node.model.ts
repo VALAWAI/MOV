@@ -6,9 +6,10 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { ComponentType, TopologyNode } from "@app/shared/mov-api";
+import { ComponentType, TopologyNode, DesignTopologyConnection } from "@app/shared/mov-api";
 import { IPoint } from "@foblex/2d";
 import { EditorEndpoint } from './editor-endpoint.model';
+import { EditorConnection } from "./editor-connection.model";
 
 /**
  * A node in the graph od the EditorTopology..
@@ -31,10 +32,11 @@ export class EditorNode {
 	 */
 	public endpoints: EditorEndpoint[] = [];
 
+
 	/**
 	 * Create a new model.
 	 */
-	constructor(public model: TopologyNode) {
+	constructor(public model: TopologyNode | DesignTopologyConnection) {
 
 
 	}
@@ -44,23 +46,24 @@ export class EditorNode {
 	 */
 	public get id(): string {
 
-		if (this.hasComponent) {
+		if ('tag' in this.model) {
 
 			return this.model.tag!;
 
+		} else {
+
+			return this.model.source?.nodeTag + '->notification->' + this.model.source?.nodeTag;
+
 		}
-
-		return 'node_0';
-
 	}
 
 
 	/**
 	 * Chck if the node has a component.
 	 */
-	public get hasComponent(): boolean {
+	public get isTopologyNode(): boolean {
 
-		return ('component' in this.model && this.model.position != null);
+		return ('position' in this.model && this.model.position != null);
 	}
 
 
@@ -69,12 +72,15 @@ export class EditorNode {
 	 */
 	public get position(): IPoint {
 
-		if (this.hasComponent) {
+		if ('position' in this.model) {
 
 			return this.model.position;
 
+		} else {
+
+			return this.model.notificationPosition!;
 		}
-		return { x: 0, y: 0 };
+
 	}
 
 	/**
@@ -82,10 +88,13 @@ export class EditorNode {
 	 */
 	public set position(point: IPoint) {
 
-		if (this.hasComponent) {
+		if ('position' in this.model) {
 
 			this.model.position = point;
 
+		} else {
+
+			this.model.notificationPosition! = point;
 		}
 
 	}
@@ -105,7 +114,14 @@ export class EditorNode {
 	 */
 	public get name(): string | null {
 
-		return (this.model as TopologyNode).component!.name;
+		if ('position' in this.model) {
+
+			return (this.model as TopologyNode).component!.name;
+
+		} else {
+
+			return null;
+		}
 	}
 
 	/**
@@ -120,9 +136,17 @@ export class EditorNode {
 	/**
 	 * Get a endpoint or create it if not exist.
 	 */
-	public searchEndpointOrCreate(channel: string, isSource: boolean): EditorEndpoint {
+	public searchEndpoint(channel: string | null, isSource: boolean): EditorEndpoint | null {
 
-		var endpoint = this.endpoints.find(e => e.channel == channel && e.isSource == isSource);
+		return this.endpoints.find(e => e.channel === channel && e.isSource === isSource) || null;
+	}
+
+	/**
+	 * Get a endpoint or create it if not exist.
+	 */
+	public searchEndpointOrCreate(channel: string | null, isSource: boolean): EditorEndpoint {
+
+		var endpoint = this.searchEndpoint(channel, isSource);
 		if (endpoint == null) {
 
 			endpoint = new EditorEndpoint(this.id, channel, isSource);
@@ -131,6 +155,30 @@ export class EditorNode {
 
 		return endpoint;
 
+	}
+
+	/**
+	 * Return the first endppoint that is or not a source.
+	 */
+	public fisrtEndPointWithIsSource(isSource: boolean): EditorEndpoint {
+
+		return this.endpoints.find(e => e.isSource == isSource)!;
+
+	}
+
+	/**
+	 * Check if this is a notificaiton node of the specified connection.
+	 */
+	public isNotificationNodeOf(connection: EditorConnection): boolean {
+
+		if (!this.isTopologyNode) {
+
+			var defined = this.model as DesignTopologyConnection;
+			return JSON.stringify(defined.source) === JSON.stringify(connection.model.source)
+				&& JSON.stringify(defined.target) === JSON.stringify(connection.model.target);
+
+		}
+		return false;
 	}
 
 } 
