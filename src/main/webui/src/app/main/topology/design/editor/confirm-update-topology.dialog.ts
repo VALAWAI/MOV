@@ -9,26 +9,26 @@
 import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
-import { EditorConnection } from "./editor-connection.model";
 import { GraphModule } from "@app/shared/graph";
+import { UpdateTopologyEvent } from "./editor-topology.model";
 
 
 @Component({
 	standalone: true,
-	selector: 'dialog-confirm-remove-ednpoints',
-	templateUrl: 'confirm-remove-endpoints.dialog.html',
+	selector: 'dialog-confirm-update-topology',
+	templateUrl: './confirm-update-topology.dialog.html',
 	imports: [
 		MatButtonModule,
 		MatDialogModule,
 		GraphModule
 	],
 })
-export class ConfirmRemoveEndpointsDialog {
+export class ConfirmUpdateTopologyDialog {
 
 	/**
-	 * The connections taht will be removed.
+	 * The update event over the topology.
 	 */
-	public data: EditorConnection[] = inject(MAT_DIALOG_DATA);
+	public data: UpdateTopologyEvent = inject(MAT_DIALOG_DATA);
 
 
 }

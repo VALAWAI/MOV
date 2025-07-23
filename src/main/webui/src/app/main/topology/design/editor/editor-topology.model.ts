@@ -6,10 +6,77 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { MinTopology, Topology, TopologyConnectionEndpoint } from "@app/shared/mov-api";
+import { MinTopology, Topology } from "@app/shared/mov-api";
 import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from "./editor-endpoint.model";
+
+/**
+ * The information of teh update of the topology.
+ */
+export class UpdateTopologyEvent {
+
+	/**
+	 * The nodes that has been removed when the topology is updated.
+	 */
+	public removedNodes: EditorNode[] = [];
+
+	/**
+	 * The connections that has been removed when the topology is updated.
+	 */
+	public removedConnections: EditorConnection[] = [];
+
+	/**
+	 * Check if the update do some removes.
+	 */
+	public get hasRemovedSomething(): boolean {
+
+		return this.removedNodes.length > 0 || this.removedConnections.length > 0;
+	}
+
+	/**
+	 * Undo the removed nodes and connections.
+	 */
+	public undo(topology: EditorTopology) {
+
+		topology.connections.push(...this.removedConnections);
+		topology.nodes.push(...this.removedNodes);
+
+	}
+
+}
+
+/**
+ * The information of teh update of the topology.
+ */
+export class UpdateTopologyNodeEvent extends UpdateTopologyEvent {
+
+	/**
+	 * The endpoint of the node that has been removed.
+	 */
+	public originalEndpoints: EditorEndpoint[];
+
+	/**
+	 * Create an event to update a node.
+	 */
+	constructor(public node: EditorNode) {
+
+		super();
+		this.originalEndpoints = node.endpoints;
+		node.endpoints = [...node.endpoints];
+	}
+
+	/**
+	 * Undo the removed endpoints.
+	 */
+	public override undo(topology: EditorTopology) {
+
+		super.undo(topology);
+		this.node.endpoints = this.originalEndpoints;
+	}
+
+}
+
 
 /**
  * Define the topology that is editing into the editor.
@@ -133,5 +200,112 @@ export class EditorTopology {
 		this.unsaved = this.topology.id != null;
 	}
 
+	/**
+	 * Called when want to update the endppoint of a node.
+	 */
+	public synchronizeNodeEndpoints(node: EditorNode, newEndpoints: EditorEndpoint[]): UpdateTopologyNodeEvent {
 
+		var event = new UpdateTopologyNodeEvent(node);
+		node.endpoints = [...newEndpoints];
+		node.endpoints.sort((e1, e2) => e1.channel!.localeCompare(e2.channel!));
+		for (var endpoint of event.originalEndpoints) {
+
+			var index = newEndpoints.findIndex(e => e.channel === endpoint.channel);
+			if (index < 0) {
+				// end point remobed
+				this.propagateRemovedEndpoint(endpoint, event);
+			}
+		}
+
+		return event;
+	}
+
+	/**
+	 * Propagate the changes necessaries to remove the specified end point.
+	 */
+	public propagateRemovedEndpoint(endpoint: EditorEndpoint, event: UpdateTopologyEvent) {
+
+		var id = endpoint.id;
+		var removedConnections: EditorConnection[] = [];
+		for (var i = 0; i < this.connections.length; i++) {
+
+			const connection = this.connections[i];
+			if (connection.source.id == id || connection.target.id == id) {
+				// The connection must be removed
+				this.connections.splice(i, 1);
+				event.removedConnections.push(connection);
+				removedConnections.push(connection);
+				i--;
+			}
+		}
+
+		for (var connection of removedConnections) {
+
+			this.propagateRemovedConnection(connection, event);
+		}
+
+	}
+
+	/**
+	 * Propagate the changes necessaries when a connection is removed.
+	 */
+	public propagateRemovedConnection(connection: EditorConnection, event: UpdateTopologyEvent) {
+
+		if (connection.model.notificationPosition != null) {
+
+			for (var i = 0; i < this.nodes.length; i++) {
+
+				var node = this.nodes[i];
+				if (node.isNotificationNodeOf(connection)) {
+
+					this.nodes.splice(i, 1);
+					event.removedNodes.push(node);
+					this.propagateRemovedNode(node, event);
+					break;
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Propagate the changes necessaries when a node is removed.
+	 */
+	public propagateRemovedNode(node: EditorNode, event: UpdateTopologyEvent) {
+
+		for (var endpoint of [...node.endpoints]) {
+
+			this.propagateRemovedEndpoint(endpoint, event);
+		}
+	}
+
+	/**
+	 * Called to remove a node.
+	 */
+	public removeNode(node: EditorNode | string): UpdateTopologyEvent {
+
+		var nodeId = "";
+		if (typeof node === 'string') {
+
+			nodeId = node;
+
+		} else {
+			nodeId = node.id;
+		}
+
+		var index = this.nodes.findIndex(n => n.id === nodeId);
+		if (index > -1) {
+
+			node = this.nodes.splice(index, 1)[0];
+			var event = new UpdateTopologyNodeEvent(node);
+			event.removedNodes.push(node);
+			this.unsaved = true;
+			this.propagateRemovedNode(node, event);
+			return event;
+
+		} else {
+
+			return new UpdateTopologyEvent();
+		}
+	}
 } 
