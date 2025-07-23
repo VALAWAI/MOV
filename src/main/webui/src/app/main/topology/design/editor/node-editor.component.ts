@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MessagesService } from '@app/shared/messages';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { toPattern } from '@app/shared';
+import { EditorModule } from './editor.module';
+import { EditorService } from './editor.service';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -39,7 +41,8 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 		MatFormFieldModule,
 		ReactiveFormsModule,
 		MatSelectModule,
-		MatIconModule
+		MatIconModule,
+		EditorModule
 	],
 	templateUrl: './node-editor.component.html'
 })
@@ -75,17 +78,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The subscription to the changes of the node form.
 	 */
-	public nodeStatusSubscription: Subscription | null = null;
-
-	/**
-	 * The subscription to the changes of the level form.
-	 */
-	public levelChangeSubscription: Subscription | null = null;
-
-	/**
-	 * The subscription to the changes of the component form.
-	 */
-	public componentChangeSubscription: Subscription | null = null;
+	private subscriptions: Subscription[] = [];
 
 	/**
 	 * The page with the components that match the name.
@@ -93,14 +86,19 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	public page: ComponentDefinitionPage | null = null;
 
 	/**
-	 *  Create the component.
+	 * The service of teh editor.
 	 */
-	constructor(
-		private api: MovApiService,
-		private messages: MessagesService
-	) {
+	private readonly editor = inject(EditorService);
 
-	}
+	/**
+	 * The service to interact withe MOV.
+	 */
+	private readonly api = inject(MovApiService);
+
+	/**
+	 * The service to show messages to the user.
+	 */
+	private readonly messages = inject(MessagesService);
 
 	/**
 	 * The node to edit.
@@ -133,7 +131,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnInit(): void {
 
-		this.nodeStatusSubscription = this.nodeForm.statusChanges.subscribe(
+		this.subscriptions.push(this.nodeForm.statusChanges.subscribe(
 			{
 				next: status => {
 
@@ -154,9 +152,9 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 					}
 				}
 			}
-		);
+		));
 
-		this.levelChangeSubscription = this.nodeForm.controls.level.valueChanges.subscribe(
+		this.subscriptions.push(this.nodeForm.controls.level.valueChanges.subscribe(
 			{
 				next: value => {
 
@@ -169,8 +167,8 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 
 				}
 			}
-		);
-		this.componentChangeSubscription = this.nodeForm.controls.component.valueChanges.subscribe(
+		));
+		this.subscriptions.push(this.nodeForm.controls.component.valueChanges.subscribe(
 			{
 				next: value => {
 
@@ -180,7 +178,20 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 					}
 				}
 			}
-		);
+		));
+		this.subscriptions.push(this.editor.movedNode$.subscribe(
+			{
+				next: event => {
+					if (event.nodeId == this.nodeForm.controls.tag.value) {
+
+						this.nodeForm.controls.positionX.setValue(event.point.x, { emitEvent: false });
+						this.nodeForm.controls.positionY.setValue(event.point.y, { emitEvent: false });
+					}
+				}
+			}
+
+		));
+
 	}
 
 	/**
@@ -188,24 +199,12 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy(): void {
 
+		for (var subscription of this.subscriptions) {
 
-		if (this.nodeStatusSubscription != null) {
+			subscription.unsubscribe();
 
-			this.nodeStatusSubscription.unsubscribe();
-			this.nodeStatusSubscription = null;
 		}
-
-		if (this.levelChangeSubscription != null) {
-
-			this.levelChangeSubscription.unsubscribe();
-			this.levelChangeSubscription = null;
-		}
-
-		if (this.componentChangeSubscription != null) {
-
-			this.componentChangeSubscription.unsubscribe();
-			this.componentChangeSubscription = null;
-		}
+		this.subscriptions = [];
 
 	}
 

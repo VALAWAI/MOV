@@ -55,6 +55,11 @@ import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DagreLayoutService, GraphModule } from '@app/shared/graph';
 import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@angular/router';
+import { EditorTopology } from './editor-topology.model';
+import { EditorNode } from './editor-node.model';
+import { EditorConnection } from './editor-connection.model';
+import { EditorModule } from './editor.module';
+import { EditorService } from './editor.service';
 
 @Component({
 	standalone: true,
@@ -70,7 +75,8 @@ import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@a
 		TopologyConnectionEditorComponent,
 		MatDialogModule,
 		MinTopologyEditorComponent,
-		GraphModule
+		GraphModule,
+		EditorModule
 	],
 	templateUrl: './editor.component.html',
 	styleUrl: './editor.component.css',
@@ -91,7 +97,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The service to access the APP configuration.
 	 */
-	private readonly conf = inject(ConfigService);
+	public readonly conf = inject(ConfigService);
 
 	/**
 	 * Service over the changes.
@@ -121,17 +127,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The topology that is editing.
 	 */
-	public topology: TopologyData = new TopologyData();
-
-	/**
-	 * This is {@code true} if has to show the grid.
-	 */
-	public showGrid$: Observable<boolean> = this.conf.editorShowGrid$;
+	public topology: EditorTopology = new EditorTopology();
 
 	/**
 	 * Selected element.
 	 */
-	private _selectedElement: TopologyElement | null = null;
+	public selected: EditorNode | EditorConnection | null = null;
 
 	/**
 	 * The height of the component.
@@ -144,11 +145,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public width = 100;
 
 	/**
-	 * This is true if the current topology is not saved.
-	 */
-	private unsaved: boolean = false;
-
-	/**
 	 * The active router.
 	 */
 	private route = inject(ActivatedRoute);
@@ -156,7 +152,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The subscription to the query params.
 	 */
-	private queryParamSubscription: Subscription | null = null;
+	private subscriptions: Subscription[] = [];
 
 	/**
 	 * The layout manager using dagre.
@@ -169,9 +165,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	private fZoomDirective = viewChild.required(FZoomDirective);
 
 	/**
-	 * The subscription to the autosave action.
+	 * The service of teh editor.
 	 */
-	private autoscaeSubscription: Subscription | null = null;
+	public readonly editorService = inject(EditorService);
 
 	/**
 	 * Called when the window is resized.
@@ -196,7 +192,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.header.changeHeaderTitle($localize`:The header title for the topology editor@@main_topology_editor_code_page-title:Topology Editor`);
 		this.windowResized();
 
-		this.queryParamSubscription = this.route.queryParams.pipe(
+		this.subscriptions.push(this.route.queryParams.pipe(
 			switchMap(params => {
 
 				var topologyId = params['topologyId'] || null;
@@ -229,20 +225,29 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 					this.conf.editorLastStoredTopologyId = null;
 				}
 			}
-		);
+		));
 
-		this.autoscaeSubscription = timer(this.conf.editorAutosaveTime, this.conf.editorAutosaveTime).subscribe(
+		this.subscriptions.push(timer(this.conf.editorAutosaveTime, this.conf.editorAutosaveTime).subscribe(
 			{
 				next: () => {
 
-					if (this.unsaved) {
+					if (this.topology.unsaved) {
 
 						this.saveTopology();
 					}
-
 				}
 			}
-		);
+		));
+
+		this.subscriptions.push(this.editorService.movedNode$.subscribe(
+			{
+				next: event => {
+
+					var node = this.topology.nodes.find(n => n.id === event.nodeId)!;
+					node.position = event.point;
+				}
+			}
+		));
 	}
 
 	/**
@@ -250,16 +255,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy() {
 
-		if (this.queryParamSubscription != null) {
+		for (var subscription of this.subscriptions) {
 
-			this.queryParamSubscription.unsubscribe();
-			this.queryParamSubscription = null;
+			subscription.unsubscribe();
 		}
-		if (this.autoscaeSubscription != null) {
 
-			this.autoscaeSubscription.unsubscribe();
-			this.autoscaeSubscription = null;
-		}
+		this.subscriptions = [];
 	}
 
 	/**
@@ -302,7 +303,21 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public selectionChanged(event: FSelectionChangeEvent) {
 
-		this.selectedElement = this.topology.getElementFor(event);
+		if (event.fNodeIds.length > 0) {
+
+			const selectedNodeId = event.fNodeIds[0];
+			this.selected = this.topology.nodes.find(n => n.id === selectedNodeId) || null;
+
+		} else if (event.fConnectionIds.length > 0) {
+
+			const selectedConnectionId = event.fConnectionIds[0];
+			this.selected = this.topology.connections.find(c => c.id === selectedConnectionId) || null;
+
+		} else {
+
+			this.selected = null;
+		}
+		this.updatedGraph();
 
 	}
 
@@ -319,8 +334,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	private addNode(type: ComponentType, x: number, y: number) {
 
-		this.selectedElement = this.topology.addNodeWithType(type, x, y);
-		this.unsaved = true;
+		//this.selectedElement = this.topology.addNodeWithType(type, x, y);
 		this.updatedGraph();
 	}
 
@@ -355,8 +369,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called when has to delete a node.
 	 */
-	public deleteNode(node: NodeData) {
+	public deleteNode(node: EditorNode) {
 
+		/*
 		if (this.topology.removeNode(node.id)) {
 
 			this.unsaved = true;
@@ -366,81 +381,19 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			}
 			this.updatedGraph();
 		}
+		*/
 
-	}
-
-	/**
-	 * Change teh selected element.
-	 */
-	public set selectedElement(selected: TopologyElement | null) {
-
-		this._selectedElement = selected;
-		this.ref.markForCheck();
-		this.ref.detectChanges();
-	}
-
-	/**
-	 * Return  the selected element.
-	 */
-	public get selectedElement(): TopologyElement | null {
-
-		return this._selectedElement;
-	}
-
-	/**
-	 * Check if a node is selected.
-	 */
-	public isNodeSelected(): boolean {
-
-		return this.selectedElement instanceof NodeData;
-	}
-
-	/**
-	 * Return the selected node or {@code null} if not selected.
-	 */
-	public get selectedNode(): NodeData | null {
-
-		if (this.isNodeSelected()) {
-
-			return (this.selectedElement as NodeData);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Check if a connection is selected.
-	 */
-	public isConnectionSelected(): boolean {
-
-		return this.selectedElement instanceof ConnectionData;
-	}
-
-	/**
-	 * Return the selected connection or {@code null} if not selected.
-	 */
-	public get selectedConnection(): ConnectionData | null {
-
-		if (this.isConnectionSelected()) {
-
-			return (this.selectedElement as ConnectionData);
-		}
-
-		return null;
 	}
 
 	/**
 	 * Called when the selected node has changed.
 	 */
-	public updatedSelectedNode(node: TopologyNode) {
+	public updatedTopologyNode(model: TopologyNode) {
 
-		if (this.selectedElement != null
-			&& this.topology.updateNodeModel(this.selectedElement.id, node)
-		) {
-
-			this.unsaved = true;
-			this.updatedGraph();
-		}
+		var node = this.topology.nodes.find(n => n.id == model.tag)!;
+		node.model = model;
+		this.topology.unsaved = true;
+		this.updatedGraph();
 
 	}
 
@@ -449,7 +402,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public changeTopology(newTopology: Topology = new Topology()) {
 
-		if (this.unsaved) {
+		if (this.topology.unsaved) {
 
 			this.dialog.open(ConfirmSaveBeforeChangeDialog).afterClosed()
 				.pipe(
@@ -483,9 +436,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		} else {
 
-			this.topology = new TopologyData(newTopology);
-			this.unsaved = this.topology.model.id == null;
-			this.selectedElement = null;
+			this.topology.model = newTopology;
+			this.selected = null;
 			this.fit();
 			this.updatedGraph();
 		}
@@ -519,34 +471,39 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * Store the model.
 	 */
 	private storeModel(): Observable<boolean> {
-
-		var model = this.topology.model;
-		var action: Observable<any> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);
-		return action.pipe(
-			catchError(
-				err => {
-					this.messages.showMOVConnectionError(err);
-					return of(null);
+		/*
+				var model = this.topology.model;
+				if (model.name == null || model.name.trim().length == 0) {
+		
+					model.name = $localize`:The name to set to the topology when any is defined@@main_topology_editor_code_default-unamed-topology-name:Unnamed`;
 				}
-			),
-			map(
-				stored => {
-
-					if (stored != null) {
-
-						this.topology.id = stored.id;
-						this.unsaved = false;
-						this.conf.editorLastStoredTopologyId = stored.id;
-						return true;
-
-					} else {
-
-						return false;
-					}
-				}
-			)
-		);
-
+				var action: Observable<any> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);
+				return action.pipe(
+					catchError(
+						err => {
+							this.messages.showMOVConnectionError(err);
+							return of(null);
+						}
+					),
+					map(
+						stored => {
+		
+							if (stored != null) {
+		
+								this.topology.id = stored.id;
+								this.unsaved = false;
+								this.conf.editorLastStoredTopologyId = stored.id;
+								return true;
+		
+							} else {
+		
+								return false;
+							}
+						}
+					)
+				);
+		*/
+		return of(true);
 
 	}
 
@@ -575,43 +532,21 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public duplicateTopology() {
 
+		/*
 		var cloned = JSON.parse(JSON.stringify(this.topology.model));
 		cloned.id = null;
 		this.changeTopology(cloned);
-
+*/
 	}
 
-	/**
-	 * Called when has changed the values of the topology.
-	 */
-	public updatedTopology(min: MinTopology) {
 
-		this.topology.min = min;
-		this.unsaved = true;
-		this.ref.markForCheck();
-		this.ref.detectChanges();
-	}
-
-	/**
-	 * Called whne the position of a node has changed.
-	 */
-	public updatedNodePosition(nodeId: string, point: IPoint) {
-
-		var updated = this.topology.updateNodePosition(nodeId, point);
-		if (updated) {
-
-			this.unsaved = true;
-			var cloned = JSON.parse(JSON.stringify(updated.model));
-			this.selectedElement = new NodeData(cloned);
-		}
-
-	}
 
 	/**
 	 * Called when the selected connection has changed.
 	 */
 	public updatedSelectedConnection(connection: DesignTopologyConnection) {
 
+		/*
 		if (this.selectedElement != null
 			&& this.topology.updateConnectionModel(this.selectedElement.id, connection)
 		) {
@@ -619,23 +554,26 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			this.unsaved = true;
 			this.updatedGraph();
 		}
+		*/
 
 	}
 
 	/**
 	 * Called when has to edit and endpoint into a node.
 	 */
-	public editEndPointTo(node: NodeData) {
+	public editEndPointTo(node: EditorNode) {
 
 		this.dialog.open(SelectNodeEndpointsDialog, { data: node }).afterClosed().subscribe(
 			{
 				next: (result: EndpointData[] | null) => {
 
+					/*
 					if (result != null && node.changeEndpoints(result)) {
 
-						this.unsaved = true;
+						//this.unsaved = true;
 						this.updatedGraph();
 					}
+					*/
 				}
 			}
 		);
@@ -649,26 +587,14 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		if (event.fInputId != null && event.fInputId != null) {
 
-			this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
-			this.unsaved = true;
+			//			this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
+			//this.unsaved = true;
 			this.updatedGraph();
 
 		}
 
 	}
 
-	/**
-	 * Check if an element is selected.
-	 */
-	public isSelected(element: TopologyElement | null | undefined): boolean {
-
-		if (this._selectedElement != null && element != null) {
-
-			return this._selectedElement.id == element.id;
-		}
-		return false;
-
-	}
 
 	/**
 	 * Called when has to change the layout.
@@ -690,29 +616,29 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 							graph.vertical();
 						}
-						for (var node of this.topology.nodes) {
-
-							graph.addNode(node.id, node.width, node.height);
-						}
-						for (var connection of this.topology.connections) {
-
-							var sourceId = connection.model.source?.nodeTag || '';
-							var targetId = connection.model.target?.nodeTag || '';
-							graph.addEdge(sourceId, targetId);
-						}
-						if (graph.layout()) {
-
-							updated = true;
-							for (var node of this.topology.nodes) {
-
-								var point = graph.getPositionFor(node.id);
-								if (point != null) {
-
-									node.position = point;
-								}
-							}
-						}
-
+						//						for (var node of this.topology.nodes) {
+						//
+						//							graph.addNode(node.id, node.width, node.height);
+						//						}
+						//						for (var connection of this.topology.connections) {
+						//
+						//							var sourceId = connection.model.source?.nodeTag || '';
+						//							var targetId = connection.model.target?.nodeTag || '';
+						//							graph.addEdge(sourceId, targetId);
+						//						}
+						//						if (graph.layout()) {
+						//
+						//							updated = true;
+						//							for (var node of this.topology.nodes) {
+						//
+						//								var point = graph.getPositionFor(node.id);
+						//								if (point != null) {
+						//
+						//									node.position = point;
+						//								}
+						//							}
+						//						}
+						//
 					} catch (err) {
 						updated = false;
 						console.error(err);
@@ -728,14 +654,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-	}
-
-	/**
-	 * Check if has changes to be saved.
-	 */
-	public hasUnsavedChanges() {
-
-		return this.unsaved;
 	}
 
 	/**
@@ -780,6 +698,33 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 	}
 
+	/**
+	 * Return the selected node.
+	 */
+	public get selectedEditorNode(): EditorNode | null {
+
+		if (this.selected && 'endpoints' in this.selected) {
+
+			return this.selected as EditorNode;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return the selected node.
+	 */
+	public get selectedTopologyNode(): TopologyNode | null {
+
+		var node = this.selectedEditorNode;
+		if (node != null && node.hasComponent) {
+
+			return node.model as TopologyNode;
+		}
+
+		return null;
+	}
+
 }
 
 /**
@@ -787,8 +732,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
   */
 export const leaveEditorGuard: CanDeactivateFn<TopologyEditorComponent> = (component: TopologyEditorComponent, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState: RouterStateSnapshot) => {
 
-	return component.hasUnsavedChanges()
-		? component.storeBeforeLeave()
-		: true;
+	return component.topology.unsaved ? component.storeBeforeLeave() : of(true);
 };
 

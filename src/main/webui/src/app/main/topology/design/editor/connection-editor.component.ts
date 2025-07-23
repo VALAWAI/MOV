@@ -17,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NotificationChangedEvent } from './notification-changed.event';
 
 
 
@@ -43,10 +44,16 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	public topology: TopologyData | null = null;
 
 	/**
-	 * Notify when teh node has been updated.
+	 * Notify when the node has been updated.
 	 */
 	@Output()
 	public connectionUpdated = new EventEmitter<DesignTopologyConnection>();
+
+	/**
+	 * Notify when the node has been updated.
+	 */
+	@Output()
+	public notificationsChanged = new EventEmitter<NotificationChangedEvent>();
 
 	/**
 	 * The form to edit the connection.
@@ -58,6 +65,8 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 			convertCode: new FormControl<string | null>(null),
 			type: new FormControl<TopologyGraphConnectionType | null>(null, Validators.required),
 			notifications: new FormControl<boolean>(true, Validators.required),
+			notificationX: new FormControl<number | null>(null),
+			notificationY: new FormControl<number | null>(null),
 		}
 	);
 
@@ -70,6 +79,11 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	 * The the last valid connection.
 	 */
 	private lastValid: DesignTopologyConnection | null = null;
+
+	/**
+	 * The subscription to the changes of the connection form.
+	 */
+	public changeNotificationsSubscription: Subscription | null = null;
 
 	/**
 	 * Initialize the component.
@@ -87,12 +101,42 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 						newConnection.target = this.connectionForm.controls.target.value || null;
 						newConnection.convertCode = this.connectionForm.controls.convertCode.value || null;
 						newConnection.type = this.connectionForm.controls.type.value || null;
+						if (this.connectionForm.controls.notifications.value === true) {
+
+							newConnection.notificationPosition = {
+								x: this.connectionForm.controls.notificationX.value || 0,
+								y: this.connectionForm.controls.notificationY.value || 0
+							};
+						}
 
 						if (JSON.stringify(this.lastValid) != JSON.stringify(newConnection)) {
 
 							this.lastValid = newConnection;
 							this.connectionUpdated.emit(newConnection);
 						}
+					}
+				}
+			}
+		);
+
+		this.changeNotificationsSubscription = this.connectionForm.controls.notifications.valueChanges.subscribe(
+			{
+				next: value => {
+
+					if (value) {
+
+						var source = this.topology?.getNodeWithId(this.connectionForm.controls.source.value?.nodeTag);
+						var target = this.topology?.getNodeWithId(this.connectionForm.controls.target.value?.nodeTag);
+						var x = ((source?.position.x || 0) + (target?.position.x || 0)) / 2.0;
+						this.connectionForm.controls.notificationX.setValue(x);
+						var y = ((source?.position.y || 0) + (target?.position.y || 0)) / 2.0;
+						this.connectionForm.controls.notificationY.setValue(y);
+						//Notify Add notificaiton node
+
+					} else {
+
+						//Remove Notify Add notificaiton node
+
 					}
 				}
 			}
@@ -110,7 +154,11 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 			this.connectionStatusSubscription.unsubscribe();
 			this.connectionStatusSubscription = null;
 		}
+		if (this.changeNotificationsSubscription != null) {
 
+			this.changeNotificationsSubscription.unsubscribe();
+			this.changeNotificationsSubscription = null;
+		}
 
 	}
 
@@ -125,7 +173,11 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 				source: connection?.source || null,
 				target: connection?.target || null,
 				convertCode: connection?.convertCode || null,
-				type: connection?.type || null
+				type: connection?.type || null,
+				notifications: connection?.notificationPosition != null || (connection?.notifications != null && connection?.notifications.length > 0) || false,
+				notificationX: connection?.notificationPosition?.x || null,
+				notificationY: connection?.notificationPosition?.y || null
+
 			},
 			{
 				emitEvent: false

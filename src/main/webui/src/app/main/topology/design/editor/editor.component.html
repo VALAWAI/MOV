@@ -5,22 +5,24 @@
 		<f-flow fDraggable (fSelectionChange)="selectionChanged($event)"
 			(fCreateNode)="onNodeAdded($event)"
 			(fCreateConnection)="onConnectionAdded($event)" class="w-full">
-		<f-background *ngIf="showGrid$|async"> <f-circle-pattern></f-circle-pattern>
-		</f-background> <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
+		@if(conf.editorShowGrid == true){ <f-background> <f-circle-pattern></f-circle-pattern>
+		</f-background>} <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
 		<f-canvas fZoom> <f-connection-for-create></f-connection-for-create>
 		@for(node of topology.nodes;track node.id){
 		<div fNode [fNodeId]="node.id" fDragHandle
 			[fNodePosition]="node.position"
-			(fNodePositionChange)="updatedNodePosition(node.id,$event)">
+			(fNodePositionChange)="editorService.nodePositionChange(node.id,$event)">
+			@if(node.hasComponent){
+			<!-- Component node -->
 			<app-component-type-node-container [type]="node.type"
-				[isSelected]="node.id === selectedElement?.id"
-				(width)="node.width=$event" (height)="node.height=$event">
+				[isSelected]="node.id === selected?.id" (width)="node.width=$event"
+				(height)="node.height=$event">
 			<div
 				class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
-				<app-content-type-badge [type]="node.type"></app-content-type-badge>
-				<div
-					class="grow text-wrap font-bold text-lg max-w-48 wrap-break-word">{{node.name}}</div>
-				<button mat-icon-button [matMenuTriggerFor]="nodeMenu">
+				<app-content-type-badge [type]="node.type" class="w-[48px]"></app-content-type-badge>
+				<div class="grow text-wrap font-bold text-lg wrap-break-word">{{node.name}}</div>
+				<button mat-icon-button [matMenuTriggerFor]="nodeMenu"
+					class="w-[48px]">
 					<mat-icon class="text-xs">more_vert</mat-icon>
 				</button>
 				<mat-menu #nodeMenu="matMenu">
@@ -40,7 +42,7 @@
 				</mat-menu>
 			</div>
 			@for(endpoint of node.endpoints;track endpoint.id){
-			@if(endpoint.isPublished){
+			@if(endpoint.isSource){
 			<div class="grow rounded-lg p-2 gap-2" fNodeOutput
 				[fOutputId]="endpoint.id" [fOutputMultiple]="true"
 				fOutputConnectableSide="right" fNodeOutlet>
@@ -56,8 +58,12 @@
 				{{endpoint.name}}
 			</div>
 			} } </app-component-type-node-container>
+			}@else{
+			<!-- Notification node -->
+			}
 		</div>
-		} @for(connection of topology.connections;track connection.id){ <f-connection
+		} @for(connection of topology.connections;track connection.id){ <!--
+		 <f-connection
 			[fType]="connection.type" [fConnectionId]="connection.id"
 			[fOutputId]="connection.sourceId" [fInputId]="connection.targetId"
 			[fStartColor]="topology.startColorFor(connection,isSelected(connection))"
@@ -67,7 +73,8 @@
 			[fOffset]="30"> <app-connection-markers
 			[color]="connection.isControl?'fill-sky-400':'fill-indigo-400'"
 			[selectedColor]="connection.isControl?'fill-sky-800':'fill-indigo-800'"></app-connection-markers>
-		</f-connection> } </f-canvas> </f-flow>
+		</f-connection>
+		--> } </f-canvas> </f-flow>
 		<!-- TOOLBAR -->
 		<div class="absolute top-2 end-2">
 			<button mat-icon-button color="primary" (click)="zoomIn()">
@@ -141,9 +148,9 @@
 			<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
 			</mat-menu>
 			<mat-menu #deleteNodeMenu="matMenu"> @for(node of
-			topology.nodes;track node.id){
+			topology.nodes;track node.id){ <!--
 			<button mat-menu-item (click)="deleteNode(node)">{{node.typeName}}</button>
-			} </mat-menu>
+			--> } </mat-menu>
 			<mat-menu #viewMenu="matMenu">
 			<button mat-menu-item (click)="fit()">
 				<mat-icon>aspect_ratio</mat-icon>
@@ -164,7 +171,7 @@
 			</button>
 			<button mat-menu-item (click)="toogleGrid()">
 				<!-- The icon is the reverse because the action what to do the reverse of the current status -->
-				<mat-icon *ngIf="showGrid$ | async; else gridOff">grid_off
+				<mat-icon *ngIf="conf.editorShowGrid===true; else gridOff">grid_off
 				</mat-icon>
 				<ng-template #gridOff> <mat-icon>grid_on</mat-icon> </ng-template>
 				<span
@@ -189,19 +196,17 @@
 		</div>
 		<!-- PALETE -->
 		<div class="absolute start-2 top-2/5">
-			<div class="flex flex-col">
+			<div class="flex flex-col gap-2">
 				<button class="p-2" fExternalItem [fPreview]="c0PreviewTemplate"
-					fData="C0">
-					<div class="border border-indigo-500 text-indigo-500">C0</div>
+					fData="C0"
+					class="border border-indigo-500 text-indigo-500 p-1 hover:font-bold hover:text-xl">C0
 				</button>
 				<button class="p-2" fExternalItem [fPreview]="c1PreviewTemplate"
-					fData="C1">
-					<div class="border border-purple-500 text-purple-500">C1</div>
+					fData="C1"
+					class="border border-purple-500 text-purple-500 p-1 hover:font-bold hover:text-xl">C1
 				</button>
-				<button class="p-2" fExternalItem [fPreview]="c2PreviewTemplate"
-					fData="C2">
-					<div class="border border-slky-500 text-sky-500">C2</div>
-				</button>
+				<button fExternalItem [fPreview]="c2PreviewTemplate" fData="C2"
+					class="border border-slky-500 text-sky-500 p-1 hover:font-bold hover:text-xl">C2</button>
 				<ng-template #c0PreviewTemplate>
 				<div
 					class="border border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
@@ -224,16 +229,26 @@
 		</div>
 	</div>
 	<div class="sm:w-96 p-2">
-		@if(isNodeSelected()){
-		<app-topology-node-editor [node]="selectedNode?.model"
+		@if( selected == null ){
+		<app-min-topology-editor [topology]="topology.minTopology"
+			(topologyUpdated)="topology.minTopology = $event"></app-min-topology-editor>
+		} @else if( selectedTopologyNode != null){
+		<app-topology-node-editor [node]="selectedTopologyNode"
+			(nodeUpdated)="updatedTopologyNode($event)"></app-topology-node-editor>
+		<!-- 
+		<app-topology-node-editor [node]="selectedNode.model"
 			(nodeUpdated)="updatedSelectedNode($event)"></app-topology-node-editor>
-		} @else if(isConnectionSelected()){
+			 -->
+		}
+		<!-- 
+		@else if(isConnectionSelected()){
+
 		<app-topology-connection-editor
 			[connection]="selectedConnection?.model" [topology]="topology"
 			(connectionUpdated)="updatedSelectedConnection($event)"></app-topology-connection-editor>
+			
 		} @else {
-		<app-min-topology-editor [topology]="topology.min"
-			(topologyUpdated)="updatedTopology($event)"></app-min-topology-editor>
 		}
+		 -->
 	</div>
 </div>
