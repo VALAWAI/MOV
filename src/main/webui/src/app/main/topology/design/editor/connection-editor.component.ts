@@ -9,9 +9,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DesignTopologyConnection, Topology, TopologyConnectionEndpoint, TopologyGraphConnectionType } from '@app/shared/mov-api';
+import { DesignTopologyConnection, TopologyConnectionEndpoint, TopologyGraphConnectionType } from '@app/shared/mov-api';
 import { TopologyConnectionEndpointEditorComponent } from './endpoint-editor.component';
-import { TopologyData } from './editor.models';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

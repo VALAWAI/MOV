@@ -11,7 +11,7 @@
 		<mat-form-field> <mat-label
 			i18n="The label of the form field to edit the endpoimnt channel@@main_topology_design_endpoint-editor_channel-label">Channel</mat-label>
 		<mat-select formControlName="channel"> @for(channel of
-		posibleChannels;track channel){ <mat-option [value]="channel">{{channel|channelToName}}</mat-option>
+		posibleChannels;track channel){ <mat-option [value]="channel">{{channel|toChannelName}}</mat-option>
 		} </mat-select> <mat-error
 			*ngIf="endpointForm.controls.channel.hasError('required')"
 			i18n="The error message if no channel is selected@@main_topology_design_endpoint-editor_channel-required">

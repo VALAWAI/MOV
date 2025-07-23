@@ -34,7 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService, ToCssVariablePipe } from '@app/shared';
 import { Observable, switchMap, of, Subscription, timer } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { TopologyNodeEditorComponent } from './node-editor.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
 import {
@@ -322,37 +322,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Called when a node is added to the graf.
-	 */
-	public onNodeAdded(event: FCreateNodeEvent): void {
-
-		this.addNode(event.data, event.rect.x, event.rect.y);
-	}
-
-	/**
 	 * Add a node to the topology.
 	 */
-	private addNode(type: ComponentType, x: number, y: number) {
+	public addNode(type: ComponentType, x: number, y: number) {
 
-		//this.selectedElement = this.topology.addNodeWithType(type, x, y);
+		this.selected = this.topology.addNodeWithType(type, x, y);
 		this.updatedGraph();
-	}
-
-	/**
-	 * Called to add a node by type..
-	 */
-	public addNodeByType(type: ComponentType): void {
-
-		var x = 0;
-		var y = 0;
-		var box = this.fFlow().getNodesBoundingBox();
-		if (box != null) {
-
-			var x = (box.x + box.width) / 2.0;
-			var y = (box.y + box.height) / 2.0;
-		}
-		this.addNode(type, x, y);
-
 	}
 
 	/**
@@ -463,40 +438,37 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * Store the model.
 	 */
 	private storeModel(): Observable<boolean> {
-		/*
-				var model = this.topology.model;
-				if (model.name == null || model.name.trim().length == 0) {
-		
-					model.name = $localize`:The name to set to the topology when any is defined@@main_topology_editor_code_default-unamed-topology-name:Unnamed`;
+
+		var model = this.topology.model;
+		if (model.name == null || model.name.trim().length == 0) {
+
+			model.name = $localize`:The name to set to the topology when any is defined@@main_topology_editor_code_default-unamed-topology-name:Unnamed`;
+		}
+		var action: Observable<any> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);
+		return action.pipe(
+			catchError(
+				err => {
+					this.messages.showMOVConnectionError(err);
+					return of(null);
 				}
-				var action: Observable<any> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);
-				return action.pipe(
-					catchError(
-						err => {
-							this.messages.showMOVConnectionError(err);
-							return of(null);
-						}
-					),
-					map(
-						stored => {
-		
-							if (stored != null) {
-		
-								this.topology.id = stored.id;
-								this.unsaved = false;
-								this.conf.editorLastStoredTopologyId = stored.id;
-								return true;
-		
-							} else {
-		
-								return false;
-							}
-						}
-					)
-				);
-		*/
-		this.topology.unsaved = false;
-		return of(true);
+			),
+			map(
+				stored => {
+
+					if (stored != null) {
+
+						this.topology.id = stored.id;
+						this.topology.unsaved = false;
+						this.conf.editorLastStoredTopologyId = stored.id;
+						return true;
+
+					} else {
+
+						return false;
+					}
+				}
+			)
+		);
 
 	}
 

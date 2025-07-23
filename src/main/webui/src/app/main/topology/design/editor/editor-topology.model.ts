@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { MinTopology, Topology } from "@app/shared/mov-api";
+import { ComponentDefinition, ComponentType, MinTopology, Point, Topology, TopologyNode } from "@app/shared/mov-api";
 import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from "./editor-endpoint.model";
@@ -102,6 +102,14 @@ export class EditorTopology {
 	 * The connections of the topology.
 	 */
 	public connections: EditorConnection[] = [];
+	
+	/**
+	 * Chaneg the identifier of teh topology.
+	 */
+	public set id(id:string){
+		
+		this.topology.id = id;
+	}
 
 	/**
 	 * Called whne change the topology.
@@ -338,4 +346,59 @@ export class EditorTopology {
 			return new UpdateTopologyEvent();
 		}
 	}
+	
+	/**
+	 * Add a node to the topology.
+	 */
+	public addNodeWithType(type: ComponentType, x: number, y: number): EditorNode {
+
+		var newTopologyNode = new TopologyNode();
+		newTopologyNode.tag = 'node_0';
+		newTopologyNode.position = new Point();
+		newTopologyNode.position.x = x;
+		newTopologyNode.position.y = y;
+		newTopologyNode.component = new ComponentDefinition();
+		newTopologyNode.component.type = type;
+		return this.addNodeWithModel(newTopologyNode)
+	}
+
+	/**
+	 * Add a node to the topology.
+	 */
+	public addNodeWithModel(newTopologyNode: TopologyNode): EditorNode {
+
+		var newNode = new EditorNode(newTopologyNode);
+		var collision = true;
+		var id = this.nodes.length + 1;
+		while (collision) {
+
+			collision = false;
+			for (var dataNode of this.nodes) {
+
+				if (dataNode.id == newNode.id) {
+
+					id++;
+					newTopologyNode.tag = 'node_' + id;
+					collision = true;
+					break;
+
+				} else {
+
+					var distance = Point.distance(dataNode.position, newNode.position);
+					if (distance < 64) {
+
+						newNode.position.x += 64;
+						newNode.position.y += 64;
+						collision = true;
+						break;
+
+					}
+				}
+			}
+
+		}
+		this.nodes.push(newNode);
+		return newNode;
+	}
+
 } 

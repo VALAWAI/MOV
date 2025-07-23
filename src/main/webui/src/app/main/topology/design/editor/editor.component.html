@@ -3,7 +3,7 @@
 	<div class="relative grow bg-gray-50 w-gull h-full p-2"
 		[ngStyle]="{'height.px':height,'width.px':width}">
 		<f-flow fDraggable (fSelectionChange)="selectionChanged($event)"
-			(fCreateNode)="onNodeAdded($event)"
+			(fCreateNode)="addNode($event.data, $event.rect.x, $event.rect.y)"
 			(fCreateConnection)="onConnectionAdded($event)" class="w-full">
 		@if(conf.editorShowGrid == true){ <f-background> <f-circle-pattern></f-circle-pattern>
 		</f-background>} <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
@@ -154,9 +154,9 @@
 			</button>
 			</mat-menu>
 			<mat-menu #addNodeMenu="matMenu">
-			<button mat-menu-item (click)="addNodeByType('C0')">C0</button>
-			<button mat-menu-item (click)="addNodeByType('C1')">C1</button>
-			<button mat-menu-item (click)="addNodeByType('C2')">C2</button>
+			<button mat-menu-item (click)="addNode('C0',0,0)">C0</button>
+			<button mat-menu-item (click)="addNode('C1',0,0)">C1</button>
+			<button mat-menu-item (click)="addNode('C2',0,0)">C2</button>
 			</mat-menu>
 			<mat-menu #deleteNodeMenu="matMenu"> @for(node of
 			topology.nodes;track node.id){ <!--

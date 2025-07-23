@@ -13,8 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TopologyConnectionEndpoint } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
-import { ChannleToNamePipe } from './channel-to-name.pipe';
 import { EditorTopology } from './editor-topology.model';
+import { GraphModule } from '@app/shared/graph';
 
 
 
@@ -26,7 +26,7 @@ import { EditorTopology } from './editor-topology.model';
 		ReactiveFormsModule,
 		MatSelectModule,
 		MatFormFieldModule,
-		ChannleToNamePipe
+		GraphModule
 	],
 	templateUrl: './endpoint-editor.component.html'
 })
