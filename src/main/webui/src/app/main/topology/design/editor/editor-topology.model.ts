@@ -441,4 +441,44 @@ export class EditorTopology {
 		this.unsaved = true;
 		return connection;
 	}
+
+	/**
+	 * Remove a connection.
+	 */
+	public removeConnection(connectionId: string): UpdateTopologyEvent {
+
+		var index = this.connections.findIndex(c => c.id === connectionId);
+		if (index > -1) {
+
+			var connection = this.connections.splice(index, 1)[0];
+			var event = new UpdateTopologyEvent();
+			event.removedConnections.push(connection);
+			this.unsaved = true;
+			this.propagateRemovedConnection(connection, event);
+			return event;
+
+		} else {
+
+			return new UpdateTopologyEvent();
+		}
+	}
+
+	/**
+	 * Chnage the target of a connection.
+	 */
+	public changeConnectionTarget(connectionId: string, targetEndpoiuntId: string) {
+
+		var connection = this.connections.find(c => c.id === connectionId)!;
+		for (var node of this.nodes) {
+
+			var endpoint = node.endpoints.find(e => e.id == targetEndpoiuntId) || null;
+			if (endpoint != null) {
+
+				connection.target = endpoint;
+				this.unsaved = true;
+				break;
+			}
+		}
+	}
+
 } 

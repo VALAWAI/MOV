@@ -4,7 +4,8 @@
 		[ngStyle]="{'height.px':height,'width.px':width}">
 		<f-flow fDraggable (fSelectionChange)="selectionChanged($event)"
 			(fCreateNode)="addNode($event.data, $event.rect.x, $event.rect.y)"
-			(fCreateConnection)="onConnectionAdded($event)" class="w-full">
+			(fCreateConnection)="onConnectionAdded($event)"
+			(fReassignConnection)="onReassignConnection($event)" class="w-full">
 		@if(conf.editorShowGrid == true){ <f-background> <f-circle-pattern></f-circle-pattern>
 		</f-background>} <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
 		<f-canvas fZoom> <f-connection-for-create></f-connection-for-create>
@@ -72,7 +73,8 @@
 			}
 		</div>
 		} @for(connection of topology.connections;track connection.id){ <f-connection
-			[fReassignDisabled]="true" [fType]="connection.type|toConnectionType"
+			[fReassignDisabled]="connection.target.channel==null"
+			[fType]="connection.type|toConnectionType"
 			[fConnectionId]="connection.id" [fOutputId]="connection.source.id"
 			[fInputId]="connection.target.id"
 			[fStartColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"

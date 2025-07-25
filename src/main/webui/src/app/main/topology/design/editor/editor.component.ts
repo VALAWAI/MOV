@@ -28,7 +28,8 @@ import {
 	FCreateNodeEvent,
 	FFlowComponent,
 	FCreateConnectionEvent,
-	FZoomDirective
+	FZoomDirective,
+	FReassignConnectionEvent
 } from '@foblex/flow';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -587,6 +588,26 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			this.updatedGraph();
 
 		}// else connection not linked to an endpoint => may be we can create a node
+	}
+
+	/**
+	 * Called when a connection is try to be reasigned.
+	 */
+	public onReassignConnection(event: FReassignConnectionEvent) {
+
+
+		if (!event.newTargetId) {
+			// remove connection
+			var previous = this.topology.unsaved;
+			var updateEvent = this.topology.removeConnection(event.connectionId);
+			this.topologyUpdated(updateEvent, previous);
+
+		} else if( event.oldTargetId != event.newTargetId){
+			// redirect connection
+			this.topology.changeConnectionTarget(event.connectionId,event.newTargetId);
+			this.updatedGraph();
+		}
+
 	}
 
 
