@@ -61,12 +61,11 @@
 			}@else{
 			<!-- Notification node -->
 			<div class="rounded-full border-2 w-6 h-6 hover:stroke-7 relative"
-				[ngClass]="{'border-red-400 bg-red-800':node.id === selected?.id,'border-sky-400 bg-sky-400':node.id !== selected?.id}">
-				<div fNodeInput [fInputId]="node.fisrtEndPointWithIsSource(true).id"
-					[fInputMultiple]="true" fInputConnectableSide="top"></div>
-				<div fNodeOutput
-					[fOutputId]="node.fisrtEndPointWithIsSource(false).id"
-					[fOutputMultiple]="true" fOutputConnectableSide="bottom"></div>
+				[ngClass]="{'border-red-400 bg-red-800':node.id === selected?.id,'border-sky-400 bg-sky-400':node.id !== selected?.id}"
+				fNodeInput [fInputId]="node.fisrtEndPointWithIsSource(true).id"
+				[fInputMultiple]="true" fInputConnectableSide="top" fNodeOutput
+				[fOutputId]="node.fisrtEndPointWithIsSource(false).id"
+				[fOutputMultiple]="true" fOutputConnectableSide="bottom">
 				<div fNodeOutlet
 					class="absolute top-5 start-4 text-sky-800 border border-sky-800 rounded-full text-sm">
 					<mat-icon class="scale-75">arrow_downward</mat-icon>

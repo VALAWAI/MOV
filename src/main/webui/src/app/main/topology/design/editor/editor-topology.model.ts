@@ -398,6 +398,7 @@ export class EditorTopology {
 
 		}
 		this.nodes.push(newNode);
+		this.unsaved = true;
 		return newNode;
 	}
 

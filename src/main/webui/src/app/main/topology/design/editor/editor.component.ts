@@ -42,7 +42,8 @@ import {
 	Topology,
 	TopologyNode,
 	DesignTopologyConnection,
-	ComponentType
+	ComponentType,
+    TopologyConnectionEndpoint
 } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -502,8 +503,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.changeTopology(cloned);
 	}
 
-
-
 	/**
 	 * Called when the selected connection has changed.
 	 */
@@ -582,6 +581,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public onConnectionAdded(event: FCreateConnectionEvent): void {
 
 		if (event.fInputId != null && event.fInputId != null) {
+			
+			var connection = new DesignTopologyConnection();
+			connection.source = new TopologyConnectionEndpoint();
+			connection.target = new TopologyConnectionEndpoint();
+			this.topology.addNodeWithModel
 
 			//			this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
 			//this.unsaved = true;
