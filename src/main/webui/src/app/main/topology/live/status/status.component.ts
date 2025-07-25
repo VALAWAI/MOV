@@ -48,7 +48,8 @@ export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFI
 		NodeDetailComponent,
 		NotificationNodeDetailComponent
 	],
-	templateUrl: './status.component.html'
+	templateUrl: './status.component.html',
+	styleUrls: ['./status.component.css']
 })
 export class StatusComponent implements OnInit, OnDestroy {
 

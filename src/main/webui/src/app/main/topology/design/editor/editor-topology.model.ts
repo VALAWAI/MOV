@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { ComponentDefinition, ComponentType, MinTopology, Point, Topology, TopologyNode } from "@app/shared/mov-api";
+import { ComponentDefinition, ComponentType, DesignTopologyConnection, MinTopology, Point, Topology, TopologyConnectionEndpoint, TopologyNode } from "@app/shared/mov-api";
 import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from "./editor-endpoint.model";
@@ -102,12 +102,12 @@ export class EditorTopology {
 	 * The connections of the topology.
 	 */
 	public connections: EditorConnection[] = [];
-	
+
 	/**
 	 * Chaneg the identifier of teh topology.
 	 */
-	public set id(id:string){
-		
+	public set id(id: string) {
+
 		this.topology.id = id;
 	}
 
@@ -346,7 +346,7 @@ export class EditorTopology {
 			return new UpdateTopologyEvent();
 		}
 	}
-	
+
 	/**
 	 * Add a node to the topology.
 	 */
@@ -402,4 +402,43 @@ export class EditorTopology {
 		return newNode;
 	}
 
+
+	/**
+	 * Add a node to the topology.
+	 */
+	public addConnectionBetween(sourceEndpointId: string, targetEndpointId: string): EditorConnection {
+
+		var sourceNode: EditorNode;
+		var sourceEndpoint: EditorEndpoint;
+		var targetNode: EditorNode;
+		var targetEndpoint: EditorEndpoint;
+		for (var node of this.nodes) {
+
+			for (var endpoint of node.endpoints) {
+
+				if (endpoint.id == sourceEndpointId) {
+
+					sourceEndpoint = endpoint;
+					sourceNode = node;
+				}
+				if (endpoint.id == targetEndpointId) {
+
+					targetEndpoint = endpoint;
+					targetNode = node;
+				}
+			}
+
+		}
+		var model = new DesignTopologyConnection();
+		model.source = new TopologyConnectionEndpoint();
+		model.source.nodeTag = sourceNode!.id;
+		model.source.channel = sourceEndpoint!.channel;
+		model.target = new TopologyConnectionEndpoint();
+		model.target.nodeTag = targetNode!.id;
+		model.target.channel = targetEndpoint!.channel;
+		var connection = new EditorConnection(model, sourceEndpoint!, targetEndpoint!);
+		this.connections.push(connection);
+		this.unsaved = true;
+		return connection;
+	}
 } 

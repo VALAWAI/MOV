@@ -43,17 +43,15 @@
 			</div>
 			@for(endpoint of node.endpoints;track endpoint.id){
 			@if(endpoint.isSource){
-			<div class="grow rounded-lg p-2 gap-2" fNodeOutput
-				[fOutputId]="endpoint.id" [fOutputMultiple]="true"
-				fOutputConnectableSide="right" fNodeOutlet>
+			<div class="grow p-2 gap-2" fNodeOutput [fOutputId]="endpoint.id"
+				[fOutputMultiple]="true" fOutputConnectableSide="right" fNodeOutlet>
 				<mat-icon color="primary" fontIcon="publish"></mat-icon>
 				{{endpoint.channel|toChannelName}}
 			</div>
 
 			} @else{
-			<div class="grow rounded-lg p-2 gap-2" fNodeInput
-				[fInputId]="endpoint.id" [fInputMultiple]="true"
-				fInputConnectableSide="left">
+			<div class="grow p-2 gap-2" fNodeInput [fInputId]="endpoint.id"
+				[fInputMultiple]="true" fInputConnectableSide="left">
 				<mat-icon color="primary" fontIcon="download"></mat-icon>
 				{{endpoint.channel|toChannelName}}
 			</div>
@@ -74,7 +72,7 @@
 			}
 		</div>
 		} @for(connection of topology.connections;track connection.id){ <f-connection
-			[fType]="connection.type|toConnectionType"
+			[fReassignDisabled]="true" [fType]="connection.type|toConnectionType"
 			[fConnectionId]="connection.id" [fOutputId]="connection.source.id"
 			[fInputId]="connection.target.id"
 			[fStartColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"
@@ -209,29 +207,29 @@
 			<div class="flex flex-col gap-2">
 				<button class="p-2" fExternalItem [fPreview]="c0PreviewTemplate"
 					fData="C0"
-					class="border border-indigo-500 text-indigo-500 p-1 hover:font-bold hover:text-xl">C0
+					class="border bg-white border-indigo-500 text-indigo-500 p-1 hover:font-bold hover:text-xl">C0
 				</button>
 				<button class="p-2" fExternalItem [fPreview]="c1PreviewTemplate"
 					fData="C1"
-					class="border border-purple-500 text-purple-500 p-1 hover:font-bold hover:text-xl">C1
+					class="border bg-white border-purple-500 text-purple-500 p-1 hover:font-bold hover:text-xl">C1
 				</button>
 				<button fExternalItem [fPreview]="c2PreviewTemplate" fData="C2"
-					class="border border-slky-500 text-sky-500 p-1 hover:font-bold hover:text-xl">C2</button>
+					class="border bg-white border-slky-500 text-sky-500 p-1 hover:font-bold hover:text-xl">C2</button>
 				<ng-template #c0PreviewTemplate>
 				<div
-					class="border border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
+					class="border bg-white border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
 					<div>C0</div>
 				</div>
 				</ng-template>
 				<ng-template #c1PreviewTemplate>
 				<div
-					class="border border-purple-500 text-purple-500 flex flex flex-col items-center justify-center content-center">
+					class="border bg-white border-purple-500 text-purple-500 flex flex flex-col items-center justify-center content-center">
 					<div>C1</div>
 				</div>
 				</ng-template>
 				<ng-template #c2PreviewTemplate>
 				<div
-					class="border border-sky-500 text-sky-500 flex flex flex-col items-center justify-center content-center">
+					class="border bg-white border-sky-500 text-sky-500 flex flex flex-col items-center justify-center content-center">
 					<div>C2</div>
 				</div>
 				</ng-template>

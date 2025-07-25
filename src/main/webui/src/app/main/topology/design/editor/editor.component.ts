@@ -43,7 +43,7 @@ import {
 	TopologyNode,
 	DesignTopologyConnection,
 	ComponentType,
-    TopologyConnectionEndpoint
+	TopologyConnectionEndpoint
 } from '@app/shared/mov-api';
 import { PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -81,6 +81,7 @@ import { ConfirmUpdateTopologyDialog } from './confirm-update-topology.dialog';
 		ToCssVariablePipe
 	],
 	templateUrl: './editor.component.html',
+	styleUrls: ['./editor.component.css'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopologyEditorComponent implements OnInit, OnDestroy {
@@ -580,19 +581,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public onConnectionAdded(event: FCreateConnectionEvent): void {
 
-		if (event.fInputId != null && event.fInputId != null) {
-			
-			var connection = new DesignTopologyConnection();
-			connection.source = new TopologyConnectionEndpoint();
-			connection.target = new TopologyConnectionEndpoint();
-			this.topology.addNodeWithModel
+		if (event.fInputId != null) {
 
-			//			this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
-			//this.unsaved = true;
+			this.selected = this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
 			this.updatedGraph();
 
-		}
-
+		}// else connection not linked to an endpoint => may be we can create a node
 	}
 
 
