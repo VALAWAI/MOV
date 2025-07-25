@@ -58,11 +58,15 @@ export class ConfigService {
 	 */
 	private liveMaxNodesSubject: BehaviorSubject<number>;
 
-
 	/**
 	 * The subject to notify the changes on the editor autosave time.
 	 */
 	private editorAutosaveTimeSubject: BehaviorSubject<number>;
+
+	/**
+	 * The subject to notify the changes on the editor max history.
+	 */
+	private editorMaxHistorySubject: BehaviorSubject<number>;
 
 	/**
 	 * Create the service.
@@ -78,6 +82,7 @@ export class ConfigService {
 		this.liveEdgeTypeSubject = new BehaviorSubject<EFConnectionType>(this.liveEdgeType);
 		this.liveMaxNodesSubject = new BehaviorSubject<number>(this.liveMaxNodes);
 		this.editorAutosaveTimeSubject = new BehaviorSubject<number>(this.editorAutosaveTime);
+		this.editorMaxHistorySubject = new BehaviorSubject<number>(this.editorMaxHistory);
 	}
 
 	/**
@@ -356,6 +361,42 @@ export class ConfigService {
 
 		localStorage.setItem('EDITOR_AUTOSAVE_TIME', String(time));
 		this.editorAutosaveTimeSubject.next(time);
+
+	}
+
+	/**
+	 * Return the observable of the editor max history. 
+	 */
+	public get editorMaxHistory$(): Observable<number> {
+
+		return this.editorMaxHistorySubject.asObservable();
+	}
+
+	/**
+	 * Return the maximum number of changes to store in the changes of the editor.
+	 */
+	public get editorMaxHistory(): number {
+
+		var item = localStorage.getItem('EDITOR_MAX_HISTORY');
+		if (item != null) {
+
+			var max = Number(item);
+			if (!isNaN(max)) {
+
+				return max;
+			}
+		}
+		return 100;
+
+	}
+
+	/**
+	 * Store the  editor max history.
+	 */
+	public set editorMaxHistory(max: number) {
+
+		localStorage.setItem('EDITOR_MAX_HISTORY', String(max));
+		this.editorMaxHistorySubject.next(max);
 
 	}
 

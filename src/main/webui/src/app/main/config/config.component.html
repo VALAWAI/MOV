@@ -56,7 +56,15 @@
 				topology.</mat-hint> @if(confForm.controls.pollingTime.hasError('min')){ <mat-error
 					i18n="The error message if autosave timi is not reach the minimum@@main_config_editor-autosave-time-min-error">The
 				autosave time can not be less than 1000 ms.</mat-error> } </mat-form-field>
-
+				<mat-form-field> <mat-label
+					i18n="The label of the editor max history@@main_config_editor-max-history-label">Max
+				history</mat-label> <input matInput formControlName="editorMaxHistory"
+					class="w-full p-2" type="number"> <mat-hint
+					i18n="The hint of the editor atuosave time@@main_config_editor-max-history-hint">The
+				number maximum number of changes to be stored for Undo/Redo.</mat-hint>
+				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+					i18n="The error message if autosave timi is not reach the minimum@@main_config_editor-max-history-min-error">The
+				max history can not be less than 0.</mat-error> } </mat-form-field>
 			</div>
 		</fieldset>
 
