@@ -595,16 +595,19 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public onReassignConnection(event: FReassignConnectionEvent) {
 
-
 		if (!event.newTargetId) {
 			// remove connection
 			var previous = this.topology.unsaved;
 			var updateEvent = this.topology.removeConnection(event.connectionId);
 			this.topologyUpdated(updateEvent, previous);
+			if (this.selected?.id == event.connectionId) {
 
-		} else if( event.oldTargetId != event.newTargetId){
+				this.selected = null;
+			}
+
+		} else if (event.oldTargetId != event.newTargetId) {
 			// redirect connection
-			this.topology.changeConnectionTarget(event.connectionId,event.newTargetId);
+			this.topology.changeConnectionTarget(event.connectionId, event.newTargetId);
 			this.updatedGraph();
 		}
 
