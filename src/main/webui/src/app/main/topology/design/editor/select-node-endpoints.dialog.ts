@@ -54,13 +54,14 @@ export class SelectNodeEndpointsDialog implements OnInit {
 	 * Calculate the posible endpoints.
 	 */
 	public ngOnInit() {
-
-		if ('component' in this.data.model && this.data.model.component != null
-			&& this.data.model.component.channels != null) {
-
-			this.channels = [... this.data.model.component.channels];
-			this.channels.sort((c1, c2) => c1.name!.localeCompare(c2.name!));
-		}
+		/*
+				if ('component' in this.data.model && this.data.model.component != null
+					&& this.data.model.component.channels != null) {
+		
+					this.channels = [... this.data.model.component.channels];
+					this.channels.sort((c1, c2) => c1.name!.localeCompare(c2.name!));
+				}
+				*/
 	}
 
 	/**

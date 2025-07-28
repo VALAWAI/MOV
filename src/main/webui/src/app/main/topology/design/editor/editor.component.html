@@ -12,16 +12,17 @@
 		@for(node of topology.nodes;track node.id){
 		<div fNode [fNodeId]="node.id" fDragHandle
 			[fNodePosition]="node.position"
-			(fNodePositionChange)="editorService.nodePositionChange(node.id,$event)">
-			@if(node.isTopologyNode){
+			(fNodePositionChange)="onNodePositionChange(node,$event)">
+			@if( node.sourceNotification == null ){
 			<!-- Component node -->
-			<app-component-type-node-container [type]="node.type"
+			<app-component-type-node-container [type]="node.component!.type!"
 				[isSelected]="node.id === selected?.id" (width)="node.width=$event"
 				(height)="node.height=$event">
 			<div
 				class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
-				<app-content-type-badge [type]="node.type" class="w-[48px]"></app-content-type-badge>
-				<div class="grow text-wrap font-bold text-lg wrap-break-word">{{node.name}}</div>
+				<app-content-type-badge [type]="node.component!.type!" class="w-[48px]"></app-content-type-badge>
+				<div class="grow text-wrap font-bold text-lg wrap-break-word">{{node.component!.name}}</div>
+				<!-- 
 				<button mat-icon-button [matMenuTriggerFor]="nodeMenu"
 					class="w-[48px]">
 					<mat-icon class="text-xs">more_vert</mat-icon>
@@ -34,13 +35,14 @@
 						node</span>
 				</button>
 				<button mat-menu-item (click)="editEndPointTo(node)"
-					[ngClass]="{'!hidden':!node.hasChannels}">
+					[ngClass]="{'!hidden':node.component == null || node.component.channels==null || node.component.channels.length == 0}">
 					<mat-icon color="primary">edit</mat-icon>
 					<span
 						i18n="The label of the menu to edit an endpoint into a node@@main_topology_design_editor-menu-edit-endpoint">Edit
 						endpoint</span>
 				</button>
 				</mat-menu>
+				 -->
 			</div>
 			@for(endpoint of node.endpoints;track endpoint.id){
 			@if(endpoint.isSource){
@@ -239,6 +241,7 @@
 		</div>
 	</div>
 	<div class="sm:w-96 p-2">
+	<!-- 
 		@if( selected == null ){
 		<app-min-topology-editor [topology]="topology.minTopology"
 			(topologyUpdated)="topology.minTopology = $event"></app-min-topology-editor>
@@ -250,5 +253,6 @@
 			[connection]="selectedTopologyConnection" [topology]="topology"
 			(connectionUpdated)="updatedTopologyConnection($event)"></app-topology-connection-editor>
 		}
+		 -->
 	</div>
 </div>

@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DesignTopologyConnection, TopologyConnectionEndpoint, TopologyGraphConnectionType } from '@app/shared/mov-api';
 import { TopologyConnectionEndpointEditorComponent } from './endpoint-editor.component';
@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NotificationChangedEvent } from './notification-changed.event';
-import { EditorTopology } from './editor-topology.model';
+import { EditorTopologyService } from './editor-topology.service';
 
 
 
@@ -40,8 +40,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The topology where the connection is defined.
 	 */
-	@Input()
-	public topology: EditorTopology | null = null;
+	public readonly topology = inject(EditorTopologyService);
 
 	/**
 	 * Notify when the node has been updated.

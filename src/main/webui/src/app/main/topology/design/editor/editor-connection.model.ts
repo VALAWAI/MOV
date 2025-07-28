@@ -6,10 +6,8 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { DesignTopologyConnection } from "@app/shared/mov-api";
+import { TopologyGraphConnectionType } from "@app/shared/mov-api";
 import { EditorEndpoint } from "./editor-endpoint.model";
-
-
 
 
 /**
@@ -18,37 +16,28 @@ import { EditorEndpoint } from "./editor-endpoint.model";
 export class EditorConnection {
 
 	/**
-	 * The identifeir of the connection.
+	 * An optional code snippet or identifier used to transform messages from the
+	 * source channel's format to the target channel's expected format. Can be null
+	 * or empty if no conversion is required.
 	 */
-	public id: string = 'connection_0';
-
+	public convertCode: string | null = null;
 
 	/**
-	 * Create the connection.
+	 * Explain how the connection has to be painted.
+	 */
+	public type: string | null = null;
+
+	/**
+	 * Create a new connection to edit.
 	 */
 	constructor(
-		public model: DesignTopologyConnection,
+		public id: string,
 		public source: EditorEndpoint,
 		public target: EditorEndpoint,
+		public sourceNotification: EditorEndpoint | null = null
 	) {
 
 	}
-	
-
-	/**
-	 * The type of the connection.
-	 */
-	public get type(): string | null {
-
-		if ('type' in this.model) {
-
-			return this.model.type;
-		}
-
-		return null;
-
-	}
-
 
 	/**
 	 * The color of the connection.

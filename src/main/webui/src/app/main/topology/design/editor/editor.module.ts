@@ -7,12 +7,12 @@
 */
 
 import { NgModule } from "@angular/core";
-import { EditorService } from "./editor.service";
+import { EditorTopologyService } from "./editor-topology.service";
 
 @NgModule({
 	providers:
 		[
-			EditorService
+			EditorTopologyService
 		]
 })
 export class EditorModule { }

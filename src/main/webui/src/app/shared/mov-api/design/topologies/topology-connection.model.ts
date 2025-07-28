@@ -12,6 +12,22 @@ import { TopologyConnectionEndpoint } from './topology-connection-endpoint.model
 
 export type TopologyGraphConnectionType = 'STRAIGHT' | 'BEZIER' | 'SEGMENT';
 
+export function toTopologyGraphConnectionType(value: string | undefined | null): TopologyGraphConnectionType | null {
+
+	if (value != null) {
+
+		var type = value.toUpperCase().trim();
+		if (type == 'STRAIGHT' || type == 'BEZIER' || type == 'SEGMENT') {
+
+			return type;
+		}
+	}
+
+	return null;
+
+
+}
+
 /**
  * Represents a directed connection between two nodes within a {@link Topology}.
  * This connection specifies the exact output channel on the source node and the

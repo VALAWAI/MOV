@@ -13,7 +13,7 @@
 export class EditorEndpoint {
 
 	/**
-	 * The identifvier of the endpoint.
+	 * The identifier of the endpoint.
 	 */
 	public id: string;
 
@@ -47,7 +47,7 @@ export class EditorEndpoint {
 	}
 
 	/**
-	 * Return the expected order of a 
+	 * Return the expected order of this endpoint respect another. 
 	 */
 	public compareTo(other: EditorEndpoint): number {
 

@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { toPattern } from '@app/shared';
 import { EditorModule } from './editor.module';
-import { EditorService } from './editor.service';
+import { EditorTopologyService } from './editor-topology.service';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -88,7 +88,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The service of teh editor.
 	 */
-	private readonly editor = inject(EditorService);
+	private readonly topology = inject(EditorTopologyService);
 
 	/**
 	 * The service to interact withe MOV.
@@ -179,6 +179,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 				}
 			}
 		));
+		/*
 		this.subscriptions.push(this.editor.movedNode$.subscribe(
 			{
 				next: event => {
@@ -191,6 +192,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 			}
 
 		));
+		*/
 
 	}
 
@@ -248,8 +250,8 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 		);
 
 	}
-	
-	
+
+
 
 
 

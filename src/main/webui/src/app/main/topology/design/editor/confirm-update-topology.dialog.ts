@@ -10,7 +10,6 @@ import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { GraphModule } from "@app/shared/graph";
-import { UpdateTopologyEvent } from "./editor-topology.model";
 
 
 @Component({
@@ -28,7 +27,7 @@ export class ConfirmUpdateTopologyDialog {
 	/**
 	 * The update event over the topology.
 	 */
-	public data: UpdateTopologyEvent = inject(MAT_DIALOG_DATA);
+	public data = inject(MAT_DIALOG_DATA);
 
 
 }

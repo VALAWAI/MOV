@@ -11,11 +11,14 @@
 		nodes:</h3>
 	<ul class="list-disc list-inside text-gray-600 space-y-1 pl-4">
 		@for(node of data.removedNodes;track node.id){
-		<li class="ms-8">@if(node.isTopologyNode){ <span
-			class="font-bold">{{node.name}}</span> }@else{ The notification node
+		<li class="ms-8">@if(node.component!=null){ <span
+			class="font-bold">{{node.component.name}}</span> }
+			<!-- 
+			@else{ The notification node
 			of the connection from <span class="font-bold">{{node.connectionModel.source?.channel}}</span>
 			to <span class="font-bold">{{node.connectionModel.target?.channel}}</span>.
 			}
+			 -->
 		</li> }
 	</ul>
 </div>

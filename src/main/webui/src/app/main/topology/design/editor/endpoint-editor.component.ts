@@ -7,14 +7,14 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TopologyConnectionEndpoint } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
-import { EditorTopology } from './editor-topology.model';
 import { GraphModule } from '@app/shared/graph';
+import { EditorTopologyService } from './editor-topology.service';
 
 
 
@@ -41,8 +41,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	/**
 	 * The topology where the endpoint is defined.
 	 */
-	@Input()
-	public topology: EditorTopology | null = null;
+	public readonly topology = inject(EditorTopologyService);
 
 	/**
 	 * Notify when the endpoint is valid.
@@ -157,7 +156,9 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 	 */
 	private updatePossibleChannels() {
 
+
 		this.posibleChannels = [];
+		/*
 		if (this.topology != null) {
 
 			var node = this.topology.nodes.find(n => n.id == this.endpointForm.controls.nodeTag.value);
@@ -175,6 +176,7 @@ export class TopologyConnectionEndpointEditorComponent implements OnInit, OnDest
 			}
 
 		}
+		*/
 
 		if (this.endpointForm.controls.channel.value != null && this.posibleChannels.indexOf(this.endpointForm.controls.channel.value) < 0) {
 
