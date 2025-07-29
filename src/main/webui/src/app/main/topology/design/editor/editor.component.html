@@ -20,29 +20,9 @@
 				(height)="node.height=$event">
 			<div
 				class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
-				<app-content-type-badge [type]="node.component!.type!" class="w-[48px]"></app-content-type-badge>
-				<div class="grow text-wrap font-bold text-lg wrap-break-word">{{node.component!.name}}</div>
-				<!-- 
-				<button mat-icon-button [matMenuTriggerFor]="nodeMenu"
-					class="w-[48px]">
-					<mat-icon class="text-xs">more_vert</mat-icon>
-				</button>
-				<mat-menu #nodeMenu="matMenu">
-				<button mat-menu-item (click)="deleteNode(node)">
-					<mat-icon color="warn">delete</mat-icon>
-					<span
-						i18n="The label of the menu to delete a node from the topology@@main_topology_design_editor-menu-delete-node">Delete
-						node</span>
-				</button>
-				<button mat-menu-item (click)="editEndPointTo(node)"
-					[ngClass]="{'!hidden':node.component == null || node.component.channels==null || node.component.channels.length == 0}">
-					<mat-icon color="primary">edit</mat-icon>
-					<span
-						i18n="The label of the menu to edit an endpoint into a node@@main_topology_design_editor-menu-edit-endpoint">Edit
-						endpoint</span>
-				</button>
-				</mat-menu>
-				 -->
+				<app-content-type-badge [type]="node.component!.type!"
+					class="grow-0"></app-content-type-badge>
+				<div class="text-wrap font-bold text-lg wrap-break-word">{{node.component!.name}}</div>
 			</div>
 			@for(endpoint of node.endpoints;track endpoint.id){
 			@if(endpoint.isSource){
@@ -140,17 +120,29 @@
 			</button>
 			</mat-menu>
 			<mat-menu #editMenu="matMenu">
+			<button mat-menu-item [disabled]="!topology.canUndo"
+				(click)="topology.undo()">
+				<mat-icon color="primary">undo</mat-icon>
+				<span
+					i18n="The menu label to the undo action@@main_topology_editor-menu-edit-undo">Undo</span>
+			</button>
+			<button mat-menu-item [disabled]="!topology.canRedo"
+				(click)="topology.redo()">
+				<mat-icon color="primary">redo</mat-icon>
+				<span
+					i18n="The menu label to the redo action@@main_topology_editor-menu-edit-redo">Redo</span>
+			</button>
 			<button mat-menu-item [matMenuTriggerFor]="addNodeMenu">
 				<mat-icon color="primary">add</mat-icon>
 				<span
 					i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add
 					node</span>
 			</button>
-			<button mat-menu-item [matMenuTriggerFor]="deleteNodeMenu"
+			<button mat-menu-item [matMenuTriggerFor]="selectNodeMenu"
 				[disabled]="topology.nodes.length==0">
-				<mat-icon color="warn">delete</mat-icon>
+				<mat-icon color="warn">select</mat-icon>
 				<span
-					i18n="The menu label to delete a node@@main_topology_editor-menu-delete-node">Delete
+					i18n="The menu label to select a node@@main_topology_editor-menu-select-node">Select
 					node</span>
 			</button>
 			</mat-menu>
@@ -159,10 +151,12 @@
 			<button mat-menu-item (click)="addNode('C1',0,0)">C1</button>
 			<button mat-menu-item (click)="addNode('C2',0,0)">C2</button>
 			</mat-menu>
-			<mat-menu #deleteNodeMenu="matMenu"> @for(node of
-			topology.nodes;track node.id){ <!--
-			<button mat-menu-item (click)="deleteNode(node)">{{node.typeName}}</button>
-			--> } </mat-menu>
+			<mat-menu #selectNodeMenu="matMenu"> @for(node of
+			topology.nodes;track node.id){
+			<button mat-menu-item (click)="selected = node">
+				@if(node.component != null){ {{node.component.name}} } @else{
+				Notification from {{node.sourceNotification?.channel}} }</button>
+			} </mat-menu>
 			<mat-menu #viewMenu="matMenu">
 			<button mat-menu-item (click)="fit()">
 				<mat-icon>aspect_ratio</mat-icon>
@@ -241,11 +235,11 @@
 		</div>
 	</div>
 	<div class="sm:w-96 p-2">
-	<!-- 
 		@if( selected == null ){
-		<app-min-topology-editor [topology]="topology.minTopology"
-			(topologyUpdated)="topology.minTopology = $event"></app-min-topology-editor>
-		} @else if( selectedTopologyNode != null){
+		<app-topology-form> </app-topology-form>
+		}
+		<!-- 
+		 @else if( selectedTopologyNode != null){
 		<app-topology-node-editor [node]="selectedTopologyNode"
 			(nodeUpdated)="updatedTopologyNode($event)"></app-topology-node-editor>
 		} @else if( selectedTopologyConnection != null){

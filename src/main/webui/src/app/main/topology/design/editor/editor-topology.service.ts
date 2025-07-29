@@ -151,7 +151,8 @@ export class EditorTopologyService {
 
 			try {
 
-				this.changes[this.changeIndex].undo(this);
+				var action = this.changes[this.changeIndex];
+				action.undo(this);
 				this.changeIndex--;
 				return true;
 
@@ -181,7 +182,8 @@ export class EditorTopologyService {
 
 			try {
 
-				this.changes[this.changeIndex].redo(this);
+				var action = this.changes[this.changeIndex+1];
+				action.redo(this);
 				this.changeIndex++;
 				return true;
 

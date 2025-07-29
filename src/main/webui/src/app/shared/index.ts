@@ -79,4 +79,21 @@ export function toChannelName(value: string | null | undefined): string | null {
 
 	return null;
 
-}  
+}
+
+/**
+ * Normalize a string value.
+ */
+export function normalizeString(value: string | null | undefined): string | null {
+
+	if (value != null) {
+
+		value = value.trim();
+		if (value.length > 0) {
+
+			return value;
+		}
+	}
+
+	return null;
+}

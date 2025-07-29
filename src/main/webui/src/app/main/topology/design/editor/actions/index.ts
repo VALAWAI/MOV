@@ -8,6 +8,8 @@
 
 export { CollectionAction } from './collection.action';
 export { ChangeTopologyAction } from './change-topology.action';
+export { ChangeTopologyName } from './chnage-topology-name.action';
+export { ChangeTopologyDescription } from './chnage-topology-description.action';
 
 //actions over nodes.
 export { ChangeNodeAction } from './change-node.action';

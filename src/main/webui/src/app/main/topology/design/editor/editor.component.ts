@@ -50,7 +50,6 @@ import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
-import { MinTopologyEditorComponent } from './min-topology-editor.component';
 import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DagreLayoutService, GraphModule } from '@app/shared/graph';
@@ -59,11 +58,10 @@ import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorModule } from './editor.module';
 import { EditorTopologyService } from './editor-topology.service';
-import { EditorEndpoint } from './editor-endpoint.model';
-import { ConfirmUpdateTopologyDialog } from './confirm-update-topology.dialog';
 import { ChangeNodePositionAction, ChangeTopologyAction, CollectionAction } from './actions';
 import { RemoveConnectionAction } from './actions/remove-connection.action';
 import { ChangeConnectionTargetAction } from './actions/chnage-connection-target.action';
+import { TopologyFormComponent } from './topology-form.component';
 
 @Component({
 	standalone: true,
@@ -78,7 +76,7 @@ import { ChangeConnectionTargetAction } from './actions/chnage-connection-target
 		TopologyNodeEditorComponent,
 		TopologyConnectionEditorComponent,
 		MatDialogModule,
-		MinTopologyEditorComponent,
+		TopologyFormComponent,
 		GraphModule,
 		EditorModule,
 		ToCssVariablePipe
@@ -128,7 +126,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * The canvas with the hraph.
 	 */
 	protected fCanvas = viewChild.required(FCanvasComponent);
-
 
 	/**
 	 * Selected element.
@@ -327,6 +324,13 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.selected = this.topology.addNodeWithType(type, x, y);
 		this.updatedGraph();
 		*/
+	}
+
+	/**
+	 * Delete a node.
+	 */
+	public deleteNode(node: EditorNode) {
+
 	}
 
 	/**
@@ -569,12 +573,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called when the position of a node has changed.
 	 */
-	onNodePositionChange(node: EditorNode, newPosition: IPoint) {
+	public onNodePositionChange(node: EditorNode, newPosition: IPoint) {
 
 		var action = new ChangeNodePositionAction(node, newPosition);
 		this.topology.apply(action);
 	}
-
 
 	/**
 	 * Called when has to change the layout.
