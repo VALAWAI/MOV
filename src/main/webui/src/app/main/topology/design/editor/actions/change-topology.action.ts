@@ -83,7 +83,7 @@ export class ChangeTopologyAction extends TopologyChangeAction {
 				if (topologyConnection.notificationPosition != null) {
 
 					var targetId = this.nextIdFor(this.newNodes, "node");
-					var target = new EditorNode(targetId,sourceEndpoint);
+					var target = new EditorNode(targetId, sourceEndpoint);
 					this.newNodes.push(target);
 					var targetEndpoint = target.searchEndpointOrCreate(null, true);
 
@@ -137,26 +137,26 @@ export class ChangeTopologyAction extends TopologyChangeAction {
 	/**
 	 * Change the topology.
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public override undo(service: EditorTopologyService): void {
 
 		service.min = this.oldMin!;
-		service.nodes = [...this.oldNodes!];
-		service.connections = [...this.oldConnections!];
+		service.nodes = this.oldNodes!;
+		service.connections = this.oldConnections!;
 
 	}
 
 	/**
 	 * Restore the topology.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public override redo(service: EditorTopologyService): void {
 
 		this.oldMin = service.min;
 		this.oldNodes = service.nodes;
 		this.oldConnections = service.connections;
 
-		service.min = this.oldMin;
-		service.nodes = [...this.oldNodes];
-		service.connections = [...this.oldConnections];
+		service.min = this.newMin;
+		service.nodes = this.newNodes;
+		service.connections = this.newConnections;
 	}
 }
 

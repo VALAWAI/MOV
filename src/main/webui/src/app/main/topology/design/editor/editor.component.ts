@@ -232,7 +232,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			{
 				next: () => {
 
-					if (this.topology.unsaved) {
+					if (this.topology.unsaved && !this.topology.isEmpty) {
 
 						this.saveTopology();
 					}
@@ -346,7 +346,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public changeTopology(newTopology: Topology = new Topology()) {
 
-		if (this.topology.unsaved) {
+		if (this.topology.unsaved && !this.topology.isEmpty) {
 
 			this.dialog.open(ConfirmSaveBeforeChangeDialog).afterClosed()
 				.pipe(
@@ -382,6 +382,10 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 			var action = new ChangeTopologyAction(newTopology);
 			this.topology.apply(action);
+			if (newTopology.id != null) {
+
+				this.topology.stored(newTopology.id);
+			}
 		}
 	}
 
@@ -416,7 +420,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		var model = this.topology.model;
 		if (model.name == null || model.name.trim().length == 0) {
-
+			// a name is required to allow to store the topology
 			model.name = $localize`:The name to set to the topology when any is defined@@main_topology_editor_code_default-unamed-topology-name:Unnamed`;
 		}
 		var action: Observable<any> = model.id != null ? this.api.updateDesignedTopology(model) : this.api.storeDesignedTopology(model);

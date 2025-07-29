@@ -77,8 +77,9 @@ export class EditorTopologyService {
 
 		try {
 
-			action.redo(this);
 			this.add(action);
+			action.redo(this);
+			this.topologyChangedSubject.next(action);
 
 		} catch (e) {
 			console.error(e);
@@ -111,6 +112,16 @@ export class EditorTopologyService {
 	public get unsaved(): boolean {
 
 		return this.min.id == null || this.storedIndex != this.changeIndex;
+
+	}
+
+	/**
+	 * Check if the current topology is empty.
+	 */
+	public get isEmpty(): boolean {
+
+		return this.min.id == null && this.min.name == null && this.min.description == null &&
+			this.nodes.length == 0 && this.connections.length == 0;
 
 	}
 

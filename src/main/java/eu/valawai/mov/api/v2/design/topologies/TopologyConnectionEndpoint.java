@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v2.design.topologies;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * Represents a single endpoint of a connection, comprising a node's unique tag
@@ -27,6 +28,7 @@ public class TopologyConnectionEndpoint extends Model {
 	 * The unique identifier (tag) of the node involved in this endpoint.
 	 */
 	@Schema(description = "The unique identifier (tag) of the node.")
+	@NotEmpty
 	public String nodeTag;
 
 	/**
@@ -35,6 +37,7 @@ public class TopologyConnectionEndpoint extends Model {
 	 * channel.
 	 */
 	@Schema(description = "The name of the channel on the node (output for source, input for target).")
+	@NotEmpty
 	public String channel;
 
 }

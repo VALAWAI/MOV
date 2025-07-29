@@ -48,7 +48,7 @@ export class SelectNodeEndpointsDialog implements OnInit {
 	/**
 	 * The endpoints that has been selected.
 	 */
-	public selectedEndpoints: EditorEndpoint[] = [...this.data.endpoints];
+	public selectedEndpoints: EditorEndpoint[] = this.data.endpoints;
 
 	/**
 	 * Calculate the posible endpoints.

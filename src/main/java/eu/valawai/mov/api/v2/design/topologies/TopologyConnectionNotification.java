@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v2.design.topologies;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Represents the component that needs to be notified whenever a message passes
@@ -29,6 +30,7 @@ public class TopologyConnectionNotification extends Model {
 	 * should be delivered.
 	 */
 	@Schema(description = "The recipient or delivery endpoint of the notification, including its tag and delivery channel.")
+	@NotNull
 	public TopologyConnectionEndpoint target;
 
 	/**

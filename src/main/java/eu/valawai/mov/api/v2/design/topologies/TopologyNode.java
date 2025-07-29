@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
 import eu.valawai.mov.api.v2.design.components.ComponentDefinition;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -50,5 +51,6 @@ public class TopologyNode extends Model {
 	 * This defines the functional behavior and capabilities of the node.
 	 */
 	@Schema(description = "The component definition that this node embodies, defining its functionality.")
+	@Nullable
 	public ComponentDefinition component;
 }
