@@ -37,7 +37,7 @@ import { ConfigService, ToCssVariablePipe } from '@app/shared';
 import { Observable, switchMap, of, Subscription, timer } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { TopologyNodeFormComponent } from './node-form.component';
-import { TopologyConnectionEditorComponent } from './connection-editor.component';
+import { TopologyConnectionFormComponent } from './connection-form.component';
 import {
 	MovApiService,
 	Topology,
@@ -74,7 +74,7 @@ import { TopologyFormComponent } from './topology-form.component';
 		MatMenuModule,
 		FExternalItemDirective,
 		TopologyNodeFormComponent,
-		TopologyConnectionEditorComponent,
+		TopologyConnectionFormComponent,
 		MatDialogModule,
 		TopologyFormComponent,
 		GraphModule,

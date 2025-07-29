@@ -18,12 +18,13 @@ import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NotificationChangedEvent } from './notification-changed.event';
 import { EditorTopologyService } from './editor-topology.service';
+import { EditorConnection } from './editor-connection.model';
 
 
 
 @Component({
 	standalone: true,
-	selector: 'app-topology-connection-editor',
+	selector: 'app-topology-connection-form',
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
@@ -33,26 +34,14 @@ import { EditorTopologyService } from './editor-topology.service';
 		MatSelectModule,
 		MatSlideToggleModule
 	],
-	templateUrl: './connection-editor.component.html'
+	templateUrl: './connection-form.component.html'
 })
-export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
+export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The topology where the connection is defined.
 	 */
 	public readonly topology = inject(EditorTopologyService);
-
-	/**
-	 * Notify when the node has been updated.
-	 */
-	@Output()
-	public connectionUpdated = new EventEmitter<DesignTopologyConnection>();
-
-	/**
-	 * Notify when the node has been updated.
-	 */
-	@Output()
-	public notificationsChanged = new EventEmitter<NotificationChangedEvent>();
 
 	/**
 	 * The form to edit the connection.
@@ -111,7 +100,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 						if (JSON.stringify(this.lastValid) != JSON.stringify(newConnection)) {
 
 							this.lastValid = newConnection;
-							this.connectionUpdated.emit(newConnection);
+							//this.connectionUpdated.emit(newConnection);
 						}
 					}
 				}
@@ -165,8 +154,9 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 	 * Set the conneciton to edit.
 	 */
 	@Input()
-	public set connection(connection: DesignTopologyConnection | null | undefined) {
+	public set connection(connection: EditorConnection | null | undefined) {
 
+		/*
 		this.connectionForm.patchValue(
 			{
 				source: connection?.source || null,
@@ -182,6 +172,7 @@ export class TopologyConnectionEditorComponent implements OnInit, OnDestroy {
 				emitEvent: false
 			}
 		);
+		*/
 
 	}
 
