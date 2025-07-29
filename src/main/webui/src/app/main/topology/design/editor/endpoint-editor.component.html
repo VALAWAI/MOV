@@ -1,27 +1,28 @@
+
 <div class="w-full h-full">
 	<form [formGroup]="endpointForm" class="flex flex-col">
 		<mat-form-field> <mat-label
 			i18n="The label of the form field to edit the endpoimnt node@@main_topology_design_endpoint-editor_node-label">Node</mat-label>
-		<mat-select formControlName="nodeTag">
-		<!-- 
-		 @for(node of
-		topology?.nodes;track node.id){ <mat-option [value]="node.id">{{node.name}}</mat-option>
-		} 
-		 -->
-		</mat-select> <mat-error
-			*ngIf="endpointForm.controls.nodeTag.hasError('required')"
-			i18n="The error message if no node tag is selected@@main_topology_design_endpoint-editor_node-required">
-		>You must select a node.</mat-error> </mat-form-field>
+		<input type="text" matInput formControlName="node"
+			[matAutocomplete]="autoNode"> <mat-autocomplete
+			#autoNode="matAutocomplete" [displayWith]="displayNode">
+		@for(node of possibleNodes; track node.id) { <mat-option
+			[value]="node">{{displayNode(node)}}</mat-option> } </mat-autocomplete> <mat-error
+			*ngIf="endpointForm.controls.node.hasError('required')"
+			i18n="The error message if no node is selected@@main_topology_design_endpoint-editor_node-required">
+		You must select a node.</mat-error> </mat-form-field>
 		<mat-form-field> <mat-label
 			i18n="The label of the form field to edit the endpoimnt channel@@main_topology_design_endpoint-editor_channel-label">Channel</mat-label>
-		<mat-select formControlName="channel"> @for(channel of
-		posibleChannels;track channel){ <mat-option [value]="channel">{{channel|toChannelName}}</mat-option>
-		} </mat-select> <mat-error
+		<input type="text" matInput formControlName="channel"
+			[matAutocomplete]="autoChannel"> <mat-autocomplete
+			#autoChannel="matAutocomplete" [displayWith]="displayChannel">
+		@for(channel of possibleChannels; track channel.name) { <mat-option
+			[value]="channel">
+		<div class="text-lg font-bold mb-2">{{channel.name|toChannelName}}</div>
+		<div class="text-gray-600">{{channel.description}}</div>
+		</mat-option> } </mat-autocomplete> <mat-error
 			*ngIf="endpointForm.controls.channel.hasError('required')"
-			i18n="The error message if no channel is selected@@main_topology_design_endpoint-editor_channel-required">
-		You must select a channel.</mat-error> <mat-error
-			*ngIf="endpointForm.controls.channel.hasError('undefined')"
-			i18n="The error message if the channel is not defined in the node@@main_topology_design_endpoint-editor_channel-undefined">
-		The channel is not posible in the slected node.</mat-error> </mat-form-field>
+			i18n="The error message if no valid channel is selected@@main_topology_design_endpoint-editor_channel-required">
+		You must select a valid channel.</mat-error> </mat-form-field>
 	</form>
 </div>
