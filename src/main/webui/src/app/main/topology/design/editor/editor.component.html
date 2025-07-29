@@ -237,12 +237,11 @@
 	<div class="sm:w-96 p-2">
 		@if( selected == null ){
 		<app-topology-form> </app-topology-form>
+		}@else if( selectedEditorNode != null){
+		<app-topology-node-form [node]="selectedEditorNode"></app-topology-node-form>
 		}
 		<!-- 
-		 @else if( selectedTopologyNode != null){
-		<app-topology-node-editor [node]="selectedTopologyNode"
-			(nodeUpdated)="updatedTopologyNode($event)"></app-topology-node-editor>
-		} @else if( selectedTopologyConnection != null){
+		 @else if( selectedTopologyConnection != null){
 		<app-topology-connection-editor
 			[connection]="selectedTopologyConnection" [topology]="topology"
 			(connectionUpdated)="updatedTopologyConnection($event)"></app-topology-connection-editor>

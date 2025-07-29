@@ -36,7 +36,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService, ToCssVariablePipe } from '@app/shared';
 import { Observable, switchMap, of, Subscription, timer } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { TopologyNodeEditorComponent } from './node-editor.component';
+import { TopologyNodeFormComponent } from './node-form.component';
 import { TopologyConnectionEditorComponent } from './connection-editor.component';
 import {
 	MovApiService,
@@ -73,7 +73,7 @@ import { TopologyFormComponent } from './topology-form.component';
 		MatIconModule,
 		MatMenuModule,
 		FExternalItemDirective,
-		TopologyNodeEditorComponent,
+		TopologyNodeFormComponent,
 		TopologyConnectionEditorComponent,
 		MatDialogModule,
 		TopologyFormComponent,

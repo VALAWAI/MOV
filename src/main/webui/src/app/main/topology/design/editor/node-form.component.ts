@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { toPattern } from '@app/shared';
 import { EditorModule } from './editor.module';
 import { EditorTopologyService } from './editor-topology.service';
+import { EditorNode } from './editor-node.model';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -33,7 +34,7 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 
 @Component({
 	standalone: true,
-	selector: 'app-topology-node-editor',
+	selector: 'app-topology-node-form',
 	imports: [
 		CommonModule,
 		MatAutocompleteModule,
@@ -44,9 +45,9 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 		MatIconModule,
 		EditorModule
 	],
-	templateUrl: './node-editor.component.html'
+	templateUrl: './node-form.component.html'
 })
-export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
+export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The the last valid node.
@@ -56,15 +57,14 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Notify when teh node has been updated.
 	 */
-	@Output()
-	public nodeUpdated = new EventEmitter<TopologyNode>();
+	private readonly topology = inject(EditorTopologyService);
 
 	/**
 	 * The form to edit the component.
 	 */
 	public nodeForm = new FormGroup(
 		{
-			tag: new FormControl<string>('node_0'),
+			id: new FormControl<string>('node_0'),
 			level: new FormControl<ComponentType | null>(null, Validators.required),
 			component: new FormControl<ComponentDefinition | string | null>(null, {
 				updateOn: 'change',
@@ -86,11 +86,6 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	public page: ComponentDefinitionPage | null = null;
 
 	/**
-	 * The service of teh editor.
-	 */
-	private readonly topology = inject(EditorTopologyService);
-
-	/**
 	 * The service to interact withe MOV.
 	 */
 	private readonly api = inject(MovApiService);
@@ -104,10 +99,10 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 	 * The node to edit.
 	 */
 	@Input()
-	public set node(node: TopologyNode | null | undefined) {
+	public set node(node: EditorNode | null | undefined) {
 
 		var value = {
-			tag: 'node_0',
+			id: 'node_0',
 			level: null as ComponentType | null,
 			component: null as ComponentDefinition | string | null,
 			positionX: 0.0,
@@ -115,7 +110,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 		};
 		if (node != null) {
 
-			value.tag = node.tag;
+			value.id = node.id;
 			value.level = node.component?.type || null;
 			value.component = node.component;
 			value.positionX = node.position.x;
@@ -138,7 +133,7 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 					if (status == 'VALID') {
 
 						var newNode = new TopologyNode();
-						newNode.tag = this.nodeForm.controls.tag.value || 'node_0';
+						newNode.tag = this.nodeForm.controls.id.value || 'node_0';
 						newNode.component = this.nodeForm.controls.component.value as ComponentDefinition;
 						newNode.position = new Point();
 						newNode.position.x = this.nodeForm.controls.positionX.value || 0;
@@ -147,38 +142,42 @@ export class TopologyNodeEditorComponent implements OnInit, OnDestroy {
 						if (JSON.stringify(this.lastValid) != JSON.stringify(newNode)) {
 
 							this.lastValid = newNode;
-							this.nodeUpdated.emit(newNode);
+							//							this.nodeUpdated.emit(newNode);
 						}
 					}
 				}
 			}
 		));
 
-		this.subscriptions.push(this.nodeForm.controls.level.valueChanges.subscribe(
-			{
-				next: value => {
+		this.subscriptions.push(
+			this.nodeForm.controls.level.valueChanges.subscribe(
+				{
+					next: value => {
 
-					var component = this.nodeForm.controls.component.value;
-					if (component != null && typeof component !== 'string' && component.type != value) {
+						var component = this.nodeForm.controls.component.value;
+						if (component != null && typeof component !== 'string' && component.type != value) {
 
-						this.nodeForm.controls.component.setValue(null, { emitEvent: false });
-					}
-					this.updatePage();
+							this.nodeForm.controls.component.setValue(null, { emitEvent: false });
+						}
+						this.updatePage();
 
-				}
-			}
-		));
-		this.subscriptions.push(this.nodeForm.controls.component.valueChanges.subscribe(
-			{
-				next: value => {
-
-					if (value == null || typeof value === 'string') {
-
-						this.updatePage()
 					}
 				}
-			}
-		));
+			)
+		);
+		this.subscriptions.push(
+			this.nodeForm.controls.component.valueChanges.subscribe(
+				{
+					next: value => {
+
+						if (value == null || typeof value === 'string') {
+
+							this.updatePage()
+						}
+					}
+				}
+			)
+		);
 		/*
 		this.subscriptions.push(this.editor.movedNode$.subscribe(
 			{
