@@ -91,13 +91,10 @@ export class EditorTopologyService {
 	 */
 	public add(action: TopologyChangeAction) {
 
-		if (this.changeIndex > -1) {
+		var diff = this.changes.length - (this.changeIndex + 1);
+		if (diff > 0) {
 
-			var diff = this.changes.length - (this.changeIndex + 1);
-			if (diff > 0) {
-
-				this.changes.splice(this.changeIndex + 1, diff);
-			}
+			this.changes.splice(this.changeIndex + 1, diff);
 		}
 		this.changes.push(action);
 		this.changeIndex++;
