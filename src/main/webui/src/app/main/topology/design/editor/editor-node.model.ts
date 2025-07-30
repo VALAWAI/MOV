@@ -6,9 +6,10 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { ComponentDefinition } from "@app/shared/mov-api";
+import { ChannelSchema, ComponentDefinition } from "@app/shared/mov-api";
 import { IPoint } from "@foblex/2d";
 import { EditorEndpoint } from './editor-endpoint.model';
+import { distance } from "@app/shared/graph";
 
 /**
  * A node in the graph od the EditorTopology..
@@ -111,6 +112,49 @@ export class EditorNode {
 	public compareTo(other: EditorNode): number {
 
 		return this.name.localeCompare(other.name);
+
+	}
+
+	/**
+	 * Return the distance of the node to the specified point.
+	 */
+	public distanceTo(source: IPoint | EditorNode): number {
+
+		if ('position' in source) {
+
+			return distance(source.position, this.position);
+
+		} else {
+
+			return distance(source, this.position);
+		}
+
+	}
+
+	/**
+	 * Check if a point is inside the node.
+	 */
+	public isPointInside(point: IPoint, delta: number = 7): boolean {
+
+		return (
+			point.x >= (this.position.x - delta) &&
+			point.x <= (this.position.x + this.width + 2 * delta) &&
+			point.y >= (this.position.y - delta) &&
+			point.y <= (this.position.y + this.height + 2 * delta)
+		);
+	}
+
+	/**
+	 * Return the schema associated to the channel. 
+	 */
+	public getChannelSchemaFor(channel: string): ChannelSchema | null {
+
+		if (this.component != null && this.component.channels != null) {
+
+			return this.component.channels.find(c => c.name == channel) || null;
+		}
+
+		return null;
 
 	}
 

@@ -30,12 +30,12 @@ export class EditorTopologyService {
 	/**
 	 * The nodes of the topology.
 	 */
-	public nodes: EditorNode[] = [];
+	private _nodes: EditorNode[] = [];
 
 	/**
 	 * The connections of the topology.
 	 */
-	public connections: EditorConnection[] = [];
+	private _connections: EditorConnection[] = [];
 
 	/**
 	 * The configuration of the application.
@@ -61,6 +61,16 @@ export class EditorTopologyService {
 	 * The subject that mange the changes on the node.
 	 */
 	private topologyChangedSubject = new Subject<TopologyChangeAction>();
+
+	/**
+	 * The index of teh last created node.
+	 */
+	private lastNodeIndex = 0;
+
+	/**
+	 * The index of teh last created connection.
+	 */
+	private lastConnectionIndex = 0;
 
 	/**
 	 * Listen for cnaged in the node.
@@ -340,14 +350,7 @@ export class EditorTopologyService {
 	 */
 	public get nextNodeId(): string {
 
-		var index = this.nodes.length + 1;
-		var id = 'node_' + index;
-		while (this.getNodeWith(id) != null) {
-
-			index++;
-			id = 'node_' + index;
-		}
-		return id;
+		return 'node_' + (++this.lastNodeIndex);
 	}
 
 
@@ -356,15 +359,69 @@ export class EditorTopologyService {
 	 */
 	public get nextConnectionId(): string {
 
-		var index = this.connections.length + 1;
-		var id = 'connection_' + index;
-		while (this.getConnectionWith(id) != null) {
-
-			index++;
-			id = 'connection_' + index;
-		}
-		return id;
+		return 'connection_' + (++this.lastConnectionIndex);
 	}
+
+	/**
+	 * Return the nodes of the topology.
+	 */
+	public get nodes(): EditorNode[] {
+
+		return this._nodes;
+	}
+
+	/**
+	 * Chaneg the nodes of the topology.
+	 */
+	public set nodes(nodes: EditorNode[]) {
+
+		this._nodes = nodes;
+		this.lastNodeIndex = 0;
+		for (var node of nodes) {
+
+			var index = Number(node.id.replaceAll(/\D/g, ''));
+			if (!isNaN(index) && this.lastNodeIndex < index) {
+
+				this.lastNodeIndex = index;
+			}
+		}
+	}
+
+	/**
+	 * Return the connections of the topology.
+	 */
+	public get connections(): EditorConnection[] {
+
+		return this._connections;
+	}
+
+	/**
+	 * Chaneg the connections of the topology.
+	 */
+	public set connections(connections: EditorConnection[]) {
+
+		this._connections = connections;
+		this.lastConnectionIndex = 0;
+		for (var connection of connections) {
+
+			var index = Number(connection.id.replaceAll(/\D/g, ''));
+			if (!isNaN(index) && this.lastConnectionIndex < index) {
+
+				this.lastConnectionIndex = index;
+			}
+		}
+	}
+
+
+	/**
+	 * Return the connection associated to the specified end points. 
+	 */
+	public getConnectionBetween(source: EditorEndpoint, target: EditorEndpoint): EditorConnection | null {
+
+		return this.connections.find(c => c.source.id === source.id && c.target.id === target.id) || null;
+
+	}
+
 
 }
 

@@ -44,7 +44,8 @@ import {
 	TopologyNode,
 	DesignTopologyConnection,
 	ComponentType,
-	TopologyConnectionEndpoint
+	TopologyConnectionEndpoint,
+	ChannelSchema
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -62,6 +63,8 @@ import { ChangeNodePositionAction, ChangeTopologyAction, CollectionAction } from
 import { RemoveConnectionAction } from './actions/remove-connection.action';
 import { ChangeConnectionTargetAction } from './actions/chnage-connection-target.action';
 import { TopologyFormComponent } from './topology-form.component';
+import { AddConnectionAction } from './actions/add-connection.action';
+import { EditorEndpoint } from './editor-endpoint.model';
 
 @Component({
 	standalone: true,
@@ -553,12 +556,117 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public onConnectionAdded(event: FCreateConnectionEvent): void {
 
-		if (event.fInputId != null) {
-			/*
-						this.selected = this.topology.addConnectionBetween(event.fOutputId, event.fInputId);
-						this.updatedGraph();
-			*/
-		}// else connection not linked to an endpoint => may be we can create a node
+		this.searchPosibleConnection(event.fOutputId, event.fInputId, event.fDropPosition).subscribe(
+			{
+				next: possible => {
+
+					if (possible != null) {
+
+						if (possible.source == null || possible.target == null) {
+
+							this.messages.showError(
+								$localize`:Error message when not exist an endpoint to link a new connection@@main_topology_editor_code_add-connection-target-endpoint-undefined-error-msg:Does not exist a channel where the conection can be connected.`
+							);
+
+						} else {
+
+							var connection = this.topology.getConnectionBetween(possible.source, possible.target);
+							if (connection != null) {
+								// Connection defined
+								this.messages.showError(
+									$localize`:Error message when try to add a conection that is already defined@@main_topology_editor_code_add-connection-duplicated-error-msg:Already exist a connection between this endpoionts.`
+								);
+
+							} else {
+
+								connection = new EditorConnection(this.topology.nextConnectionId, possible.source, possible.target, possible.source.channel == null);
+								var action = new AddConnectionAction(connection);
+								this.topology.apply(action);
+							}
+
+						}
+
+					}// else cancelled by the user
+				}
+			}
+		);
+	}
+
+	/**
+	 * Search for the posible endpoint for a connection.
+	 */
+	private searchPosibleConnection(sourceEndpointId: string, targetEndpointId: string | null | undefined, targetPoint: IPoint): Observable<PosibleConnection | null> {
+
+		var sourceEndpoint = this.topology.getEndpointWith(sourceEndpointId);
+		var targetEndpoint: EditorEndpoint | null = null;
+		if (targetEndpointId != null) {
+
+			targetEndpoint = this.topology.getEndpointWith(targetEndpointId);
+
+		} else {
+
+			var source = this.topology.getNodeWith(sourceEndpoint?.nodeId);
+			var sourceChannel: ChannelSchema | null = null;
+			if (source != null) {
+
+				if (source.sourceNotification != null) {
+					// add notification connection
+					var notificationSource = this.topology.getNodeWith(source.sourceNotification.nodeId)!;
+					sourceChannel = notificationSource.getChannelSchemaFor(source.sourceNotification.channel!);
+
+				} else if (sourceEndpoint!.channel != null) {
+					// add a new connection
+					sourceChannel = source.getChannelSchemaFor(sourceEndpoint!.channel);
+				}
+			}
+
+
+			var sourcePayload: string | null = null;
+			if (sourceChannel != null) {
+
+				sourcePayload = JSON.stringify(sourceChannel.publish);
+			}
+
+			var normalizedTargetPoint = this.fFlow().getPositionInFlow(targetPoint);
+			TARGET: for (var target of this.topology.nodes) {
+
+				if (target.isPointInside(normalizedTargetPoint)) {
+
+					if (target.component != null && target.component.channels != null) {
+
+						var possibelChannels: ChannelSchema[] = [];
+						for (var targetChannel of target.component.channels) {
+
+							if (targetChannel.subscribe != null) {
+
+								if (sourcePayload != null && sourcePayload == JSON.stringify(targetChannel.subscribe)) {
+									// match a channle => cerate an endpoint to the channel
+									targetEndpoint = target.searchEndpointOrCreate(targetChannel.name, false);
+									break TARGET;
+								}
+								possibelChannels.push(targetChannel);
+							}
+						}
+
+						if (possibelChannels.length > 0) {
+
+							if (possibelChannels.length == 1) {
+								// exist only one posibility
+								targetEndpoint = target.searchEndpointOrCreate(possibelChannels[0].name, false);
+								break;
+
+							} else {
+								//ask the user about the channel to use.
+
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		return of({ source: sourceEndpoint, target: targetEndpoint });
 	}
 
 	/**
@@ -567,9 +675,42 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	public onReassignConnection(event: FReassignConnectionEvent) {
 
 		if (!event.newTargetId) {
-			// remove connection
-			var removeAction = new RemoveConnectionAction(event.connectionId);
-			this.topology.apply(removeAction);
+
+			this.searchPosibleConnection(event.oldSourceId, null, event.dropPoint).subscribe(
+				{
+					next: possible => {
+
+						if (possible != null && possible.source != null) {
+
+							if (possible.target == null) {
+
+								// remove connection
+								var removeAction = new RemoveConnectionAction(event.connectionId);
+								this.topology.apply(removeAction);
+
+							} else {
+
+								var connection = this.topology.getConnectionBetween(possible.source, possible.target);
+								if (connection != null) {
+									// Connection defined
+									this.messages.showError(
+										$localize`:Error message when try to redirect to a conection that is already defined@@main_topology_editor_code_redirect-connection-duplicated-error-msg:Already exist a connection between this endpoionts.`
+									);
+
+								} else {
+
+									var redirectAction = new ChangeConnectionTargetAction(event.connectionId, possible.target);
+									this.topology.apply(redirectAction);
+								}
+
+							}
+
+						}// else cancelled by the user
+					}
+				}
+			);
+			// check if connecto to a node.
+
 
 		} else if (event.oldTargetId != event.newTargetId) {
 			// redirect connection
@@ -729,3 +870,19 @@ export const leaveEditorGuard: CanDeactivateFn<TopologyEditorComponent> = (compo
 	return component.topology.unsaved ? component.storeBeforeLeave() : of(true);
 };
 
+
+/**
+ * The representaiton of a posible connection.
+ */
+class PosibleConnection {
+
+	/**
+	 * The posible source.
+	 */
+	public source: EditorEndpoint | null = null;
+
+	/**
+	 * The posible target.
+	 */
+	public target: EditorEndpoint | null = null;
+}
