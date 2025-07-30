@@ -100,7 +100,7 @@ export class ChangeTopologyAction extends TopologyChangeAction {
 							var targetEndpoint = target.searchEndpointOrCreate(notification.target!.channel!, false);
 
 							connectionId = this.nextIdFor(this.newConnections, "connection");
-							connection = new EditorConnection(connectionId, sourceEndpoint, targetEndpoint, source.sourceNotification);
+							connection = new EditorConnection(connectionId, sourceEndpoint, targetEndpoint, true);
 							this.newConnections.push(connection);
 						}
 

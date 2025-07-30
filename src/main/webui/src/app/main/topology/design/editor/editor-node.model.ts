@@ -6,10 +6,9 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { ComponentType, TopologyNode, DesignTopologyConnection, ComponentDefinition } from "@app/shared/mov-api";
+import { ComponentDefinition } from "@app/shared/mov-api";
 import { IPoint } from "@foblex/2d";
 import { EditorEndpoint } from './editor-endpoint.model';
-import { EditorConnection } from "./editor-connection.model";
 
 /**
  * A node in the graph od the EditorTopology..
@@ -83,6 +82,35 @@ export class EditorNode {
 	public fisrtEndPointWithIsSource(isSource: boolean): EditorEndpoint {
 
 		return this.endpoints.find(e => e.isSource == isSource)!;
+
+	}
+
+	/**
+	 * A name to order the node.
+	 */
+	public get name(): string {
+
+		if (this.component != null && this.component.name != null) {
+
+			return this.component.name;
+
+		} else if (this.sourceNotification != null) {
+
+			return this.sourceNotification.id;
+
+		} else {
+
+			return '';
+		}
+
+	}
+
+	/**
+	 * Return the expected order of this endpoint respect another. 
+	 */
+	public compareTo(other: EditorNode): number {
+
+		return this.name.localeCompare(other.name);
 
 	}
 

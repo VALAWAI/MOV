@@ -97,3 +97,17 @@ export function normalizeString(value: string | null | undefined): string | null
 
 	return null;
 }
+
+/**
+ * Return a regexp to match the value.
+ */
+export function toRegexp(value: object | string | null) {
+
+	var pattern = '.*';
+	if (typeof value === 'string') {
+
+		pattern += value;
+		pattern += '.*';
+	}
+	return new RegExp(pattern, 'i');
+}

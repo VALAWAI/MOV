@@ -26,7 +26,7 @@ export function requiredNode(): ValidatorFn {
 
 	return (control: AbstractControl): ValidationErrors | null => {
 
-		if (control != null && (control.value == null || typeof control.value === 'string')) {
+		if (control != null && !(control.value instanceof EditorNode)) {
 
 			return { 'required': true };
 
@@ -37,29 +37,40 @@ export function requiredNode(): ValidatorFn {
 	};
 }
 
-export function requiredChannel(editor: EndpointEditorComponent): ValidatorFn {
+export function requiredChannel(): ValidatorFn {
 
 	return (control: AbstractControl): ValidationErrors | null => {
 
-		if (control != null &&
-			control.value === null ||
-			(typeof control.value === 'string' &&
-				editor.possibleChannels.findIndex(c => c.name === control.value) < 0)
-			|| (
-				typeof control.value === 'object' &&
-				editor.possibleChannels.findIndex(c => c.name === control.value.name) < 0
-			)
-		) {
+		if (control != null && control.parent instanceof FormGroup) {
 
-			return { 'required': true };
+			var node = control.parent.get('node');
+			if (node != null) {
 
+				if (node.value instanceof EditorNode) {
 
-		} else {
-			return null;
+					if (
+						(node.value.sourceNotification != null && control.value == null)
+						|| (
+							typeof control.value === 'object'
+							&& node.value.component != null
+							&& node.value.component.channels != null
+							&& node.value.component.channels.find(c => c.name === control.value.name)
+						)
+					) {
+
+						return null;
+					}
+				}
+
+				return { 'required': true };
+			}
 		}
+
+		return null;
 
 	};
 }
+
 
 @Component({
 	standalone: true,
@@ -103,7 +114,7 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 				updateOn: 'change'
 			}),
 			channel: new FormControl<ChannelSchema | string | null>(null, {
-				validators: requiredChannel(this),
+				validators: requiredChannel(),
 				updateOn: 'change'
 			}),
 		}
@@ -144,11 +155,17 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 						value => {
 
 							this.updatePossibleNodes(value);
-							if (typeof value === 'object') {
+							if (value instanceof EditorNode) {
 
 								this.endpointForm.controls.channel.enable();
 								this.updatePossibleChannels();
-								this.endpointForm.controls.channel.updateValueAndValidity();
+								var name = this.displayChannel(this.endpointForm.controls.channel.value);
+								var newChannel = this.possibleChannels.find(c => toChannelName(c.name) === name) || null;
+								this.endpointForm.controls.channel.setValue(newChannel, { emitEvent: true });
+								if (newChannel == null) {
+
+
+								}
 							}
 						}
 				}
@@ -164,16 +181,29 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscruptions.push(
-			this.endpointForm.statusChanges.subscribe(
+			this.endpointForm.valueChanges.subscribe(
 				{
-					next: status => {
+					next: () => {
 
-						if (status == 'VALID') {
+						if (this.endpointForm.valid) {
 
-							var value = this.endpointForm.value;
-							var node = value.node as EditorNode;
-							var channel = value.channel as ChannelSchema;
-							var newEndpoint = new EditorEndpoint(node.id, channel.name, this.isSource);
+							const node = this.endpointForm.controls.node.value as EditorNode;
+							var channelName: string | null = null;
+							if (node.sourceNotification == null) {
+								const channel = this.endpointForm.controls.channel.value as ChannelSchema | null;
+								if (channel != null && node.component != null && node.component.channels != null
+									&& node.component.channels.find(c => c.name == channel.name) != null
+								) {
+
+									channelName = channel.name;
+
+								} else {
+									// bad channel
+									return;
+
+								}
+							}
+							var newEndpoint = new EditorEndpoint(node.id, channelName, this.isSource);
 							if (JSON.stringify(this.lastValid) != JSON.stringify(newEndpoint)) {
 
 								this.lastValid = newEndpoint;
@@ -214,7 +244,7 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 
 		this.possibleChannels = [];
 		var node = this.endpointForm.controls.node.value;
-		if (node != null && typeof node === 'object') {
+		if (node != null && node instanceof EditorNode) {
 
 			if (node.component! != null && node.component.channels != null) {
 
@@ -265,24 +295,27 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 	@Input()
 	public set endpoint(endpoint: EditorEndpoint | null | undefined) {
 
-		var channel: ChannelSchema | null = null;
-		var node = this.topology.getNodeWith(endpoint?.nodeId);
-		if (node != null && node.component != null && node.component.channels != null) {
+		if (JSON.stringify(this.lastValid) !== JSON.stringify(endpoint)) {
 
-			channel = node.component.channels.find(c => c.name == endpoint?.channel) || null;
-		}
-		this.lastValid = endpoint || null;
-		this.endpointForm.setValue(
-			{
-				node: node,
-				channel: channel
-			},
-			{
-				emitEvent: false
+			var channel: ChannelSchema | null = null;
+			var node = this.topology.getNodeWith(endpoint?.nodeId);
+			if (node != null && node.component != null && node.component.channels != null) {
+
+				channel = node.component.channels.find(c => c.name == endpoint?.channel) || null;
 			}
-		);
-		this.updatePossibleNodes(node);
-		this.updatePossibleChannels(channel);
+			this.lastValid = endpoint || null;
+			this.endpointForm.setValue(
+				{
+					node: node,
+					channel: channel
+				},
+				{
+					emitEvent: false
+				}
+			);
+			this.updatePossibleNodes(node);
+			this.updatePossibleChannels(channel);
+		}
 	}
 
 	/**

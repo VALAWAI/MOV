@@ -29,7 +29,7 @@ export class ChangeConnectionTargetAction extends ChangeConnectionAction {
 	/**
 	 * Create the action with the connection to be removed.
 	 */
-	constructor(public override connectionId: string, private targetEndpoiuntId: string) {
+	constructor(public override connectionId: string, public newTargetEndpoint: EditorEndpoint) {
 
 		super();
 	}
@@ -48,18 +48,10 @@ export class ChangeConnectionTargetAction extends ChangeConnectionAction {
 	 */
 	public override redo(service: EditorTopologyService): void {
 
-		this.connection = service.connections.find(c => c.id === this.connectionId)!;
-		for (var node of service.nodes) {
-
-			var endpoint = node.endpoints.find(e => e.id == this.targetEndpoiuntId) || null;
-			if (endpoint != null) {
-
-				this.oldTarget = this.connection.target;
-				this.connection.target = endpoint;
-				break;
-			}
-		}
-
+		this.connection = service.getConnectionWith(this.connectionId)!;
+		this.oldTarget = this.connection.target;
+		var targetNode = service.getNodeWith(this.newTargetEndpoint.nodeId)!;
+		this.connection.target = targetNode.searchEndpointOrCreate(this.newTargetEndpoint.channel, this.newTargetEndpoint.isSource);
 	}
 
 

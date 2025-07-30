@@ -2,20 +2,15 @@
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the source of the connection@@main_topology_design_connection-editor_source-fieldset-label">Source:</legend>
-		<!-- 
-		<app-topology-connection-endpoint-editor class="w-full"
-			[isSource]="true" [topology]="topology"
-			[endpoint]="connectionForm.controls.source.value"></app-topology-connection-endpoint-editor>
-			 -->
+		<app-topology-endpoint-editor class="w-full" [isSource]="true"
+			[endpoint]="connectionForm.controls.source.value"></app-topology-endpoint-editor>
 	</fieldset>
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the target of the connection@@main_topology_design_connection-editor_target-fieldset-label">Target:</legend>
-		<!-- 
-		<app-topology-connection-endpoint-editor class="w-full"
-			[isSource]="false" [topology]="topology"
-			[endpoint]="connectionForm.controls.target.value"></app-topology-connection-endpoint-editor>
-			 -->
+		<app-topology-endpoint-editor class="w-full" [isSource]="false"
+			[endpoint]="connectionForm.controls.target.value"
+			(endpointUpdated)="targetEndpointChanged($event)"></app-topology-endpoint-editor>
 	</fieldset>
 	<mat-form-field> <mat-label
 		i18n="The label to select the type of connection@@main_topology_design_connection-editor_typee-label">Type</mat-label>
@@ -36,6 +31,7 @@
 		placeholder="Write the function to convert the source message to the target message."
 		i18n-placeholder="The placeholder for the field to write the convertion code@@main_topology_design_connection-editor_convert-code-placeholder">
 			></textarea> </mat-form-field>
+	<!-- 
 	@if(notificationAllowed()){
 	<mat-slide-toggle color="primary" formControlName="notifications"
 		i18n="The label of the slide toggle to activate the notifications@@main_topology_design_connection-editor_notification-position-label">Notifications</mat-slide-toggle>
@@ -57,6 +53,6 @@
 	</fieldset>
 
 	} }
-
+ -->
 
 </form>

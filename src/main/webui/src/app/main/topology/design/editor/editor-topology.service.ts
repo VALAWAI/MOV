@@ -13,6 +13,7 @@ import { MinTopology, Topology, TopologyNode, DesignTopologyConnection, toTopolo
 import { EditorNode } from "./editor-node.model";
 import { EditorConnection } from "./editor-connection.model";
 import { TopologyConnectionNotification } from "@app/shared/mov-api/design/topologies/iopology-connection-notification.model";
+import { EditorEndpoint } from "./editor-endpoint.model";
 
 
 /**
@@ -218,50 +219,68 @@ export class EditorTopologyService {
 
 		}
 		model.connections = [];
+		var partial: EditorConnection[] = [];
 		for (var connection of this.connections) {
 
-			for (var modelConnection of model.connections) {
-
-
-
-			}
-
-			var modelConnection = new DesignTopologyConnection();
-			if (modelConnection.source == null) {
-
-				modelConnection.source = new TopologyConnectionEndpoint();
-				modelConnection.source.nodeTag = connection.source.nodeId;
-
-			}
 			if (connection.source.channel != null) {
 
+				var modelConnection = new DesignTopologyConnection();
+				modelConnection.source = new TopologyConnectionEndpoint();
 				modelConnection.source.nodeTag = connection.source.nodeId;
 				modelConnection.source.channel = connection.source.channel;
-			}
-			if (connection.source) {
+				modelConnection.convertCode = connection.convertCode;
+				modelConnection.type = toTopologyGraphConnectionType(connection.type);
 
-				if (modelConnection.notifications == null) {
+				if (connection.target.channel != null) {
 
-					modelConnection.notifications = [];
+					modelConnection.target = new TopologyConnectionEndpoint();
+					modelConnection.target.nodeTag = connection.target.nodeId;
+					modelConnection.target.channel = connection.target.channel;
+
 				}
-				var notification = new TopologyConnectionNotification();
-				notification.convertCode = connection.convertCode;
-				notification.type = toTopologyGraphConnectionType(connection.type);
-				notification.target = new TopologyConnectionEndpoint();
-				notification.target.nodeTag = connection.target.nodeId;
-				notification.target.channel = connection.target.channel;
-				modelConnection.notifications.push(notification);
+				model.connections.push(modelConnection);
 
 			} else {
 
-				modelConnection.convertCode = connection.convertCode;
-				modelConnection.type = toTopologyGraphConnectionType(connection.type);
-				modelConnection.target = new TopologyConnectionEndpoint();
-				modelConnection.target.nodeTag = connection.target.nodeId;
-				modelConnection.target.channel = connection.target.channel;
+				partial.push(connection);
 			}
-			model.connections.push(modelConnection);
 		}
+
+		for (var connection of partial) {
+
+			var notificationNode = this.getNodeWith(connection.source.id)!;
+			for (var modelConnection of model.connections) {
+
+				if (notificationNode.sourceNotification?.nodeId == modelConnection.source?.nodeTag
+					&& notificationNode.sourceNotification?.channel == modelConnection.source?.channel
+				) {
+
+					if (connection.isNotification) {
+
+						if (modelConnection.notifications == null) {
+
+							modelConnection.notifications = [];
+						}
+						var notification = new TopologyConnectionNotification();
+						notification.convertCode = connection.convertCode;
+						notification.type = toTopologyGraphConnectionType(connection.type);
+						notification.target = new TopologyConnectionEndpoint();
+						notification.target.nodeTag = connection.target.nodeId;
+						notification.target.channel = connection.target.channel;
+						modelConnection.notifications.push(notification);
+
+					} else {
+
+						modelConnection.target = new TopologyConnectionEndpoint();
+						modelConnection.target.nodeTag = connection.target.nodeId;
+						modelConnection.target.channel = connection.target.channel;
+					}
+					break;
+				}
+
+			}
+		}
+
 		return model;
 	}
 
@@ -293,6 +312,28 @@ export class EditorTopologyService {
 		return null;
 
 	}
+
+	/**
+	 * Return the endpoint associated to an identifier. 
+	 */
+	public getEndpointWith(id: string | null | undefined): EditorEndpoint | null {
+
+		if (id) {
+
+			for (var node of this.nodes) {
+
+				var endpoint = node.endpoints.find(n => n.id === id) || null;
+				if (endpoint != null) {
+
+					return endpoint;
+				}
+			}
+		}
+
+		return null;
+
+	}
+
 
 	/**
 	 * Return the next node identifier to use.

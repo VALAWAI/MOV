@@ -6,7 +6,6 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { TopologyGraphConnectionType } from "@app/shared/mov-api";
 import { EditorEndpoint } from "./editor-endpoint.model";
 
 
@@ -34,7 +33,7 @@ export class EditorConnection {
 		public id: string,
 		public source: EditorEndpoint,
 		public target: EditorEndpoint,
-		public sourceNotification: EditorEndpoint | null = null
+		public isNotification: boolean = false
 	) {
 
 	}

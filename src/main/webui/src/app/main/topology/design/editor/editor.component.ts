@@ -564,7 +564,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		} else if (event.oldTargetId != event.newTargetId) {
 			// redirect connection
-			var redirectAction = new ChangeConnectionTargetAction(event.connectionId, event.newTargetId);
+			var newTargetEndpoint = this.topology.getEndpointWith(event.newTargetId)!;
+			var redirectAction = new ChangeConnectionTargetAction(event.connectionId, newTargetEndpoint);
 			this.topology.apply(redirectAction);
 		}
 

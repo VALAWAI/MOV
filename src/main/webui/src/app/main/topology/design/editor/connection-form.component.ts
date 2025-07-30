@@ -7,18 +7,19 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DesignTopologyConnection, TopologyConnectionEndpoint, TopologyGraphConnectionType } from '@app/shared/mov-api';
-import { TopologyConnectionEndpointEditorComponent } from './endpoint-editor.component';
+import { DesignTopologyConnection } from '@app/shared/mov-api';
+import { EndpointEditorComponent } from './endpoint-editor.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NotificationChangedEvent } from './notification-changed.event';
 import { EditorTopologyService } from './editor-topology.service';
 import { EditorConnection } from './editor-connection.model';
+import { EditorEndpoint } from './editor-endpoint.model';
+import { ChangeConnectionTargetAction } from './actions';
 
 
 
@@ -28,7 +29,7 @@ import { EditorConnection } from './editor-connection.model';
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
-		TopologyConnectionEndpointEditorComponent,
+		EndpointEditorComponent,
 		MatFormFieldModule,
 		MatInputModule,
 		MatSelectModule,
@@ -44,24 +45,28 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	public readonly topology = inject(EditorTopologyService);
 
 	/**
+	 * Service over the changes.
+	 */
+	private readonly ref = inject(ChangeDetectorRef);
+
+
+	/**
 	 * The form to edit the connection.
 	 */
 	public connectionForm = new FormGroup(
 		{
-			source: new FormControl<TopologyConnectionEndpoint | null>(null),
-			target: new FormControl<TopologyConnectionEndpoint | null>(null),
+			id: new FormControl<string>({ value: '', disabled: true }),
+			source: new FormControl<EditorEndpoint | null>(null),
+			target: new FormControl<EditorEndpoint | null>(null),
 			convertCode: new FormControl<string | null>(null),
-			type: new FormControl<TopologyGraphConnectionType | null>(null, Validators.required),
-			notifications: new FormControl<boolean>(true, Validators.required),
-			notificationX: new FormControl<number | null>(null),
-			notificationY: new FormControl<number | null>(null),
+			type: new FormControl<string | null>(null, Validators.required)
 		}
 	);
 
 	/**
 	 * The subscription to the changes of the connection form.
 	 */
-	public connectionStatusSubscription: Subscription | null = null;
+	public subscriptions: Subscription[] = [];
 
 	/**
 	 * The the last valid connection.
@@ -69,15 +74,38 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	private lastValid: DesignTopologyConnection | null = null;
 
 	/**
-	 * The subscription to the changes of the connection form.
-	 */
-	public changeNotificationsSubscription: Subscription | null = null;
-
-	/**
 	 * Initialize the component.
 	 */
 	public ngOnInit(): void {
 
+		this.subscriptions.push(
+			this.topology.topologyChanged$.subscribe(
+				{
+					next: action => {
+
+						if (action instanceof ChangeConnectionTargetAction && action.connectionId == this.connectionForm.controls.id.value) {
+
+							if (JSON.stringify(this.connectionForm.controls.target.value) !== JSON.stringify(action.newTargetEndpoint)) {
+
+								this.connectionForm.controls.target.setValue(action.newTargetEndpoint, { emitEvent: false });
+								this.ref.markForCheck();
+								this.ref.detectChanges();
+							}
+							/*
+							var hasNotifications = (updatedConnection.sourceNotification != null);
+							if (this.connectionForm.controls.notifications.value === hasNotifications) {
+
+								this.connectionForm.controls.notifications.setValue(hasNotifications, { emitEvent: false });
+							}
+							*/
+							// the other changes are doen by this editor
+						}
+					}
+				}
+			)
+		);
+
+		/*
 		this.connectionStatusSubscription = this.connectionForm.statusChanges.subscribe(
 			{
 				next: status => {
@@ -129,7 +157,7 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
-
+*/
 	}
 
 	/**
@@ -137,16 +165,12 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy(): void {
 
-		if (this.connectionStatusSubscription != null) {
+		for (var subscription of this.subscriptions) {
 
-			this.connectionStatusSubscription.unsubscribe();
-			this.connectionStatusSubscription = null;
-		}
-		if (this.changeNotificationsSubscription != null) {
+			subscription.unsubscribe();
 
-			this.changeNotificationsSubscription.unsubscribe();
-			this.changeNotificationsSubscription = null;
 		}
+		this.subscriptions = [];
 
 	}
 
@@ -154,7 +178,20 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	 * Set the conneciton to edit.
 	 */
 	@Input()
-	public set connection(connection: EditorConnection | null | undefined) {
+	public set connection(connection: EditorConnection) {
+
+		this.connectionForm.setValue(
+			{
+				id: connection.id,
+				source: connection.source,
+				target: connection.target,
+				convertCode: connection.convertCode,
+				type: connection.type
+			},
+			{
+				emitEvent: false
+			}
+		);
 
 		/*
 		this.connectionForm.patchValue(
@@ -182,6 +219,20 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	public notificationAllowed(): boolean {
 
 		return true;
+	}
+
+	/**
+	 * Called whne the target of the connection must be changed.
+	 */
+	public targetEndpointChanged(newTarget: EditorEndpoint) {
+
+		var connection = this.topology.getConnectionWith(this.connectionForm.controls.id.value!)!;
+		if (JSON.stringify(connection.target) !== JSON.stringify(newTarget)) {
+
+			var action = new ChangeConnectionTargetAction(this.connectionForm.controls.id.value!, newTarget);
+			this.topology.apply(action);
+
+		}
 	}
 
 
