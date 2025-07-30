@@ -6,6 +6,8 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { PayloadSchema } from './components/payload-schema.model';
+
 export { MovApiService } from './mov-api.service';
 export { Info } from './info.model';
 export { HealthInfo, HealthStatus, HealthCheck } from './health-info.model';
@@ -54,3 +56,23 @@ export { LiveTopology } from './live/topologies/live-topology.model';
 export { LiveTopologyComponent } from './live/topologies/live-topology-component.model';
 export { LiveTopologyComponentOutConnection } from './live/topologies/live-topology-component-out-connection.model';
 export { LiveTopologyConnectionEndpoint } from './live/topologies/live-topology-connection-endpoint.model';
+
+
+/**
+ * Check if two payload schemas match.
+ */
+export function matchPayloadSchema(source: PayloadSchema | null | undefined, target: PayloadSchema | null | undefined): boolean {
+
+	if (source == target) {
+
+		return true;
+
+	} else if (source == null || target == null) {
+
+		return false;
+
+	} else {
+
+		return JSON.stringify(source) == JSON.stringify(target);
+	}
+}

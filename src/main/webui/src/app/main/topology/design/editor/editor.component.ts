@@ -42,7 +42,8 @@ import {
 	MovApiService,
 	Topology,
 	ComponentType,
-	ChannelSchema
+	ChannelSchema,
+	matchPayloadSchema
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -57,7 +58,7 @@ import { EditorModule } from './editor.module';
 import { EditorTopologyService } from './editor-topology.service';
 import { ChangeNodePositionAction, ChangeTopologyAction, CollectionAction } from './actions';
 import { RemoveConnectionAction } from './actions/remove-connection.action';
-import { ChangeConnectionTargetAction } from './actions/chnage-connection-target.action';
+import { ChangeConnectionTargetAction } from './actions/change-connection-target.action';
 import { TopologyFormComponent } from './topology-form.component';
 import { AddConnectionAction } from './actions/add-connection.action';
 import { EditorEndpoint } from './editor-endpoint.model';
@@ -618,12 +619,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			}
 
 
-			var sourcePayload: string | null = null;
-			if (sourceChannel != null) {
-
-				sourcePayload = JSON.stringify(sourceChannel.publish);
-			}
-
+			var sourcePayload = sourceChannel?.publish;
 			var normalizedTargetPoint = this.fFlow().getPositionInFlow(targetPoint);
 			TARGET: for (var target of this.topology.nodes) {
 
@@ -636,8 +632,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 							if (targetChannel.subscribe != null) {
 
-								if (sourcePayload != null && sourcePayload == JSON.stringify(targetChannel.subscribe)) {
-									// match a channle => cerate an endpoint to the channel
+								if (sourcePayload != null && matchPayloadSchema(sourcePayload, targetChannel.subscribe)) {
+									// match a channel => create an endpoint to the channel
 									targetEndpoint = target.searchEndpointOrCreate(targetChannel.name, false);
 									break TARGET;
 								}

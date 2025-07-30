@@ -8,8 +8,8 @@
 
 export { CollectionAction } from './collection.action';
 export { ChangeTopologyAction } from './change-topology.action';
-export { ChangeTopologyName } from './chnage-topology-name.action';
-export { ChangeTopologyDescription } from './chnage-topology-description.action';
+export { ChangeTopologyName } from './change-topology-name.action';
+export { ChangeTopologyDescription } from './change-topology-description.action';
 
 //actions over nodes.
 export { ChangeNodeAction } from './change-node.action';
@@ -19,5 +19,5 @@ export { ChangeNodeComponentAction } from './change-node-component.action';
 // Actiokn over connections
 export { ChangeConnectionAction } from './change-connection.action';
 export { RemoveConnectionAction } from './remove-connection.action';
-export { ChangeConnectionTargetAction } from './chnage-connection-target.action';
-export { ChangeConnectionSourceAction } from './chnage-connection-source.action';
+export { ChangeConnectionTargetAction } from './change-connection-target.action';
+export { ChangeConnectionSourceAction } from './change-connection-source.action';

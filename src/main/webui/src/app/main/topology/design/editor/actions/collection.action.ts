@@ -39,10 +39,11 @@ export class CollectionAction extends TopologyChangeAction {
 	 */
 	public override undo(service: EditorTopologyService): void {
 
-		for (var action of this.actions) {
+		// Undo in reverse order
+		for (var i = this.actions.length - 1; i >= 0; i--) {
 
+			const action = this.actions[i];
 			action.undo(service);
-
 		}
 
 	}

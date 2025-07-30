@@ -23,7 +23,7 @@ import { EditorTopologyService } from './editor-topology.service';
 import { EditorNode } from './editor-node.model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { ChangeNodePositionAction } from './actions';
+import { ChangeNodeComponentAction, ChangeNodePositionAction } from './actions';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -176,6 +176,15 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 						if (value == null || typeof value === 'string') {
 
 							this.updatePage()
+
+						} else {
+							// selected component
+							var node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
+							if (node.component == null || node.component.id != value.id) {
+
+								var action = new ChangeNodeComponentAction(node.id, value);
+								this.topology.apply(action);
+							}
 						}
 					}
 				}

@@ -31,18 +31,14 @@ export class EditorEndpoint {
 
 			this.id += "_" + channel;
 
-		} else
+		} else if (isSource) {
 
-			if (isSource) {
+			this.id += "_output";
 
-				this.id += "_output";
+		} else {
 
-			} else {
-
-				this.id += "_input";
-
-
-			}
+			this.id += "_input";
+		}
 
 	}
 
