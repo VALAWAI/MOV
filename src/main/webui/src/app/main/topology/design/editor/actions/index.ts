@@ -19,3 +19,4 @@ export { ChangeNodePositionAction } from './change-node-position.action';
 export { ChangeConnectionAction } from './change-connection.action';
 export { RemoveConnectionAction } from './remove-connection.action';
 export { ChangeConnectionTargetAction } from './chnage-connection-target.action';
+export { ChangeConnectionSourceAction } from './chnage-connection-source.action';

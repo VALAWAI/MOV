@@ -21,6 +21,9 @@ import { toPattern } from '@app/shared';
 import { EditorModule } from './editor.module';
 import { EditorTopologyService } from './editor-topology.service';
 import { EditorNode } from './editor-node.model';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { ChangeNodePositionAction } from './actions';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -43,7 +46,9 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 		ReactiveFormsModule,
 		MatSelectModule,
 		MatIconModule,
-		EditorModule
+		EditorModule,
+		MatButtonModule,
+		MatMenuModule
 	],
 	templateUrl: './node-form.component.html'
 })
@@ -64,14 +69,14 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	 */
 	public nodeForm = new FormGroup(
 		{
-			id: new FormControl<string>('node_0'),
+			id: new FormControl<string>({ value: 'node_0', disabled: true }),
 			level: new FormControl<ComponentType | null>(null, Validators.required),
 			component: new FormControl<ComponentDefinition | string | null>(null, {
 				updateOn: 'change',
 				validators: [requiredComponentValidator]
 			}),
 			positionX: new FormControl<number>(0.0, Validators.required),
-			positionY: new FormControl<number>(0.0, Validators.required)
+			positionY: new FormControl<number>(0.0, Validators.required),
 		}
 	);
 
@@ -126,28 +131,36 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnInit(): void {
 
-		this.subscriptions.push(this.nodeForm.statusChanges.subscribe(
-			{
-				next: status => {
+		this.subscriptions.push(
+			this.topology.topologyChanged$.subscribe(
+				{
+					next: action => {
 
-					if (status == 'VALID') {
+						if (action instanceof ChangeNodePositionAction
+							&& action.nodeId == this.nodeForm.controls.id.value
+							&& (
+								this.nodeForm.controls.positionX.value != action.newPosition.x
+								|| this.nodeForm.controls.positionY.value != action.newPosition.y
+							)
+						) {
 
-						var newNode = new TopologyNode();
-						newNode.tag = this.nodeForm.controls.id.value || 'node_0';
-						newNode.component = this.nodeForm.controls.component.value as ComponentDefinition;
-						newNode.position = new Point();
-						newNode.position.x = this.nodeForm.controls.positionX.value || 0;
-						newNode.position.y = this.nodeForm.controls.positionY.value || 0;
-
-						if (JSON.stringify(this.lastValid) != JSON.stringify(newNode)) {
-
-							this.lastValid = newNode;
-							//							this.nodeUpdated.emit(newNode);
+							this.nodeForm.patchValue(
+								{
+									positionX: action.newPosition.x,
+									positionY: action.newPosition.y
+								},
+								{ emitEvent: false }
+							);
 						}
 					}
 				}
-			}
-		));
+
+			)
+		);
+
+		this.subscriptions.push(this.nodeForm.controls.positionX.valueChanges.subscribe({ next: () => this.applyChangesInNodePosition() }));
+		this.subscriptions.push(this.nodeForm.controls.positionY.valueChanges.subscribe({ next: () => this.applyChangesInNodePosition() }));
+
 
 		this.subscriptions.push(
 			this.nodeForm.controls.level.valueChanges.subscribe(
@@ -192,6 +205,28 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 		));
 		*/
+
+	}
+
+	/**
+	 * Called when has to change the position of the node.
+	 */
+	private applyChangesInNodePosition() {
+
+		var x = this.nodeForm.controls.positionX;
+		if (x.valid) {
+
+			var y = this.nodeForm.controls.positionY;
+			if (y.valid) {
+
+				var node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
+				if (node.position.x != x.value || node.position.y != y.value) {
+
+					var action = new ChangeNodePositionAction(node, { x: x.value!, y: y.value! });
+					this.topology.apply(action);
+				}
+			}
+		}
 
 	}
 

@@ -1,4 +1,22 @@
 <form class="flex flex-col gap-2" [formGroup]="nodeForm">
+	<div class="flex flex-row gap-2">
+		<mat-form-field appearance="fill" class="w-full"> <mat-label
+			i18n="The label to show the identifier of the node@@main_topology_design_node-editor_id">Id</mat-label>
+		<input matInput formControlName="id"> </mat-form-field>
+		<button matIconButton aria-label="Menu to to change the node"
+			[matMenuTriggerFor]="nodeMenu">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #nodeMenu="matMenu">
+		<button mat-menu-item>
+			<mat-icon color="warn">delete</mat-icon>
+			<span
+				i18n="The label of the menu item to remove teh node@@main_topology_design_node-editor_remove-menu-label">Remove
+				node</span>
+		</button>
+		<button mat-menu-item>Item 2</button>
+		</mat-menu>
+	</div>
 	<mat-form-field appearance="fill" class="w-full"> <mat-label
 		i18n="The label to select the level@@main_topology_design_node-editor_level">Level</mat-label>
 	<mat-select formControlName="level"> <mat-option

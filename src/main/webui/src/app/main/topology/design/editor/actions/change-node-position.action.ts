@@ -25,7 +25,7 @@ export class ChangeNodePositionAction extends ChangeNodeAction {
 	/**
 	 * Create the event with the node that changed.
 	 */
-	constructor(private node: EditorNode, private newPosition: IPoint) {
+	constructor(private node: EditorNode, public newPosition: IPoint) {
 
 		super();
 		this.oldPosition = node.position;

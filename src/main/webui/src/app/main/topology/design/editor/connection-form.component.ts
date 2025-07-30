@@ -19,7 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { EditorTopologyService } from './editor-topology.service';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from './editor-endpoint.model';
-import { ChangeConnectionTargetAction } from './actions';
+import { ChangeConnectionSourceAction, ChangeConnectionTargetAction } from './actions';
 
 
 
@@ -91,14 +91,15 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 								this.ref.markForCheck();
 								this.ref.detectChanges();
 							}
-							/*
-							var hasNotifications = (updatedConnection.sourceNotification != null);
-							if (this.connectionForm.controls.notifications.value === hasNotifications) {
 
-								this.connectionForm.controls.notifications.setValue(hasNotifications, { emitEvent: false });
+						} else if (action instanceof ChangeConnectionSourceAction && action.connectionId == this.connectionForm.controls.id.value) {
+
+							if (JSON.stringify(this.connectionForm.controls.source.value) !== JSON.stringify(action.newSourceEndpoint)) {
+
+								this.connectionForm.controls.source.setValue(action.newSourceEndpoint, { emitEvent: false });
+								this.ref.markForCheck();
+								this.ref.detectChanges();
 							}
-							*/
-							// the other changes are doen by this editor
 						}
 					}
 				}
@@ -230,6 +231,21 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 		if (JSON.stringify(connection.target) !== JSON.stringify(newTarget)) {
 
 			var action = new ChangeConnectionTargetAction(this.connectionForm.controls.id.value!, newTarget);
+			this.topology.apply(action);
+
+		}
+	}
+
+
+	/**
+	 * Called whne the source of the connection must be changed.
+	 */
+	public sourceEndpointChanged(newSource: EditorEndpoint) {
+
+		var connection = this.topology.getConnectionWith(this.connectionForm.controls.id.value!)!;
+		if (JSON.stringify(connection.source) !== JSON.stringify(newSource)) {
+
+			var action = new ChangeConnectionSourceAction(this.connectionForm.controls.id.value!, newSource);
 			this.topology.apply(action);
 
 		}

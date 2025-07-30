@@ -3,7 +3,8 @@
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the source of the connection@@main_topology_design_connection-editor_source-fieldset-label">Source:</legend>
 		<app-topology-endpoint-editor class="w-full" [isSource]="true"
-			[endpoint]="connectionForm.controls.source.value"></app-topology-endpoint-editor>
+			[endpoint]="connectionForm.controls.source.value"
+			(endpointUpdated)="sourceEndpointChanged($event)"></app-topology-endpoint-editor>
 	</fieldset>
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"

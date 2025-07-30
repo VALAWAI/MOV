@@ -12,9 +12,9 @@ import { EditorTopologyService } from "../editor-topology.service";
 import { ChangeConnectionAction } from "./change-connection.action";
 
 /**
- * An actin taht change teh target of a connection.
+ * An actin taht change the source of a connection.
  */
-export class ChangeConnectionTargetAction extends ChangeConnectionAction {
+export class ChangeConnectionSourceAction extends ChangeConnectionAction {
 
 	/**
 	 * The conneciton tha has been chnaged.
@@ -22,14 +22,14 @@ export class ChangeConnectionTargetAction extends ChangeConnectionAction {
 	private connection: EditorConnection | null = null;
 
 	/**
-	 * The previous conneciton target.
+	 * The previous conneciton source.
 	 */
-	private oldTarget: EditorEndpoint | null = null;
+	private oldSource: EditorEndpoint | null = null;
 
 	/**
 	 * Create the action with the connection to be removed.
 	 */
-	constructor(public override connectionId: string, public newTargetEndpoint: EditorEndpoint) {
+	constructor(public override connectionId: string, public newSourceEndpoint: EditorEndpoint) {
 
 		super();
 	}
@@ -39,7 +39,7 @@ export class ChangeConnectionTargetAction extends ChangeConnectionAction {
 	 */
 	public override undo(service: EditorTopologyService): void {
 
-		this.connection!.target = this.oldTarget!;
+		this.connection!.source = this.oldSource!;
 
 	}
 
@@ -49,9 +49,9 @@ export class ChangeConnectionTargetAction extends ChangeConnectionAction {
 	public override redo(service: EditorTopologyService): void {
 
 		this.connection = service.getConnectionWith(this.connectionId)!;
-		this.oldTarget = this.connection.target;
-		var targetNode = service.getNodeWith(this.newTargetEndpoint.nodeId)!;
-		this.connection.target = targetNode.searchEndpointOrCreate(this.newTargetEndpoint.channel, this.newTargetEndpoint.isSource);
+		this.oldSource = this.connection.source;
+		var sourceNode = service.getNodeWith(this.newSourceEndpoint.nodeId)!;
+		this.connection.source = sourceNode.searchEndpointOrCreate(this.newSourceEndpoint.channel, this.newSourceEndpoint.isSource);
 	}
 
 
