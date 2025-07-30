@@ -22,7 +22,7 @@ channel.name) { <mat-list-option [value]="channel">
 	i18n="The lable to not select a target endpoint@@main_topology_editor-dialog-select-channel-cancel-label">
 	Cancel</button>
 <button matButton color="primary"
-	[mat-dialog-close]="selectedChannel.value"
+	[mat-dialog-close]="selectedChannel.value?.[0]"
 	[disabled]="selectedChannel.invalid"
 	i18n="The label to use the selected channel@@main_topology_editor-dialog-select-channel-ok-label">
 	Select</button>

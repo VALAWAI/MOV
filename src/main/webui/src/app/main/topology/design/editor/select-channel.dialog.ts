@@ -41,7 +41,7 @@ export class SelectChannelDialog {
 	/**
 	 * The form control to define the target channle to select.
 	 */
-	public selectedChannel = new FormControl<ChannelSchema | null>(null, Validators.required);;
+	public selectedChannel = new FormControl<ChannelSchema[] | null>(null, Validators.required);
 
 
 }

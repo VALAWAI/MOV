@@ -7,13 +7,13 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MessagesService } from '@app/shared/messages';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService, TopologyNode, Point } from '@app/shared/mov-api';
+import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService } from '@app/shared/mov-api';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
