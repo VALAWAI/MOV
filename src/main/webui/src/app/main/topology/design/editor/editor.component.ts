@@ -41,17 +41,13 @@ import { TopologyConnectionFormComponent } from './connection-form.component';
 import {
 	MovApiService,
 	Topology,
-	TopologyNode,
-	DesignTopologyConnection,
 	ComponentType,
-	TopologyConnectionEndpoint,
 	ChannelSchema
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
-import { SelectNodeEndpointsDialog } from './select-node-endpoints.dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DagreLayoutService, GraphModule } from '@app/shared/graph';
 import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@angular/router';
@@ -65,6 +61,7 @@ import { ChangeConnectionTargetAction } from './actions/chnage-connection-target
 import { TopologyFormComponent } from './topology-form.component';
 import { AddConnectionAction } from './actions/add-connection.action';
 import { EditorEndpoint } from './editor-endpoint.model';
+import { SelectChannelDialog } from './select-channel.dialog';
 
 @Component({
 	standalone: true,
@@ -657,9 +654,21 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 							} else {
 								//ask the user about the channel to use.
+								return this.dialog.open(SelectChannelDialog, { data: possibelChannels }).afterClosed().pipe(
+									map(channel => {
 
+										if (channel != null) {
+
+											targetEndpoint = target.searchEndpointOrCreate(channel.name, false);
+											return { source: sourceEndpoint, target: targetEndpoint };
+
+										} else {
+
+											return null;
+										}
+									})
+								);
 							}
-
 						}
 					}
 				}
@@ -709,7 +718,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 					}
 				}
 			);
-			// check if connecto to a node.
 
 
 		} else if (event.oldTargetId != event.newTargetId) {

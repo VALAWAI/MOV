@@ -1,0 +1,29 @@
+<h2 mat-dialog-title class="text-lg font-bold mb-4"
+	i18n="Title of the dialog to select the target endpoint@@main_topology_editor-dialog-select-channel-title">
+	Select endpoint</h2>
+<mat-dialog-content>
+<p class="text-gray-600 mb-4 text-lg"
+	i18n="Message of the dialog to select the target endpoint@@main_topology_editor-dialog-select-channel-content-msg">
+	Please select one of the following endpoints.</p>
+<mat-selection-list #shoesList [formControl]="selectedChannel"
+	[multiple]="false"> @for (channel of data; track
+channel.name) { <mat-list-option [value]="channel">
+<div class="text-lg font-medium text-gray-900">
+	@if(channel.publish!=null){
+	<mat-icon color="primary" fontIcon="publish"></mat-icon>
+	}@else{
+	<mat-icon color="primary" fontIcon="download"></mat-icon>
+	} {{channel.name|toChannelName}}
+</div>
+<div class="text-xs text-gray-500">{{channel.description}}</div>
+</mat-list-option> } </mat-selection-list> </mat-dialog-content>
+<mat-dialog-actions>
+<button matButton color="warn" [mat-dialog-close]="null"
+	i18n="The lable to not select a target endpoint@@main_topology_editor-dialog-select-channel-cancel-label">
+	Cancel</button>
+<button matButton color="primary"
+	[mat-dialog-close]="selectedChannel.value"
+	[disabled]="selectedChannel.invalid"
+	i18n="The label to use the selected channel@@main_topology_editor-dialog-select-channel-ok-label">
+	Select</button>
+</mat-dialog-actions>
