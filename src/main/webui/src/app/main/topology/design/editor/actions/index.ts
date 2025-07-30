@@ -14,6 +14,7 @@ export { ChangeTopologyDescription } from './chnage-topology-description.action'
 //actions over nodes.
 export { ChangeNodeAction } from './change-node.action';
 export { ChangeNodePositionAction } from './change-node-position.action';
+export { ChangeNodeComponentAction } from './change-node-component.action';
 
 // Actiokn over connections
 export { ChangeConnectionAction } from './change-connection.action';

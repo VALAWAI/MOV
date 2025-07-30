@@ -19,7 +19,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { EditorTopologyService } from './editor-topology.service';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from './editor-endpoint.model';
-import { ChangeConnectionSourceAction, ChangeConnectionTargetAction } from './actions';
+import { ChangeConnectionSourceAction, ChangeConnectionTargetAction, RemoveConnectionAction } from './actions';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -33,7 +35,9 @@ import { ChangeConnectionSourceAction, ChangeConnectionTargetAction } from './ac
 		MatFormFieldModule,
 		MatInputModule,
 		MatSelectModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		MatButtonModule,
+		MatIconModule
 	],
 	templateUrl: './connection-form.component.html'
 })
@@ -49,13 +53,12 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	 */
 	private readonly ref = inject(ChangeDetectorRef);
 
-
 	/**
 	 * The form to edit the connection.
 	 */
 	public connectionForm = new FormGroup(
 		{
-			id: new FormControl<string>({ value: '', disabled: true }),
+			id: new FormControl<string>({ value: 'connection_0', disabled: true }),
 			source: new FormControl<EditorEndpoint | null>(null),
 			target: new FormControl<EditorEndpoint | null>(null),
 			convertCode: new FormControl<string | null>(null),
@@ -67,11 +70,6 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	 * The subscription to the changes of the connection form.
 	 */
 	public subscriptions: Subscription[] = [];
-
-	/**
-	 * The the last valid connection.
-	 */
-	private lastValid: DesignTopologyConnection | null = null;
 
 	/**
 	 * Initialize the component.
@@ -106,59 +104,6 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 			)
 		);
 
-		/*
-		this.connectionStatusSubscription = this.connectionForm.statusChanges.subscribe(
-			{
-				next: status => {
-
-					if (status == 'VALID') {
-
-						var newConnection = new DesignTopologyConnection();
-						newConnection.source = this.connectionForm.controls.source.value || null;
-						newConnection.target = this.connectionForm.controls.target.value || null;
-						newConnection.convertCode = this.connectionForm.controls.convertCode.value || null;
-						newConnection.type = this.connectionForm.controls.type.value || null;
-						if (this.connectionForm.controls.notifications.value === true) {
-
-							newConnection.notificationPosition = {
-								x: this.connectionForm.controls.notificationX.value || 0,
-								y: this.connectionForm.controls.notificationY.value || 0
-							};
-						}
-
-						if (JSON.stringify(this.lastValid) != JSON.stringify(newConnection)) {
-
-							this.lastValid = newConnection;
-							//this.connectionUpdated.emit(newConnection);
-						}
-					}
-				}
-			}
-		);
-
-		this.changeNotificationsSubscription = this.connectionForm.controls.notifications.valueChanges.subscribe(
-			{
-				next: value => {
-
-					if (value) {
-
-						var source = this.topology?.nodes.find(n => n.id == this.connectionForm.controls.source.value?.nodeTag);
-						var target = this.topology?.nodes.find(n => n.id == this.connectionForm.controls.target.value?.nodeTag);
-						var x = ((source?.position.x || 0) + (target?.position.x || 0)) / 2.0;
-						this.connectionForm.controls.notificationX.setValue(x);
-						var y = ((source?.position.y || 0) + (target?.position.y || 0)) / 2.0;
-						this.connectionForm.controls.notificationY.setValue(y);
-						//Notify Add notificaiton node
-
-					} else {
-
-						//Remove Notify Add notificaiton node
-
-					}
-				}
-			}
-		);
-*/
 	}
 
 	/**
@@ -187,40 +132,15 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 				source: connection.source,
 				target: connection.target,
 				convertCode: connection.convertCode,
-				type: connection.type
+				type: connection.type || 'BEZIER'
 			},
 			{
 				emitEvent: false
 			}
 		);
 
-		/*
-		this.connectionForm.patchValue(
-			{
-				source: connection?.source || null,
-				target: connection?.target || null,
-				convertCode: connection?.convertCode || null,
-				type: connection?.type || null,
-				notifications: connection?.notificationPosition != null || (connection?.notifications != null && connection?.notifications.length > 0) || false,
-				notificationX: connection?.notificationPosition?.x || null,
-				notificationY: connection?.notificationPosition?.y || null
-
-			},
-			{
-				emitEvent: false
-			}
-		);
-		*/
-
 	}
 
-	/**
-	 * Check if the connection can have notifications.
-	 */
-	public notificationAllowed(): boolean {
-
-		return true;
-	}
 
 	/**
 	 * Called whne the target of the connection must be changed.
@@ -251,5 +171,14 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * Called when the user what to remove the editing connection.
+	 */
+	public removeConnection() {
+
+		var action = new RemoveConnectionAction(this.connectionForm.controls.id.value!);
+		this.topology.apply(action);
+
+	}
 
 }

@@ -239,7 +239,16 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.push(this.topology.topologyChanged$.subscribe(
 			{
-				next: () => this.updatedGraph()
+				next: action => {
+
+					if (action instanceof RemoveConnectionAction && this.selected?.id == action.connectionId) {
+
+						this.selected = null;
+					}
+
+					this.updatedGraph();
+
+				}
 			}
 		));
 	}

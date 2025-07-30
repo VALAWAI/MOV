@@ -78,6 +78,14 @@
 			<button mat-icon-button color="primary" (click)="fit()">
 				<mat-icon>aspect_ratio</mat-icon>
 			</button>
+			<button mat-icon-button color="primary" (click)="topology.undo()"
+				[disabled]="!topology.canUndo">
+				<mat-icon>undo</mat-icon>
+			</button>
+			<button mat-icon-button color="primary" (click)="topology.redo()"
+				[disabled]="!topology.canRedo">
+				<mat-icon>redo</mat-icon>
+			</button>
 			<button mat-icon-button color="primary"
 				[matMenuTriggerFor]="editorMenu">
 				<mat-icon>more_vert</mat-icon>

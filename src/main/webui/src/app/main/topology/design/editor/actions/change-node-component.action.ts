@@ -12,9 +12,9 @@ import { EditorTopologyService } from "../editor-topology.service";
 import { EditorNode } from "../editor-node.model";
 
 /**
- * An actin that change the position of a node.
+ * An actin that change teh component of a node..
  */
-export class ChangeNodePositionAction extends ChangeNodeAction {
+export class ChangeNodeComponentAction extends ChangeNodeAction {
 
 
 	/**

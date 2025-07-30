@@ -55,11 +55,6 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 	/**
-	 * The the last valid node.
-	 */
-	private lastValid: TopologyNode | null = null;
-
-	/**
 	 * Notify when teh node has been updated.
 	 */
 	private readonly topology = inject(EditorTopologyService);
@@ -104,26 +99,21 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	 * The node to edit.
 	 */
 	@Input()
-	public set node(node: EditorNode | null | undefined) {
+	public set node(node: EditorNode) {
 
-		var value = {
-			id: 'node_0',
-			level: null as ComponentType | null,
-			component: null as ComponentDefinition | string | null,
-			positionX: 0.0,
-			positionY: 0.0
-		};
-		if (node != null) {
+		this.nodeForm.setValue(
+			{
+				id: node.id,
+				level: node.component?.type || null,
+				component: node.component,
+				positionX: node.position.x,
+				positionY: node.position.y
 
-			value.id = node.id;
-			value.level = node.component?.type || null;
-			value.component = node.component;
-			value.positionX = node.position.x;
-			value.positionY = node.position.y;
-		}
-
-		this.nodeForm.patchValue(value, { emitEvent: false });
-
+			},
+			{
+				emitEvent: false
+			}
+		);
 	}
 
 	/**

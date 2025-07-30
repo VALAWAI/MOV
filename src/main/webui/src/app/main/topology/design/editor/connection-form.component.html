@@ -1,4 +1,13 @@
 <form class="flex flex-col gap-2" [formGroup]="connectionForm">
+	<div class="flex flex-row gap-2">
+		<mat-form-field appearance="fill" class="w-full"> <mat-label
+			i18n="The label to show the identifier of the #onnection@@main_topology_design_#onnection-editor_id">Id</mat-label>
+		<input matInput formControlName="id"> </mat-form-field>
+		<button matIconButton aria-label="REmove the connection"
+			(click)="removeConnection()">
+			<mat-icon color="warn">delete</mat-icon>
+		</button>
+	</div>
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the source of the connection@@main_topology_design_connection-editor_source-fieldset-label">Source:</legend>
