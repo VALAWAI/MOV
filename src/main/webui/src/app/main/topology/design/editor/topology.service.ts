@@ -222,7 +222,7 @@ export class TopologyEditorService {
 		model.nodes = [];
 		for (var node of this.nodes) {
 
-			if (node.sourceNotification == null) {
+			if (node.sourceNotification == null && node.component != null && node.component.id != null) {
 
 				var modelNode = new TopologyNode();
 				modelNode.tag = node.id;
