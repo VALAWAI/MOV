@@ -6,12 +6,13 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { EditorTopologyService, TopologyChangeAction } from "../editor-topology.service";
+import { TopologyEditorAction } from "../topology.action";
+import { TopologyEditorService } from "../topology.service";
 
 /**
  * An actin to change the topology name.
  */
-export class ChangeTopologyName extends TopologyChangeAction {
+export class ChangeTopologyName implements TopologyEditorAction {
 
 	/**
 	 * The old name of the topology
@@ -23,25 +24,25 @@ export class ChangeTopologyName extends TopologyChangeAction {
 	 */
 	constructor(private newName: string | null) {
 
-		super();
 	}
 
 	/**
 	 * Restore the previous name.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public undo(service: TopologyEditorService): void {
 
 		service.min.name = this.oldName;
+		service.notifyChangedTopology();
 	}
 
 	/**
 	 * Set the new topology name. 
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public redo(service: TopologyEditorService): void {
 
 		this.oldName = service.min.name;
 		service.min.name = this.newName;
-
+		service.notifyChangedTopology();
 	}
 
 }

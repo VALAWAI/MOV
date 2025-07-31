@@ -7,43 +7,59 @@
 */
 
 import { EditorNode } from "../editor-node.model";
-import { EditorTopologyService } from "../editor-topology.service";
+import { TopologyEditorService } from "../topology.service";
+import { AbstractCompositeAction } from "./abstract-composite.action";
 import { ChangeNodeAction } from "./change-node.action";
+import { RemoveConnectionAction } from "./remove-connection.action";
 
 /**
  * An actin to remove a node.
  */
-export class RemoveNodeAction extends ChangeNodeAction {
+export class RemoveNodeAction extends AbstractCompositeAction implements ChangeNodeAction {
 
 	/**
-	 * The conneciton tha has been removed.
+	 * The node that has been removed.
 	 */
-	private node: EditorNode | null = null;
+	private node: EditorNode | null = null
+
 
 	/**
-	 * Create the action with the node to be removed.
+	 * Create the event with the new node to remove.
 	 */
-	constructor(public override nodeId: string) {
+	constructor(public nodeId: string) {
 
 		super();
 	}
 
+
 	/**
 	 * Undo the remove.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public override undo(service: TopologyEditorService): void {
 
+		super.undo(service);
 		service.nodes.push(this.node!);
-
+		service.notifyAddedNode(this.nodeId);
 	}
 
 	/**
 	 * Remove the node. 
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public override redo(service: TopologyEditorService): void {
 
 		var index = service.nodes.findIndex(c => c.id == this.nodeId);
 		this.node = service.nodes.splice(index, 1)[0];
+		service.notifyRemovedNode(this.nodeId);
+		this.actions = [];
+
+		for (var connection of [...service.connections]) {
+
+			if (connection.source.nodeId == this.nodeId || connection.target.nodeId == this.nodeId) {
+
+				this.addAndRedo(new RemoveConnectionAction(connection.id), service);
+			}
+
+		}
 
 	}
 

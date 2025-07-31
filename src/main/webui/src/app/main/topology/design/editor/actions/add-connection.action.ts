@@ -6,39 +6,34 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { EditorConnection } from "../editor-connection.model";
-import { EditorTopologyService, TopologyChangeAction } from "../editor-topology.service";
+
+import { TopologyEditorService } from "../topology.service";
+import { AbstractConnectionAction } from "./abstract-connection.action";
 
 /**
  * An actin to add a connection betwen node.
  */
-export class AddConnectionAction extends TopologyChangeAction {
+export class AddConnectionAction extends AbstractConnectionAction {
 
 
 	/**
-	 * Create the action with the connection to be removed.
+	 * Remove the added connection.
 	 */
-	constructor(public connection: EditorConnection) {
-
-		super();
-	}
-
-	/**
-	 * Undo teh action. Thus remove the added connection.
-	 */
-	public override undo(service: EditorTopologyService): void {
+	public undo(service: TopologyEditorService): void {
 
 		var index = service.connections.findIndex(c => c.id == this.connection.id);
-		this.connection = service.connections.splice(index, 1)[0];
+		service.connections.splice(index, 1);
+		service.notifyRemovedConnection(this.connectionId);
 
 	}
 
 	/**
-	 * Remove the connection. 
+	 * Add the connection. 
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public redo(service: TopologyEditorService): void {
 
 		service.connections.push(this.connection);
+		service.notifyAddedConnection(this.connectionId);
 
 	}
 

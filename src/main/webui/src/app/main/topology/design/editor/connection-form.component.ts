@@ -16,7 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { EditorTopologyService } from './editor-topology.service';
+import { TopologyEditorService } from './topology.service';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from './editor-endpoint.model';
 import { ChangeConnectionSourceAction, ChangeConnectionTargetAction, RemoveConnectionAction } from './actions';
@@ -46,7 +46,7 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	/**
 	 * The topology where the connection is defined.
 	 */
-	public readonly topology = inject(EditorTopologyService);
+	public readonly topology = inject(TopologyEditorService);
 
 	/**
 	 * Service over the changes.
@@ -77,30 +77,17 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 
 		this.subscriptions.push(
-			this.topology.topologyChanged$.subscribe(
+			this.topology.changed$.subscribe(
 				{
 					next: action => {
 
-						if (action instanceof ChangeConnectionTargetAction && action.connectionId == this.connectionForm.controls.id.value) {
+						if (action.type == 'CHANGED_CONNECTION' && this.connectionForm.controls.id.value == action.id) {
 
-							if (JSON.stringify(this.connectionForm.controls.target.value) !== JSON.stringify(action.newTargetEndpoint)) {
-
-								this.connectionForm.controls.target.setValue(action.newTargetEndpoint, { emitEvent: false });
-								this.ref.markForCheck();
-								this.ref.detectChanges();
-							}
-
-						} else if (action instanceof ChangeConnectionSourceAction && action.connectionId == this.connectionForm.controls.id.value) {
-
-							if (JSON.stringify(this.connectionForm.controls.source.value) !== JSON.stringify(action.newSourceEndpoint)) {
-
-								this.connectionForm.controls.source.setValue(action.newSourceEndpoint, { emitEvent: false });
-								this.ref.markForCheck();
-								this.ref.detectChanges();
-							}
+							this.connection = this.topology.getConnectionWith(action.id)!;
 						}
 					}
 				}
+
 			)
 		);
 

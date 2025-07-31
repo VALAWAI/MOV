@@ -6,19 +6,17 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { TopologyChangeAction } from "../editor-topology.service";
+import { TopologyEditorAction } from "../topology.action";
 
 /**
  * An actin that change a node.
  */
-export abstract class ChangeNodeAction extends TopologyChangeAction {
+export interface ChangeNodeAction extends TopologyEditorAction {
 
 	/**
 	 * The identifier of the node that has changed. 
 	 */
-	public abstract get nodeId(): string;
+	nodeId: string;
 
-	
-	
 }
 

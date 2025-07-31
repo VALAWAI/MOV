@@ -6,12 +6,13 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { EditorTopologyService, TopologyChangeAction } from "../editor-topology.service";
+import { TopologyEditorService } from "../topology.service";
+import { TopologyEditorAction } from '../topology.action';
 
 /**
  * An actin to change the topology description.
  */
-export class ChangeTopologyDescription extends TopologyChangeAction {
+export class ChangeTopologyDescription implements TopologyEditorAction {
 
 	/**
 	 * The old description of the topology
@@ -23,24 +24,25 @@ export class ChangeTopologyDescription extends TopologyChangeAction {
 	 */
 	constructor(private newDescription: string | null) {
 
-		super();
 	}
 
 	/**
 	 * Restore the previous description.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public undo(service: TopologyEditorService): void {
 
 		service.min.description = this.oldDescription;
+		service.notifyChangedTopology();
 	}
 
 	/**
 	 * Set the new topology description. 
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public redo(service: TopologyEditorService): void {
 
 		this.oldDescription = service.min.description;
 		service.min.description = this.newDescription;
+		service.notifyChangedTopology();
 
 	}
 

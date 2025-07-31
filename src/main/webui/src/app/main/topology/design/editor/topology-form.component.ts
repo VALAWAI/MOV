@@ -7,29 +7,18 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MessagesService } from '@app/shared/messages';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService, MinTopology, Point } from '@app/shared/mov-api';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { EditorTopologyService } from './editor-topology.service';
+import { TopologyEditorService } from './topology.service';
 import { normalizeString } from '@app/shared';
-import { ChangeTopologyAction, ChangeTopologyDescription, ChangeTopologyName } from './actions';
+import { ChangeTopologyDescription, ChangeTopologyName } from './actions';
 
-
-function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
-
-	if (control.value == null || typeof control.value === 'string') {
-
-		return { 'required': true };
-	}
-	return null;
-}
 
 @Component({
 	standalone: true,
@@ -50,7 +39,7 @@ export class TopologyFormComponent implements OnInit, OnDestroy {
 	/**
 	 * The topology to edit.
 	 */
-	private readonly topology = inject(EditorTopologyService);
+	private readonly topology = inject(TopologyEditorService);
 
 	/**
 	 * The form to edit the component.
@@ -81,11 +70,11 @@ export class TopologyFormComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 
 		this.subscriptions.push(
-			this.topology.topologyChanged$.subscribe(
+			this.topology.changed$.subscribe(
 				{
 					next: action => {
 
-						if (action instanceof ChangeTopologyAction) {
+						if (action.type == 'CHANGED_TOPOLOGY') {
 
 							this.topologyForm.setValue(
 								{

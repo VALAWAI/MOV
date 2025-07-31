@@ -8,13 +8,14 @@
 
 import { EditorNode } from "../editor-node.model";
 import { EditorConnection } from "../editor-connection.model";
-import { EditorTopologyService, TopologyChangeAction } from "../editor-topology.service";
+import { TopologyEditorService } from "../topology.service";
 import { MinTopology, Topology } from "@app/shared/mov-api";
+import { TopologyEditorAction } from "../topology.action";
 
 /**
  * A set of collection to do at the same time.
  */
-export class ChangeTopologyAction extends TopologyChangeAction {
+export class ChangeTopologyAction implements TopologyEditorAction {
 
 	/**
 	 * The previous min topology information.
@@ -51,8 +52,6 @@ export class ChangeTopologyAction extends TopologyChangeAction {
 	 * Create the action to chnage the layout of the nodes. 
 	 */
 	constructor(model: Topology) {
-
-		super();
 
 		this.newMin = new MinTopology();
 		this.newMin.id = model.id;
@@ -137,18 +136,19 @@ export class ChangeTopologyAction extends TopologyChangeAction {
 	/**
 	 * Change the topology.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public undo(service: TopologyEditorService): void {
 
 		service.min = this.oldMin!;
 		service.nodes = this.oldNodes!;
 		service.connections = this.oldConnections!;
+		service.notifyChangedTopology();
 
 	}
 
 	/**
 	 * Restore the topology.
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public redo(service: TopologyEditorService): void {
 
 		this.oldMin = service.min;
 		this.oldNodes = service.nodes;
@@ -157,6 +157,7 @@ export class ChangeTopologyAction extends TopologyChangeAction {
 		service.min = this.newMin;
 		service.nodes = this.newNodes;
 		service.connections = this.newConnections;
+		service.notifyChangedTopology();
 	}
 }
 

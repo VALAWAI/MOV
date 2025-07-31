@@ -6,19 +6,17 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { TopologyChangeAction } from "../editor-topology.service";
+import { TopologyEditorAction } from "../topology.action";
 
 /**
  * An actin that change a connection.
  */
-export abstract class ChangeConnectionAction extends TopologyChangeAction {
+export interface ChangeConnectionAction extends TopologyEditorAction {
 
 	/**
 	 * The identifier of the connection that has changed. 
 	 */
-	public abstract get connectionId(): string;
+	connectionId: string;
 
-	
-	
 }
 

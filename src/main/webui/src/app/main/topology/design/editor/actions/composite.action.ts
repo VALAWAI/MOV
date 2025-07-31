@@ -6,13 +6,14 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { NgModule } from "@angular/core";
-import { TopologyEditorService } from "./topology.service";
+import { AbstractCompositeAction } from "./abstract-composite.action";
 
-@NgModule({
-	providers:
-		[
-			TopologyEditorService
-		]
-})
-export class EditorModule { }
+/**
+ * An actin to remove a connection.
+ */
+export class CompositeAction extends AbstractCompositeAction  {
+	
+	
+
+}
+

@@ -6,20 +6,15 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { EditorConnection } from "../editor-connection.model";
+
 import { EditorEndpoint } from "../editor-endpoint.model";
-import { EditorTopologyService } from "../editor-topology.service";
+import { TopologyEditorService } from "../topology.service";
 import { ChangeConnectionAction } from "./change-connection.action";
 
 /**
  * An actin taht change the source of a connection.
  */
-export class ChangeConnectionSourceAction extends ChangeConnectionAction {
-
-	/**
-	 * The conneciton tha has been chnaged.
-	 */
-	private connection: EditorConnection | null = null;
+export class ChangeConnectionSourceAction implements ChangeConnectionAction {
 
 	/**
 	 * The previous conneciton source.
@@ -29,29 +24,31 @@ export class ChangeConnectionSourceAction extends ChangeConnectionAction {
 	/**
 	 * Create the action with the connection to be removed.
 	 */
-	constructor(public override connectionId: string, public newSourceEndpoint: EditorEndpoint) {
-
-		super();
-	}
-
-	/**
-	 * Undo the remove.
-	 */
-	public override undo(service: EditorTopologyService): void {
-
-		this.connection!.source = this.oldSource!;
+	constructor(public connectionId: string, public newSourceEndpoint: EditorEndpoint) {
 
 	}
 
 	/**
-	 * Remove the connection. 
+	 * REtore the old source.
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public undo(service: TopologyEditorService): void {
 
-		this.connection = service.getConnectionWith(this.connectionId)!;
-		this.oldSource = this.connection.source;
+		const connection = service.getConnectionWith(this.connectionId)!;
+		connection!.source = this.oldSource!;
+		service.notifyChangedConnection(this.connectionId);
+
+	}
+
+	/**
+	 * Change the connection source. the connection. 
+	 */
+	public redo(service: TopologyEditorService): void {
+
+		const connection = service.getConnectionWith(this.connectionId)!;
+		this.oldSource = connection.source;
 		var sourceNode = service.getNodeWith(this.newSourceEndpoint.nodeId)!;
-		this.connection.source = sourceNode.searchEndpointOrCreate(this.newSourceEndpoint.channel, this.newSourceEndpoint.isSource);
+		connection.source = sourceNode.searchEndpointOrCreate(this.newSourceEndpoint.channel, true);
+		service.notifyChangedConnection(this.connectionId);
 	}
 
 

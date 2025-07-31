@@ -55,14 +55,15 @@ import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@a
 import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorModule } from './editor.module';
-import { EditorTopologyService } from './editor-topology.service';
-import { ChangeNodePositionAction, ChangeTopologyAction, CollectionAction } from './actions';
+import { TopologyEditorService } from './topology.service';
+import { ChangeConnectionAction, ChangeNodeAction, ChangeNodePositionAction, ChangeTopologyAction, CompositeAction } from './actions';
 import { RemoveConnectionAction } from './actions/remove-connection.action';
 import { ChangeConnectionTargetAction } from './actions/change-connection-target.action';
 import { TopologyFormComponent } from './topology-form.component';
 import { AddConnectionAction } from './actions/add-connection.action';
 import { EditorEndpoint } from './editor-endpoint.model';
 import { SelectChannelDialog } from './select-channel.dialog';
+import { RemoveNodeAction } from './actions/remove-node.action';
 
 @Component({
 	standalone: true,
@@ -166,7 +167,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The service of teh editor.
 	 */
-	public readonly topology = inject(EditorTopologyService);
+	public readonly topology = inject(TopologyEditorService);
 
 	/**
 	 * Called when the window is resized.
@@ -238,20 +239,34 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			}
 		));
 
-		this.subscriptions.push(this.topology.topologyChanged$.subscribe(
-			{
-				next: action => {
+		this.subscriptions.push(
+			this.topology.changed$.subscribe(
+				{
+					next: action => {
 
-					if (action instanceof RemoveConnectionAction && this.selected?.id == action.connectionId) {
+						if (action.type == 'ADDED_NODE') {
 
-						this.selected = null;
+							this.selected = this.topology.getNodeWith(action.id);
+
+						} else if (action.type == 'ADDED_CONNECTION') {
+
+							this.selected = this.topology.getConnectionWith(action.id);
+
+						} else if (
+							action.type == 'CHANGED_TOPOLOGY'
+							|| (
+								(action.type == 'REMOVED_NODE' || action.type == 'REMOVED_CONNECTION')
+								&& action.id === this.selected?.id
+							)
+						) {
+							this.selected = null;
+						}
+
+						this.updatedGraph();
+
 					}
-
-					this.updatedGraph();
-
 				}
-			}
-		));
+			));
 	}
 
 	/**
@@ -495,61 +510,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Called when has to edit and endpoint into a node.
-	 */
-	public editEndPointTo(node: EditorNode) {
-		/*
-				var previous = this.topology.unsaved;
-				this.dialog.open(SelectNodeEndpointsDialog, { data: node }).afterClosed().subscribe(
-					{
-						next: (result: EditorEndpoint[] | null) => {
-		
-							if (result != null) {
-		
-								var event = this.topology.synchronizeNodeEndpoints(node, result);
-								this.topologyUpdated(event, previous);
-							}
-						}
-					}
-				);
-		*/
-	}
-
-	/**
-	 * Called whne the topology is updated.
-	 
-	private topologyUpdated(event: UpdateTopologyEvent, previous: boolean) {
-
-		if (event.hasRemovedSomething) {
-
-			this.dialog.open(ConfirmUpdateTopologyDialog, { data: event })
-				.afterClosed().subscribe(
-					{
-						next: ok => {
-
-							if (ok === true) {
-
-								this.topology.unsaved = true;
-								this.updatedGraph();
-
-							} else {
-
-								event.undo(this.topology);
-								this.topology.unsaved = previous;
-							}
-						}
-					}
-				);
-
-		} else {
-
-			this.topology.unsaved = true;
-			this.updatedGraph();
-		}
-
-	}
-*/
-	/**
 	 * Called when a connection is added into the graf.
 	 */
 	public onConnectionAdded(event: FCreateConnectionEvent): void {
@@ -730,7 +690,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public onNodePositionChange(node: EditorNode, newPosition: IPoint) {
 
-		var action = new ChangeNodePositionAction(node, newPosition);
+		var action = new ChangeNodePositionAction(node.id, newPosition);
 		this.topology.apply(action);
 	}
 
@@ -765,18 +725,18 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 						if (graph.layout()) {
 
 							updated = true;
-							var actions: ChangeNodePositionAction[] = [];
+							var actions = new CompositeAction();
 							for (var node of this.topology.nodes) {
 
 								var newPoint = graph.getPositionFor(node.id);
 								if (newPoint != null) {
 
-									var action = new ChangeNodePositionAction(node, newPoint);
-									actions.push(action);
+									var action = new ChangeNodePositionAction(node.id, newPoint);
+									actions.add(action);
 								}
 							}
 
-							this.topology.apply(new CollectionAction(actions));
+							this.topology.apply(actions);
 						}
 
 					} catch (err) {

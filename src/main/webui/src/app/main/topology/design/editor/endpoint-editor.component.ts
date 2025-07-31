@@ -12,7 +12,7 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ChannelSchema, } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
-import { EditorTopologyService } from './editor-topology.service';
+import { TopologyEditorService } from './topology.service';
 import { EditorNode } from './editor-node.model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { EditorEndpoint } from './editor-endpoint.model';
@@ -96,7 +96,7 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * The topology where the endpoint is defined.
 	 */
-	public readonly topology = inject(EditorTopologyService);
+	public readonly topology = inject(TopologyEditorService);
 
 	/**
 	 * Notify when the endpoint is valid.

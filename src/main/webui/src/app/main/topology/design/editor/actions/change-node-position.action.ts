@@ -8,54 +8,47 @@
 
 import { IPoint } from "@foblex/2d";
 import { ChangeNodeAction } from "./change-node.action";
-import { EditorTopologyService } from "../editor-topology.service";
-import { EditorNode } from "../editor-node.model";
+import { TopologyEditorService } from "../topology.service";
 
 /**
  * An actin that change the position of a node.
  */
-export class ChangeNodePositionAction extends ChangeNodeAction {
+export class ChangeNodePositionAction implements ChangeNodeAction {
 
 
 	/**
 	 * The previopus position.
 	 */
-	private oldPosition: IPoint;
+	private oldPosition: IPoint = { x: 0, y: 0 };
 
 	/**
 	 * Create the event with the node that changed.
 	 */
-	constructor(private node: EditorNode, public newPosition: IPoint) {
+	constructor(public nodeId: string, public newPosition: IPoint) {
 
-		super();
-		this.oldPosition = node.position;
-	}
-
-	/**
-	 * Return teh identifier of the node that has change the position.
-	 */
-	public override get nodeId(): string {
-
-		return this.node.id;
 	}
 
 
 	/**
 	 * Set the new position.
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public redo(service: TopologyEditorService): void {
 
-		this.node.position = this.newPosition;
+		var node = service.getNodeWith(this.nodeId)!;
+		this.oldPosition = node.position;
+		node.position = this.newPosition;
+		service.notifyChangedNode(this.nodeId);
 
 	}
 
 	/**
 	 * Restore the old position.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public undo(service: TopologyEditorService): void {
 
-		this.node.position = this.oldPosition;
-
+		var node = service.getNodeWith(this.nodeId)!;
+		node.position = this.oldPosition;
+		service.notifyChangedNode(this.nodeId);
 	}
 
 }

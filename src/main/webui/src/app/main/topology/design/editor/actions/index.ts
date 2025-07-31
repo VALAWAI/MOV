@@ -6,7 +6,9 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-export { CollectionAction } from './collection.action';
+
+export { CompositeAction } from './composite.action';
+
 export { ChangeTopologyAction } from './change-topology.action';
 export { ChangeTopologyName } from './change-topology-name.action';
 export { ChangeTopologyDescription } from './change-topology-description.action';

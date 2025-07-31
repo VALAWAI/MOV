@@ -7,19 +7,19 @@
 */
 
 import { ChangeNodeAction } from "./change-node.action";
-import { EditorTopologyService, TopologyChangeAction } from "../editor-topology.service";
+import { TopologyEditorService } from "../topology.service";
 import { ComponentDefinition, matchPayloadSchema } from "@app/shared/mov-api";
 import { EditorEndpoint } from "../editor-endpoint.model";
-import { CollectionAction } from "./collection.action";
 import { RemoveConnectionAction } from "./remove-connection.action";
-import { RemoveNodeAction } from "./remove-node.action";
 import { ChangeConnectionTargetAction } from "./change-connection-target.action";
 import { ChangeConnectionSourceAction } from "./change-connection-source.action";
+import { AbstractCompositeAction } from "./abstract-composite.action";
+
 
 /**
  * An actoin to change the component defined in a node.
  */
-export class ChangeNodeComponentAction extends ChangeNodeAction {
+export class ChangeNodeComponentAction extends AbstractCompositeAction implements ChangeNodeAction {
 
 	/**
 	 * The previopus position.
@@ -32,33 +32,29 @@ export class ChangeNodeComponentAction extends ChangeNodeAction {
 	private oldEndpoints: EditorEndpoint[] = [];
 
 	/**
-	 * The actions That adapt the topology to the new component.
-	 */
-	private adaptTopologyActions: CollectionAction | null = null;
-
-	/**
-	 * Create the event with the node that changed.
+	 * Create the event with the new component for the node.
 	 */
 	constructor(public nodeId: string, public newComponent: ComponentDefinition) {
 
 		super();
 	}
 
+
 	/**
 	 * Set the new position.
 	 */
-	public override redo(service: EditorTopologyService): void {
+	public override redo(service: TopologyEditorService): void {
 
 		var node = service.getNodeWith(this.nodeId)!;
 		this.oldComponent = node.component;
 		this.oldEndpoints = node.endpoints;
 		node.component = this.newComponent;
 		node.endpoints = [];
+		this.actions = [];
+		service.notifyChangedNode(this.nodeId);
 
 		if (this.oldEndpoints.length > 0) {
 
-			var adaptActions: TopologyChangeAction[] = [];
-			const removedIds = new Set<string>();
 			for (var oldEndpoint of this.oldEndpoints) {
 
 				var oldChannel = this.oldComponent!.channels!.find(c => c.name == oldEndpoint.channel)!;
@@ -73,16 +69,13 @@ export class ChangeNodeComponentAction extends ChangeNodeAction {
 						var newEndpoint = node.searchEndpointOrCreate(newChannel.name, newChannel.publish != null);
 						for (var connection of service.connections) {
 
-							if (!removedIds.has(connection.id)) {
+							if (connection.source.nodeId == node.id) {
 
-								if (connection.source.nodeId == node.id) {
+								this.addAndRedo(new ChangeConnectionSourceAction(connection.id, newEndpoint), service);
 
-									adaptActions.push(new ChangeConnectionSourceAction(connection.id, newEndpoint));
+							} else if (connection.target.nodeId == node.id) {
 
-								} else if (connection.target.nodeId == node.id) {
-
-									adaptActions.push(new ChangeConnectionTargetAction(connection.id, newEndpoint));
-								}
+								this.addAndRedo(new ChangeConnectionTargetAction(connection.id, newEndpoint), service);
 							}
 						}
 						break;
@@ -91,55 +84,27 @@ export class ChangeNodeComponentAction extends ChangeNodeAction {
 
 				if (!found) {
 					// the endpoint can not exist => remove all the connections that has the endpoint
-					for (var connection of service.connections) {
+					for (var connection of [...service.connections]) {
 
-						if ((connection.source.id == oldEndpoint.id || connection.target.id == oldEndpoint.id)
-							&& removedIds.add(connection.id)
-						) {
+						if ((connection.source.id == oldEndpoint.id || connection.target.id == oldEndpoint.id)) {
 
-							adaptActions.push(new RemoveConnectionAction(connection.id));
-							if (connection.target.channel == null) {
-								//must remove the notification node and its connections
-								var notificationNode = service.getNodeWith(connection.target.nodeId)!;
-								for (var notificationConnection of service.connections) {
-
-									if (notificationConnection.source.nodeId == notificationNode.id
-										&& removedIds.add(notificationConnection.id)
-									) {
-										adaptActions.push(new RemoveConnectionAction(notificationConnection.id));
-									}
-								}
-								adaptActions.push(new RemoveNodeAction(notificationNode.id));
-							}
+							this.addAndRedo(new RemoveConnectionAction(connection.id), service);
 						}
 					}
 				}
 			}
-
-			if (adaptActions.length > 0) {
-
-				this.adaptTopologyActions = new CollectionAction(adaptActions);
-				this.adaptTopologyActions.redo(service);
-			}
-
-		} else {
-			// Nothing to adapt
-			this.adaptTopologyActions = null;
 		}
 	}
 
 	/**
 	 * Restore the old position.
 	 */
-	public override undo(service: EditorTopologyService): void {
+	public override undo(service: TopologyEditorService): void {
 
+		super.undo(service);
 		var node = service.getNodeWith(this.nodeId)!;
 		node.component = this.oldComponent;
 		node.endpoints = this.oldEndpoints;
-		if (this.adaptTopologyActions != null) {
-
-			this.adaptTopologyActions.undo(service);
-		}
 
 	}
 

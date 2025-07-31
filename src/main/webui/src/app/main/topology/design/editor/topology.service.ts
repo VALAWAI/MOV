@@ -9,18 +9,20 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { ConfigService } from "@app/shared";
-import { MinTopology, Topology, TopologyNode, DesignTopologyConnection, toTopologyGraphConnectionType, TopologyConnectionEndpoint } from "@app/shared/mov-api";
+import { DesignTopologyConnection, MinTopology, Topology, TopologyConnectionEndpoint, TopologyNode, toTopologyGraphConnectionType } from "@app/shared/mov-api";
 import { EditorNode } from "./editor-node.model";
 import { EditorConnection } from "./editor-connection.model";
 import { TopologyConnectionNotification } from "@app/shared/mov-api/design/topologies/iopology-connection-notification.model";
 import { EditorEndpoint } from "./editor-endpoint.model";
+import { TopologyEditorChangedEvent } from "./topology.event";
+import { TopologyEditorAction } from "./topology.action";
 
 
 /**
  * The service that mantains the topology that is editing.
  */
 @Injectable()
-export class EditorTopologyService {
+export class TopologyEditorService {
 
 	/**
 	 * The information of the topology.
@@ -45,7 +47,7 @@ export class EditorTopologyService {
 	/**
 	 * The changes that has been done in the topology.
 	 */
-	private changes: TopologyChangeAction[] = [];
+	private changes: TopologyEditorAction[] = [];
 
 	/**
 	 * The index of the last actin applied.
@@ -60,7 +62,7 @@ export class EditorTopologyService {
 	/**
 	 * The subject that mange the changes on the node.
 	 */
-	private topologyChangedSubject = new Subject<TopologyChangeAction>();
+	private changedSubject = new Subject<TopologyEditorChangedEvent>();
 
 	/**
 	 * The index of teh last created node.
@@ -75,22 +77,21 @@ export class EditorTopologyService {
 	/**
 	 * Listen for cnaged in the node.
 	 */
-	public get topologyChanged$(): Observable<TopologyChangeAction> {
+	public get changed$(): Observable<TopologyEditorChangedEvent> {
 
-		return this.topologyChangedSubject.asObservable();
+		return this.changedSubject.asObservable();
 
 	};
 
 	/**
 	 * Apply the change ans store it.
 	 */
-	public apply(action: TopologyChangeAction) {
+	public apply(action: TopologyEditorAction) {
 
 		try {
 
 			this.add(action);
 			action.redo(this);
-			this.topologyChangedSubject.next(action);
 
 		} catch (e) {
 			console.error(e);
@@ -100,7 +101,7 @@ export class EditorTopologyService {
 	/**
 	 * Store a changed done in the topology.
 	 */
-	public add(action: TopologyChangeAction) {
+	public add(action: TopologyEditorAction) {
 
 		var diff = this.changes.length - (this.changeIndex + 1);
 		if (diff > 0) {
@@ -422,23 +423,60 @@ export class EditorTopologyService {
 
 	}
 
+	/**
+	 * Notify that a connection has changed.
+	 */
+	public notifyChangedConnection(id: string) {
 
-}
-
-/**
- * An event thgat change the topology.
- */
-export abstract class TopologyChangeAction {
+		this.changedSubject.next({ type: 'CHANGED_CONNECTION', 'id': id });
+	}
 
 	/**
-	 * Undo the topology change action.
+	 * Notify that a connection has removed.
 	 */
-	public abstract undo(service: EditorTopologyService): void;
+	public notifyRemovedConnection(id: string) {
+
+		this.changedSubject.next({ type: 'REMOVED_CONNECTION', 'id': id });
+	}
 
 	/**
-	 * Redo the topology change action.
+	 * Notify that a connection has added.
 	 */
-	public abstract redo(service: EditorTopologyService): void;
+	public notifyAddedConnection(id: string) {
+
+		this.changedSubject.next({ type: 'ADDED_CONNECTION', 'id': id });
+	}
+
+	/**
+	 * Notify that a node has changed.
+	 */
+	public notifyChangedNode(id: string) {
+
+		this.changedSubject.next({ type: 'CHANGED_NODE', 'id': id });
+	}
+
+	/**
+	 * Notify that a node has removed.
+	 */
+	public notifyRemovedNode(id: string) {
+
+		this.changedSubject.next({ type: 'REMOVED_NODE', 'id': id });
+	}
+
+	/**
+	 * Notify that a node has added.
+	 */
+	public notifyAddedNode(id: string) {
+
+		this.changedSubject.next({ type: 'ADDED_NODE', 'id': id });
+	}
+	/**
+	 * Notify that a topology has changed.
+	 */
+	public notifyChangedTopology() {
+
+		this.changedSubject.next({ type: 'CHANGED_TOPOLOGY', id: null });
+	}
+
 
 }
-

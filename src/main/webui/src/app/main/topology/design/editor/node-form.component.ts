@@ -19,11 +19,11 @@ import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { toPattern } from '@app/shared';
 import { EditorModule } from './editor.module';
-import { EditorTopologyService } from './editor-topology.service';
+import { TopologyEditorService } from './topology.service';
 import { EditorNode } from './editor-node.model';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
 import { ChangeNodeComponentAction, ChangeNodePositionAction } from './actions';
+import { RemoveNodeAction } from './actions/remove-node.action';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -47,8 +47,7 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 		MatSelectModule,
 		MatIconModule,
 		EditorModule,
-		MatButtonModule,
-		MatMenuModule
+		MatButtonModule
 	],
 	templateUrl: './node-form.component.html'
 })
@@ -57,7 +56,7 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	/**
 	 * Notify when teh node has been updated.
 	 */
-	private readonly topology = inject(EditorTopologyService);
+	private readonly topology = inject(TopologyEditorService);
 
 	/**
 	 * The form to edit the component.
@@ -122,25 +121,13 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 
 		this.subscriptions.push(
-			this.topology.topologyChanged$.subscribe(
+			this.topology.changed$.subscribe(
 				{
 					next: action => {
 
-						if (action instanceof ChangeNodePositionAction
-							&& action.nodeId == this.nodeForm.controls.id.value
-							&& (
-								this.nodeForm.controls.positionX.value != action.newPosition.x
-								|| this.nodeForm.controls.positionY.value != action.newPosition.y
-							)
-						) {
+						if (action.type == 'CHANGED_NODE' && this.nodeForm.controls.id.value == action.id) {
 
-							this.nodeForm.patchValue(
-								{
-									positionX: action.newPosition.x,
-									positionY: action.newPosition.y
-								},
-								{ emitEvent: false }
-							);
+							this.node = this.topology.getNodeWith(action.id)!;
 						}
 					}
 				}
@@ -190,20 +177,6 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 				}
 			)
 		);
-		/*
-		this.subscriptions.push(this.editor.movedNode$.subscribe(
-			{
-				next: event => {
-					if (event.nodeId == this.nodeForm.controls.tag.value) {
-
-						this.nodeForm.controls.positionX.setValue(event.point.x, { emitEvent: false });
-						this.nodeForm.controls.positionY.setValue(event.point.y, { emitEvent: false });
-					}
-				}
-			}
-
-		));
-		*/
 
 	}
 
@@ -221,7 +194,7 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 				var node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
 				if (node.position.x != x.value || node.position.y != y.value) {
 
-					var action = new ChangeNodePositionAction(node, { x: x.value!, y: y.value! });
+					var action = new ChangeNodePositionAction(node.id, { x: x.value!, y: y.value! });
 					this.topology.apply(action);
 				}
 			}
@@ -284,8 +257,15 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 	}
 
+	/**
+	 * Called when the user what to remove the editing node.
+	 */
+	public removeNode() {
 
+		var action = new RemoveNodeAction(this.nodeForm.controls.id.value!);
+		this.topology.apply(action);
 
+	}
 
 
 }
