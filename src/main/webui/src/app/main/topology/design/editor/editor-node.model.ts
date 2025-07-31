@@ -54,11 +54,27 @@ export class EditorNode {
 	}
 
 	/**
+	 * Get the position of an endpoint.
+	 */
+	public searchEndpointIndex(channel: string | null, isSource: boolean): number {
+
+		return this.endpoints.findIndex(e => e.channel === channel && e.isSource === isSource);
+	}
+
+	/**
 	 * Get a endpoint or create it if not exist.
 	 */
 	public searchEndpoint(channel: string | null, isSource: boolean): EditorEndpoint | null {
 
-		return this.endpoints.find(e => e.channel === channel && e.isSource === isSource) || null;
+		var index = this.searchEndpointIndex(channel, isSource);
+		if (index < 0) {
+
+			return null;
+
+		} else {
+
+			return this.endpoints[index];
+		}
 	}
 
 	/**
@@ -71,6 +87,7 @@ export class EditorNode {
 
 			endpoint = new EditorEndpoint(this.id, channel, isSource);
 			this.endpoints.push(endpoint);
+			this.endpoints.sort((e1, e2) => e1.compareTo(e2));
 		}
 
 		return endpoint;

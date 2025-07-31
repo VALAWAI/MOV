@@ -1,0 +1,13 @@
+@if(channel != null){
+<div class="flex flex-col gap-1">
+	<div class="text-lg font-medium flex flex-row gap-2">
+		@if(channel.publish!=null){
+		<mat-icon color="primary" fontIcon="publish"></mat-icon>
+		}@else{
+		<mat-icon color="primary" fontIcon="download"></mat-icon>
+		} <span class="text-gray-900 wrap-break-word">
+			{{channel.name|toChannelName}} </span>
+	</div>
+	<div class="text-sm text-gray-500 text-wrap wrap-break-word">{{channel.description}}</div>
+</div>
+}

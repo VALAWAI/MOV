@@ -7,13 +7,13 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MessagesService } from '@app/shared/messages';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService } from '@app/shared/mov-api';
+import { ComponentDefinitionPage, ComponentDefinition, ComponentType, MovApiService, ChannelSchema, sortChannelSchemaByName } from '@app/shared/mov-api';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,8 +22,12 @@ import { EditorModule } from './editor.module';
 import { TopologyEditorService } from './topology.service';
 import { EditorNode } from './editor-node.model';
 import { MatButtonModule } from '@angular/material/button';
-import { ChangeNodeComponentAction, ChangeNodePositionAction } from './actions';
+import { ChangeNodeComponentAction, ChangeNodePositionAction, RemoveNodeEndpointAction } from './actions';
 import { RemoveNodeAction } from './actions/remove-node.action';
+import { GraphModule } from '@app/shared/graph';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SelectChannelDialog } from './select-channel.dialog';
+import { ChannelSchemaViewComponent } from './channel-view.component';
 
 
 function requiredComponentValidator(control: AbstractControl): ValidationErrors | null {
@@ -47,7 +51,10 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 		MatSelectModule,
 		MatIconModule,
 		EditorModule,
-		MatButtonModule
+		MatButtonModule,
+		GraphModule,
+		MatDialogModule,
+		ChannelSchemaViewComponent
 	],
 	templateUrl: './node-form.component.html'
 })
@@ -95,6 +102,26 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	private readonly messages = inject(MessagesService);
 
 	/**
+	 * The posible channels.
+	 */
+	public possibleChannels: ChannelSchema[] = [];
+
+	/**
+	 * The posible channels.
+	 */
+	public activeChannels: ChannelSchema[] = [];
+
+	/**
+	 * The component to manage the dialogs.
+	 */
+	private readonly dialog = inject(MatDialog);
+
+	/**
+	 * Service over the changes.
+	 */
+	private readonly ref = inject(ChangeDetectorRef);
+
+	/**
 	 * The node to edit.
 	 */
 	@Input()
@@ -106,13 +133,33 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 				level: node.component?.type || null,
 				component: node.component,
 				positionX: node.position.x,
-				positionY: node.position.y
+				positionY: node.position.y,
 
 			},
 			{
 				emitEvent: false
 			}
 		);
+
+		this.possibleChannels = [];
+		this.activeChannels = [];
+
+		if (node.component != null && node.component.channels != null) {
+
+			for (var channel of node.component.channels) {
+
+				if (node.searchEndpoint(channel.name, channel.publish != null) == null) {
+
+					this.possibleChannels.push(channel);
+
+				} else {
+
+					this.activeChannels.push(channel);
+				}
+			}
+			sortChannelSchemaByName(this.possibleChannels);
+			sortChannelSchemaByName(this.activeChannels);
+		}
 	}
 
 	/**
@@ -166,7 +213,7 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 						} else {
 							// selected component
-							var node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
+							const node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
 							if (node.component == null || node.component.id != value.id) {
 
 								var action = new ChangeNodeComponentAction(node.id, value);
@@ -263,6 +310,84 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	public removeNode() {
 
 		var action = new RemoveNodeAction(this.nodeForm.controls.id.value!);
+		this.topology.apply(action);
+
+	}
+
+	/**
+	 * The selected component.
+	 */
+	public get selectedComponent(): ComponentDefinition | null {
+
+		var component = this.nodeForm.controls.component.value;
+		if (typeof component === 'object') {
+
+			return component as ComponentDefinition;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Add an endpoint to be edited.
+	 */
+	public addEndpoint() {
+
+		if (this.possibleChannels.length == 1) {
+			//only one add it automatically
+			const channel = this.possibleChannels.splice(0, 1)[0];
+			this.activeChannels.push(channel);
+			sortChannelSchemaByName(this.activeChannels);
+			const node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
+			node.searchEndpointOrCreate(channel.name, channel.publish != null);
+			this.ref.markForCheck();
+			this.ref.detectChanges();
+
+
+		} else {
+
+			this.dialog.open(SelectChannelDialog, { data: this.possibleChannels }).afterClosed().subscribe(
+				{
+					next: channel => {
+
+						if (channel != null) {
+
+							const index = this.possibleChannels.findIndex(c => c.name = channel.name);
+							this.possibleChannels.splice(0, 1);
+							this.activeChannels.push(channel);
+							sortChannelSchemaByName(this.activeChannels);
+							const node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
+							node.searchEndpointOrCreate(channel.name, channel.publish != null);
+							this.ref.markForCheck();
+							this.ref.detectChanges();
+
+						}
+					}
+				}
+			);
+
+		}
+
+	}
+
+	/**
+	 * Called when the user what to remove the editing endpoint.
+	 */
+	public removeEndpoint(channel: ChannelSchema) {
+
+		// update the form data
+		this.possibleChannels.push(channel);
+		sortChannelSchemaByName(this.possibleChannels);
+		const index = this.activeChannels.findIndex(c => c.name == channel.name);
+		this.activeChannels.splice(index, 1);
+		this.ref.markForCheck();
+		this.ref.detectChanges();
+
+
+		// update the node
+		const node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
+		const endpoint = node.searchEndpoint(channel.name, channel.publish != null)!;
+		var action = new RemoveNodeEndpointAction(endpoint);
 		this.topology.apply(action);
 
 	}

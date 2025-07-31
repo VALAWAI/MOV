@@ -19,6 +19,7 @@ export { RemoveNodeAction } from './remove-node.action';
 export { AddNodeAction } from './add-node.action';
 export { ChangeNodePositionAction } from './change-node-position.action';
 export { ChangeNodeComponentAction } from './change-node-component.action';
+export { RemoveNodeEndpointAction } from './remove-node-endpoint.action';
 
 // Actiokn over connections
 export { ChangeConnectionAction } from './change-connection.action';

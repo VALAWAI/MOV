@@ -6,6 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
+import { ChannelSchema } from './components/channel-schema.model';
 import { PayloadSchema } from './components/payload-schema.model';
 
 export { MovApiService } from './mov-api.service';
@@ -75,4 +76,25 @@ export function matchPayloadSchema(source: PayloadSchema | null | undefined, tar
 
 		return JSON.stringify(source) == JSON.stringify(target);
 	}
+}
+
+/**
+ * Sort the channles by name.
+ */
+export function sortChannelSchemaByName(channels: ChannelSchema[]): void {
+
+	channels.sort((c1, c2) => {
+
+		var source = '';
+		if (c1.name != null) {
+
+			source = c1.name;
+		}
+		var target = '';
+		if (c2.name != null) {
+
+			target = c2.name;
+		}
+		return source.localeCompare(target);
+	});
 }

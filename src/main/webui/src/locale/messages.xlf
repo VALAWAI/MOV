@@ -120,7 +120,31 @@
         <source>The autosave time can not be less than 1000 ms.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">58,63</context>
+          <context context-type="linenumber">58,60</context>
+        </context-group>
+        <note priority="1" from="description">The error message if autosave timi is not reach the minimum</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-max-history-label" datatype="html">
+        <source>Max history</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+        <note priority="1" from="description">The label of the editor max history</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-max-history-hint" datatype="html">
+        <source>The number maximum number of changes to be stored for Undo/Redo.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">64,66</context>
+        </context-group>
+        <note priority="1" from="description">The hint of the editor atuosave time</note>
+      </trans-unit>
+      <trans-unit id="main_config_editor-max-history-min-error" datatype="html">
+        <source>The max history can not be less than 0.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/config/config.component.html</context>
+          <context context-type="linenumber">67,71</context>
         </context-group>
         <note priority="1" from="description">The error message if autosave timi is not reach the minimum</note>
       </trans-unit>
@@ -128,7 +152,7 @@
         <source> Live topology graph </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">66,69</context>
+          <context context-type="linenumber">74,77</context>
         </context-group>
         <note priority="1" from="description">The legend to edit the live graph configuration</note>
       </trans-unit>
@@ -138,7 +162,7 @@
 						routerLink=&quot;/main/topology/live/status&quot;&gt;"/>live topology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">70,75</context>
+          <context context-type="linenumber">78,83</context>
         </context-group>
         <note priority="1" from="description">The desciprion of the live graph configuration</note>
       </trans-unit>
@@ -146,7 +170,7 @@
         <source> Show the grid in the live. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">77,79</context>
+          <context context-type="linenumber">85,87</context>
         </context-group>
         <note priority="1" from="description">The label to show the grid in the live</note>
       </trans-unit>
@@ -154,7 +178,7 @@
         <source>Edge type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">80,81</context>
+          <context context-type="linenumber">88,89</context>
         </context-group>
         <note priority="1" from="description">The label of the live edge type</note>
       </trans-unit>
@@ -162,11 +186,11 @@
         <source>Draw a straight line.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">83,84</context>
+          <context context-type="linenumber">91,92</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">30,31</context>
         </context-group>
         <note priority="1" from="description">Name for the straight edge type</note>
       </trans-unit>
@@ -174,11 +198,11 @@
         <source>Draw a bezier curve.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">85,86</context>
+          <context context-type="linenumber">93,94</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">23,24</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">32,33</context>
         </context-group>
         <note priority="1" from="description">Name for the bezier edge type</note>
       </trans-unit>
@@ -186,11 +210,11 @@
         <source>Draw segements lines.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">87,88</context>
+          <context context-type="linenumber">95,96</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">25,26</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">34,35</context>
         </context-group>
         <note priority="1" from="description">Name for the segments edge type</note>
       </trans-unit>
@@ -198,7 +222,7 @@
         <source>Max nodes </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">90,91</context>
+          <context context-type="linenumber">98,99</context>
         </context-group>
         <note priority="1" from="description">The label of the live max nodes</note>
       </trans-unit>
@@ -206,7 +230,7 @@
         <source>The maximum number of nodes to view in the graph.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">93,94</context>
+          <context context-type="linenumber">101,102</context>
         </context-group>
         <note priority="1" from="description">The hint of the polling time</note>
       </trans-unit>
@@ -214,7 +238,7 @@
         <source>The number of nodes can not be less than 100.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.html</context>
-          <context context-type="linenumber">96,100</context>
+          <context context-type="linenumber">104,108</context>
         </context-group>
         <note priority="1" from="description">The error message if the number of nodes not reach the minimum</note>
       </trans-unit>
@@ -222,7 +246,7 @@
         <source>Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/config/config.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">The header title for the comnfig page</note>
       </trans-unit>
@@ -941,144 +965,67 @@
         </context-group>
         <note priority="1" from="description">OK label of the dialog to confirm to save before change the topology</note>
       </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-confirm-update-topology-title" datatype="html">
-        <source> Confirm update topology</source>
+      <trans-unit id="main_topology_design_#onnection-editor_id" datatype="html">
+        <source>Id</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-update-topology.dialog.html</context>
-          <context context-type="linenumber">3,5</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">4,6</context>
         </context-group>
-        <note priority="1" from="description">Title of the dialog to confirm update topology</note>
-      </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-confirm-update-topology-content" datatype="html">
-        <source><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/>Be aware that your action will change other components of the topology. This includes:<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/><x id="START_BLOCK_IF_1" equiv-text="@if( data.removedNodes.length&gt;0){"/><x id="START_TAG_DIV" ctype="x-div" equiv-text="&lt;div class=&quot;mb-6&quot;&gt;"/><x id="START_HEADING_LEVEL3" ctype="x-h3" equiv-text="&lt;h3 class=&quot;font-medium text-gray-800 mb-2&quot;&gt;"/>Removing the following nodes:<x id="CLOSE_HEADING_LEVEL3" ctype="x-h3" equiv-text="&lt;/h3&gt;"/><x id="START_UNORDERED_LIST" ctype="x-ul" equiv-text="&lt;ul class=&quot;list-disc list-inside text-gray-600 space-y-1 pl-4&quot;&gt;"/><x id="START_BLOCK_FOR" equiv-text="@for(node of data.removedNodes;track node.id){"/><x id="START_LIST_ITEM" ctype="x-li" equiv-text="&lt;li class=&quot;ms-8&quot;&gt;"/><x id="START_BLOCK_IF" equiv-text="@if(node.isTopologyNode){"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-			class=&quot;font-bold&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{node.name}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else{"/> The notification node of the connection from <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-			class=&quot;font-bold&quot;&gt;"/><x id="INTERPOLATION_1" equiv-text="{{node.connectionModel.source?.channel}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> to <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-			class=&quot;font-bold&quot;&gt;"/><x id="INTERPOLATION_2" equiv-text="{{node.connectionModel.target?.channel}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>. <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/><x id="CLOSE_LIST_ITEM" ctype="x-li" equiv-text="&lt;/li&gt;"/><x id="CLOSE_BLOCK_FOR" equiv-text="}"/><x id="CLOSE_UNORDERED_LIST" ctype="x-ul" equiv-text="&lt;/ul&gt;"/><x id="CLOSE_TAG_DIV" ctype="x-div" equiv-text="&lt;/div&gt;"/><x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_IF_4" equiv-text="@if( data.removedConnections.length&gt;0){"/><x id="START_TAG_DIV" ctype="x-div" equiv-text="&lt;div class=&quot;mb-6&quot;&gt;"/><x id="START_HEADING_LEVEL3" ctype="x-h3" equiv-text="&lt;h3 class=&quot;font-medium text-gray-800 mb-2&quot;&gt;"/>Removing the following nodes:<x id="CLOSE_HEADING_LEVEL3" ctype="x-h3" equiv-text="&lt;/h3&gt;"/><x id="START_UNORDERED_LIST" ctype="x-ul" equiv-text="&lt;ul class=&quot;list-disc list-inside text-gray-600 space-y-1 pl-4&quot;&gt;"/><x id="START_BLOCK_FOR_1" equiv-text="@for(connection of data.removedConnections;track connection.id){"/><x id="START_LIST_ITEM" ctype="x-li" equiv-text="&lt;li class=&quot;ms-8&quot;&gt;"/>From <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-			class=&quot;font-bold&quot;&gt;"/><x id="START_BLOCK_IF_2" equiv-text="@if(connection.source.channel==null){"/> Notification Node <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else{"/> <x id="INTERPOLATION_3" equiv-text="{{connection.source.channel}}"/> <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> to <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-			class=&quot;font-bold&quot;&gt;"/><x id="START_BLOCK_IF_3" equiv-text="@if(connection.target.channel==null){"/> Notification Node <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else{"/> <x id="INTERPOLATION_4" equiv-text="{{connection.target.channel}}"/> <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>. <x id="CLOSE_LIST_ITEM" ctype="x-li" equiv-text="&lt;/li&gt;"/><x id="CLOSE_BLOCK_FOR" equiv-text="}"/><x id="CLOSE_UNORDERED_LIST" ctype="x-ul" equiv-text="&lt;/ul&gt;"/><x id="CLOSE_TAG_DIV" ctype="x-div" equiv-text="&lt;/div&gt;"/><x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_PARAGRAPH_1" equiv-text="&lt;p class=&quot;font-bold&quot;&gt;"/>Do you want to proceed with the removal process, which includes these changes?<x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-update-topology.dialog.html</context>
-          <context context-type="linenumber">6,38</context>
-        </context-group>
-        <note priority="1" from="description">Content of the dialog to confirm update topology</note>
-      </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-confirm-update-topology-cancel-label" datatype="html">
-        <source> No, discard changes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-update-topology.dialog.html</context>
-          <context context-type="linenumber">42,45</context>
-        </context-group>
-        <note priority="1" from="description">Cancel label of the dialog to confirm remove endpoints</note>
-      </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-confirm-update-topology-ok-label" datatype="html">
-        <source> Yes, do them</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/confirm-update-topology.dialog.html</context>
-          <context context-type="linenumber">46,47</context>
-        </context-group>
-        <note priority="1" from="description">OK label of the dialog to confirm remove endpoints</note>
+        <note priority="1" from="description">The label to show the identifier of the #onnection</note>
       </trans-unit>
       <trans-unit id="main_topology_design_connection-editor_source-fieldset-label" datatype="html">
         <source>Source:</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">4,7</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">The legend to edit the source of the connection</note>
       </trans-unit>
       <trans-unit id="main_topology_design_connection-editor_target-fieldset-label" datatype="html">
         <source>Target:</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">11,14</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">20,22</context>
         </context-group>
         <note priority="1" from="description">The legend to edit the target of the connection</note>
       </trans-unit>
       <trans-unit id="main_topology_design_connection-editor_typee-label" datatype="html">
         <source>Type</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">17,20</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">26,29</context>
         </context-group>
         <note priority="1" from="description">The label to select the type of connection</note>
       </trans-unit>
       <trans-unit id="main_topology_design_connection-editor_type-required-error" datatype="html">
         <source>You must select a type of connection.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">28,30</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">37,39</context>
         </context-group>
         <note priority="1" from="description">The error message if no type of connection is selected</note>
       </trans-unit>
       <trans-unit id="main_topology_design_connection-editor_convert-code-label" datatype="html">
         <source>Convert code</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">31,32</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">40,41</context>
         </context-group>
         <note priority="1" from="description">The label to edit the convertion code</note>
       </trans-unit>
       <trans-unit id="main_topology_design_connection-editor_convert-code-placeholder" datatype="html">
         <source>Write the function to convert the source message to the target message.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">32,33</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-form.component.html</context>
+          <context context-type="linenumber">41,42</context>
         </context-group>
         <note priority="1" from="description">The placeholder for the field to write the convertion code</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_connection-editor_notification-position-label" datatype="html">
-        <source>Notifications</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">37,39</context>
-        </context-group>
-        <note priority="1" from="description">The label of the slide toggle to activate the notifications</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_connection-editor_notification_position" datatype="html">
-        <source>Notification node Position:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">41,45</context>
-        </context-group>
-        <note priority="1" from="description">The legend to notification node position</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_connection-editor_notification-position-x" datatype="html">
-        <source>X</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">45,48</context>
-        </context-group>
-        <note priority="1" from="description">The label to edit the X position of the notification node</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_connection-editor_notification-position-y" datatype="html">
-        <source>Y</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/connection-editor.component.html</context>
-          <context context-type="linenumber">49,58</context>
-        </context-group>
-        <note priority="1" from="description">The label to edit the Y position of the notification node</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_editor-menu-delete-node" datatype="html">
-        <source>Delete node</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">33,36</context>
-        </context-group>
-        <note priority="1" from="description">The label of the menu to delete a node from the topology</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_editor-menu-edit-endpoint" datatype="html">
-        <source>Edit endpoint</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">40,45</context>
-        </context-group>
-        <note priority="1" from="description">The label of the menu to edit an endpoint into a node</note>
       </trans-unit>
       <trans-unit id="main_topology_editor-toolbar-zoon-in-menu" datatype="html">
         <source>View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">109,111</context>
+          <context context-type="linenumber">98,100</context>
         </context-group>
         <note priority="1" from="description">The label of the menu to zoom in</note>
       </trans-unit>
@@ -1086,7 +1033,7 @@
         <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">114,117</context>
+          <context context-type="linenumber">103,106</context>
         </context-group>
         <note priority="1" from="description">The menu item that go to the Editor help site</note>
       </trans-unit>
@@ -1094,7 +1041,7 @@
         <source>New topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">121,124</context>
+          <context context-type="linenumber">110,113</context>
         </context-group>
         <note priority="1" from="description">The menu item that create a new topology</note>
       </trans-unit>
@@ -1102,7 +1049,7 @@
         <source> Open... </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">127,130</context>
+          <context context-type="linenumber">116,119</context>
         </context-group>
         <note priority="1" from="description">The menu item that save the current topology</note>
       </trans-unit>
@@ -1110,7 +1057,7 @@
         <source>Save topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">133,136</context>
+          <context context-type="linenumber">122,125</context>
         </context-group>
         <note priority="1" from="description">The menu item that save the current topology</note>
       </trans-unit>
@@ -1118,31 +1065,47 @@
         <source>Duplicate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">138,142</context>
+          <context context-type="linenumber">127,131</context>
         </context-group>
         <note priority="1" from="description">The menu item that duplicate the current topology</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-edit-undo" datatype="html">
+        <source>Undo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">135,138</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to the undo action</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-menu-edit-redo" datatype="html">
+        <source>Redo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
+          <context context-type="linenumber">141,144</context>
+        </context-group>
+        <note priority="1" from="description">The menu label to the redo action</note>
       </trans-unit>
       <trans-unit id="main_topology_editor-menu-add-node" datatype="html">
         <source>Add node</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">146,148</context>
+          <context context-type="linenumber">147,149</context>
         </context-group>
         <note priority="1" from="description">The menu label to add a node</note>
       </trans-unit>
-      <trans-unit id="main_topology_editor-menu-delete-node" datatype="html">
-        <source>Delete node</source>
+      <trans-unit id="main_topology_editor-menu-select-node" datatype="html">
+        <source>Select node</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">153,157</context>
+          <context context-type="linenumber">154,158</context>
         </context-group>
-        <note priority="1" from="description">The menu label to delete a node</note>
+        <note priority="1" from="description">The menu label to select a node</note>
       </trans-unit>
       <trans-unit id="main_topology_editor-menu-fit" datatype="html">
         <source>Fit to Screen </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">169,171</context>
+          <context context-type="linenumber">172,174</context>
         </context-group>
         <note priority="1" from="description">The menu label to fit</note>
       </trans-unit>
@@ -1150,7 +1113,7 @@
         <source>Zoom in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">175,178</context>
+          <context context-type="linenumber">178,181</context>
         </context-group>
         <note priority="1" from="description">The menu label to zoom in</note>
       </trans-unit>
@@ -1158,7 +1121,7 @@
         <source>Zoom out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">181,183</context>
+          <context context-type="linenumber">184,186</context>
         </context-group>
         <note priority="1" from="description">The menu label to zoom in</note>
       </trans-unit>
@@ -1166,7 +1129,7 @@
         <source>Toggle Grid</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">190,192</context>
+          <context context-type="linenumber">193,195</context>
         </context-group>
         <note priority="1" from="description">The menu label to toogle grid</note>
       </trans-unit>
@@ -1174,7 +1137,7 @@
         <source>Layouts</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">194,198</context>
+          <context context-type="linenumber">197,201</context>
         </context-group>
         <note priority="1" from="description">The menu label to change the layout</note>
       </trans-unit>
@@ -1182,7 +1145,7 @@
         <source>Horizontal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">200,204</context>
+          <context context-type="linenumber">203,207</context>
         </context-group>
         <note priority="1" from="description">The menu label to change the layout to horizontal</note>
       </trans-unit>
@@ -1190,7 +1153,7 @@
         <source>Vertical</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.html</context>
-          <context context-type="linenumber">204,209</context>
+          <context context-type="linenumber">207,212</context>
         </context-group>
         <note priority="1" from="description">The menu label to change the layout to vertical</note>
       </trans-unit>
@@ -1198,7 +1161,7 @@
         <source>Topology Editor</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">198</context>
         </context-group>
         <note priority="1" from="description">The header title for the topology editor</note>
       </trans-unit>
@@ -1206,7 +1169,7 @@
         <source>Unnamed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">445</context>
+          <context context-type="linenumber">440</context>
         </context-group>
         <note priority="1" from="description">The name to set to the topology when any is defined</note>
       </trans-unit>
@@ -1214,15 +1177,39 @@
         <source>Topology saved!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">486</context>
+          <context context-type="linenumber">480</context>
         </context-group>
         <note priority="1" from="description">Success message when the topology has been saved</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor_code_add-connection-target-endpoint-undefined-error-msg" datatype="html">
+        <source>Does not exist a channel where the conection can be connected.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
+          <context context-type="linenumber">513</context>
+        </context-group>
+        <note priority="1" from="description">Error message when not exist an endpoint to link a new connection</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor_code_add-connection-duplicated-error-msg" datatype="html">
+        <source>Already exist a connection between this endpoionts.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
+          <context context-type="linenumber">522</context>
+        </context-group>
+        <note priority="1" from="description">Error message when try to add a conection that is already defined</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor_code_redirect-connection-duplicated-error-msg" datatype="html">
+        <source>Already exist a connection between this endpoionts.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
+          <context context-type="linenumber">649</context>
+        </context-group>
+        <note priority="1" from="description">Error message when try to redirect to a conection that is already defined</note>
       </trans-unit>
       <trans-unit id="main_topology_editor_code_layout-error-msg" datatype="html">
         <source>Cannot apply the layout.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">646</context>
+          <context context-type="linenumber">737</context>
         </context-group>
         <note priority="1" from="description">Error message when not apply the layout</note>
       </trans-unit>
@@ -1230,7 +1217,7 @@
         <source>Cannot store the topology.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">674</context>
+          <context context-type="linenumber">765</context>
         </context-group>
         <note priority="1" from="description">Error message when store before leave</note>
       </trans-unit>
@@ -1238,7 +1225,7 @@
         <source>Topology has been saved.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/editor.component.ts</context>
-          <context context-type="linenumber">680</context>
+          <context context-type="linenumber">771</context>
         </context-group>
         <note priority="1" from="description">Success message when store before leave</note>
       </trans-unit>
@@ -1246,163 +1233,161 @@
         <source>Node</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
-          <context context-type="linenumber">4,6</context>
+          <context context-type="linenumber">5,7</context>
         </context-group>
         <note priority="1" from="description">The label of the form field to edit the endpoimnt node</note>
       </trans-unit>
       <trans-unit id="main_topology_design_endpoint-editor_node-required" datatype="html">
-        <source> &gt;You must select a node.</source>
+        <source> You must select a node.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
-        <note priority="1" from="description">The error message if no node tag is selected</note>
+        <note priority="1" from="description">The error message if no node is selected</note>
       </trans-unit>
       <trans-unit id="main_topology_design_endpoint-editor_channel-label" datatype="html">
         <source>Channel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
-          <context context-type="linenumber">12,14</context>
+          <context context-type="linenumber">15,17</context>
         </context-group>
         <note priority="1" from="description">The label of the form field to edit the endpoimnt channel</note>
       </trans-unit>
       <trans-unit id="main_topology_design_endpoint-editor_channel-required" datatype="html">
-        <source> You must select a channel.</source>
+        <source> You must select a valid channel.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">26,29</context>
         </context-group>
-        <note priority="1" from="description">The error message if no channel is selected</note>
+        <note priority="1" from="description">The error message if no valid channel is selected</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_endpoint-editor_channel-undefined" datatype="html">
-        <source> The channel is not posible in the slected node.</source>
+      <trans-unit id="main_topology_design_node-form_id" datatype="html">
+        <source>Id</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/endpoint-editor.component.html</context>
-          <context context-type="linenumber">21,23</context>
-        </context-group>
-        <note priority="1" from="description">The error message if the channel is not defined in the node</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_editor_min_name" datatype="html">
-        <source>Name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/min-topology-editor.component.html</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
           <context context-type="linenumber">4,6</context>
         </context-group>
-        <note priority="1" from="description">The label of the field to write the topology name</note>
+        <note priority="1" from="description">The label to show the identifier of the node</note>
       </trans-unit>
-      <trans-unit id="main_topology_design-editor_min_name-required" datatype="html">
-        <source>You must write a name for the topology.</source>
+      <trans-unit id="main_topology_design_node-form_remove-node" datatype="html">
+        <source>Button to remove the node</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/min-topology-editor.component.html</context>
-          <context context-type="linenumber">8,10</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">6,7</context>
         </context-group>
-        <note priority="1" from="description">The error message if no topology name is defined</note>
+        <note priority="1" from="description">The aria label to remove the node</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_editor_min_description" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/min-topology-editor.component.html</context>
-          <context context-type="linenumber">10,12</context>
-        </context-group>
-        <note priority="1" from="description">The label of the field to write the topology description</note>
-      </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_level" datatype="html">
+      <trans-unit id="main_topology_design_node-form_level" datatype="html">
         <source>Level</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">3,5</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">The label to select the level</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_component" datatype="html">
+      <trans-unit id="main_topology_design_node-form_component" datatype="html">
         <source>Component</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">8,10</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
         <note priority="1" from="description">The label to select the component</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_component-required" datatype="html">
+      <trans-unit id="main_topology_design_node-form_component-required" datatype="html">
         <source>You must select the component associated to the node.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">28,31</context>
         </context-group>
         <note priority="1" from="description">The error message if no component is selected</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_component-learn-more" datatype="html">
+      <trans-unit id="main_topology_design_node-form_component-learn-more" datatype="html">
         <source> Learn more </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">26,30</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">37,42</context>
         </context-group>
         <note priority="1" from="description">Text to learn more about the selected omcponent in teh node</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_position" datatype="html">
+      <trans-unit id="main_topology_design_node-form_position-label" datatype="html">
         <source>Position:</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">31,33</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">43,45</context>
         </context-group>
         <note priority="1" from="description">The legend to edit the node position</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_x" datatype="html">
+      <trans-unit id="main_topology_design_node-form_x" datatype="html">
         <source>X</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">34,36</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">46,47</context>
         </context-group>
         <note priority="1" from="description">The label to edit the X position of the node</note>
       </trans-unit>
-      <trans-unit id="main_topology_design_node-editor_y" datatype="html">
+      <trans-unit id="main_topology_design_node-form_y" datatype="html">
         <source>Y</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/node-editor.component.html</context>
-          <context context-type="linenumber">37,39</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">49,50</context>
         </context-group>
         <note priority="1" from="description">The label to edit the Y position of the node</note>
       </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-dialog-title" datatype="html">
-        <source> Node Endpoints</source>
+      <trans-unit id="main_topology_design_node-form_endpoints-label" datatype="html">
+        <source>Endpoints: </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">56,61</context>
+        </context-group>
+        <note priority="1" from="description">The legend to edit the node endpoints</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_node-form_add-endpoint" datatype="html">
+        <source>Add an endpoint to the node</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">62,63</context>
+        </context-group>
+        <note priority="1" from="description">The aria label to add an endpoint to the node</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_endpoint-form_remove-endpoint" datatype="html">
+        <source>Button to remove the endpoint</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/node-form.component.html</context>
+          <context context-type="linenumber">82,83</context>
+        </context-group>
+        <note priority="1" from="description">The aria label to remove the endpoint</note>
+      </trans-unit>
+      <trans-unit id="main_topology_editor-dialog-select-channel-title" datatype="html">
+        <source> Select endpoint</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-channel.dialog.html</context>
           <context context-type="linenumber">3,6</context>
         </context-group>
-        <note priority="1" from="description">Title of the dialog to select an endpoint for the node</note>
+        <note priority="1" from="description">Title of the dialog to select the target endpoint</note>
       </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-no-endpoint-error-msg" datatype="html">
-        <source>
-Any endpoint couldn&apos;t be selected. This is either because no endpoints
-exist or no component is selected for the node. </source>
+      <trans-unit id="main_topology_editor-dialog-select-channel-content-msg" datatype="html">
+        <source> Please select one of the following endpoints.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-channel.dialog.html</context>
           <context context-type="linenumber">7,10</context>
         </context-group>
-        <note priority="1" from="description">Error message when does not exist any endpoint</note>
+        <note priority="1" from="description">Message of the dialog to select the target endpoint</note>
       </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-select-message" datatype="html">
-        <source> Select one or more endpoints for the node from the list below.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
-          <context context-type="linenumber">11,14</context>
-        </context-group>
-        <note priority="1" from="description">The message to inform the user to select an endpoint</note>
-      </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-cancel-label" datatype="html">
+      <trans-unit id="main_topology_editor-dialog-select-channel-cancel-label" datatype="html">
         <source> Cancel</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
-          <context context-type="linenumber">27,30</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-channel.dialog.html</context>
+          <context context-type="linenumber">23,26</context>
         </context-group>
-        <note priority="1" from="description">Cancel label of the dialog to select the node endpoints</note>
+        <note priority="1" from="description">The lable to not select a target endpoint</note>
       </trans-unit>
-      <trans-unit id="main_topology_editor-dialog-select-node-endpoints-ok-label" datatype="html">
-        <source> Use selected endpoints</source>
+      <trans-unit id="main_topology_editor-dialog-select-channel-ok-label" datatype="html">
+        <source> Select</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/main/topology/design/editor/select-node-endpoints.dialog.html</context>
-          <context context-type="linenumber">31,32</context>
+          <context context-type="sourcefile">src/app/main/topology/design/editor/select-channel.dialog.html</context>
+          <context context-type="linenumber">28,29</context>
         </context-group>
-        <note priority="1" from="description">OK label of the dialog to select the node endpoints</note>
+        <note priority="1" from="description">The label to use the selected channel</note>
       </trans-unit>
       <trans-unit id="main_topology_editor-dialog-select-topology-to-open-title" datatype="html">
         <source> Select topology</source>
@@ -1460,6 +1445,30 @@ must select one topology to open.</source>
           <context context-type="linenumber">29,30</context>
         </context-group>
         <note priority="1" from="description">OK label of the dialog to select the topology to load</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_editor_min_name" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/topology-form.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the topology name</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design-editor_min_name-required" datatype="html">
+        <source>You must write a name for the topology.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/topology-form.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">The error message if no topology name is defined</note>
+      </trans-unit>
+      <trans-unit id="main_topology_design_editor_min_description" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/main/topology/design/editor/topology-form.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">The label of the field to write the topology description</note>
       </trans-unit>
       <trans-unit id="main_topology_editor-dialog-confirm-remove-topology-title" datatype="html">
         <source> Remove Topology</source>
@@ -2682,7 +2691,7 @@ must select one topology to open.</source>
         <source>Live topology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/status/status.component.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="description">The header title for the topology libe status</note>
       </trans-unit>

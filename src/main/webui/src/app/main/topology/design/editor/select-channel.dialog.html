@@ -7,16 +7,8 @@
 	Please select one of the following endpoints.</p>
 <mat-selection-list #shoesList [formControl]="selectedChannel"
 	[multiple]="false"> @for (channel of data; track
-channel.name) { <mat-list-option [value]="channel">
-<div class="text-lg font-medium text-gray-900">
-	@if(channel.publish!=null){
-	<mat-icon color="primary" fontIcon="publish"></mat-icon>
-	}@else{
-	<mat-icon color="primary" fontIcon="download"></mat-icon>
-	} {{channel.name|toChannelName}}
-</div>
-<div class="text-xs text-gray-500">{{channel.description}}</div>
-</mat-list-option> } </mat-selection-list> </mat-dialog-content>
+channel.name) { <mat-list-option [value]="channel"> <app-channel-schema-view
+	[channel]="channel"></app-channel-schema-view> </mat-list-option> } </mat-selection-list> </mat-dialog-content>
 <mat-dialog-actions>
 <button matButton color="warn" [mat-dialog-close]="null"
 	i18n="The lable to not select a target endpoint@@main_topology_editor-dialog-select-channel-cancel-label">

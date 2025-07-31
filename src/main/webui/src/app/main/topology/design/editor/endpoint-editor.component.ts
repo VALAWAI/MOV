@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ChannelSchema, } from '@app/shared/mov-api';
+import { ChannelSchema, sortChannelSchemaByName, } from '@app/shared/mov-api';
 import { Subscription } from 'rxjs';
 import { TopologyEditorService } from './topology.service';
 import { EditorNode } from './editor-node.model';
@@ -260,7 +260,7 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 					}
 				}
 
-				this.possibleChannels.sort((c1, c2) => c1.name!.localeCompare(c2.name!));
+				sortChannelSchemaByName(this.possibleChannels);
 			}
 			if (this.endpointForm.controls.channel.disabled) {
 

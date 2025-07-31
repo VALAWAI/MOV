@@ -15,6 +15,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { GraphModule } from "@app/shared/graph";
 import { ChannelSchema } from "@app/shared/mov-api";
+import { ChannelSchemaViewComponent } from "./channel-view.component";
 
 
 @Component({
@@ -28,7 +29,8 @@ import { ChannelSchema } from "@app/shared/mov-api";
 		MatDialogModule,
 		GraphModule,
 		MatListModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		ChannelSchemaViewComponent
 	],
 })
 export class SelectChannelDialog {

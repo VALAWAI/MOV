@@ -574,7 +574,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 					if (target.component != null && target.component.channels != null) {
 
-						var possibelChannels: ChannelSchema[] = [];
+						var possibleChannels: ChannelSchema[] = [];
 						for (var targetChannel of target.component.channels) {
 
 							if (targetChannel.subscribe != null) {
@@ -584,20 +584,20 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 									targetEndpoint = target.searchEndpointOrCreate(targetChannel.name, false);
 									break TARGET;
 								}
-								possibelChannels.push(targetChannel);
+								possibleChannels.push(targetChannel);
 							}
 						}
 
-						if (possibelChannels.length > 0) {
+						if (possibleChannels.length > 0) {
 
-							if (possibelChannels.length == 1) {
+							if (possibleChannels.length == 1) {
 								// exist only one posibility
-								targetEndpoint = target.searchEndpointOrCreate(possibelChannels[0].name, false);
+								targetEndpoint = target.searchEndpointOrCreate(possibleChannels[0].name, false);
 								break;
 
 							} else {
 								//ask the user about the channel to use.
-								return this.dialog.open(SelectChannelDialog, { data: possibelChannels }).afterClosed().pipe(
+								return this.dialog.open(SelectChannelDialog, { data: possibleChannels }).afterClosed().pipe(
 									map(channel => {
 
 										if (channel != null) {
