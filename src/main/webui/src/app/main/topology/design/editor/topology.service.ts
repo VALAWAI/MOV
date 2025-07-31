@@ -191,7 +191,7 @@ export class TopologyEditorService {
 	 * Redo the last action.
 	 */
 	public redo(): boolean {
-		debugger
+
 		if (this.canRedo) {
 
 			try {
