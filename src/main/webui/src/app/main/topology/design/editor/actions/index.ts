@@ -15,11 +15,14 @@ export { ChangeTopologyDescription } from './change-topology-description.action'
 
 //actions over nodes.
 export { ChangeNodeAction } from './change-node.action';
+export { RemoveNodeAction } from './remove-node.action';
+export { AddNodeAction } from './add-node.action';
 export { ChangeNodePositionAction } from './change-node-position.action';
 export { ChangeNodeComponentAction } from './change-node-component.action';
 
 // Actiokn over connections
 export { ChangeConnectionAction } from './change-connection.action';
 export { RemoveConnectionAction } from './remove-connection.action';
+export { AddConnectionAction } from './add-connection.action';
 export { ChangeConnectionTargetAction } from './change-connection-target.action';
 export { ChangeConnectionSourceAction } from './change-connection-source.action';

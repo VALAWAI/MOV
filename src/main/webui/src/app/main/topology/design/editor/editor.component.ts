@@ -43,7 +43,8 @@ import {
 	Topology,
 	ComponentType,
 	ChannelSchema,
-	matchPayloadSchema
+	matchPayloadSchema,
+	ComponentDefinition
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -56,7 +57,7 @@ import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorModule } from './editor.module';
 import { TopologyEditorService } from './topology.service';
-import { ChangeConnectionAction, ChangeNodeAction, ChangeNodePositionAction, ChangeTopologyAction, CompositeAction } from './actions';
+import { AddNodeAction, ChangeConnectionAction, ChangeNodeAction, ChangeNodePositionAction, ChangeTopologyAction, CompositeAction } from './actions';
 import { RemoveConnectionAction } from './actions/remove-connection.action';
 import { ChangeConnectionTargetAction } from './actions/change-connection-target.action';
 import { TopologyFormComponent } from './topology-form.component';
@@ -320,7 +321,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Called when something is selectd in the flow.
 	 */
-	public selectionChanged(event: FSelectionChangeEvent) {
+	public onSelectionChange(event: FSelectionChangeEvent) {
 
 		if (event.fNodeIds.length > 0) {
 
@@ -341,24 +342,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Add a node to the topology.
-	 */
-	public addNode(type: ComponentType, x: number, y: number) {
-
-		/*
-		this.selected = this.topology.addNodeWithType(type, x, y);
-		this.updatedGraph();
-		*/
-	}
-
-	/**
-	 * Delete a node.
-	 */
-	public deleteNode(node: EditorNode) {
-
-	}
-
-	/**
 	 * Called whne the graph has been updated.
 	 */
 	private updatedGraph() {
@@ -366,7 +349,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.ref.markForCheck();
 		this.ref.detectChanges();
 		this.fCanvas().redrawWithAnimation();
-
 	}
 
 
@@ -822,6 +804,56 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Called when whant to create a node.
+	 */
+	public onCreateNode(event: FCreateNodeEvent) {
+
+		var node = new EditorNode(this.topology.nextNodeId);
+		node.position = { x: event.rect.x, y: event.rect.y };
+		node.component = new ComponentDefinition();
+		node.component.type = event.data;
+		var action = new AddNodeAction(node);
+		this.topology.apply(action);
+
+	}
+
+	/**
+	 * Add a node by its type.
+	 */
+	public addNodeByType(type: ComponentType, delta: number = 7) {
+
+
+		var newNode = new EditorNode(this.topology.nextNodeId);
+		newNode.component = new ComponentDefinition();
+		newNode.component.type = type;
+		var collision = false;
+		do {
+
+			collision = false;
+			var upCorner = { x: newNode.position.x - delta, y: newNode.position.y - delta };
+			var lowCorner = { x: newNode.position.x + newNode.width + delta, y: newNode.position.y + newNode.height + delta };
+			for (var node of this.topology.nodes) {
+
+				if (node.isPointInside(upCorner) || node.isPointInside(lowCorner)) {
+					collision = true;
+					newNode.position = {
+						x: lowCorner.x + node.width,
+						y: lowCorner.x + node.height
+					};
+					break;
+				}
+
+			}
+
+		} while (collision);
+
+		var action = new AddNodeAction(newNode);
+		this.topology.apply(action);
+		this.fCanvas().centerGroupOrNode(newNode.id);
+		this.updatedGraph();
 	}
 
 }
