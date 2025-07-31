@@ -19,9 +19,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TopologyEditorService } from './topology.service';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from './editor-endpoint.model';
-import { ChangeConnectionSourceAction, ChangeConnectionTargetAction, RemoveConnectionAction } from './actions';
+import { ChangeConnectionConvertCodeAction, ChangeConnectionSourceAction, ChangeConnectionTargetAction, ChangeConnectionTypeAction, RemoveConnectionAction } from './actions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { normalizeString } from '@app/shared';
 
 
 
@@ -61,8 +62,9 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 			id: new FormControl<string>({ value: 'connection_0', disabled: true }),
 			source: new FormControl<EditorEndpoint | null>(null),
 			target: new FormControl<EditorEndpoint | null>(null),
-			convertCode: new FormControl<string | null>(null),
-			type: new FormControl<string | null>(null, Validators.required)
+			type: new FormControl<string | null>(null, Validators.required),
+			convertCode: new FormControl<string | null>(null, { updateOn: 'blur' }),
+
 		}
 	);
 
@@ -88,6 +90,42 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 					}
 				}
 
+			)
+		);
+
+		this.subscriptions.push(
+			this.connectionForm.controls.type.valueChanges.subscribe(
+				{
+					next: value => {
+
+						const newType = normalizeString(value);
+						const id = this.connectionForm.controls.id.value!;
+						const connection = this.topology.getConnectionWith(id)!;
+						if (connection.type != newType) {
+
+							const action = new ChangeConnectionTypeAction(id, newType);
+							this.topology.apply(action);
+						}
+					}
+				}
+			)
+		);
+
+		this.subscriptions.push(
+			this.connectionForm.controls.convertCode.valueChanges.subscribe(
+				{
+					next: value => {
+
+						const newConvertCode = normalizeString(value);
+						const id = this.connectionForm.controls.id.value!;
+						const connection = this.topology.getConnectionWith(id)!;
+						if (connection.convertCode != newConvertCode) {
+
+							const action = new ChangeConnectionConvertCodeAction(id, newConvertCode);
+							this.topology.apply(action);
+						}
+					}
+				}
 			)
 		);
 

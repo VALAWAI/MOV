@@ -88,6 +88,8 @@ export class ChangeTopologyAction implements TopologyEditorAction {
 
 					var connectionId = this.nextIdFor(this.newConnections, "connection");
 					var connection = new EditorConnection(connectionId, sourceEndpoint, targetEndpoint);
+					connection.type = topologyConnection.type;
+					connection.convertCode = topologyConnection.convertCode;
 					this.newConnections.push(connection);
 					sourceEndpoint = target.searchEndpointOrCreate(null, false);
 
@@ -100,6 +102,8 @@ export class ChangeTopologyAction implements TopologyEditorAction {
 
 							connectionId = this.nextIdFor(this.newConnections, "connection");
 							connection = new EditorConnection(connectionId, sourceEndpoint, targetEndpoint, true);
+							connection.type = notification.type;
+							connection.convertCode = notification.convertCode;
 							this.newConnections.push(connection);
 						}
 
@@ -112,6 +116,8 @@ export class ChangeTopologyAction implements TopologyEditorAction {
 
 				var connectionId = this.nextIdFor(this.newConnections, "connection");
 				var connection = new EditorConnection(connectionId, sourceEndpoint, targetEndpoint);
+				connection.type = topologyConnection.type;
+				connection.convertCode = topologyConnection.convertCode;
 				this.newConnections.push(connection);
 			}
 		}

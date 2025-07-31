@@ -27,3 +27,6 @@ export { RemoveConnectionAction } from './remove-connection.action';
 export { AddConnectionAction } from './add-connection.action';
 export { ChangeConnectionTargetAction } from './change-connection-target.action';
 export { ChangeConnectionSourceAction } from './change-connection-source.action';
+export { ChangeConnectionTypeAction } from './change-connection-type.action';
+export { ChangeConnectionConvertCodeAction } from './change-connection-convert-code.action';
+
