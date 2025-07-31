@@ -52,7 +52,7 @@ export class TopologyEditorService {
 	/**
 	 * The index of the last actin applied.
 	 */
-	private changeIndex: number = -1;
+	private lastDoneActionIndex: number = -1;
 
 	/**
 	 * The index of the last actin that is stored.
@@ -91,6 +91,7 @@ export class TopologyEditorService {
 		try {
 
 			this.add(action);
+			this.lastDoneActionIndex = this.changes.length - 1;
 			action.redo(this);
 
 		} catch (e) {
@@ -103,18 +104,18 @@ export class TopologyEditorService {
 	 */
 	public add(action: TopologyEditorAction) {
 
-		var diff = this.changes.length - (this.changeIndex + 1);
+		var diff = this.changes.length - (this.lastDoneActionIndex + 1);
 		if (diff > 0) {
 
-			this.changes.splice(this.changeIndex + 1, diff);
+			this.changes.splice(this.lastDoneActionIndex + 1, diff);
 		}
 		this.changes.push(action);
-		this.changeIndex++;
+		this.lastDoneActionIndex++;
 		diff = this.changes.length - this.conf.editorMaxHistory;
-		if (this.changeIndex > this.conf.editorMaxHistory) {
+		if (this.lastDoneActionIndex > this.conf.editorMaxHistory) {
 
 			this.changes.splice(0, diff);
-			this.changeIndex = this.changes.length;
+			this.lastDoneActionIndex = this.changes.length;
 		}
 	}
 
@@ -123,7 +124,7 @@ export class TopologyEditorService {
 	 */
 	public get unsaved(): boolean {
 
-		return this.min.id == null || this.storedIndex != this.changeIndex;
+		return this.min.id == null || this.storedIndex != this.lastDoneActionIndex;
 
 	}
 
@@ -143,7 +144,7 @@ export class TopologyEditorService {
 	public stored(id: string) {
 
 		this.min.id = id;
-		this.storedIndex = this.changeIndex;
+		this.storedIndex = this.lastDoneActionIndex;
 	}
 
 	/**
@@ -151,7 +152,7 @@ export class TopologyEditorService {
 	 */
 	public get canUndo(): boolean {
 
-		return (this.changeIndex > -1);
+		return (this.lastDoneActionIndex > -1);
 	}
 
 	/**
@@ -163,9 +164,10 @@ export class TopologyEditorService {
 
 			try {
 
-				var action = this.changes[this.changeIndex];
+				var action = this.changes[this.lastDoneActionIndex];
 				action.undo(this);
-				this.changeIndex--;
+				this.lastDoneActionIndex--;
+				this.changedSubject.next({ type: 'UNDO', id: null });
 				return true;
 
 			} catch (e) {
@@ -182,21 +184,22 @@ export class TopologyEditorService {
 	 */
 	public get canRedo(): boolean {
 
-		return (this.changeIndex < this.changes.length - 1);
+		return (this.lastDoneActionIndex < this.changes.length - 1);
 	}
 
 	/**
 	 * Redo the last action.
 	 */
 	public redo(): boolean {
-
+		debugger
 		if (this.canRedo) {
 
 			try {
 
-				var action = this.changes[this.changeIndex + 1];
+				var action = this.changes[this.lastDoneActionIndex + 1];
 				action.redo(this);
-				this.changeIndex++;
+				this.lastDoneActionIndex++;
+				this.changedSubject.next({ type: 'REDO', id: null });
 				return true;
 
 			} catch (e) {

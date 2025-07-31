@@ -21,6 +21,8 @@ export interface TopologyEditorChangedEvent {
 	| 'ADDED_CONNECTION'
 	| 'REMOVED_CONNECTION'
 	| 'CHANGED_CONNECTION'
+	| 'UNDO'
+	| 'REDO'
 	;
 
 	/**

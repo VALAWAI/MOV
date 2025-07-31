@@ -57,14 +57,19 @@ import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
 import { EditorModule } from './editor.module';
 import { TopologyEditorService } from './topology.service';
-import { AddNodeAction, ChangeConnectionAction, ChangeNodeAction, ChangeNodePositionAction, ChangeTopologyAction, CompositeAction } from './actions';
-import { RemoveConnectionAction } from './actions/remove-connection.action';
-import { ChangeConnectionTargetAction } from './actions/change-connection-target.action';
+import {
+	AddNodeAction,
+	ChangeNodePositionAction,
+	ChangeTopologyAction,
+	CompositeAction,
+	RemoveConnectionAction,
+	ChangeConnectionTargetAction,
+	AddConnectionAction
+} from './actions';
 import { TopologyFormComponent } from './topology-form.component';
-import { AddConnectionAction } from './actions/add-connection.action';
 import { EditorEndpoint } from './editor-endpoint.model';
 import { SelectChannelDialog } from './select-channel.dialog';
-import { RemoveNodeAction } from './actions/remove-node.action';
+
 
 @Component({
 	standalone: true,
@@ -824,7 +829,6 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * Add a node by its type.
 	 */
 	public addNodeByType(type: ComponentType, delta: number = 7) {
-
 
 		var newNode = new EditorNode(this.topology.nextNodeId);
 		newNode.component = new ComponentDefinition();
