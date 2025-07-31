@@ -252,10 +252,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 						if (action.type == 'ADDED_NODE') {
 
+							this.fFlow().select([action.id!], [], true);
 							this.selected = this.topology.getNodeWith(action.id);
 
 						} else if (action.type == 'ADDED_CONNECTION') {
 
+							this.fFlow().select([], [action.id!], true);
 							this.selected = this.topology.getConnectionWith(action.id);
 
 						} else if (
@@ -265,6 +267,8 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 								&& action.id === this.selected?.id
 							)
 						) {
+
+							this.fFlow().select([], [], true);
 							this.selected = null;
 						}
 
