@@ -121,6 +121,7 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 	 */
 	private readonly ref = inject(ChangeDetectorRef);
 
+
 	/**
 	 * The node to edit.
 	 */
@@ -143,7 +144,6 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 		this.possibleChannels = [];
 		this.activeChannels = [];
-
 		if (node.component != null && node.component.channels != null) {
 
 			for (var channel of node.component.channels) {

@@ -9,6 +9,7 @@
 			<mat-icon color="warn">delete</mat-icon>
 		</button>
 	</div>
+	@if(possibleChannels.length > 0 || activeChannels.length > 0){
 	<mat-form-field appearance="fill" class="w-full"> <mat-label
 		i18n="The label to select the level@@main_topology_design_node-form_level">Level</mat-label>
 	<mat-select formControlName="level"> <mat-option
@@ -37,7 +38,7 @@
 				Learn more </span>
 		</a> }
 	</div>
-	}
+	} }
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the node position@@main_topology_design_node-form_position-label">Position:</legend>
@@ -50,6 +51,7 @@
 			<input matInput formControlName="positionY" type="number"> </mat-form-field>
 		</div>
 	</fieldset>
+	@if(possibleChannels.length > 0 || activeChannels.length > 0){
 	<fieldset
 		class="grow fieldset  border-base-300 rounded-box border p-2 relative">
 		<legend class="p-2 font-bold"
@@ -80,4 +82,5 @@
 			}
 		</div>
 	</fieldset>
+	}
 </form>
