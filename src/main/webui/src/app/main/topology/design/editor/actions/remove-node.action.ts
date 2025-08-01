@@ -56,8 +56,17 @@ export class RemoveNodeAction extends AbstractCompositeAction implements ChangeN
 
 		} else {
 
-			const connectionsToRemove = service.connections.filter(c => c.source.nodeId == this.nodeId || c.target.nodeId == this.nodeId);
-			connectionsToRemove.forEach(c => this.addAndRedo(new RemoveConnectionAction(c.id), service));
+			for (var i = 0; i < service.connections.length; i++) {
+
+				var connection = service.connections[i];
+				if (connection.source.nodeId == this.nodeId || connection.target.nodeId == this.nodeId) {
+
+					service.connections.splice(i, 1);
+					i--;
+					this.addAndRedo( new RemoveConnectionAction(connection.id,connection),service);
+				
+				}
+			}
 		}
 	}
 

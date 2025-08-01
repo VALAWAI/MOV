@@ -215,7 +215,7 @@ export class TopologyEditorService {
 	 */
 	public get model(): Topology {
 
-		var model = new Topology();
+		const model = new Topology();
 		model.id = this.min.id;
 		model.name = this.min.name;
 		model.description = this.min.description;
@@ -224,7 +224,7 @@ export class TopologyEditorService {
 
 			if (node.sourceNotification == null && node.component != null && node.component.id != null) {
 
-				var modelNode = new TopologyNode();
+				const modelNode = new TopologyNode();
 				modelNode.tag = node.id;
 				modelNode.position = node.position;
 				modelNode.component = node.component;
@@ -233,58 +233,51 @@ export class TopologyEditorService {
 
 		}
 		model.connections = [];
-		var partial: EditorConnection[] = [];
 		for (var connection of this.connections) {
 
 			if (connection.source.channel != null) {
 
-				var modelConnection = new DesignTopologyConnection();
+				const modelConnection = new DesignTopologyConnection();
 				modelConnection.source = new TopologyConnectionEndpoint();
 				modelConnection.source.nodeTag = connection.source.nodeId;
 				modelConnection.source.channel = connection.source.channel;
 				modelConnection.convertCode = connection.convertCode;
 				modelConnection.type = toTopologyGraphConnectionType(connection.type);
 				modelConnection.target = new TopologyConnectionEndpoint();
-				modelConnection.target.nodeTag = connection.target.nodeId;
-				modelConnection.target.channel = connection.target.channel;
+				if (connection.target.channel == null) {
+					// notification => get the other connection
+					const notificationNode = this.getNodeWith(connection.notificationNodeId)!;
+					modelConnection.notificationPosition = notificationNode.position;
+					const otherConnection = this.connections.find(c => !c.isNotification && c.source.channel == null && c.source.nodeId === connection.target.nodeId)!;
+					modelConnection.target.nodeTag = otherConnection.target.nodeId;
+					modelConnection.target.channel = otherConnection.target.channel;
+
+					for (var mayBeNotification of this.connections) {
+						// search for notifications
+						if (mayBeNotification.isNotification && mayBeNotification.source.nodeId == notificationNode.id) {
+
+							if (modelConnection.notifications == null) {
+
+								modelConnection.notifications = [];
+							}
+							const notification = new TopologyConnectionNotification();
+							notification.convertCode = mayBeNotification.convertCode;
+							notification.type = toTopologyGraphConnectionType(mayBeNotification.type);
+							notification.target = new TopologyConnectionEndpoint();
+							notification.target.nodeTag = mayBeNotification.target.nodeId;
+							notification.target.channel = mayBeNotification.target.channel;
+							modelConnection.notifications.push(notification);
+
+						}
+					}
+
+				} else {
+
+					modelConnection.target.nodeTag = connection.target.nodeId;
+					modelConnection.target.channel = connection.target.channel;
+				}
 				model.connections.push(modelConnection);
 
-			} else {
-
-				partial.push(connection);
-			}
-		}
-
-		for (var connection of partial) {
-
-			var notificationNode = this.getNodeWith(connection.source.nodeId)!;
-			if (!connection.isNotification) {
-
-				var modelConnection = model.connections.find(c => c.target!.nodeTag === notificationNode.id)!;
-				modelConnection.notificationPosition = notificationNode.position;
-				modelConnection!.target!.nodeTag = connection.target.nodeId;
-				modelConnection!.target!.channel = connection.target.channel;
-				// The type and the conversion code is defined in the first connection
-
-			} else {
-
-				var modelConnection = model.connections.find(
-					c =>
-					(c.source!.nodeTag === notificationNode.sourceNotification!.nodeId
-						&& c.source!.channel === notificationNode.sourceNotification!.channel
-					)
-				)!;
-				if (modelConnection.notifications == null) {
-
-					modelConnection.notifications = [];
-				}
-				var notification = new TopologyConnectionNotification();
-				notification.convertCode = connection.convertCode;
-				notification.type = toTopologyGraphConnectionType(connection.type);
-				notification.target = new TopologyConnectionEndpoint();
-				notification.target.nodeTag = connection.target.nodeId;
-				notification.target.channel = connection.target.channel;
-				modelConnection.notifications.push(notification);
 			}
 		}
 
