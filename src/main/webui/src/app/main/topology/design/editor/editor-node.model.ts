@@ -9,7 +9,7 @@
 import { ChannelSchema, ComponentDefinition } from "@app/shared/mov-api";
 import { IPoint } from "@foblex/2d";
 import { EditorEndpoint } from './editor-endpoint.model';
-import { distance } from "@app/shared/graph";
+import { calculateMiddlePoint, distance } from "@app/shared/graph";
 
 /**
  * A node in the graph od the EditorTopology..
@@ -95,11 +95,20 @@ export class EditorNode {
 	}
 
 	/**
-	 * Return the first endppoint that is or not a source.
+	 * Return the source notification endpoint.
 	 */
-	public fisrtEndPointWithIsSource(isSource: boolean): EditorEndpoint {
+	public get notificationSource(): EditorEndpoint | null {
 
-		return this.endpoints.find(e => e.isSource == isSource)!;
+		return this.endpoints.find(e => e.channel == null && e.isSource == true) || null;
+
+	}
+
+	/**
+	 * Return the source notification endpoint.
+	 */
+	public get notificationTarget(): EditorEndpoint | null {
+
+		return this.endpoints.find(e => e.channel == null && e.isSource == false) || null;
 
 	}
 
@@ -173,6 +182,18 @@ export class EditorNode {
 
 		return null;
 
+	}
+
+	/**
+	 * Return the middle point to the specified node.
+	 */
+	public calculateMiddlePointTo(target: EditorNode): IPoint {
+
+		var lowPosition = {
+			x: this.position.x + this.width,
+			y: this.position.y + this.height
+		};
+		return calculateMiddlePoint(lowPosition, target.position);
 	}
 
 } 

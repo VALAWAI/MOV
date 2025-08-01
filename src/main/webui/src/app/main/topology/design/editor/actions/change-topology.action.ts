@@ -79,19 +79,27 @@ export class ChangeTopologyAction implements TopologyEditorAction {
 				var source = this.newNodes.find(n => n.id == topologyConnection.source!.nodeTag)!;
 				var sourceEndpoint = source.searchEndpointOrCreate(topologyConnection.source!.channel, true);
 
-				if (topologyConnection.notificationPosition != null) {
+				if (topologyConnection.notificationPosition != null || topologyConnection.notifications != null) {
 
 					var targetId = this.nextIdFor(this.newNodes, "node");
 					var target = new EditorNode(targetId, sourceEndpoint);
+					if (topologyConnection.notificationPosition != null) {
+
+						target.position = topologyConnection.notificationPosition;
+
+					} else {
+
+						target.position = source.calculateMiddlePointTo(this.newNodes.find(n => n.id == topologyConnection.target!.nodeTag)!);
+					}
 					this.newNodes.push(target);
-					var targetEndpoint = target.searchEndpointOrCreate(null, true);
+					var targetEndpoint = target.searchEndpointOrCreate(null, false);
 
 					var connectionId = this.nextIdFor(this.newConnections, "connection");
 					var connection = new EditorConnection(connectionId, sourceEndpoint, targetEndpoint);
 					connection.type = topologyConnection.type;
 					connection.convertCode = topologyConnection.convertCode;
 					this.newConnections.push(connection);
-					sourceEndpoint = target.searchEndpointOrCreate(null, false);
+					sourceEndpoint = target.searchEndpointOrCreate(null, true);
 
 					if (topologyConnection.notifications != null) {
 

@@ -84,13 +84,8 @@ export class ChangeNodeComponentAction extends AbstractCompositeAction implement
 
 				if (!found) {
 					// the endpoint can not exist => remove all the connections that has the endpoint
-					for (var connection of [...service.connections]) {
-
-						if ((connection.source.id == oldEndpoint.id || connection.target.id == oldEndpoint.id)) {
-
-							this.addAndRedo(new RemoveConnectionAction(connection.id), service);
-						}
-					}
+					const removeConnections = service.connections.filter(c => c.source.id == oldEndpoint.id || c.target.id == oldEndpoint.id);
+					removeConnections.forEach(c => this.addAndRedo(new RemoveConnectionAction(c.id), service));
 				}
 			}
 		}

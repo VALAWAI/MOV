@@ -8,6 +8,7 @@
 			<mat-icon color="warn">delete</mat-icon>
 		</button>
 	</div>
+	@if(!isNotification){
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the source of the connection@@main_topology_design_connection-editor_source-fieldset-label">Source:</legend>
@@ -15,6 +16,7 @@
 			[endpoint]="connectionForm.controls.source.value"
 			(endpointUpdated)="sourceEndpointChanged($event)"></app-topology-endpoint-editor>
 	</fieldset>
+	}
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
 			i18n="The legend to edit the target of the connection@@main_topology_design_connection-editor_target-fieldset-label">Target:</legend>
@@ -41,28 +43,8 @@
 		placeholder="Write the function to convert the source message to the target message."
 		i18n-placeholder="The placeholder for the field to write the convertion code@@main_topology_design_connection-editor_convert-code-placeholder">
 			></textarea> </mat-form-field>
-	<!-- 
-	@if(notificationAllowed()){
+	@if(notificationAllowed){
 	<mat-slide-toggle color="primary" formControlName="notifications"
 		i18n="The label of the slide toggle to activate the notifications@@main_topology_design_connection-editor_notification-position-label">Notifications</mat-slide-toggle>
-	@if(connectionForm.controls.notifications.value == true){
-	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
-		<legend class="p-2 font-bold"
-			i18n="The legend to notification node position@@main_topology_design_connection-editor_notification_position">Notification
-			node Position:</legend>
-		<div class="flex flex-col gap-2">
-			<mat-form-field class="w-full" appearance="fill"> <mat-label
-				i18n="The label to edit the X position of the notification node@@main_topology_design_connection-editor_notification-position-x">X</mat-label>
-			<input matInput formControlName="notificationX" type="number">
-			</mat-form-field>
-			<mat-form-field class="w-full" appearance="fill"> <mat-label
-				i18n="The label to edit the Y position of the notification node@@main_topology_design_connection-editor_notification-position-y">Y</mat-label>
-			<input matInput formControlName="notificationY" type="number">
-			</mat-form-field>
-		</div>
-	</fieldset>
-
-	} }
- -->
-
+	}
 </form>

@@ -50,19 +50,16 @@ export class RemoveNodeAction extends AbstractCompositeAction implements ChangeN
 		var index = service.nodes.findIndex(c => c.id == this.nodeId);
 		this.node = service.nodes.splice(index, 1)[0];
 		service.notifyRemovedNode(this.nodeId);
-		this.actions = [];
+		if (this.actions.length > 0) {
 
-		for (var connection of [...service.connections]) {
+			super.redo(service);
 
-			if (connection.source.nodeId == this.nodeId || connection.target.nodeId == this.nodeId) {
+		} else {
 
-				this.addAndRedo(new RemoveConnectionAction(connection.id), service);
-			}
-
+			const connectionsToRemove = service.connections.filter(c => c.source.nodeId == this.nodeId || c.target.nodeId == this.nodeId);
+			connectionsToRemove.forEach(c => this.addAndRedo(new RemoveConnectionAction(c.id), service));
 		}
-
 	}
-
 
 }
 

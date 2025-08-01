@@ -54,18 +54,15 @@ export class RemoveNodeEndpointAction extends AbstractCompositeAction implements
 		var index = node.searchEndpointIndex(this.endpoint.channel, this.endpoint.isSource);
 		this.endpoint = node.endpoints.splice(index, 1)[0];
 
-		this.actions = [];
-		for (var connection of [...service.connections]) {
+		if (this.actions.length > 0) {
 
-			if (connection.source.id == this.endpoint.id || connection.target.id == this.endpoint.id) {
+			super.redo(service);
 
-				this.addAndRedo(new RemoveConnectionAction(connection.id), service);
-			}
+		} else {
 
+			const connectionToRemove = service.connections.filter(c => c.source.id == this.endpoint.id || c.target.id == this.endpoint.id);
+			connectionToRemove.forEach(c => this.addAndRedo(new RemoveConnectionAction(c.id), service));
 		}
-
 	}
-
-
 }
 

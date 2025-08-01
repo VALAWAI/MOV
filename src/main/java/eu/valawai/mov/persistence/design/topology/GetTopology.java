@@ -191,7 +191,6 @@ public class GetTopology extends AbstractEntityOperator<Topology, GetTopology> {
 						Projections.include("nodes", "connections"))));
 
 		pipeline.add(Aggregates.match(Filters.ne("_id", null)));
-
 		return TopologyGraphEntity.mongoCollection().aggregate(pipeline, Topology.class).collect().first();
 
 	}

@@ -26,3 +26,15 @@ export function distance(source: IPoint, target: IPoint): number {
 	return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 
 }
+
+/**
+ * REturn the midle between two points.
+ */
+export function calculateMiddlePoint(point1: IPoint, point2: IPoint): IPoint {
+
+	return {
+		x: (point1.x + point2.x) / 2.0,
+		y: (point1.y + point2.y) / 2.0
+	};
+
+}

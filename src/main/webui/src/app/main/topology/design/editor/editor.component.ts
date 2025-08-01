@@ -233,17 +233,19 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 			}
 		));
 
-		this.subscriptions.push(timer(this.conf.editorAutosaveTime, this.conf.editorAutosaveTime).subscribe(
-			{
-				next: () => {
+		this.subscriptions.push(
+			timer(this.conf.editorAutosaveTime, this.conf.editorAutosaveTime).subscribe(
+				{
+					next: () => {
 
-					if (this.topology.unsaved && !this.topology.isEmpty) {
+						if (this.topology.unsaved && !this.topology.isEmpty) {
 
-						this.saveTopology();
+							this.saveTopology();
+						}
 					}
 				}
-			}
-		));
+			)
+		);
 
 		this.subscriptions.push(
 			this.topology.changed$.subscribe(

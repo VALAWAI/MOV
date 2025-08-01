@@ -1,3 +1,8 @@
 ::ng-deep.f-connection-drag-handle {
 	fill: transparent;
 }
+
+.notification ::ng-deep.f-connection-path {
+	stroke-dashoffset: 10px;
+	stroke-dasharray: 5px;
+}

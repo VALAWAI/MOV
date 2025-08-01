@@ -331,10 +331,6 @@ export class EndpointEditorComponent implements OnInit, OnDestroy {
 
 			return node.component.name;
 
-		} else if (node.fisrtEndPointWithIsSource != null) {
-
-			return 'NOTIFICATION TO DO';
-
 		} else {
 
 			return node.id;

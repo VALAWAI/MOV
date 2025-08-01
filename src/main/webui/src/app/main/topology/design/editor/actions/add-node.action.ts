@@ -11,7 +11,7 @@ import { TopologyEditorService } from "../topology.service";
 import { AbstractNodeAction } from "./abstract-node.action";
 
 /**
- * An actin to add a node betwen node.
+ * An action to add a node betwen node.
  */
 export class AddNodeAction extends AbstractNodeAction {
 

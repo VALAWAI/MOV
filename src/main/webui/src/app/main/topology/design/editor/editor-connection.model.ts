@@ -68,4 +68,30 @@ export class EditorConnection {
 		}
 	}
 
+	/**
+	 * Check if the connection is a partial one. thus, a connection that pass thoought a notification node.
+	 */
+	public get isPartial(): boolean {
+
+		return this.source.channel == null || this.target.channel == null;
+	}
+
+	/**
+	 * REturn the identifier of the notification node involved in the connection if any.
+	 */
+	public get notificationNodeId(): string | null {
+
+		if (this.source.channel == null) {
+
+			return this.source.nodeId;
+
+		} else if (this.target.channel == null) {
+
+			return this.target.nodeId;
+		} else {
+
+			return null;
+		}
+	}
+
 } 

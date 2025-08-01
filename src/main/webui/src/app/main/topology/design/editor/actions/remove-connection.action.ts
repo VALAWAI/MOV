@@ -51,34 +51,22 @@ export class RemoveConnectionAction extends AbstractCompositeAction implements C
 		var index = service.connections.findIndex(c => c.id == this.connectionId);
 		this.connection = service.connections.splice(index, 1)[0];
 		service.notifyRemovedConnection(this.connectionId);
-		this.actions = [];
+		if (this.actions.length > 0) {
 
-		if (!this.connection.isNotification) {
+			super.redo(service);
 
-			var notificationNodeId: string | null = null;
-			if (this.connection.source.channel == null) {
+		} else if (!this.connection.isNotification) {
 
-				notificationNodeId = this.connection.source.nodeId;
-
-			} else if (this.connection.target.channel == null) {
-
-				notificationNodeId = this.connection.target.nodeId;
-			}
-
+			const notificationNodeId = this.connection.notificationNodeId;
 			if (notificationNodeId != null) {
 				//must remove the notification node and its connections
-				for (var connection of [...service.connections]) {
-
-					if (connection.source.nodeId == notificationNodeId || connection.target.nodeId == notificationNodeId) {
-
-						this.addAndRedo(new RemoveConnectionAction(connection.id), service);
-					}
-
-				}
+				const connectionToRemove = service.connections.filter(c => c.notificationNodeId == notificationNodeId);
+				connectionToRemove.forEach(c => this.addAndRedo(new RemoveConnectionAction(c.id), service));
 				if (service.getNodeWith(notificationNodeId) != null) {
 
 					this.addAndRedo(new RemoveNodeAction(notificationNodeId), service);
-				}
+
+				}// else already removed
 			}
 		}
 

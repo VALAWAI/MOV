@@ -7,9 +7,8 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DesignTopologyConnection } from '@app/shared/mov-api';
+import { Component, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EndpointEditorComponent } from './endpoint-editor.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TopologyEditorService } from './topology.service';
 import { EditorConnection } from './editor-connection.model';
 import { EditorEndpoint } from './editor-endpoint.model';
-import { ChangeConnectionConvertCodeAction, ChangeConnectionSourceAction, ChangeConnectionTargetAction, ChangeConnectionTypeAction, RemoveConnectionAction } from './actions';
+import { ChangeConnectionConvertCodeAction, ChangeConnectionSourceAction, ChangeConnectionTargetAction, ChangeConnectionTypeAction, DisableConnectionNotificationsAction, EnableConnectionNotificationsAction, RemoveConnectionAction } from './actions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { normalizeString } from '@app/shared';
@@ -50,21 +49,31 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	public readonly topology = inject(TopologyEditorService);
 
 	/**
-	 * Service over the changes.
+	 * This is {@code true} if the connection cna have notifications.
 	 */
-	private readonly ref = inject(ChangeDetectorRef);
+	public notificationAllowed: boolean = true;
+
+	/**
+	 * This is {@code true} if the connection is a notification.
+	 */
+	public isNotification: boolean = false;
+
+	/**
+	 * The topology where the connection is defined.
+	 */
+	private readonly fb = inject(FormBuilder);
 
 	/**
 	 * The form to edit the connection.
 	 */
-	public connectionForm = new FormGroup(
+	public connectionForm = this.fb.group(
 		{
-			id: new FormControl<string>({ value: 'connection_0', disabled: true }),
-			source: new FormControl<EditorEndpoint | null>(null),
-			target: new FormControl<EditorEndpoint | null>(null),
-			type: new FormControl<string | null>(null, Validators.required),
-			convertCode: new FormControl<string | null>(null, { updateOn: 'blur' }),
-
+			id: this.fb.control<string>({ value: 'connection_0', disabled: true }),
+			source: this.fb.control<EditorEndpoint | null>(null),
+			target: this.fb.control<EditorEndpoint | null>(null),
+			type: this.fb.control<string | null>(null, Validators.required),
+			convertCode: this.fb.control<string | null>(null, { updateOn: 'blur' }),
+			notifications: this.fb.control<boolean>(false)
 		}
 	);
 
@@ -129,6 +138,30 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 			)
 		);
 
+		this.subscriptions.push(
+			this.connectionForm.controls.notifications.valueChanges.subscribe(
+				{
+					next: value => {
+
+						const id = this.connectionForm.controls.id.value!;
+						const connection = this.topology.getConnectionWith(id)!;
+						connection.target.channel == null
+						if (connection.isPartial && value == false) {
+							// disable the notifications
+							var disableAction = new DisableConnectionNotificationsAction(id);
+							this.topology.apply(disableAction);
+
+						} else if (!connection.isPartial && value == true) {
+							// enable the notifications.
+							var enableAction = new EnableConnectionNotificationsAction(id);
+							this.topology.apply(enableAction);
+
+						}// else no modified
+					}
+				}
+			)
+		);
+
 	}
 
 	/**
@@ -151,18 +184,22 @@ export class TopologyConnectionFormComponent implements OnInit, OnDestroy {
 	@Input()
 	public set connection(connection: EditorConnection) {
 
+		this.isNotification = connection.isNotification;
 		this.connectionForm.setValue(
 			{
 				id: connection.id,
 				source: connection.source,
 				target: connection.target,
-				convertCode: connection.convertCode,
-				type: connection.type || 'BEZIER'
+				convertCode: connection.convertCode || null,
+				type: connection.type || 'BEZIER',
+				notifications: connection.isPartial
 			},
 			{
 				emitEvent: false
 			}
 		);
+
+		this.notificationAllowed = !connection.isNotification;
 
 	}
 

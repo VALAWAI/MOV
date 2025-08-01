@@ -244,14 +244,9 @@ export class TopologyEditorService {
 				modelConnection.source.channel = connection.source.channel;
 				modelConnection.convertCode = connection.convertCode;
 				modelConnection.type = toTopologyGraphConnectionType(connection.type);
-
-				if (connection.target.channel != null) {
-
-					modelConnection.target = new TopologyConnectionEndpoint();
-					modelConnection.target.nodeTag = connection.target.nodeId;
-					modelConnection.target.channel = connection.target.channel;
-
-				}
+				modelConnection.target = new TopologyConnectionEndpoint();
+				modelConnection.target.nodeTag = connection.target.nodeId;
+				modelConnection.target.channel = connection.target.channel;
 				model.connections.push(modelConnection);
 
 			} else {
@@ -262,36 +257,34 @@ export class TopologyEditorService {
 
 		for (var connection of partial) {
 
-			var notificationNode = this.getNodeWith(connection.source.id)!;
-			for (var modelConnection of model.connections) {
+			var notificationNode = this.getNodeWith(connection.source.nodeId)!;
+			if (!connection.isNotification) {
 
-				if (notificationNode.sourceNotification?.nodeId == modelConnection.source?.nodeTag
-					&& notificationNode.sourceNotification?.channel == modelConnection.source?.channel
-				) {
+				var modelConnection = model.connections.find(c => c.target!.nodeTag === notificationNode.id)!;
+				modelConnection.notificationPosition = notificationNode.position;
+				modelConnection!.target!.nodeTag = connection.target.nodeId;
+				modelConnection!.target!.channel = connection.target.channel;
+				// The type and the conversion code is defined in the first connection
 
-					if (connection.isNotification) {
+			} else {
 
-						if (modelConnection.notifications == null) {
+				var modelConnection = model.connections.find(
+					c =>
+					(c.source!.nodeTag === notificationNode.sourceNotification!.nodeId
+						&& c.source!.channel === notificationNode.sourceNotification!.channel
+					)
+				)!;
+				if (modelConnection.notifications == null) {
 
-							modelConnection.notifications = [];
-						}
-						var notification = new TopologyConnectionNotification();
-						notification.convertCode = connection.convertCode;
-						notification.type = toTopologyGraphConnectionType(connection.type);
-						notification.target = new TopologyConnectionEndpoint();
-						notification.target.nodeTag = connection.target.nodeId;
-						notification.target.channel = connection.target.channel;
-						modelConnection.notifications.push(notification);
-
-					} else {
-
-						modelConnection.target = new TopologyConnectionEndpoint();
-						modelConnection.target.nodeTag = connection.target.nodeId;
-						modelConnection.target.channel = connection.target.channel;
-					}
-					break;
+					modelConnection.notifications = [];
 				}
-
+				var notification = new TopologyConnectionNotification();
+				notification.convertCode = connection.convertCode;
+				notification.type = toTopologyGraphConnectionType(connection.type);
+				notification.target = new TopologyConnectionEndpoint();
+				notification.target.nodeTag = connection.target.nodeId;
+				notification.target.channel = connection.target.channel;
+				modelConnection.notifications.push(notification);
 			}
 		}
 
