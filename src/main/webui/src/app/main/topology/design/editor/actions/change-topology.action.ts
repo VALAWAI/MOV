@@ -172,6 +172,7 @@ export class ChangeTopologyAction implements TopologyEditorAction {
 		service.nodes = this.newNodes;
 		service.connections = this.newConnections;
 		service.notifyChangedTopology();
+
 	}
 }
 

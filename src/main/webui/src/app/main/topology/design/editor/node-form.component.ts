@@ -352,8 +352,8 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 
 						if (channel != null) {
 
-							const index = this.possibleChannels.findIndex(c => c.name = channel.name);
-							this.possibleChannels.splice(0, 1);
+							const index = this.possibleChannels.findIndex(c => c.name === channel.name);
+							this.possibleChannels.splice(index, 1);
 							this.activeChannels.push(channel);
 							sortChannelSchemaByName(this.activeChannels);
 							const node = this.topology.getNodeWith(this.nodeForm.controls.id.value)!;
@@ -378,7 +378,7 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 		// update the form data
 		this.possibleChannels.push(channel);
 		sortChannelSchemaByName(this.possibleChannels);
-		const index = this.activeChannels.findIndex(c => c.name == channel.name);
+		const index = this.activeChannels.findIndex(c => c.name === channel.name);
 		this.activeChannels.splice(index, 1);
 		this.ref.markForCheck();
 		this.ref.detectChanges();

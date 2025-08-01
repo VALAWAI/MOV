@@ -53,7 +53,7 @@ export class DisableConnectionNotificationsAction extends AbstractCompositeActio
 			super.redo(service);
 
 		} else {
-debugger
+
 			const connection = service.getConnectionWith(this.connectionId)!;
 			const notificationNodeId = connection.notificationNodeId!;
 			var newSource: EditorEndpoint;
