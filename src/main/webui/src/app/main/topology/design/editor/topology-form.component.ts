@@ -11,7 +11,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -42,16 +42,21 @@ export class TopologyFormComponent implements OnInit, OnDestroy {
 	private readonly topology = inject(TopologyEditorService);
 
 	/**
+	 * The form nbuilder.
+	 */
+	private readonly fb = inject(FormBuilder);
+
+	/**
 	 * The form to edit the component.
 	 */
-	public topologyForm = new FormGroup(
+	public topologyForm = this.fb.group(
 		{
-			name: new FormControl<string | null>(this.topology.min.name, {
+			name: this.fb.control<string | null>(this.topology.min.name || null, {
 				updateOn: 'blur',
 				validators: [
 					Validators.required]
 			}),
-			description: new FormControl<string | null>(this.topology.min.description, {
+			description: this.fb.control<string | null>(this.topology.min.description || null, {
 				updateOn: 'blur'
 			})
 		}
@@ -78,8 +83,8 @@ export class TopologyFormComponent implements OnInit, OnDestroy {
 
 							this.topologyForm.setValue(
 								{
-									name: this.topology.min.name,
-									description: this.topology.min.description
+									name: this.topology.min.name||null,
+									description: this.topology.min.description||null
 								},
 								{
 									emitEvent: false
