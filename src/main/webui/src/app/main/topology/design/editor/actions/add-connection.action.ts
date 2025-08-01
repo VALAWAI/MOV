@@ -7,6 +7,7 @@
 */
 
 
+import { EditorConnection } from "../editor-connection.model";
 import { TopologyEditorService } from "../topology.service";
 import { AbstractConnectionAction } from "./abstract-connection.action";
 
@@ -15,14 +16,30 @@ import { AbstractConnectionAction } from "./abstract-connection.action";
  */
 export class AddConnectionAction extends AbstractConnectionAction {
 
+	/**
+	 * Create teh action to add multiple connecitons at the same time.
+	 */
+	constructor(
+		public override connection: EditorConnection,
+		private otherConnection: EditorConnection | null = null
+	) {
+
+		super(connection);
+	}
 
 	/**
 	 * Remove the added connection.
 	 */
 	public undo(service: TopologyEditorService): void {
 
-		var index = service.connections.findIndex(c => c.id == this.connection.id);
+		var index = service.connections.findIndex(c => c.id == this.connectionId);
 		service.connections.splice(index, 1);
+		if (this.otherConnection != null) {
+
+			index = service.connections.findIndex(c => c.id == this.otherConnection!.id);
+			service.connections.splice(index, 1);
+			service.notifyRemovedConnection(this.otherConnection!.id);
+		}
 		service.notifyRemovedConnection(this.connectionId);
 
 	}
@@ -33,6 +50,11 @@ export class AddConnectionAction extends AbstractConnectionAction {
 	public redo(service: TopologyEditorService): void {
 
 		service.connections.push(this.connection);
+		if (this.otherConnection != null) {
+
+			service.connections.push(this.otherConnection);
+			service.notifyRemovedConnection(this.otherConnection!.id);
+		}
 		service.notifyAddedConnection(this.connectionId);
 
 	}

@@ -51,25 +51,27 @@ export class EnableConnectionNotificationsAction extends AbstractCompositeAction
 
 		} else {
 
-			var connection = service.getConnectionWith(this.connectionId)!;
+			const connection = service.getConnectionWith(this.connectionId)!;
 			this.addAndRedo(new RemoveConnectionAction(this.connectionId), service);
 
-			var source = service.getNodeWith(connection.source.nodeId)!;
-			var target = service.getNodeWith(connection.target.nodeId)!;
+			const source = service.getNodeWith(connection.source.nodeId)!;
+			const target = service.getNodeWith(connection.target.nodeId)!;
 
-			var notificationNode = new EditorNode(service.nextNodeId, connection.source);
+			const notificationNode = new EditorNode(service.nextNodeId, connection.source);
+			const notificationSource = notificationNode.searchEndpointOrCreate(null, true)
+			const notificationTarget = notificationNode.searchEndpointOrCreate(null, false)
 			notificationNode.position = source.calculateMiddlePointTo(target);
+
+
 			this.addAndRedo(new AddNodeAction(notificationNode), service);
 
-			var notificationToTarget = new EditorConnection(service.nextConnectionId, notificationNode.searchEndpointOrCreate(null, true), connection.target, false);
+			const notificationToTarget = new EditorConnection(service.nextConnectionId, notificationSource, connection.target, false);
 			notificationToTarget.type = connection.type;
 			notificationToTarget.convertCode = connection.convertCode;
-			this.addAndRedo(new AddConnectionAction(notificationToTarget), service);
-
-			var sourceToNotification = new EditorConnection(service.nextConnectionId, connection.source, notificationNode.searchEndpointOrCreate(null, false), false);
+			const sourceToNotification = new EditorConnection(service.nextConnectionId, connection.source, notificationTarget, false);
 			sourceToNotification.type = connection.type;
 			sourceToNotification.convertCode = connection.convertCode;
-			this.addAndRedo(new AddConnectionAction(sourceToNotification), service);
+			this.addAndRedo(new AddConnectionAction(sourceToNotification,notificationToTarget), service);
 		}
 
 
