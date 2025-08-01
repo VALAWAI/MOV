@@ -23,7 +23,7 @@ export class ChangeConnectionTypeAction implements ChangeConnectionAction {
 	/**
 	 * Create the action with the connection to be removed.
 	 */
-	constructor(public connectionId: string, private newType: string | null) {
+	constructor(public connectionId: string, private newType: string | null, private otherId: string) {
 
 	}
 
@@ -32,9 +32,7 @@ export class ChangeConnectionTypeAction implements ChangeConnectionAction {
 	 */
 	public undo(service: TopologyEditorService): void {
 
-		const connection = service.getConnectionWith(this.connectionId)!;
-		connection.type = this.oldType;
-		service.notifyChangedConnection(this.connectionId);
+		this.toogleType(this.oldType, service);
 
 	}
 
@@ -43,10 +41,27 @@ export class ChangeConnectionTypeAction implements ChangeConnectionAction {
 	 */
 	public redo(service: TopologyEditorService): void {
 
+		this.oldType = this.toogleType(this.newType, service);
+	}
+
+	/**
+	 * Toogle the type.
+	 */
+	private toogleType(type: string | null, service: TopologyEditorService): string | null {
+
+
 		const connection = service.getConnectionWith(this.connectionId)!;
-		this.oldType = connection.type;
-		connection.type = this.newType;
+		var previous = connection.type;
+		connection.type = type;
+		if (this.otherId != this.connectionId) {
+
+			const otherConnection = service.getConnectionWith(this.otherId)!;
+			otherConnection.type = type;
+			service.notifyChangedConnection(this.otherId);
+		}
 		service.notifyChangedConnection(this.connectionId);
+		return previous;
+
 	}
 
 

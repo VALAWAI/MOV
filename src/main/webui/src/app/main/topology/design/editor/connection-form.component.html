@@ -16,6 +16,15 @@
 			[endpoint]="connectionForm.controls.source.value"
 			(endpointUpdated)="sourceEndpointChanged($event)"></app-topology-endpoint-editor>
 	</fieldset>
+	}@else{
+	<div
+		i18n="Notification explanation@@main_topology_design_connection-editor_notification-explanation">
+		When a message is sent from <span class="font-bold">{{sourceNode!.name}}</span>
+		(<span class="italic">{{sourceEndpoint!.channel|toChannelName}}</span>)
+		to <span class="font-bold">{{targetNode!.name}}</span> (<span
+			class="italic">{{targetEndpoint!.channel|toChannelName}}</span>), a
+		notification will be sent to the following target node.
+	</div>
 	}
 	<fieldset class="grow fieldset  border-base-300 rounded-box border p-2">
 		<legend class="p-2 font-bold"
