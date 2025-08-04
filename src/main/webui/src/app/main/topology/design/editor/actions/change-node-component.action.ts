@@ -69,11 +69,11 @@ export class ChangeNodeComponentAction extends AbstractCompositeAction implement
 						var newEndpoint = node.searchEndpointOrCreate(newChannel.name, newChannel.publish != null);
 						for (var connection of service.connections) {
 
-							if (connection.source.nodeId == node.id) {
+							if (connection.source.id == oldEndpoint.id) {
 
 								this.addAndRedo(new ChangeConnectionSourceAction(connection.id, newEndpoint), service);
 
-							} else if (connection.target.nodeId == node.id) {
+							} else if (connection.target.id == oldEndpoint.id) {
 
 								this.addAndRedo(new ChangeConnectionTargetAction(connection.id, newEndpoint), service);
 							}
