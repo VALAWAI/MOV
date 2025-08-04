@@ -9,7 +9,7 @@
 			<mat-icon color="warn">delete</mat-icon>
 		</button>
 	</div>
-	@if(possibleChannels.length > 0 || activeChannels.length > 0){
+	@if(nodeForm.controls.component.enabled){
 	<mat-form-field appearance="fill" class="w-full"> <mat-label
 		i18n="The label to select the level@@main_topology_design_node-form_level">Level</mat-label>
 	<mat-select formControlName="level"> <mat-option

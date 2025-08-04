@@ -142,6 +142,7 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 			}
 		);
 
+
 		this.possibleChannels = [];
 		this.activeChannels = [];
 		if (node.component != null && node.component.channels != null) {
@@ -160,6 +161,17 @@ export class TopologyNodeFormComponent implements OnInit, OnDestroy {
 			sortChannelSchemaByName(this.possibleChannels);
 			sortChannelSchemaByName(this.activeChannels);
 		}
+
+		if (node.sourceNotification == null) {
+
+			this.nodeForm.controls.component.enable();
+
+		} else {
+
+			this.nodeForm.controls.component.disable();
+		}
+
+		this.updatePage();
 	}
 
 	/**
