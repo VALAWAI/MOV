@@ -17,9 +17,9 @@ import { ChangeConnectionAction } from "./change-connection.action";
 export class ChangeConnectionSourceAction implements ChangeConnectionAction {
 
 	/**
-	 * The previous conneciton source.
+	 * The previous endpoint to teh source.
 	 */
-	private oldSource: EditorEndpoint | null = null;
+	private oldSourceEndpoint: EditorEndpoint | null = null;
 
 	/**
 	 * Create the action with the connection to be removed.
@@ -29,12 +29,14 @@ export class ChangeConnectionSourceAction implements ChangeConnectionAction {
 	}
 
 	/**
-	 * REtore the old source.
+	 * Restore the old source.
 	 */
 	public undo(service: TopologyEditorService): void {
 
 		const connection = service.getConnectionWith(this.connectionId)!;
-		connection!.source = this.oldSource!;
+		var sourceNode = service.getNodeWith(this.oldSourceEndpoint!.nodeId)!;
+		connection.source = sourceNode.searchEndpointOrCreate(this.oldSourceEndpoint!.channel, true);
+		service.notifyChangedNode(sourceNode.id);
 		service.notifyChangedConnection(this.connectionId);
 
 	}
@@ -45,9 +47,10 @@ export class ChangeConnectionSourceAction implements ChangeConnectionAction {
 	public redo(service: TopologyEditorService): void {
 
 		const connection = service.getConnectionWith(this.connectionId)!;
-		this.oldSource = connection.source;
+		this.oldSourceEndpoint = connection.source;
 		var sourceNode = service.getNodeWith(this.newSourceEndpoint.nodeId)!;
 		connection.source = sourceNode.searchEndpointOrCreate(this.newSourceEndpoint.channel, true);
+		service.notifyChangedNode(sourceNode.id);
 		service.notifyChangedConnection(this.connectionId);
 	}
 
