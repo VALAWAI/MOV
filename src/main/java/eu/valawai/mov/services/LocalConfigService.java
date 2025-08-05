@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import org.eclipse.microprofile.config.ConfigProvider;
+
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -95,6 +97,52 @@ public class LocalConfigService {
 			}
 
 		});
+	}
+
+	/**
+	 * Update the local configuration asynchronously and log the result.
+	 *
+	 * @param key   the key of the property.
+	 * @param value the value of the property.
+	 */
+	public void setPropertyAsync(String key, String value) {
+
+		this.setProperty(key, value).subscribe().with(result -> {
+
+			if (result == false) {
+
+				Log.errorv("Cannot update the property {0} to {1}.", key, value);
+
+			} else {
+
+				Log.debugv("Changed property {0} to {1}.", key, value);
+
+			}
+		});
+	}
+
+	/**
+	 * Get a property value.
+	 *
+	 * @param key  the key of the property.
+	 * @param type of the value.
+	 *
+	 * @return the value of the property or {@code null} if not defined or not match
+	 *         the type.
+	 */
+	public <T> T getPropertyValue(String key, Class<T> type) {
+
+		try {
+
+			return ConfigProvider.getConfig().getValue(key, type);
+
+		} catch (final Throwable cause) {
+
+			Log.debugv(cause, "Cannot get the property {0}.", key);
+			return null;
+
+		}
+
 	}
 
 }

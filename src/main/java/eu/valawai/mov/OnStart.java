@@ -10,12 +10,13 @@ package eu.valawai.mov;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
+import eu.valawai.mov.MOVConfiguration.UpdateMode;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.components.FinishAllComponents;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.DeleteAllTopologyConnections;
 import eu.valawai.mov.persistence.live.topology.DisableAllTopologyConnections;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import eu.valawai.mov.services.ComponenetLibraryService;
 import io.quarkus.runtime.StartupEvent;
 import io.smallrye.config.Priorities;
@@ -36,28 +37,10 @@ import jakarta.inject.Inject;
 public class OnStart {
 
 	/**
-	 * If this is {@code true} it removes all the previous data on start up.
+	 * The configuration of the MOV.
 	 */
-	@ConfigProperty(name = MOVSettings.CLEAN_ON_STARTUP, defaultValue = "true")
-	protected boolean cleanOnStartup;
-
-	/**
-	 * If this is {@code true} it has to update the components library on start up.
-	 */
-	@ConfigProperty(name = MOVSettings.COMPONENTS_LIBRARY_UPDATE_ON_START, defaultValue = "true")
-	protected boolean updateOnStart;
-
-	/**
-	 * The data of the last time the component library has been updated.
-	 */
-	@ConfigProperty(name = MOVSettings.COMPONENTS_LIBRARY_LAST_UPDATE, defaultValue = "0")
-	protected long lastUpdate;
-
-	/**
-	 * The seconds to wait until update process.
-	 */
-	@ConfigProperty(name = MOVSettings.COMPONENTS_LIBRARY_UPDATE_PERIOD, defaultValue = "86400")
-	protected long updatePeriod;
+	@Inject
+	MOVConfiguration conf;
 
 	/**
 	 * The pattern to check the on page resource.
@@ -83,40 +66,13 @@ public class OnStart {
 	 */
 	public void handle(@Observes @Priority(Priorities.APPLICATION + 23) StartupEvent event) {
 
-		if (this.cleanOnStartup) {
+		this.initComponents();
+		this.initConnections();
 
-			FinishAllComponents.fresh().execute().onFailure().recoverWithItem(error -> {
-
-				AddLog.fresh().withError(error).withMessage("Cannot finish some previous components").store();
-				return null;
-
-			}).await().indefinitely();
-
-			AddLog.fresh().withInfo().withMessage("Finished the previous components").store();
-
-			DeleteAllTopologyConnections.fresh().execute().onFailure().recoverWithItem(error -> {
-
-				AddLog.fresh().withError(error).withMessage("Cannot delete some previous topology connections").store();
-				return null;
-
-			}).await().indefinitely();
-
-			AddLog.fresh().withInfo().withMessage("Deleted the previous topology connections").store();
-
-		} else {
-
-			DisableAllTopologyConnections.fresh().execute().onFailure().recoverWithItem(error -> {
-
-				AddLog.fresh().withError(error).withMessage("Cannot disable some previous topology connections")
-						.store();
-				return null;
-
-			}).await().indefinitely();
-
-			AddLog.fresh().withInfo().withMessage("Disabled the previous topology connections").store();
-		}
-
-		if (this.updateOnStart && this.lastUpdate + this.updatePeriod < TimeManager.now()) {
+		final var updateConentsLibraryMode = this.conf.init().updateComponentsLibrary();
+		if (updateConentsLibraryMode == UpdateMode.ALWAYS
+				|| updateConentsLibraryMode == UpdateMode.IF_STALE && this.conf.componentsLibrary().lastUpdate()
+						+ this.conf.componentsLibrary().updatePeriod() < TimeManager.now()) {
 			// Needs to update the library
 			this.libraryService.update().onFailure().recoverWithItem(error -> {
 
@@ -126,6 +82,48 @@ public class OnStart {
 
 			}).await().indefinitely();
 		}
+
+	}
+
+	/**
+	 * Adapt the {@link ComponentEntity} when the MOV start.
+	 */
+	private void initComponents() {
+
+		final var mode = this.conf.init().components();
+		final var action = switch (mode) {
+		case FINISH -> FinishAllComponents.fresh().execute()
+				.chain(any -> AddLog.fresh().withInfo().withMessage("Finished the previous components").execute());
+		case DROP -> ComponentEntity.mongoCollection().drop()
+				.chain(any -> AddLog.fresh().withInfo().withMessage("Dropped the previous components").execute());
+		default -> AddLog.fresh().withInfo().withMessage("Preserve the previous components").execute();
+		};
+
+		action.onFailure().recoverWithUni(
+				cause -> AddLog.fresh().withError(cause).withMessage("Could not {0} the components.", mode).execute())
+				.await().indefinitely();
+
+	}
+
+	/**
+	 * Adapt the {@link TopologyConnectionEntity} when the MOV start.
+	 */
+	private void initConnections() {
+
+		final var mode = this.conf.init().connections();
+		final var action = switch (mode) {
+		case DISABLE -> DisableAllTopologyConnections.fresh().execute()
+				.chain(any -> AddLog.fresh().withInfo().withMessage("Disable the previous connections").execute());
+		case DELETE -> DeleteAllTopologyConnections.fresh().execute()
+				.chain(any -> AddLog.fresh().withInfo().withMessage("Delete the previous connections").execute());
+		case DROP -> TopologyConnectionEntity.mongoCollection().drop()
+				.chain(any -> AddLog.fresh().withInfo().withMessage("Dropped the previous connections").execute());
+		default -> AddLog.fresh().withInfo().withMessage("Preserve the previous connections").execute();
+		};
+
+		action.onFailure().recoverWithUni(
+				cause -> AddLog.fresh().withError(cause).withMessage("Could not {0} the connections.", mode).execute())
+				.await().indefinitely();
 
 	}
 

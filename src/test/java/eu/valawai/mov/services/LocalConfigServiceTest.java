@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.services;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -49,6 +50,51 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 
 		final var confValue = ConfigProvider.getConfig().getValue(key, String.class);
 		assertEquals(confValue, value);
+
+	}
+
+	/**
+	 * Check that can be set a property async.
+	 */
+	@Test
+	public void shouldSetPropertyAsync() {
+
+		final var key = ValueGenerator.nextPattern("async_key_{0}");
+		final var value = ValueGenerator.nextPattern("Value with number {0}");
+
+		this.service.setPropertyAsync(key, value);
+
+		var confValue = this.service.getPropertyValue(key, String.class);
+		while (confValue == null) {
+
+			confValue = this.service.getPropertyValue(key, String.class);
+		}
+		assertEquals(confValue, value);
+
+	}
+
+	/**
+	 * Check that can not get an undefined property value.
+	 */
+	@Test
+	public void shouldNotGetUndefinedPropertyValue() {
+
+		final var key = ValueGenerator.nextPattern("undefined_property_key_{0}");
+		final var confValue = this.service.getPropertyValue(key, String.class);
+		assertNull("Can obtain undefined property value", confValue);
+
+	}
+
+	/**
+	 * Check that can not get a property with a bad type.
+	 */
+	@Test
+	public void shouldNotGetPropertyValueWithBadType() {
+
+		final var key = ValueGenerator.nextPattern("bad_property_type_key_{0}");
+		System.setProperty(key, "abc");
+		final var confValue = this.service.getPropertyValue(key, Long.class);
+		assertNull("Can obtain property value with bad type", confValue);
 
 	}
 

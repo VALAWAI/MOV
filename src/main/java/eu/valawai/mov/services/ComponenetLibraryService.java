@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import eu.valawai.mov.MOVSettings;
+import eu.valawai.mov.MOVConfiguration;
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
@@ -125,10 +125,8 @@ public class ComponenetLibraryService {
 				if (foundRepositories == null || foundRepositories.isEmpty()) {
 					// No more components to update
 					AddLog.fresh().withInfo().withMessage("Updated the components library").store();
-					this.configService
-							.setProperty(MOVSettings.COMPONENTS_LIBRARY_LAST_UPDATE, String.valueOf(TimeManager.now()))
-							.subscribe().with(setted -> {
-							});
+					this.configService.setPropertyAsync(MOVConfiguration.COMPONENTS_LIBRARY_LAST_UPDATE_NAME,
+							String.valueOf(TimeManager.now()));
 
 				} else {
 

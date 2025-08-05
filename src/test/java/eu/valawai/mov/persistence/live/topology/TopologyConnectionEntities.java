@@ -24,6 +24,8 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import io.quarkus.logging.Log;
+import io.quarkus.panache.common.Sort;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Utility calss to manage the {@link TopologyConnectionEntity} used on tests.
@@ -179,14 +181,21 @@ public interface TopologyConnectionEntities {
 	 * Check exist the minimum topology connections.
 	 *
 	 * @param min number of topology connections.
+	 *
+	 * @return the min topology connections.
 	 */
-	public static void minTopologyConnections(int min) {
+	public static List<TopologyConnectionEntity> minTopologyConnections(int min) {
 
 		final var total = TopologyConnectionEntity.count().await().atMost(Duration.ofSeconds(30));
 		if (total < min) {
 
 			nextTopologyConnections(min - total);
 		}
+
+		final Uni<List<TopologyConnectionEntity>> find = TopologyConnectionEntity.findAll(Sort.descending("_id"))
+				.range(0, min).list();
+		return find.await().atMost(Duration.ofSeconds(30));
+
 	}
 
 	/**

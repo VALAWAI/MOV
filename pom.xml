@@ -5,7 +5,8 @@
 	<artifactId>master-of-valawai</artifactId>
 	<version>2.0.0</version>
 	<properties>
-		<compiler-plugin.version>3.13.0</compiler-plugin.version>
+		<clean-plugin.version>3.5.0</clean-plugin.version>
+		<compiler-plugin.version>3.14.0</compiler-plugin.version>
 		<maven.compiler.release>21</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -13,7 +14,7 @@
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 		<quarkus.platform.version>3.25.0</quarkus.platform.version>
 		<skipITs>true</skipITs>
-		<surefire-plugin.version>3.5.0</surefire-plugin.version>
+		<surefire-plugin.version>3.5.3</surefire-plugin.version>
 		<resources-plugin.version>3.3.1</resources-plugin.version>
 		<jacoco.version>0.8.12</jacoco.version>
 		<quarkus.quinoa.version>2.6.0</quarkus.quinoa.version>
@@ -117,6 +118,19 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-clean-plugin</artifactId>
+				<version>${clean-plugin.version}</version>
+				<configuration>
+					<filesets>
+  						<fileset>
+    						<directory>config</directory>
+						    <followSymlinks>false</followSymlinks>
+  						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>${quarkus.platform.group-id}</groupId>
 				<artifactId>quarkus-maven-plugin</artifactId>
