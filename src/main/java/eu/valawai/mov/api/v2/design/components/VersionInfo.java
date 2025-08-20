@@ -26,14 +26,14 @@ public class VersionInfo extends Model {
 	/**
 	 * the name of the version.
 	 */
-	@Schema(title = "The name of the component.", example = "1.0.0")
+	@Schema(title = "The name of the component.", examples = "1.0.0")
 	@NotEmpty
 	public String name;
 
 	/**
 	 * The epoch time, in seconds, when the version is set.
 	 */
-	@Schema(title = "The epoch time, in seconds, when the version is set.", example = "1640995200")
+	@Schema(title = "The epoch time, in seconds, when the version is set.", examples = "1640995200")
 	public Long since;
 
 }

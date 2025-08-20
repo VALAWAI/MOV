@@ -36,7 +36,7 @@ public class ChangeConnection extends Model {
 	/**
 	 * The identifier of the topology connection to change.
 	 */
-	@Schema(description = "The identifier of the topology connection to change.", example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The identifier of the topology connection to change.", examples = "000000000000000000000000", implementation = String.class)
 	@NotNull
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	public ObjectId connectionId;

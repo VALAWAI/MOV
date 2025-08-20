@@ -11,9 +11,11 @@ package eu.valawai.mov.events.components;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import eu.valawai.mov.MOVConfiguration.RegistrationBehavior;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.events.Payload;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -53,5 +55,13 @@ public class RegisterComponentPayload extends Payload {
 	@NotEmpty
 	@JsonProperty("asyncapi_yaml")
 	public String asyncapiYaml;
+
+	/**
+	 * This is defined the behaviour that the MOV must follow when the component is
+	 * registered. If it is not defined, it follow the current configuration
+	 * behaviour.
+	 */
+	@Nullable
+	public RegistrationBehavior behaviour;
 
 }

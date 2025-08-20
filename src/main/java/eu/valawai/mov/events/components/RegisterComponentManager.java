@@ -36,8 +36,8 @@ import eu.valawai.mov.events.topology.SentMessagePayload;
 import eu.valawai.mov.persistence.live.components.AddComponent;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
-import eu.valawai.mov.persistence.live.topology.AddC2SubscriptionToTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.logging.Log;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
@@ -75,6 +75,12 @@ public class RegisterComponentManager {
 	 */
 	@Inject
 	PublishService publish;
+
+	/**
+	 * The local configuration.
+	 */
+	@Inject
+	LocalConfigService conf;
 
 	/**
 	 * The keys of the payload to notify that a component is registered.
@@ -120,29 +126,20 @@ public class RegisterComponentManager {
 
 					component.version = payload.version;
 				}
-				final Uni<Throwable> add = AddComponent.fresh().withComponent(component).execute().map(source -> {
+				final Uni<Throwable> add = AddComponent.fresh().withComponent(component).execute().onItem().ifNull()
+						.failWith(() -> new IllegalStateException("Cannot store the component")).map(source -> {
 
-					if (source != null) {
+							AddLog.fresh().withInfo().withMessage("Added the component {0}.", source.id)
+									.withPayload(payload).store();
+							final var channelsToIgnore = new HashSet<String>();
+							this.verifySpecialChannels(source, channelsToIgnore);
 
-						AddLog.fresh().withInfo().withMessage("Added the component {0}.", source.id)
-								.withPayload(payload).store();
-						final var channelsToIgnore = new HashSet<String>();
-						this.verifySpecialChannels(source, channelsToIgnore);
+							if (source.channels != null && !source.channels.isEmpty()) {
 
-						if (source.channels != null && !source.channels.isEmpty()) {
-
-							this.createConnectionsFor(source, channelsToIgnore);
-						}
-						return null;
-
-					} else {
-
-						Log.errorv("Cannot store the component {0}", component);
-						return new IllegalStateException("Cannot store the component");
-
-					}
-
-				});
+								this.createConnectionsFor(source, channelsToIgnore);
+							}
+							return null;
+						});
 				return add.subscribeAsCompletionStage().thenCompose(error -> {
 
 					if (error == null) {
@@ -281,23 +278,27 @@ public class RegisterComponentManager {
 
 							if (sentSchema.match(channel.subscribe, new HashMap<>())) {
 
-								AddC2SubscriptionToTopologyConnection.fresh().withConnection(connection.id)
-										.withComponent(entity.id).withChannel(channel.name).execute().subscribe()
-										.with(success -> {
-
-											if (success) {
-
-												AddLog.fresh().withInfo().withMessage(
-														"Subscribed the channel {0} of the component {1} into the connection {2}.",
-														channel.name, entity.id, connection.id).store();
-
-											} else {
-
-												AddLog.fresh().withError().withMessage(
-														"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
-														channel.name, entity.id, connection.id).store();
-											}
-										});
+								if (connection.c2Subscriptions != null) {
+									// TODO
+//
+//								UpsertNotificationToTopologyConnection.fresh().withConnection(connection.id)
+//										.withComponent(entity.id).withChannel(channel.name).execute().subscribe()
+//										.with(success -> {
+//
+//											if (success) {
+//
+//												AddLog.fresh().withInfo().withMessage(
+//														"Subscribed the channel {0} of the component {1} into the connection {2}.",
+//														channel.name, entity.id, connection.id).store();
+//
+//											} else {
+//
+//												AddLog.fresh().withError().withMessage(
+//														"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
+//														channel.name, entity.id, connection.id).store();
+//											}
+//										});
+								}
 							}
 						}
 						break;

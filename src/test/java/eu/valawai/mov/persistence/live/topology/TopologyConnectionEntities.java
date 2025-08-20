@@ -28,7 +28,7 @@ import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 
 /**
- * Utility calss to manage the {@link TopologyConnectionEntity} used on tests.
+ * Utility class to manage the {@link TopologyConnectionEntity} used on tests.
  *
  * @see TopologyConnectionEntity
  *
@@ -129,7 +129,7 @@ public interface TopologyConnectionEntities {
 
 		if (subsriptionsCount > 0) {
 
-			entity.c2Subscriptions = new ArrayList<>();
+			entity.notifications = new ArrayList<>();
 			do {
 
 				final var component = ComponentEntities.nextComponent();
@@ -155,13 +155,15 @@ public interface TopologyConnectionEntities {
 						fail("Cannot persist a component subscription.");
 					}
 
-					final var subscription = new TopologyNode();
-					subscription.componentId = component.id;
-					subscription.channelName = channel.name;
-					entity.c2Subscriptions.add(subscription);
+					final var notification = new TopologyConnectionNotification();
+					notification.node = new TopologyNode();
+					notification.node.componentId = component.id;
+					notification.node.channelName = channel.name;
+					notification.enabled = flipCoin();
+					entity.notifications.add(notification);
 				}
 
-			} while (entity.c2Subscriptions.size() < subsriptionsCount);
+			} while (entity.notifications.size() < subsriptionsCount);
 		}
 
 		final var stored = entity.persist().onFailure().recoverWithItem(error -> {

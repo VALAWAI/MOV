@@ -80,13 +80,12 @@ public class LiveTopologyComponentOutConnectionTest extends ModelTestCase<LiveTo
 
 				model.target.enabled = entity.enabled;
 			}
-			if (entity.c2Subscriptions != null && !entity.c2Subscriptions.isEmpty()) {
+			if (entity.notifications != null && !entity.notifications.isEmpty()) {
 
 				model.notifications = new ArrayList<>();
-				for (final var subscription : entity.c2Subscriptions) {
+				for (final var defNotification : entity.notifications) {
 
-					final var notification = LiveTopologyConnectionEndpointTest.from(subscription);
-					notification.enabled = true;
+					final var notification = LiveTopologyConnectionEndpointTest.from(defNotification);
 					model.notifications.add(notification);
 				}
 				model.notifications.sort((c1, c2) -> {

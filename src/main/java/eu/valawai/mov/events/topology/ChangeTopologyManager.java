@@ -22,8 +22,8 @@ import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.DeleteTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.EnableTopologyConnection;
-import eu.valawai.mov.persistence.live.topology.GetTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -97,13 +97,10 @@ public class ChangeTopologyManager {
 
 				} else {
 
-					final var source = entity.source.channelName;
-					final var target = entity.target.channelName;
-					final var connectionLog = entity.id.toHexString() + " ( from '" + source + "' to '" + target + "')";
 					switch (payload.action) {
-					case REMOVE -> this.removeConnection(entity, connectionLog);
-					case DISABLE -> this.disableConnection(entity, connectionLog);
-					default -> this.enableConnection(entity, connectionLog);
+					case REMOVE -> this.removeConnection(entity);
+					case DISABLE -> this.disableConnection(entity);
+					default -> this.enableConnection(entity);
 					}
 					return null;
 				}
@@ -132,10 +129,9 @@ public class ChangeTopologyManager {
 	/**
 	 * Called when has to remove a connection.
 	 *
-	 * @param connection    to remove.
-	 * @param connectionLog identifier of the connection on the log message.
+	 * @param connection to remove.
 	 */
-	private void removeConnection(TopologyConnectionEntity connection, String connectionLog) {
+	private void removeConnection(TopologyConnectionEntity connection) {
 
 		DeleteTopologyConnection.fresh().withConnection(connection.id).execute().chain(deleted -> {
 
@@ -157,11 +153,12 @@ public class ChangeTopologyManager {
 
 		}).subscribe().with(deleted -> {
 
-			AddLog.fresh().withDebug().withMessage("Removed the connection {0}", connectionLog).store();
+			AddLog.fresh().withDebug().withMessage("Removed the connection {0}", connection.toLogId()).store();
 
 		}, error -> {
 
-			AddLog.fresh().withError(error).withMessage("Cannot remove the connection {0}", connectionLog).store();
+			AddLog.fresh().withError(error).withMessage("Cannot remove the connection {0}", connection.toLogId())
+					.store();
 
 		});
 	}
@@ -195,27 +192,27 @@ public class ChangeTopologyManager {
 	/**
 	 * Called when has to disable a connection.
 	 *
-	 * @param connection    to disable.
-	 * @param connectionLog identifier of the connection on the log message.
+	 * @param connection to disable.
 	 */
-	private void disableConnection(TopologyConnectionEntity connection, String connectionLog) {
+	private void disableConnection(TopologyConnectionEntity connection) {
 
 		if (connection.enabled) {
 
 			EnableTopologyConnection.fresh().withConnection(connection.id).withAction(TopologyAction.DISABLE).execute()
 					.chain(any -> this.closeConnection(connection)).subscribe().with(success -> {
 
-						AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connectionLog).store();
+						AddLog.fresh().withInfo().withMessage("Disabled the connection {0}", connection.toLogId())
+								.store();
 
 					}, error -> {
 
-						AddLog.fresh().withError(error).withMessage("Cannot disable the connection {0}", connectionLog)
-								.store();
+						AddLog.fresh().withError(error)
+								.withMessage("Cannot disable the connection {0}", connection.toLogId()).store();
 					});
 
 		} else {
 
-			AddLog.fresh().withError().withMessage("Cannot disable the connection {0}", connectionLog).store();
+			AddLog.fresh().withError().withMessage("Cannot disable the connection {0}", connection.toLogId()).store();
 		}
 
 	}
@@ -223,137 +220,160 @@ public class ChangeTopologyManager {
 	/**
 	 * Called when has to enable a connection.
 	 *
-	 * @param connection    to enable.
-	 * @param connectionLog identifier of the connection on the log message.
+	 * @param connection to enable.
 	 */
-	private void enableConnection(TopologyConnectionEntity connection, String connectionLog) {
+	private void enableConnection(TopologyConnectionEntity connection) {
 
 		if (!connection.enabled) {
 
 			EnableTopologyConnection.fresh().withConnection(connection.id).withAction(TopologyAction.ENABLE).execute()
 					.subscribe().with(done -> {
 
-						AddLog.fresh().withInfo().withMessage("Enabled the connection {0}", connectionLog).store();
+						AddLog.fresh().withInfo().withMessage("Enabled the connection {0}", connection.toLogId())
+								.store();
+						final var source = connection.source.channelName;
+						if (!this.listener.isOpen(source)) {
+
+							this.listener.toMultiBody(this.listener.openConsumer(source)).subscribe().with(msg -> {
+
+								this.receivedMessageFromQueue(source, msg);
+
+							}, error -> {
+
+								AddLog.fresh().withError(error)
+										.withMessage("Cannot listen for the messages from the queue {0}", source)
+										.store();
+							});
+						}
 
 					}, error -> {
 
 						AddLog.fresh().withError(error)
-								.withMessage("Opened connection {0}, but not marked as enabled", connectionLog).store();
+								.withMessage("The connection {0} cannot be marked as enabled", connection.toLogId())
+								.store();
 
 					});
-			final var source = connection.source.channelName;
-			if (!this.listener.isOpen(source)) {
-
-				this.listener.toMultiBody(this.listener.openConsumer(source)).subscribe().with(received -> {
-
-					this.handleConnectionMessage(source, received);
-
-				}, error -> {
-
-					AddLog.fresh().withError(error).withMessage("Cannot enable the connection {0}", connectionLog)
-							.store();
-				});
-
-			}
 
 		} else {
 
-			AddLog.fresh().withError().withMessage("Cannot enable the connection {0}", connectionLog).store();
+			AddLog.fresh().withError().withMessage("Cannot enable the connection {0}", connection.toLogId()).store();
 		}
 
 	}
 
 	/**
-	 * Called when a message is received from a channel.
+	 * Called when has received a message form a channel.
 	 *
-	 * @param source   channel that has received the message
-	 * @param received message to send.
+	 * @param name of the channel that has received the message
+	 * @param msg  received message from the channel.
 	 */
-	private void handleConnectionMessage(String source, JsonObject received) {
+	private void receivedMessageFromQueue(String name, JsonObject msg) {
 
-		final var query = Filters.and(Filters.eq("enabled", true), Filters.eq("source.channelName", source),
+		Log.debugv("On the channel {0} received the message {1}", name, msg);
+		// search for all the active connections that has the channel as source.
+		final var query = Filters.and(Filters.eq("enabled", true), Filters.eq("source.channelName", name),
 				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)));
 		final Multi<TopologyConnectionEntity> search = TopologyConnectionEntity.find(query).stream();
 		search.subscribe().with(connection -> {
 
-			final var connectionLog = connection.id.toHexString() + " ( from '" + source + "' to '"
-					+ connection.target.channelName + "')";
-			this.handleConnectionMessage(connection, received, connectionLog);
+			AddLog.fresh().withDebug().withPayload(msg)
+					.withMessage("Received a message from the source of the connection {0}.", connection.toLogId())
+					.store();
+
+			final var msgToSent = this.convertSourceMessageToTargetMessage(connection, msg);
+			this.publish.send(connection.target.channelName, msgToSent).subscribe().with(emptySentToTarget -> {
+
+				AddLog.fresh().withDebug().withPayload(msgToSent)
+						.withMessage("Notified to the target of the connection {0}", connection.toLogId()).store();
+				if (connection.notifications != null) {
+					// notify of a sent message thought a connection
+					final var now = TimeManager.now();
+					for (final var notification : connection.notifications) {
+
+						if (notification.enabled) {
+
+							final var notificationToSend = this.convertSourceMessageToNotificationMessage(connection,
+									notification, msg, now);
+							this.publish.send(notification.node.channelName, notificationToSend).subscribe()
+									.with(emptySentToNotification -> {
+
+										AddLog.fresh().withDebug().withPayload(notificationToSend).withMessage(
+												"The message that has pass thought the connection {0}, it is notified to {1}",
+												connection.toLogId(), notification.node.channelName).store();
+
+									}, error -> {
+
+										AddLog.fresh().withError(error).withPayload(notificationToSend).withMessage(
+												"The message that has pass thought the connection {0}, it cannot be is notified to {1}",
+												connection.toLogId(), notification.node.channelName).store();
+									});
+
+						} // else notification disabled
+					}
+				}
+
+			}, error -> {
+
+				AddLog.fresh().withError(error).withPayload(msgToSent)
+						.withMessage("Cannot notify to the target of the connection {0}", connection.toLogId()).store();
+
+			});
 
 		}, error -> {
 
-			AddLog.fresh().withError(error).withPayload(received)
-					.withMessage("Cannot process received message from the queue {0}", source).store();
+			AddLog.fresh().withError(error).withPayload(msg)
+					.withMessage("Cannot process received message from the queue {0}", name).store();
 		});
+
 	}
 
 	/**
-	 * Called when a message is received from the source of a connection.
+	 * Convert the message published by a source of a connection to a message that
+	 * the target of the connection is subscribed.
 	 *
-	 * @param connection    where the message is received.
-	 * @param received      the message that has published by the source.
-	 * @param connectionLog identifier of the connection on the log message.
+	 * @param connection where the message has to pas thought.
+	 * @param msg        that has been published
 	 */
-	private void handleConnectionMessage(TopologyConnectionEntity connection, JsonObject received,
-			String connectionLog) {
+	private JsonObject convertSourceMessageToTargetMessage(TopologyConnectionEntity connection, JsonObject msg) {
 
-		final var target = connection.target.channelName;
-		this.publish.send(target, received).subscribe().with(done -> {
+		if (connection.targetMessageConverterJSCode != null) {
+			// adapt the msg to send to the notification target
 
-			AddLog.fresh().withDebug().withMessage("Sent a message through the connection {0}", connectionLog)
-					.withPayload(received).store();
-
-			if (connection.c2Subscriptions != null) {
-
-				final var payload = new SentMessagePayload();
-				payload.source = new MinComponentPayload();
-				payload.target = new MinComponentPayload();
-				payload.messagePayload = received;
-				payload.timestamp = TimeManager.now();
-				payload.connectionId = connection.id;
-
-				GetTopologyConnection.fresh().withConnection(connection.id).execute().subscribe().with(model -> {
-
-					payload.source.id = model.source.component.id;
-					payload.source.type = model.source.component.type;
-					payload.source.name = model.source.component.name;
-					payload.target.id = model.target.component.id;
-					payload.target.type = model.target.component.type;
-					payload.target.name = model.target.component.name;
-					for (final var subscriber : connection.c2Subscriptions) {
-
-						this.publish.send(subscriber.channelName, payload).subscribe().with(sent -> {
-
-							AddLog.fresh().withDebug().withMessage(
-									"Component {0} at {1} has notified of a message that has been send on the connection {2}",
-									subscriber.componentId, subscriber.channelName, connectionLog).withPayload(payload)
-									.store();
-
-						}, error -> {
-
-							AddLog.fresh().withError(error).withMessage(
-									"Cannot notify to component {0} at {1} that a message has been send on the connection {2}",
-									subscriber.componentId, subscriber.channelName, connectionLog).withPayload(payload)
-									.store();
-
-						});
-
-					}
-
-				}, error -> {
-
-					AddLog.fresh().withError(error)
-							.withMessage("Cannot found the information the connection {0}", connectionLog)
-							.withPayload(payload).store();
-				});
-			}
-
-		}, error -> {
-
-			AddLog.fresh().withError(error)
-					.withMessage("Cannot send a message thought the connection {0}", connectionLog)
-					.withPayload(received).store();
-		});
+		}
+		return msg;
 	}
 
+	/**
+	 * Convert the message published by a source of a connection to a message that
+	 * the notification target is subscribed.
+	 *
+	 * @param connection   where the message has to pas thought.
+	 * @param notification that has to be done.
+	 * @param msg          that has been published
+	 * @param now          the time when the message has been sent.
+	 *
+	 * @return the message that has to be sent
+	 */
+	private Object convertSourceMessageToNotificationMessage(TopologyConnectionEntity connection,
+			TopologyConnectionNotification notification, JsonObject msg, long now) {
+
+		final var payload = new SentMessagePayload();
+		payload.source = new MinComponentPayload();
+		payload.target = new MinComponentPayload();
+		payload.messagePayload = msg;
+		payload.timestamp = now;
+		payload.connectionId = connection.id;
+		payload.source.id = connection.source.componentId;
+		payload.source.type = connection.source.inferComponentType();
+		payload.source.name = connection.source.inferComponentName();
+		payload.target.id = connection.target.componentId;
+		payload.target.type = connection.target.inferComponentType();
+		payload.target.name = connection.target.inferComponentName();
+
+		if (notification.notificationMessageConverterJSCode != null) {
+			// adapt the msg to send to the notification target
+
+		}
+		return payload;
+	}
 }

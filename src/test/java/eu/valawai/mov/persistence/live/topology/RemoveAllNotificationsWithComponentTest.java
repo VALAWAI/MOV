@@ -28,14 +28,14 @@ import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**
- * Test the {2link RemoveAllC2SubscriptionByComponent}.
+ * Test the {@link RemoveAllNotificationsWithComponent}.
  *
- * @see RemoveAllC2SubscriptionByComponent
+ * @see RemoveAllNotificationsWithComponent
  *
  * @author VALAWAI
  */
 @QuarkusTest
-public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCase {
+public class RemoveAllNotificationsWithComponentTest extends MovPersistenceTestCase {
 
 	/**
 	 * Should not remove for undefined component.
@@ -46,7 +46,7 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 		TopologyConnectionEntities.minTopologyConnections(100);
 		final var componentId = nextObjectId();
 		final var result = this
-				.assertExecutionNotNull(RemoveAllC2SubscriptionByComponent.fresh().withComponent(componentId));
+				.assertExecutionNotNull(RemoveAllNotificationsWithComponent.fresh().withComponent(componentId));
 		assertEquals(0l, result);
 
 	}
@@ -64,7 +64,7 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 			component = ComponentEntities.nextComponent();
 		}
 		final var result = this
-				.assertExecutionNotNull(RemoveAllC2SubscriptionByComponent.fresh().withComponent(component.id));
+				.assertExecutionNotNull(RemoveAllNotificationsWithComponent.fresh().withComponent(component.id));
 		assertEquals(0l, result);
 
 	}
@@ -81,22 +81,24 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 			component = ComponentEntities.nextComponent();
 		}
 		final var connection = TopologyConnectionEntities.nextTopologyConnection();
-		connection.c2Subscriptions = new ArrayList<>();
+		connection.notifications = new ArrayList<>();
 		final var node = new TopologyNode();
 		node.componentId = component.id;
 		node.channelName = "undefined";
-		connection.c2Subscriptions.add(node);
+		final var notification = new TopologyConnectionNotification();
+		notification.node = node;
+		connection.notifications.add(notification);
 		this.assertItemNotNull(connection.update());
 
 		final var now = TimeManager.now();
 		final var result = this
-				.assertExecutionNotNull(RemoveAllC2SubscriptionByComponent.fresh().withComponent(component.id));
+				.assertExecutionNotNull(RemoveAllNotificationsWithComponent.fresh().withComponent(component.id));
 		assertEquals(1l, result);
 
 		final TopologyConnectionEntity updated = this
 				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
 		assertTrue(now <= updated.updateTimestamp);
-		assertEquals(Collections.EMPTY_LIST, updated.c2Subscriptions);
+		assertEquals(Collections.EMPTY_LIST, updated.notifications);
 	}
 
 	/**
@@ -111,22 +113,24 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 			component = ComponentEntities.nextComponent();
 		}
 		final var connection = TopologyConnectionEntities.nextTopologyConnection();
-		connection.c2Subscriptions = new ArrayList<>();
+		connection.notifications = new ArrayList<>();
 		final var node = new TopologyNode();
 		node.componentId = component.id;
 		node.channelName = "undefined";
-		connection.c2Subscriptions.add(node);
+		final var notification = new TopologyConnectionNotification();
+		notification.node = node;
+		connection.notifications.add(notification);
 		connection.deletedTimestamp = nextPastTime();
 		this.assertItemNotNull(connection.update());
 
 		final var result = this
-				.assertExecutionNotNull(RemoveAllC2SubscriptionByComponent.fresh().withComponent(component.id));
+				.assertExecutionNotNull(RemoveAllNotificationsWithComponent.fresh().withComponent(component.id));
 		assertEquals(0l, result);
 
 		final TopologyConnectionEntity updated = this
 				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
 		assertEquals(connection.updateTimestamp, updated.updateTimestamp);
-		assertEquals(connection.c2Subscriptions, updated.c2Subscriptions);
+		assertEquals(connection.notifications, updated.notifications);
 	}
 
 	/**
@@ -155,14 +159,16 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 			Collections.shuffle(c2s);
 			final var max = rnd().nextInt(1, c2s.size());
 			final var subC2s = c2s.subList(0, max);
-			connection.c2Subscriptions = new ArrayList<>();
+			connection.notifications = new ArrayList<>();
 			var containsC2 = false;
 			for (final var component : subC2s) {
 
 				final var node = new TopologyNode();
 				node.componentId = component.id;
 				node.channelName = "undefined";
-				connection.c2Subscriptions.add(node);
+				final var notification = new TopologyConnectionNotification();
+				notification.node = node;
+				connection.notifications.add(notification);
 				if (c2.id.equals(component.id)) {
 					containsC2 = true;
 				}
@@ -177,7 +183,8 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 		} while (connections.size() < 23);
 
 		final var now = TimeManager.now();
-		final var result = this.assertExecutionNotNull(RemoveAllC2SubscriptionByComponent.fresh().withComponent(c2.id));
+		final var result = this
+				.assertExecutionNotNull(RemoveAllNotificationsWithComponent.fresh().withComponent(c2.id));
 		assertEquals(connections.size(), result);
 
 		for (final var connection : connections) {
@@ -185,16 +192,16 @@ public class RemoveAllC2SubscriptionByComponentTest extends MovPersistenceTestCa
 			final TopologyConnectionEntity updated = this
 					.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
 			assertTrue(now <= updated.updateTimestamp);
-			final var iter = connection.c2Subscriptions.iterator();
+			final var iter = connection.notifications.iterator();
 			while (iter.hasNext()) {
 
 				final var subscription = iter.next();
-				if (subscription.componentId.equals(c2.id)) {
+				if (subscription.node.componentId.equals(c2.id)) {
 					iter.remove();
 					break;
 				}
 			}
-			assertEquals(connection.c2Subscriptions, updated.c2Subscriptions);
+			assertEquals(connection.notifications, updated.notifications);
 
 		}
 	}

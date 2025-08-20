@@ -34,7 +34,7 @@ public class MinTopology extends Model {
 	/**
 	 * The unique identifier of the topology.
 	 */
-	@Schema(description = "The unique identifier of the topology. This is system-generated and read-only.", readOnly = true, example = "60c87a5e8b4e7c001a1b2c3d", implementation = String.class)
+	@Schema(description = "The unique identifier of the topology. This is system-generated and read-only.", readOnly = true, examples = "688cca9c7079a2f5e0f45ee1", implementation = String.class)
 	@BsonProperty("_id")
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@JsonDeserialize(using = ObjectIdDeserializer.class)

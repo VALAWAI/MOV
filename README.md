@@ -9,84 +9,70 @@ topology, promoting component independence and decoupling.
 ## Summary
 
 *   **Name:** Master Of VALAWAI (MOV)
-*   **Version:** 1.5.0 (April 30, 2025)
+*   **Version:** 2.0.0 (August 6, 2025)
 *   **ASYNCAPI:** [1.2.0 (May 9, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/ASYNCAPI_1.2.0/asyncapi.yml)
-*   **OPENAPI:** [1.2.0 (May 9, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/API_1.2.0/openapi.yml)
+*   **OPENAPI:** [2.0.0 (August 6, 2025)](https://raw.githubusercontent.com/VALAWAI/MOV/API_2.0.0/openapi.yml)
 *   **Developed by:** [IIIA-CSIC](https://www.iiia.csic.es)
 *   **License:** [GPL3](LICENSE)
 
 ## Getting Started
 
-This section provides instructions for deploying MOV using Docker.  Docker simplifies
-deployment by containerizing the application and ensuring consistency across 
-different environments.
+This is a concise guide on how to get MOV up and running. For a comprehensive deployment 
+guide, consult the 
+[VALAWAI documentation](https://valawai.github.io/docs/architecture/implementations/mov/deploy).
 
 ### Prerequisites
 
-*   **Docker:** Install Docker following the official instructions: 
-[https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
-*   **Docker Compose:** Install Docker Compose: 
-[https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
+Before you begin, you need to **install Docker** by following the 
+[official instructions](https://docs.docker.com/get-docker/). Docker is essential for running 
+the MOV application and its dependencies.
 
-### Deployment Steps
+### Installation and Setup
 
-1.  **Clone the Repository:**
+1. **Clone the MOV Repository:**
+
+First, open a terminal and clone the MOV repository from GitHub. The `docker run` command below 
+uses an `alpine/git` container to perform the clone operation.
 
 ```bash
 docker run -ti --rm -v ${HOME}:/root -v $(pwd):/git alpine/git clone [https://github.com/VALAWAI/MOV.git](https://github.com/VALAWAI/MOV.git)
 ```
 
-2.  **Navigate to the MOV Directory:**
+2. **Navigate to the MOV directory:**
+
+After the repository is cloned, navigate into the new directory.
 
 ```bash
 cd MOV
 ```
 
-3.  **Run MOV:**
+3. **Run MOV:**
+
+Execute the `runMOV.sh` script to start the application. This script automates several steps for you.
 
  ```bash
  ./runMOV.sh
  ```
 
-The `runMOV.sh` script automates the following:
+This single command performs the following actions:
 
-*   Builds the MOV Docker image.
-*   Starts Docker containers for MOV, RabbitMQ, and MongoDB.
-*   Configures environment variables.
+* Builds the necessary **MOV Docker image**.
+* Starts the Docker containers for **MOV**, **RabbitMQ**, and **MongoDB**.
+* Provides access to the **MOV User Interface (UI)** at  [http://localhost:8080](http://localhost:8080)
+* Also provides access to the **RabbitMQ Management Interface** at [http://localhost:8081](http://localhost:8081) using the credentials  `mov:password`.
 
-### Accessing the Interfaces
+### Customizing the Configuration
 
-*   **MOV User Interface:** [http://localhost:8080](http://localhost:8080)
-*   **RabbitMQ Management Interface:** [http://localhost:8081](http://localhost:8081) (Credentials: `mov:password`)
-*   **Mongo Express:** [http://localhost:8082](http://localhost:8082) (Credentials: `mov:password`)
+You can customize the default behavior of the `runMOV.sh` script by creating a file named `.env`
+in the same directory. This file allows you to override default environment variables. For a full 
+list of available variables, refer to the [VALAWAI docuemntation](https://valawai.github.io/docs/architecture/implementations/mov/deploy#environment-variables).
 
-**Security Notice:** The default credentials for RabbitMQ and MongoDB are `mov:password`.  
-**Change these immediately** for production deployments.
+Here are some of the most important environment variables you can set:
 
-### Configuration with Environment Variables
-
-MOV can be configured using a `.env` file located in the same directory as `runMOV.sh`.  
-The following environment variables are available:
-
-*   `RABBITMQ_TAG` (Default: `management`): Specifies the RabbitMQ Docker image tag.
-*   `MQ_PORT` (Default: `5672`): Specifies the RabbitMQ listening port.
-*   `MQ_UI_PORT` (Default: `8081`): Specifies the RabbitMQ management interface port.
-*   `MQ_USER` (Default: `mov`): Specifies the RabbitMQ authentication username.
-*   `MQ_PASSWORD` (Default: `password`): Specifies the RabbitMQ authentication password 
-(**Change Immediately!**).
-*   `MONGODB_TAG` (Default: `latest`): Specifies the MongoDB Docker image tag.
-*   `MONGO_PORT` (Default: `27017`): Specifies the MongoDB listening port.
-*   `MONGO_ROOT_USER` (Default: `root`): Specifies the MongoDB root user.
-*   `MONGO_ROOT_PASSWORD` (Default: `password`): Specifies the MongoDB root user password 
-(**Change Immediately!**).
-*   `MONGO_LOCAL_DATA` (Default: `~/mongo_data/movDB`): Specifies the local directory for 
-MongoDB data persistence.
-*   `DB_NAME` (Default: `movDB`): Specifies the database name used by MOV in MongoDB.
-*   `DB_USER_NAME` (Default: `mov`): Specifies the username MOV uses to access MongoDB.
-*   `DB_USER_PASSWORD` (Default: `password`): Specifies the password MOV uses to access 
-MongoDB (**Change Immediately!**).
-*   `MOV_TAG` (Default: `latest`): Specifies the MOV Docker image tag.
-*   `MOV_UI_PORT` (Default: `8080`): Specifies the MOV user interface port.
+* `MOV_UI_PORT` (Default: `8080`): The port where the MOV UI is accessible.
+* `MOV_URL` (Default: `http://localhost:8080`): The public URL where the MOV UI is visible.
+* `MONGO_LOCAL_DATA` (Default: `~/.mongo_data/movDB`): The local directory used to store 
+the MongoDB database files.
 
 ### Database Recreation
 
@@ -199,7 +185,7 @@ or execute `./stopDevelopmentEnvironment.sh` from your host machine.
 
 ## Links
 
- - [Master Of VALAWAI tutorial](https://valawai.github.io/docs/tutorials/mov)
+ - [Master Of VALAWAI documentstion](https://valawai.github.io/docs/architecture/implementations/mov/)
  - [VALWAI documentation](https://valawai.github.io/docs/)
  - [VALAWAI project web site](https://valawai.eu/)
  - [Twitter](https://twitter.com/ValawaiEU)

@@ -29,7 +29,7 @@ public class ConnectionToCreate extends Model {
 	/**
 	 * The component that is the source of the topology connection.
 	 */
-	@Schema(description = "The component that is the source of the topology connection.", example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The component that is the source of the topology connection.", examples = "000000000000000000000000", implementation = String.class)
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@NotNull
 	public ObjectId sourceComponent;
@@ -44,7 +44,7 @@ public class ConnectionToCreate extends Model {
 	/**
 	 * The component that is the target of the topology connection.
 	 */
-	@Schema(description = "The component that is the target of the topology connection.", example = "000000000000000000000000", implementation = String.class)
+	@Schema(description = "The component that is the target of the topology connection.", examples = "000000000000000000000000", implementation = String.class)
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	@NotNull
 	public ObjectId targetComponent;

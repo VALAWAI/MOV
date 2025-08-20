@@ -55,6 +55,11 @@ public class TopologyConnectionEntity extends ReactivePanacheMongoEntity impleme
 	public TopologyNode source;
 
 	/**
+	 * The name of the connection.
+	 */
+	public String name;
+
+	/**
 	 * The node that is the target of the connection.
 	 */
 	public TopologyNode target;
@@ -68,5 +73,45 @@ public class TopologyConnectionEntity extends ReactivePanacheMongoEntity impleme
 	 * The list of C2 components that will be notified when a message is send
 	 * between the source and the target.
 	 */
+	@Deprecated
 	public List<TopologyNode> c2Subscriptions;
+
+	/**
+	 * The javaScript code that will be executed to convert the message from the
+	 * source to the message that the target can handle.
+	 */
+	public String targetMessageConverterJSCode;
+
+	/**
+	 * The notifications that has to sent every time a message go from the source to
+	 * the target.
+	 */
+	public List<TopologyConnectionNotification> notifications;
+
+	/**
+	 * Return the identifier of this connection in a log message.
+	 *
+	 * @return the log identifier of the connection
+	 */
+	public String toLogId() {
+
+		final var builder = new StringBuilder();
+		if (this.id != null) {
+			builder.append(this.id.toHexString());
+		}
+		builder.append(" ( from '");
+		if (this.source != null) {
+
+			builder.append(this.source.channelName);
+		}
+		builder.append("' to '");
+		if (this.target != null) {
+
+			builder.append(this.target.channelName);
+		}
+		builder.append("')");
+		return builder.toString();
+
+	}
+
 }

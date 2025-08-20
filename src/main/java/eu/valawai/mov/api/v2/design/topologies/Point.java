@@ -25,12 +25,12 @@ public class Point extends Model {
 	/**
 	 * The X-coordinate (horizontal position) of the point in the 2D graph.
 	 */
-	@Schema(description = "The X-coordinate (horizontal position) of the point.", example = "100.5")
+	@Schema(description = "The X-coordinate (horizontal position) of the point.", examples = "100.5")
 	public double x;
 
 	/**
 	 * The Y-coordinate (vertical position) of the point in the 2D graph.
 	 */
-	@Schema(description = "The Y-coordinate (vertical position) of the point.", example = "250.0")
+	@Schema(description = "The Y-coordinate (vertical position) of the point.", examples = "250.0")
 	public double y;
 }

@@ -8,8 +8,13 @@
 
 package eu.valawai.mov;
 
+import java.util.Optional;
+
+import org.bson.types.ObjectId;
+
 import io.quarkus.arc.Unremovable;
 import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
 
 /**
@@ -22,7 +27,7 @@ import io.smallrye.config.WithDefault;
 public interface MOVConfiguration {
 
 	/**
-	 * Obtainb the configuration when the MOV starts.
+	 * Obtain the configuration when the MOV starts.
 	 *
 	 * @return the configuration to apply when the MOV is initialized.
 	 */
@@ -60,6 +65,21 @@ public interface MOVConfiguration {
 		 */
 		@WithDefault("IF_STALE")
 		public UpdateMode updateComponentsLibrary();
+
+		/**
+		 * The identifier of the topology to use when the MOV has to manage.
+		 *
+		 * @return the identifier of the topology to follow.
+		 */
+		@WithConverter(ObjectIdConverter.class)
+		public Optional<ObjectId> topologyId();
+
+		/**
+		 * The path to the file that contains the topology that the MOV has to manage.
+		 *
+		 * @return the path to the file that contains the topology.
+		 */
+		public Optional<String> topologyPath();
 
 	}
 
@@ -180,4 +200,77 @@ public interface MOVConfiguration {
 	 */
 	public static final String COMPONENTS_LIBRARY_LAST_UPDATE_NAME = "mov.components-library.last-update";
 
+	/**
+	 * The configurations used to determine the behaviour of the MOV when receive an
+	 * event.
+	 *
+	 * @return the configuration of the events management.
+	 */
+	public Events events();
+
+	/**
+	 * Determine the behaviour of the MOV when receive some specific events.
+	 */
+	interface Events {
+
+		/**
+		 * Specify what the MOV has to do after a component has been registered.
+		 *
+		 * @return the behaviour to do after the component has been registered.
+		 */
+		@WithDefault("AUTO_DISCOVER_CONNECTIONS")
+		RegistrationBehavior registerComponent();
+
+		/**
+		 * The time, in seconds, that has to pass before to update the component
+		 * library.
+		 *
+		 * @return the seconds to wait until update the components library.
+		 */
+		@WithDefault("DELETE_RELATED_CONNECTIONS")
+		UnregistrationBehavior unregisterComponent();
+	}
+
+	/**
+	 * Enumerates the possible behaviors that can be done when a component has been
+	 * registered.
+	 */
+	public enum RegistrationBehavior {
+		/**
+		 * Do nothing after registering the component.
+		 */
+		DO_NOTHING,
+
+		/**
+		 * Automatically discover the possible connections for the component.
+		 */
+		AUTO_DISCOVER_CONNECTIONS,
+
+		/**
+		 * Check if the component can be applied to the current topology.
+		 */
+		CHECK_APPLICABILITY_TO_TOPOLOGY,
+
+		/**
+		 * Try to check if the component follows the topology, and if not, try to auto
+		 * discover the connections.
+		 */
+		CHECK_TOPOLOGY_AND_AUTO_DISCOVER_IF_NEEDED
+	}
+
+	/**
+	 * Enumerates the possible behaviors that can be done when a component is
+	 * unregistered.
+	 */
+	public enum UnregistrationBehavior {
+		/**
+		 * Do nothing after unregistering the component.
+		 */
+		DO_NOTHING,
+
+		/**
+		 * Delete all the related connections for the component.
+		 */
+		DELETE_RELATED_CONNECTIONS
+	}
 }

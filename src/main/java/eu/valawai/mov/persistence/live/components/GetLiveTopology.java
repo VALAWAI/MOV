@@ -76,13 +76,13 @@ public class GetLiveTopology extends AbstractPaginatedQuery<LiveTopology, GetLiv
 										    {
 										    	"$map":
 										    	{
-										    		"input": "$c2Subscriptions",
-										    		"as": "subscription",
+										    		"input": "$notifications",
+										    		"as": "notification",
 										    		"in":
 										    		{
-											    		"_id": "$$subscription.componentId",
-											    		"channel": "$$subscription.channelName",
-											    		"enabled": true
+											    		"_id": "$$notification.node.componentId",
+											    		"channel": "$$notification.node.channelName",
+											    		"enabled": "$$notification.enabled"
 										    		}
 										    	}
 										    }

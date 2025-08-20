@@ -22,8 +22,8 @@ import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
-import eu.valawai.mov.persistence.live.topology.AddC2SubscriptionToTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.AddTopologyConnection;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
@@ -381,23 +381,27 @@ public class CreateConnectionManager {
 			if (channel.name.matches(C2_SUBSCRIBER_CHANNEL_NAME_PATTERN) && channel.subscribe != null
 					&& sentSchema.match(channel.subscribe, new HashMap<>())) {
 				// the component must be subscribed into the connection
-				AddC2SubscriptionToTopologyConnection.fresh().withConnection(context.connectionId)
-						.withComponent(target.id).withChannel(channel.name).execute().subscribe().with(success -> {
+				final TopologyConnectionEntity connection = null;
+				if (connection.c2Subscriptions != null) {
 
-							if (success) {
-
-								AddLog.fresh().withInfo().withMessage(
-										"Subscribed the channel {0} of the component {1} into the connection {2}.",
-										channel.name, target.id, context.connectionId).store();
-
-							} else {
-
-								AddLog.fresh().withError().withMessage(
-										"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
-										channel.name, target.id, context.connectionId).store();
-							}
-						});
-
+					// TODO
+//					AddC2SubscriptionToTopologyConnection.fresh().withConnection(context.connectionId)
+//							.withComponent(target.id).withChannel(channel.name).execute().subscribe().with(success -> {
+//
+//								if (success) {
+//
+//									AddLog.fresh().withInfo().withMessage(
+//											"Subscribed the channel {0} of the component {1} into the connection {2}.",
+//											channel.name, target.id, context.connectionId).store();
+//
+//								} else {
+//
+//									AddLog.fresh().withError().withMessage(
+//											"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
+//											channel.name, target.id, context.connectionId).store();
+//								}
+//							});
+				}
 			}
 		}
 

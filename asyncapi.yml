@@ -1,7 +1,7 @@
 asyncapi: '2.6.0'
 info:
  title: Value-Aware Artificial Intelligence API
- version: '1.2.0'
+ version: '1.3.0'
  description: |
   This API provides the messages that the VALAWAI infrastructure can manage.
   These messages are used to start/stop the infrastructure and for

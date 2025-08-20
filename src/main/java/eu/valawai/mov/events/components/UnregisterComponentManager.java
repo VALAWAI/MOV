@@ -22,7 +22,7 @@ import eu.valawai.mov.events.topology.ChangeTopologyPayload;
 import eu.valawai.mov.events.topology.TopologyAction;
 import eu.valawai.mov.persistence.live.components.FinishComponent;
 import eu.valawai.mov.persistence.live.logs.AddLog;
-import eu.valawai.mov.persistence.live.topology.RemoveAllC2SubscriptionByComponent;
+import eu.valawai.mov.persistence.live.topology.RemoveAllNotificationsWithComponent;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
@@ -75,7 +75,7 @@ public class UnregisterComponentManager {
 
 				if (finished) {
 
-					return RemoveAllC2SubscriptionByComponent.fresh().withComponent(payload.componentId).execute()
+					return RemoveAllNotificationsWithComponent.fresh().withComponent(payload.componentId).execute()
 							.map(removed -> {
 								Log.debugv("Unsubscribed {0} from {1} connections.", payload.componentId, finished);
 								return true;

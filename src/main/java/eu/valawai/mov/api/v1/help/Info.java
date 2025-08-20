@@ -22,13 +22,13 @@ public class Info extends Model {
 	/**
 	 * The version of the api.
 	 */
-	@Schema(description = "Version of the web services.", example = "1.0.0")
+	@Schema(description = "Version of the web services.", examples = "1.0.0")
 	public String version;
 
 	/**
 	 * The profile of the quarkus platform.
 	 */
-	@Schema(description = "Profile that start the quarkus", example = "production")
+	@Schema(description = "Profile that start the quarkus", examples = "production")
 	public String profile;
 
 }
