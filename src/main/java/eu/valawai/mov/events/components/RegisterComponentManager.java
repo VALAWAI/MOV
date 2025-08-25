@@ -37,6 +37,9 @@ import eu.valawai.mov.persistence.live.components.AddComponent;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
+import eu.valawai.mov.persistence.live.topology.UpsertNotificationToTopologyConnection;
 import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.logging.Log;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
@@ -198,7 +201,7 @@ public class RegisterComponentManager {
 			if (!maybeSubscribeChannels.isEmpty()) {
 
 				final var paginator = TopologyConnectionEntity
-						.find("c2Subscriptions.componentId != ?1", Sort.ascending("_id"), entity.id)
+						.find("notifications.node.componentId != ?1", Sort.ascending("_id"), entity.id)
 						.page(Page.ofSize(10));
 				this.subscribeComponentIntoConnections(entity, maybeSubscribeChannels, paginator);
 			}
@@ -278,27 +281,28 @@ public class RegisterComponentManager {
 
 							if (sentSchema.match(channel.subscribe, new HashMap<>())) {
 
-								if (connection.c2Subscriptions != null) {
-									// TODO
-//
-//								UpsertNotificationToTopologyConnection.fresh().withConnection(connection.id)
-//										.withComponent(entity.id).withChannel(channel.name).execute().subscribe()
-//										.with(success -> {
-//
-//											if (success) {
-//
-//												AddLog.fresh().withInfo().withMessage(
-//														"Subscribed the channel {0} of the component {1} into the connection {2}.",
-//														channel.name, entity.id, connection.id).store();
-//
-//											} else {
-//
-//												AddLog.fresh().withError().withMessage(
-//														"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
-//														channel.name, entity.id, connection.id).store();
-//											}
-//										});
-								}
+								final var newNotification = new TopologyConnectionNotification();
+								newNotification.node = new TopologyNode();
+								newNotification.node.componentId = entity.id;
+								newNotification.node.channelName = channel.name;
+								newNotification.enabled = true;
+
+								UpsertNotificationToTopologyConnection.fresh().withConnection(connection.id)
+										.withNotification(newNotification).execute().subscribe().with(success -> {
+
+											if (success) {
+
+												AddLog.fresh().withInfo().withMessage(
+														"Added notification to the channel {0} of the component {1} into the connection {2}.",
+														channel.name, entity.id, connection.id).store();
+
+											} else {
+
+												AddLog.fresh().withError().withMessage(
+														"Could not notify the channel {0} of the component {1} into the connection {2}.",
+														channel.name, entity.id, connection.id).store();
+											}
+										});
 							}
 						}
 						break;

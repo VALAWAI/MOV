@@ -78,14 +78,16 @@ public class TopologyConnectionTest extends ModelTestCase<TopologyConnection> {
 
 				model.target = TopologyConnectionNodeTest.from(entity.target);
 			}
-			if (entity.c2Subscriptions != null) {
+			if (entity.notifications != null) {
 
 				model.subscriptions = new ArrayList<>();
-				for (final var subscription : entity.c2Subscriptions) {
+				for (final var notification : entity.notifications) {
 
-					final var node = TopologyConnectionNodeTest.from(subscription);
-					model.subscriptions.add(node);
+					if (notification.enabled) {
 
+						final var node = TopologyConnectionNodeTest.from(notification.node);
+						model.subscriptions.add(node);
+					}
 				}
 
 			}

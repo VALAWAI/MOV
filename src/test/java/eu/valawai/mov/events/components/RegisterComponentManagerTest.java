@@ -46,7 +46,6 @@ import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
@@ -553,16 +552,22 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(3, lastComponent.channels.size());
 
 		// check updated the connections
-		final var expectedSubscriptionNode = new TopologyNode();
-		expectedSubscriptionNode.componentId = lastComponent.id;
-		expectedSubscriptionNode.channelName = "valawai/c2/" + componentName + "/control/" + actionName;
+		final var expectedChannelName = "valawai/c2/" + componentName + "/control/" + actionName;
 		for (final var connection : connections) {
 
 			final TopologyConnectionEntity updated = this
 					.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
-			assertNotNull(updated.c2Subscriptions, "New component is not subscribed into the connection");
-			assertTrue(updated.c2Subscriptions.contains(expectedSubscriptionNode),
-					"New component is not subscribed into the connection");
+			assertNotNull(updated.notifications, "New component is not subscribed into the connection");
+			var found = false;
+			for (final var notification : updated.notifications) {
+
+				if (notification.node.componentId.equals(lastComponent.id)
+						&& expectedChannelName.equals(notification.node.channelName)) {
+					found = true;
+					break;
+				}
+			}
+			assertTrue(found, "New component is not subscribed into the connection");
 			assertTrue(now <= updated.updateTimestamp, "The connection is not updated");
 		}
 	}

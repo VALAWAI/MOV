@@ -61,8 +61,12 @@ public class GetTopologyConnection
 		final var pipeline = new ArrayList<Bson>();
 		pipeline.add(Aggregates.match(Filters.and(Filters.eq("_id", this.connectionId), Filters
 				.or(Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null))))));
-		final var subscriptionsPipeline = this.pipelineForTopologyConnectionNode("c2Subscriptions");
-		subscriptionsPipeline.add(0, Aggregates.unwind("$c2Subscriptions"));
+		final var subscriptionsPipeline = new ArrayList<Bson>();
+		subscriptionsPipeline.add(Aggregates.unwind("$notifications"));
+		subscriptionsPipeline.add(Aggregates.match(Filters.eq("notifications.enabled", true)));
+		subscriptionsPipeline.addAll(this.pipelineForTopologyConnectionNode("notifications.node"));
+//		subscriptionsPipeline.add(Aggregates.project(Projections.fields(Projections.include("component"),
+//				Projections.computed("channelName", "notifications.node.channelName"))));
 		pipeline.add(
 				Aggregates.facet(
 						new Facet("basic",

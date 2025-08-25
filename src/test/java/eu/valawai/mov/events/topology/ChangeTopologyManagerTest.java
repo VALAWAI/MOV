@@ -294,7 +294,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 		msgPayload.put("pattern", ValueGenerator.nextPattern("pattern {0}"));
 		final var sourceQueue = connection.source.channelName;
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(sourceQueue, msgPayload));
-		assertEquals(1l,
+		assertEquals(2l,
 				LogEntity
 						.count("level = ?1 and message like ?2 and payload = ?3", LogLevel.DEBUG,
 								".*" + sourceQueue + ".+" + targetQueueName + ".*", Json.encodePrettily(msgPayload))

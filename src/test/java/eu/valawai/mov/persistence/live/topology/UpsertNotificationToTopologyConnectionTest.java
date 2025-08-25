@@ -51,7 +51,7 @@ public class UpsertNotificationToTopologyConnectionTest extends MovPersistenceTe
 
 		final var now = TimeManager.now();
 		final var result = this.assertItemNotNull(UpsertNotificationToTopologyConnection.fresh()
-				.withConnection(connection.id).witNotification(notification).execute());
+				.withConnection(connection.id).withNotification(notification).execute());
 		assertThat(result, is(true));
 
 		final TopologyConnectionEntity updated = this
@@ -96,7 +96,7 @@ public class UpsertNotificationToTopologyConnectionTest extends MovPersistenceTe
 
 		final var now = TimeManager.now();
 		final var result = this.assertItemNotNull(UpsertNotificationToTopologyConnection.fresh()
-				.withConnection(connection.id).witNotification(notification).execute());
+				.withConnection(connection.id).withNotification(notification).execute());
 		assertThat(result, is(true));
 
 		final TopologyConnectionEntity updated = this
@@ -137,7 +137,7 @@ public class UpsertNotificationToTopologyConnectionTest extends MovPersistenceTe
 
 		final var now = TimeManager.now();
 		final var result = this.assertItemNotNull(UpsertNotificationToTopologyConnection.fresh()
-				.withConnection(connection.id).witNotification(notification).execute());
+				.withConnection(connection.id).withNotification(notification).execute());
 		assertThat(result, is(true));
 
 		final TopologyConnectionEntity updated = this
@@ -185,7 +185,7 @@ public class UpsertNotificationToTopologyConnectionTest extends MovPersistenceTe
 
 		final var now = TimeManager.now();
 		final var result = this.assertItemNotNull(UpsertNotificationToTopologyConnection.fresh()
-				.withConnection(connection.id).witNotification(notification).execute());
+				.withConnection(connection.id).withNotification(notification).execute());
 		assertThat(result, is(true));
 
 		final TopologyConnectionEntity updated = this
@@ -221,7 +221,7 @@ public class UpsertNotificationToTopologyConnectionTest extends MovPersistenceTe
 
 		final var now = TimeManager.now();
 		final var result = this.assertItemNotNull(UpsertNotificationToTopologyConnection.fresh()
-				.withConnection(connection.id).witNotification(newNotification).execute());
+				.withConnection(connection.id).withNotification(newNotification).execute());
 		assertThat(result, is(true));
 
 		final TopologyConnectionEntity updated = this
@@ -255,7 +255,7 @@ public class UpsertNotificationToTopologyConnectionTest extends MovPersistenceTe
 
 		final var now = TimeManager.now();
 		final var result = this.assertItemNotNull(UpsertNotificationToTopologyConnection.fresh()
-				.withConnection(connection.id).witNotification(newNotification).execute());
+				.withConnection(connection.id).withNotification(newNotification).execute());
 		assertThat(result, is(true));
 
 		final TopologyConnectionEntity updated = this

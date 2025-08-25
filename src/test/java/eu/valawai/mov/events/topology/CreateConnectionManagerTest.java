@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,6 @@ import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
@@ -518,17 +518,22 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		assertEquals(payload.source, NodePayloadTest.from(last.source));
 		assertEquals(payload.target, NodePayloadTest.from(last.target));
 		assertTrue(last.enabled);
-		assertNotNull(last.c2Subscriptions);
-		for (final var c2 : c2s) {
+		assertNotNull(last.notifications);
+		C2: for (final var c2 : c2s) {
 
-			final var expected = new TopologyNode();
-			expected.componentId = c2.id;
-			expected.channelName = c2.channels.get(0).name;
-			assertTrue(last.c2Subscriptions.contains(expected));
+			for (final var notification : last.notifications) {
+
+				if (notification.node.componentId.equals(c2.id)
+						&& notification.node.channelName.equals(c2.channels.get(0).name)) {
+					continue C2;
+				}
+			}
+
+			fail("The c2s " + c2.id.toHexString() + " is not notified");
 		}
 
 		assertTrue(this.listener.isOpen(payload.source.channelName));
-		assertEquals(2 + last.c2Subscriptions.size(),
+		assertEquals(2 + last.notifications.size(),
 				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
@@ -572,7 +577,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		component.apiVersion = "1.0.0";
 		component.description = type + " component";
 		final var name = nextPattern("component_{0}");
-		component.name = "valawai/" + type.name().toLowerCase() + "_" + name;
+		component.name = type.name().toLowerCase() + "_" + name;
 		component.since = TimeManager.now();
 		component.type = type;
 		component.version = "1.0.0";
@@ -632,17 +637,23 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		assertEquals(payload.source, NodePayloadTest.from(last.source));
 		assertEquals(payload.target, NodePayloadTest.from(last.target));
 		assertFalse(last.enabled);
-		assertNotNull(last.c2Subscriptions);
-		for (final var c2 : c2s) {
+		assertNotNull(last.notifications);
+		C2: for (final var c2 : c2s) {
 
-			final var expected = new TopologyNode();
-			expected.componentId = c2.id;
-			expected.channelName = c2.channels.get(0).name;
-			assertTrue(last.c2Subscriptions.contains(expected));
+			for (final var notification : last.notifications) {
+
+				if (notification.node.componentId.equals(c2.id)
+						&& notification.node.channelName.equals(c2.channels.get(0).name)) {
+
+					continue C2;
+				}
+			}
+
+			fail("The c2s " + c2.id.toHexString() + " is not notified");
 		}
 
 		assertFalse(this.listener.isOpen(payload.source.channelName));
-		assertEquals(last.c2Subscriptions.size() + 1,
+		assertEquals(last.notifications.size() + 1,
 				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 

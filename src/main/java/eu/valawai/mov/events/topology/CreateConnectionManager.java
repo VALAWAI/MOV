@@ -23,7 +23,9 @@ import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.AddTopologyConnection;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
+import eu.valawai.mov.persistence.live.topology.UpsertNotificationToTopologyConnection;
 import io.quarkus.logging.Log;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
@@ -381,27 +383,29 @@ public class CreateConnectionManager {
 			if (channel.name.matches(C2_SUBSCRIBER_CHANNEL_NAME_PATTERN) && channel.subscribe != null
 					&& sentSchema.match(channel.subscribe, new HashMap<>())) {
 				// the component must be subscribed into the connection
-				final TopologyConnectionEntity connection = null;
-				if (connection.c2Subscriptions != null) {
+				final var newNotification = new TopologyConnectionNotification();
+				newNotification.node = new TopologyNode();
+				newNotification.node.componentId = target.id;
+				newNotification.node.channelName = channel.name;
+				newNotification.enabled = true;
 
-					// TODO
-//					AddC2SubscriptionToTopologyConnection.fresh().withConnection(context.connectionId)
-//							.withComponent(target.id).withChannel(channel.name).execute().subscribe().with(success -> {
-//
-//								if (success) {
-//
-//									AddLog.fresh().withInfo().withMessage(
-//											"Subscribed the channel {0} of the component {1} into the connection {2}.",
-//											channel.name, target.id, context.connectionId).store();
-//
-//								} else {
-//
-//									AddLog.fresh().withError().withMessage(
-//											"Could not subscribe the channel {0} of the component {1} into the connection {2}.",
-//											channel.name, target.id, context.connectionId).store();
-//								}
-//							});
-				}
+				UpsertNotificationToTopologyConnection.fresh().withConnection(context.connectionId)
+						.withNotification(newNotification).execute().subscribe().with(success -> {
+
+							if (success) {
+
+								AddLog.fresh().withInfo().withMessage(
+										"Added notification to the channel {0} of the component {1} into the connection {2}.",
+										channel.name, target.id, context.connectionId).store();
+
+							} else {
+
+								AddLog.fresh().withError().withMessage(
+										"Could not notify the channel {0} of the component {1} into the connection {2}.",
+										channel.name, target.id, context.connectionId).store();
+							}
+						});
+
 			}
 		}
 

@@ -70,13 +70,6 @@ public class TopologyConnectionEntity extends ReactivePanacheMongoEntity impleme
 	public boolean enabled;
 
 	/**
-	 * The list of C2 components that will be notified when a message is send
-	 * between the source and the target.
-	 */
-	@Deprecated
-	public List<TopologyNode> c2Subscriptions;
-
-	/**
 	 * The javaScript code that will be executed to convert the message from the
 	 * source to the message that the target can handle.
 	 */

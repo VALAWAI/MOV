@@ -59,7 +59,7 @@ public class UpsertNotificationToTopologyConnection
 	 *
 	 * @return this operator.
 	 */
-	public UpsertNotificationToTopologyConnection witNotification(TopologyConnectionNotification notification) {
+	public UpsertNotificationToTopologyConnection withNotification(TopologyConnectionNotification notification) {
 
 		this.notification = notification;
 		return this.operator();
