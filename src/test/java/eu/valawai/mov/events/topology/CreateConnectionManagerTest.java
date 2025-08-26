@@ -22,8 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -36,10 +39,12 @@ import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import jakarta.inject.Inject;
 
 /**
  * Test the {@link CreateConnectionManager}.
@@ -52,10 +57,26 @@ import io.vertx.core.json.JsonObject;
 public class CreateConnectionManagerTest extends MovEventTestCase {
 
 	/**
+	 * The local configuration.
+	 */
+	@Inject
+	LocalConfigService configuration;
+
+	/**
 	 * The queue name to send the create connection events.
 	 */
 	@ConfigProperty(name = "mp.messaging.incoming.create_connection.queue.name", defaultValue = "valawai/topology/change")
 	String createConnectionQueueName;
+
+	/**
+	 * Set auto discover as default.
+	 */
+	@BeforeEach
+	public void setAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.AUTO_DISCOVER.name()));
+	}
 
 	/**
 	 * Check that cannot create with an invalid paload.
@@ -665,7 +686,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	 * match, because exist a convert code.
 	 */
 	@Test
-	public void shouldCreateConnectionWithPublishNotMatchsubscribeBecauseExistConvertCode() {
+	public void shouldCreateConnectionWithPublishNotMatchSubscribeBecauseExistConvertCode() {
 
 		final var payload = new CreateConnectionPayloadTest().nextModel();
 		payload.source.componentId = null;
@@ -727,6 +748,60 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+	}
+
+	/**
+	 * Check that create a connection without notifications because the behaviour
+	 * say it.
+	 */
+	@Test
+	public void shouldCreateConnectionWithoutNotificationBecuaseBehaviourIsDoNothing() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.DO_NOTHING.name()));
+
+		final var c0 = this.createComponent(ComponentType.C0);
+		final var c1 = this.createComponent(ComponentType.C1);
+		final var schema = PayloadSchemaTestCase.nextPayloadSchema(2);
+		c0.channels.get(0).publish = schema;
+		this.assertItemNotNull(c0.update());
+		c1.channels.get(0).subscribe = schema;
+		this.assertItemNotNull(c1.update());
+
+		final var sentMessagePayloadSchema = createSentMessagePayloadSchemaFor(schema);
+		for (var i = 0; i < 43; i++) {
+
+			final var c2 = this.createComponent(ComponentType.C2);
+			c2.channels.get(0).subscribe = sentMessagePayloadSchema;
+			this.assertItemNotNull(c2.update());
+		}
+
+		final var payload = new CreateConnectionPayload();
+		payload.source = new NodePayload();
+		payload.source.componentId = c0.id;
+		payload.source.channelName = c0.channels.get(0).name;
+		payload.target = new NodePayload();
+		payload.target.componentId = c1.id;
+		payload.target.channelName = c1.channels.get(0).name;
+		payload.enabled = false;
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(1, () -> this.assertPublish(this.createConnectionQueueName, payload));
+
+		final TopologyConnectionEntity last = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= last.createTimestamp);
+		assertTrue(last.createTimestamp <= last.updateTimestamp);
+		assertNull(last.deletedTimestamp);
+		assertEquals(payload.source, NodePayloadTest.from(last.source));
+		assertEquals(payload.target, NodePayloadTest.from(last.target));
+		assertFalse(last.enabled);
+		assertNull(last.notifications);
+
+		assertFalse(this.listener.isOpen(payload.source.channelName));
+		assertEquals(1, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+
 	}
 
 }
