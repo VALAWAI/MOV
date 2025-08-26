@@ -23,6 +23,7 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphNodeOutputConnection;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.AddTopologyConnection;
@@ -301,7 +302,47 @@ public class CreateConnectionManager {
 	 */
 	private Uni<Throwable> validateTopology(ManagerContext context) {
 
-		return Uni.createFrom().nullItem();
+		return this.configuration.getTopology().onFailure().recoverWithUni(error -> Uni.createFrom().failure(error))
+				.chain(topology -> {
+
+					if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+
+						return Uni.createFrom()
+								.failure(new IllegalStateException("The topology to follow is not defined."));
+
+					} else if (topology != null) {
+
+						if (topology.nodes != null) {
+
+							NODE: for (final var node : topology.nodes) {
+
+								if (node.outputs != null) {
+
+									for (final var output : node.outputs) {
+
+										if (output.sourceChannel.equals(context.sourceChannel.name)
+												&& output.targetChannel.equals(context.targetChannel.name)) {
+											// found the connection definition
+											context.definition = output;
+											break NODE;
+										}
+									}
+
+								}
+							}
+						}
+
+						if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
+
+							return Uni.createFrom().failure(new IllegalStateException(
+									"The topology does not contains a definition to match the connection."));
+
+						}
+
+					}
+					return Uni.createFrom().nullItem();
+
+				});
 
 	}
 
@@ -344,6 +385,11 @@ public class CreateConnectionManager {
 		 * The expected notification channel payload.
 		 */
 		private ObjectPayloadSchema notificationPayload;
+
+		/**
+		 * The definition of the connection into the topology.
+		 */
+		public TopologyGraphNodeOutputConnection definition;
 
 		/**
 		 * Create a new context
