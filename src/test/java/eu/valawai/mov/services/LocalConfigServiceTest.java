@@ -8,6 +8,9 @@
 
 package eu.valawai.mov.services;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,11 +48,17 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 		final var key = ValueGenerator.nextPattern("key_{0}");
 		final var value = ValueGenerator.nextPattern("Value with number {0}");
 
-		final var set = this.assertItemNotNull(this.service.setProperty(key, value));
+		var set = this.assertItemNotNull(this.service.setProperty(key, value));
 		assertTrue(set, "Not set property");
 
 		final var confValue = ConfigProvider.getConfig().getValue(key, String.class);
 		assertEquals(confValue, value);
+
+		set = this.assertItemNotNull(this.service.setProperty(key, null));
+		assertTrue(set, "Not set property");
+
+		final var names = ConfigProvider.getConfig().getPropertyNames();
+		assertThat(names, not(hasItem(key)));
 
 	}
 
@@ -64,10 +73,10 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 
 		this.service.setPropertyAsync(key, value);
 
-		var confValue = this.service.getPropertyValue(key, String.class);
+		var confValue = this.service.getPropertyValue(key, String.class, null);
 		while (confValue == null) {
 
-			confValue = this.service.getPropertyValue(key, String.class);
+			confValue = this.service.getPropertyValue(key, String.class, null);
 		}
 		assertEquals(confValue, value);
 
@@ -80,7 +89,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 	public void shouldNotGetUndefinedPropertyValue() {
 
 		final var key = ValueGenerator.nextPattern("undefined_property_key_{0}");
-		final var confValue = this.service.getPropertyValue(key, String.class);
+		final var confValue = this.service.getPropertyValue(key, String.class, null);
 		assertNull("Can obtain undefined property value", confValue);
 
 	}
@@ -93,7 +102,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 
 		final var key = ValueGenerator.nextPattern("bad_property_type_key_{0}");
 		System.setProperty(key, "abc");
-		final var confValue = this.service.getPropertyValue(key, Long.class);
+		final var confValue = this.service.getPropertyValue(key, Long.class, null);
 		assertNull("Can obtain property value with bad type", confValue);
 
 	}

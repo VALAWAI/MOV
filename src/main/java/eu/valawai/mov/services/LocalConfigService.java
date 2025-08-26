@@ -12,8 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.config.ConfigProvider;
 
+import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -83,8 +86,17 @@ public class LocalConfigService {
 
 			try {
 
-				this.properties.setProperty(key, value);
-				System.setProperty(key, value);
+				if (value == null) {
+
+					this.properties.remove(key);
+					System.clearProperty(key);
+
+				} else {
+
+					this.properties.setProperty(key, value);
+					System.setProperty(key, value);
+				}
+
 				final var writer = Files.newBufferedWriter(this.path);
 				this.properties.store(writer, "Local configuration of the MOV");
 				writer.close();
@@ -124,25 +136,61 @@ public class LocalConfigService {
 	/**
 	 * Get a property value.
 	 *
-	 * @param key  the key of the property.
-	 * @param type of the value.
+	 * @param key          the key of the property.
+	 * @param type         of the value.
+	 * @param defaultValue value if it not defined or can not get the value of the
+	 *                     specified type.
 	 *
 	 * @return the value of the property or {@code null} if not defined or not match
 	 *         the type.
 	 */
-	public <T> T getPropertyValue(String key, Class<T> type) {
+	public <T> T getPropertyValue(String key, Class<T> type, T defaultValue) {
 
+		T value = null;
 		try {
 
-			return ConfigProvider.getConfig().getValue(key, type);
+			value = ConfigProvider.getConfig().getValue(key, type);
 
 		} catch (final Throwable cause) {
 
 			Log.debugv(cause, "Cannot get the property {0}.", key);
-			return null;
+		}
+
+		if (value == null) {
+
+			return defaultValue;
+
+		} else {
+
+			return value;
+		}
+
+	}
+
+	/**
+	 * Get the {@link TopologyGraphEntity} to follow by the MOV.
+	 *
+	 * @return the designed topology to follow or {@code null} if does not have to
+	 *         follow any topology.
+	 */
+	public Uni<TopologyGraphEntity> getTopologyGraphToFollow() {
+
+		final var id = this.getPropertyValue(MOVConfiguration.TOPOLOGY_ID_NAME, String.class, null);
+		if (id != null) {
+
+			try {
+
+				final var topologyId = new ObjectId(id);
+				return TopologyGraphEntity.findById(topologyId);
+
+			} catch (final Error error) {
+
+				return Uni.createFrom().failure(error);
+			}
 
 		}
 
+		return Uni.createFrom().nullItem();
 	}
 
 }
