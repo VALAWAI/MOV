@@ -76,7 +76,8 @@ public class LocalConfigService {
 	 * Update the local configuration.
 	 *
 	 * @param key   the key of the property.
-	 * @param value the value of the property.
+	 * @param value the value of the property, or {@code null} to remove as local
+	 *              property.
 	 *
 	 * @return true if the property has been updated.
 	 */
@@ -115,7 +116,8 @@ public class LocalConfigService {
 	 * Update the local configuration asynchronously and log the result.
 	 *
 	 * @param key   the key of the property.
-	 * @param value the value of the property.
+	 * @param value the value of the property, or {@code null} to remove as local
+	 *              property.
 	 */
 	public void setPropertyAsync(String key, String value) {
 
@@ -173,24 +175,42 @@ public class LocalConfigService {
 	 * @return the designed topology to follow or {@code null} if does not have to
 	 *         follow any topology.
 	 */
-	public Uni<TopologyGraphEntity> getTopologyGraphToFollow() {
+	public Uni<TopologyGraphEntity> getTopology() {
+
+		final var id = this.getTopologyId();
+		if (id != null) {
+
+			return TopologyGraphEntity.findById(id);
+
+		} else {
+
+			return Uni.createFrom().nullItem();
+		}
+	}
+
+	/**
+	 * Get the {@link TopologyGraphEntity} to follow by the MOV.
+	 *
+	 * @return the designed topology to follow or {@code null} if does not have to
+	 *         follow any topology.
+	 */
+	public ObjectId getTopologyId() {
 
 		final var id = this.getPropertyValue(MOVConfiguration.TOPOLOGY_ID_NAME, String.class, null);
 		if (id != null) {
 
 			try {
 
-				final var topologyId = new ObjectId(id);
-				return TopologyGraphEntity.findById(topologyId);
+				return new ObjectId(id);
 
 			} catch (final Error error) {
 
-				return Uni.createFrom().failure(error);
+				Log.errorv(error, "Cannot get the configured topology id from {0}.", id);
 			}
 
 		}
 
-		return Uni.createFrom().nullItem();
+		return null;
 	}
 
 }

@@ -16,11 +16,14 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import eu.valawai.mov.MOVConfiguration;
 import eu.valawai.mov.persistence.design.topology.GetMinTopologyPage;
 import eu.valawai.mov.persistence.design.topology.GetTopology;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
 import eu.valawai.mov.persistence.design.topology.UpdateTopology;
+import eu.valawai.mov.services.LocalConfigService;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -49,6 +52,12 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TopologiesResource {
+
+	/**
+	 * The local configuration of the MOV.
+	 */
+	@Inject
+	LocalConfigService configuration;
 
 	/**
 	 * Get the information of some topologies.
@@ -186,6 +195,10 @@ public class TopologiesResource {
 
 			} else {
 
+				if (topologyId.equals(this.configuration.getTopologyId())) {
+					// removed topology => remove reference
+					this.configuration.setPropertyAsync(MOVConfiguration.TOPOLOGY_ID_NAME, null);
+				}
 				return Response.noContent().build();
 			}
 

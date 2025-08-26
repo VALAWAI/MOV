@@ -16,8 +16,11 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
+import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
+import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
@@ -26,10 +29,8 @@ import eu.valawai.mov.persistence.live.topology.AddTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
 import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import eu.valawai.mov.persistence.live.topology.UpsertNotificationToTopologyConnection;
+import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.logging.Log;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
-import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -69,7 +70,13 @@ public class CreateConnectionManager {
 	/**
 	 * The pattern that has to match a channel name to be used as subscriber.
 	 */
-	private static final String C2_SUBSCRIBER_CHANNEL_NAME_PATTERN = "valawai/c2/\\w+/control/\\w+";
+	private static final String C2_NOTIFICATION_CHANNEL_NAME_PATTERN = "valawai/c2/\\w+/control/\\w+";
+
+	/**
+	 * The local configuration.
+	 */
+	@Inject
+	LocalConfigService configuration;
 
 	/**
 	 * Called when has to create a connection.
@@ -86,6 +93,8 @@ public class CreateConnectionManager {
 
 			final var context = new ManagerContext();
 			context.payload = this.service.decodeAndVerify(content, CreateConnectionPayload.class);
+			context.behaviour = this.configuration.getPropertyValue(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+					TopologyBehavior.class, TopologyBehavior.AUTO_DISCOVER);
 			return this.validate(context).chain(invalid -> {
 
 				if (invalid == null) {
@@ -97,14 +106,19 @@ public class CreateConnectionManager {
 
 								if (connectionId != null) {
 
+									context.connectionId = connectionId;
 									AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
 											.withPayload(content).store();
-									context.connectionId = connectionId;
-									final var paginator = ComponentEntity.find(
-											"type = ?1 and channels.subscribe is not null and channels.name like ?2",
-											Sort.ascending("_id"), ComponentType.C2, C2_SUBSCRIBER_CHANNEL_NAME_PATTERN)
-											.page(Page.ofSize(10));
-									this.checkSubscriptionAndEnable(context, paginator);
+									switch (context.behaviour) {
+									case TopologyBehavior.AUTO_DISCOVER:
+										this.discoverNotifications(context);
+										break;
+									case TopologyBehavior.APPLY_TOPOLOGY:
+									case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+										break;
+									default:
+										// DO_NOTHING
+									}
 									return Uni.createFrom().nullItem();
 
 								} else {
@@ -168,7 +182,16 @@ public class CreateConnectionManager {
 
 						if (context.sourceChannel.publish.match(context.targetChannel.subscribe, new HashMap<>())) {
 
-							return Uni.createFrom().nullItem();
+							if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
+									|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+
+								return this.validateTopology(context);
+
+							} else {
+
+								return Uni.createFrom().nullItem();
+
+							}
 
 						} else {
 
@@ -275,9 +298,28 @@ public class CreateConnectionManager {
 	}
 
 	/**
+	 * Check if the connection is valid for the topology.
+	 *
+	 * @param context with the payload to validate.
+	 *
+	 * @return null of the connection follow the topology or the error that explains
+	 *         why is not valid.
+	 */
+	private Uni<Throwable> validateTopology(ManagerContext context) {
+
+		return Uni.createFrom().nullItem();
+
+	}
+
+	/**
 	 * Context used by this manager.
 	 */
 	private class ManagerContext {
+
+		/**
+		 * The behaviour to do after the connection has been created.
+		 */
+		public TopologyBehavior behaviour;
 
 		/**
 		 * The received payload.
@@ -299,47 +341,33 @@ public class CreateConnectionManager {
 		 */
 		public ObjectId connectionId;
 
-	}
+		/**
+		 * The expected notification channel payload.
+		 */
+		private ObjectPayloadSchema notificationPayload;
 
-	/**
-	 * Check for the necessary subscription to the
-	 */
-	private void checkSubscriptionAndEnable(ManagerContext context,
-			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
+		/**
+		 * Check if a channel can be a notification channel.
+		 *
+		 * @param channel to check.
+		 *
+		 * @return {@code true} if the channel can be a notification for the connection.
+		 */
+		public boolean canBeNotification(ChannelSchema channel) {
 
-		final Multi<ComponentEntity> getter = paginator.stream();
-		getter.onCompletion().invoke(() -> {
+			if (channel.name.matches(C2_NOTIFICATION_CHANNEL_NAME_PATTERN) && channel.subscribe != null) {
+				if (this.notificationPayload == null) {
 
-			paginator.hasNextPage().subscribe().with(hasNext -> {
-
-				if (hasNext) {
-
-					this.checkSubscriptionAndEnable(context, paginator.nextPage());
-
-				} else {
-
-					this.enableConnectionIfNecessary(context);
-
+					this.notificationPayload = SentMessagePayload
+							.createSentMessagePayloadSchemaFor(this.sourceChannel.publish);
 				}
 
-			}, error -> {
+				return this.notificationPayload.match(channel.subscribe, new HashMap<>());
 
-				Log.errorv(error,
-						"Error when paginate the components to check if has to be subscribed into a connection.");
-				this.enableConnectionIfNecessary(context);
+			}
 
-			});
-
-		}).subscribe().with(target -> {
-
-			this.checkSubscription(context, target);
-
-		}, error -> {
-
-			Log.errorv(error, "Error when checking witch component may be subscribed to the connection messages.");
-			this.enableConnectionIfNecessary(context);
-
-		});
+			return false;
+		}
 
 	}
 
@@ -369,19 +397,34 @@ public class CreateConnectionManager {
 	}
 
 	/**
+	 * Discover the possible notifications for a created connection.
+	 *
+	 * @param context with the created connection.
+	 */
+	private void discoverNotifications(ManagerContext context) {
+
+		final Multi<ComponentEntity> find = ComponentEntity
+				.find("type = ?1 and channels.subscribe is not null and channels.name like ?2", Sort.ascending("_id"),
+						ComponentType.C2, C2_NOTIFICATION_CHANNEL_NAME_PATTERN)
+				.stream();
+		find.onCompletion().invoke(() -> this.enableConnectionIfNecessary(context)).subscribe().with(
+				component -> this.discoverNotificationsIn(component, context),
+				error -> AddLog.fresh().withError(error));
+
+	}
+
+	/**
 	 * Check if a component must be subscribed to the created connection.
 	 *
 	 * @param context with the created connection.
 	 * @param target  component to check it it has to be subscribed into the
 	 *                connection.
 	 */
-	private void checkSubscription(ManagerContext context, ComponentEntity target) {
+	private void discoverNotificationsIn(ComponentEntity target, ManagerContext context) {
 
-		final var sentSchema = SentMessagePayload.createSentMessagePayloadSchemaFor(context.sourceChannel.publish);
 		for (final var channel : target.channels) {
 
-			if (channel.name.matches(C2_SUBSCRIBER_CHANNEL_NAME_PATTERN) && channel.subscribe != null
-					&& sentSchema.match(channel.subscribe, new HashMap<>())) {
+			if (context.canBeNotification(channel)) {
 				// the component must be subscribed into the connection
 				final var newNotification = new TopologyConnectionNotification();
 				newNotification.node = new TopologyNode();

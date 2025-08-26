@@ -9,6 +9,9 @@
 package eu.valawai.mov.api.v2.design.topologies;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -19,11 +22,14 @@ import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
+import eu.valawai.mov.MOVConfiguration;
 import eu.valawai.mov.api.APITestCase;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntities;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
+import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -35,6 +41,12 @@ import jakarta.ws.rs.core.Response.Status;
  */
 @QuarkusTest
 public class TopologiesResourceTest extends APITestCase {
+
+	/**
+	 * The local configuration.
+	 */
+	@Inject
+	LocalConfigService configuration;
 
 	/**
 	 * Create some topologies that can be used.
@@ -186,10 +198,37 @@ public class TopologiesResourceTest extends APITestCase {
 	@Test
 	public void shouldDeleteTopology() {
 
-		final var topology = TopologyGraphEntities.minTopologies(1).get(0);
-		given().when().delete("/v2/design/topologies/" + topology.id.toHexString()).then()
+		final var topologies = TopologyGraphEntities.minTopologies(2);
+		final var topologyId = topologies.get(0).id;
+		final var movTopologyId = topologies.get(1).id;
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, movTopologyId.toHexString()));
+
+		given().when().delete("/v2/design/topologies/" + topologyId.toHexString()).then()
 				.statusCode(Status.NO_CONTENT.getStatusCode());
-		this.assertItemNull(TopologyGraphEntity.findById(topology.id));
+		this.assertItemNull(TopologyGraphEntity.findById(topologyId));
+
+		assertThat(this.configuration.getTopologyId(), is(movTopologyId));
+
+	}
+
+	/**
+	 * Should delete a topology.
+	 *
+	 * @see TopologiesResource#deleteTopology
+	 */
+	@Test
+	public void shouldDeleteTopologyAndTopologyToFollow() {
+
+		final var topologyId = TopologyGraphEntities.minTopologies(1).get(0).id;
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topologyId.toHexString()));
+
+		given().when().delete("/v2/design/topologies/" + topologyId.toHexString()).then()
+				.statusCode(Status.NO_CONTENT.getStatusCode());
+		this.assertItemNull(TopologyGraphEntity.findById(topologyId));
+
+		assertThat(this.configuration.getTopologyId(), is(nullValue()));
 
 	}
 
