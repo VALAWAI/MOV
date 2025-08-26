@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.persistence.live.topology;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -67,9 +69,11 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		final var source = builder.nextModel();
 		final var target = builder.nextModel();
 		final var now = TimeManager.now();
-		final var connectionId = this.assertExecutionNotNull(AddTopologyConnection.fresh()
-				.withSourceComponent(source.componentId).withSourceChannel(source.channelName)
-				.withTargetComponent(target.componentId).withTargetChannel(target.channelName));
+		final var code = ValueGenerator.nextEchoConvertJSCode();
+		final var connectionId = this
+				.assertExecutionNotNull(AddTopologyConnection.fresh().withSourceComponent(source.componentId)
+						.withSourceChannel(source.channelName).withTargetComponent(target.componentId)
+						.withTargetChannel(target.channelName).withTargetMessageConverterJSCode(code));
 
 		final Uni<TopologyConnectionEntity> find = TopologyConnectionEntity.findById(connectionId);
 		final var entity = find.await().atMost(Duration.ofSeconds(30));
@@ -80,6 +84,7 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		assertFalse(entity.enabled);
 		assertEquals(source, entity.source);
 		assertEquals(target, entity.target);
+		assertThat(entity.targetMessageConverterJSCode, is(code));
 
 	}
 
@@ -98,7 +103,7 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 		suplicatedEliminatedEntity.createTimestamp = ValueGenerator.nextPastTime();
 		suplicatedEliminatedEntity.updateTimestamp = ValueGenerator.nextPastTime();
 		suplicatedEliminatedEntity.deletedTimestamp = ValueGenerator.nextPastTime();
-		suplicatedEliminatedEntity.persist().await().atMost(Duration.ofSeconds(30));
+		this.assertItemNotNull(suplicatedEliminatedEntity.persist());
 		assertNotNull(suplicatedEliminatedEntity.id);
 
 		final var now = TimeManager.now();
@@ -107,8 +112,7 @@ public class AddTopologyConnectionTest extends MovPersistenceTestCase {
 				.withTargetComponent(target.componentId).withTargetChannel(target.channelName));
 
 		final Uni<TopologyConnectionEntity> find = TopologyConnectionEntity.findById(connectionId);
-		final var entity = find.await().atMost(Duration.ofSeconds(30));
-		assertNotNull(entity);
+		final var entity = this.assertItemNotNull(find);
 		assertTrue(now <= entity.createTimestamp);
 		assertTrue(now <= entity.updateTimestamp);
 		assertNull(entity.deletedTimestamp);

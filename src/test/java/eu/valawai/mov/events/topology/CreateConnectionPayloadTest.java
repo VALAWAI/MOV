@@ -9,6 +9,7 @@
 package eu.valawai.mov.events.topology;
 
 import static eu.valawai.mov.ValueGenerator.flipCoin;
+import static eu.valawai.mov.ValueGenerator.nextEchoConvertJSCode;
 
 import eu.valawai.mov.events.PayloadTestCase;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
@@ -41,7 +42,7 @@ public class CreateConnectionPayloadTest extends PayloadTestCase<CreateConnectio
 		payload.source = builder.nextModel();
 		payload.target = builder.nextModel();
 		payload.enabled = flipCoin();
-
+		payload.target_message_converter_js_code = nextEchoConvertJSCode();
 	}
 
 	/**
@@ -63,6 +64,7 @@ public class CreateConnectionPayloadTest extends PayloadTestCase<CreateConnectio
 			model.source = NodePayloadTest.from(entity.source);
 			model.target = NodePayloadTest.from(entity.target);
 			model.enabled = entity.enabled;
+			model.target_message_converter_js_code = entity.targetMessageConverterJSCode;
 			return model;
 
 		}

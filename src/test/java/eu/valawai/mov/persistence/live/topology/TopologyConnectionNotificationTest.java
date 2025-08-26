@@ -37,13 +37,7 @@ public class TopologyConnectionNotificationTest extends ModelTestCase<TopologyCo
 
 		model.node = new TopologyNodeTest().nextModel();
 		model.enabled = ValueGenerator.rnd().nextBoolean();
-		model.notificationMessageConverterJSCode = """
-				function convert(a){
-
-					return a;
-				}
-				export {convert};
-				""" + "\n" + ValueGenerator.nextPattern("// code {0}");
+		model.notificationMessageConverterJSCode = ValueGenerator.nextEchoConvertJSCode();
 	}
 
 }

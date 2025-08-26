@@ -40,6 +40,12 @@ public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddT
 	protected TopologyNode target;
 
 	/**
+	 * The javaScript code that will be executed to convert the message from the
+	 * source to the message that the target can handle.
+	 */
+	public String targetMessageConverterJSCode;
+
+	/**
 	 * Create the operator with the default values.
 	 */
 	private AddTopologyConnection() {
@@ -111,6 +117,20 @@ public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddT
 	}
 
 	/**
+	 * Specify the JavasScriot code that has to be used to convert the published
+	 * message by the source to the subscribed message by the target.
+	 *
+	 * @param code to convert the source payload to the target payload.
+	 *
+	 * @return this operator.
+	 */
+	public AddTopologyConnection withTargetMessageConverterJSCode(String code) {
+
+		this.targetMessageConverterJSCode = code;
+		return this;
+	}
+
+	/**
 	 * Add the connection.
 	 *
 	 * @return the identifier of the added connection or {@code null} if the
@@ -125,9 +145,14 @@ public class AddTopologyConnection extends AbstractEntityOperator<ObjectId, AddT
 				Filters.eq("target.channelName", this.target.channelName),
 				Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null)));
 		final var now = TimeManager.now();
-		final var update = Updates.setOnInsert(new Document().append("createTimestamp", now)
-				.append("updateTimestamp", now).append("source", this.toDocument(this.source))
-				.append("target", this.toDocument(this.target)).append("enabled", false));
+		var connectionDoc = new Document().append("createTimestamp", now).append("updateTimestamp", now)
+				.append("source", this.toDocument(this.source)).append("target", this.toDocument(this.target))
+				.append("enabled", false);
+		if (this.targetMessageConverterJSCode != null) {
+
+			connectionDoc = connectionDoc.append("targetMessageConverterJSCode", this.targetMessageConverterJSCode);
+		}
+		final var update = Updates.setOnInsert(connectionDoc);
 		final var options = new UpdateOptions();
 		options.upsert(true);
 		return TopologyConnectionEntity.mongoCollection().updateOne(filter, update, options).onFailure()

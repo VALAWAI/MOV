@@ -11,6 +11,7 @@ package eu.valawai.mov.events.topology;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 import eu.valawai.mov.events.Payload;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -40,5 +41,12 @@ public class CreateConnectionPayload extends Payload {
 	 */
 	@NotNull
 	public boolean enabled;
+
+	/**
+	 * The javaScript code that will be executed to convert the message from the
+	 * source to the message that the target can handle.
+	 */
+	@Nullable
+	public String target_message_converter_js_code;
 
 }

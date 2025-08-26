@@ -199,4 +199,21 @@ public class ValueGenerator {
 
 	}
 
+	/**
+	 * Generate a JavaScript code that is an echo convert code.
+	 *
+	 * @return the code that return the same value as the input.
+	 */
+	public static String nextEchoConvertJSCode() {
+
+		return """
+				function convert(a){
+
+					return a;
+				}
+				export {convert};
+				""" + "\n" + ValueGenerator.nextPattern("// code {0}");
+
+	}
+
 }

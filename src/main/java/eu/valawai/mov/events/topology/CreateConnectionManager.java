@@ -91,43 +91,39 @@ public class CreateConnectionManager {
 		final var content = msg.getPayload();
 		try {
 
-			final var context = new ManagerContext();
-			context.payload = this.service.decodeAndVerify(content, CreateConnectionPayload.class);
+			final var context = new ManagerContext(
+					this.service.decodeAndVerify(content, CreateConnectionPayload.class));
 			context.behaviour = this.configuration.getPropertyValue(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 					TopologyBehavior.class, TopologyBehavior.AUTO_DISCOVER);
 			return this.validate(context).chain(invalid -> {
 
 				if (invalid == null) {
 
-					return AddTopologyConnection.fresh().withSourceChannel(context.payload.source.channelName)
-							.withSourceComponent(context.payload.source.componentId)
-							.withTargetChannel(context.payload.target.channelName)
-							.withTargetComponent(context.payload.target.componentId).execute().chain(connectionId -> {
+					return context.add.execute().chain(connectionId -> {
 
-								if (connectionId != null) {
+						if (connectionId != null) {
 
-									context.connectionId = connectionId;
-									AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
-											.withPayload(content).store();
-									switch (context.behaviour) {
-									case TopologyBehavior.AUTO_DISCOVER:
-										this.discoverNotifications(context);
-										break;
-									case TopologyBehavior.APPLY_TOPOLOGY:
-									case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
-										break;
-									default:
-										// DO_NOTHING
-									}
-									return Uni.createFrom().nullItem();
+							context.connectionId = connectionId;
+							AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
+									.withPayload(content).store();
+							switch (context.behaviour) {
+							case TopologyBehavior.AUTO_DISCOVER:
+								this.discoverNotifications(context);
+								break;
+							case TopologyBehavior.APPLY_TOPOLOGY:
+							case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+								break;
+							default:
+								// DO_NOTHING
+							}
+							return Uni.createFrom().nullItem();
 
-								} else {
+						} else {
 
-									return Uni.createFrom()
-											.item(new IllegalArgumentException("Cannot store the connection"));
-								}
+							return Uni.createFrom().item(new IllegalArgumentException("Cannot store the connection"));
+						}
 
-							});
+					});
 
 				} else {
 
@@ -180,23 +176,21 @@ public class CreateConnectionManager {
 
 					if (error2 == null) {
 
-						if (context.sourceChannel.publish.match(context.targetChannel.subscribe, new HashMap<>())) {
-
-							if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
-									|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
-
-								return this.validateTopology(context);
-
-							} else {
-
-								return Uni.createFrom().nullItem();
-
-							}
-
-						} else {
+						if (context.payload.target_message_converter_js_code == null && !context.sourceChannel.publish
+								.match(context.targetChannel.subscribe, new HashMap<>())) {
 
 							return Uni.createFrom().failure(new IllegalArgumentException(
 									"The source payload does not match the target payload."));
+
+						} else if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
+								|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+
+							return this.validateTopology(context);
+
+						} else {
+
+							return Uni.createFrom().nullItem();
+
 						}
 
 					} else {
@@ -317,6 +311,11 @@ public class CreateConnectionManager {
 	private class ManagerContext {
 
 		/**
+		 * The operation to add the connection.
+		 */
+		public AddTopologyConnection add;
+
+		/**
 		 * The behaviour to do after the connection has been created.
 		 */
 		public TopologyBehavior behaviour;
@@ -345,6 +344,23 @@ public class CreateConnectionManager {
 		 * The expected notification channel payload.
 		 */
 		private ObjectPayloadSchema notificationPayload;
+
+		/**
+		 * Create a new context
+		 *
+		 * @param payload with the connection to be created.
+		 */
+		public ManagerContext(CreateConnectionPayload payload) {
+
+			this.payload = payload;
+			this.add = AddTopologyConnection.fresh().withSourceChannel(payload.source.channelName)
+					.withSourceComponent(payload.source.componentId).withTargetChannel(payload.target.channelName)
+					.withTargetComponent(payload.target.componentId);
+			if (payload.target_message_converter_js_code != null) {
+
+				this.add.withTargetMessageConverterJSCode(payload.target_message_converter_js_code);
+			}
+		}
 
 		/**
 		 * Check if a channel can be a notification channel.

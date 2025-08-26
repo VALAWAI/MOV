@@ -670,6 +670,12 @@ components:
         enabled:
           description: This is 'true' if the connection has to be enabled.
           type: boolean
+        target_message_converter_js_code:
+          description: The javaScript code that will be executed to convert \
+            the published message by the source to the subscribed message by \
+            the target.
+          type: string
+          default: null
 
     sent_message_payload:
       type: object

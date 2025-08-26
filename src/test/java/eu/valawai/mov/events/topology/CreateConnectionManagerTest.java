@@ -279,6 +279,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		final var payload = new CreateConnectionPayloadTest().nextModel();
 		payload.source.componentId = null;
+		payload.target_message_converter_js_code = null;
 		PayloadSchema publish = null;
 		do {
 
@@ -657,6 +658,75 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 
+	}
+
+	/**
+	 * Check that can create a connection where the publish and subscribe do not
+	 * match, because exist a convert code.
+	 */
+	@Test
+	public void shouldCreateConnectionWithPublishNotMatchsubscribeBecauseExistConvertCode() {
+
+		final var payload = new CreateConnectionPayloadTest().nextModel();
+		payload.source.componentId = null;
+		PayloadSchema publish = null;
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (channel.publish != null) {
+
+						payload.source.componentId = component.id;
+						payload.source.channelName = channel.name;
+						publish = channel.publish;
+						break;
+
+					}
+				}
+			}
+
+		} while (payload.source.componentId == null);
+		payload.target.componentId = null;
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (channel.subscribe != null && !publish.match(channel.subscribe, new HashMap<>())) {
+
+						payload.target.componentId = component.id;
+						payload.target.channelName = channel.name;
+						break;
+
+					}
+				}
+			}
+
+		} while (payload.target.componentId == null);
+
+		payload.enabled = false;
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
+
+		final TopologyConnectionEntity last = this
+				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		assertTrue(now <= last.createTimestamp);
+		assertTrue(last.createTimestamp <= last.updateTimestamp);
+		assertNull(last.deletedTimestamp);
+		assertEquals(payload.source, NodePayloadTest.from(last.source));
+		assertEquals(payload.target, NodePayloadTest.from(last.target));
+		assertFalse(last.enabled);
+
+		assertFalse(this.listener.isOpen(payload.source.channelName));
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 	}
 
 }
