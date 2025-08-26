@@ -84,6 +84,11 @@ public interface MOVConfiguration {
 	}
 
 	/**
+	 * The property name with the identifier of the topology to follow by the MOV.
+	 */
+	public static final String TOPOLOGY_ID_NAME = "mov.init.topology-id";
+
+	/**
 	 * Enumerates the possible modes for maintaining components on startup.
 	 */
 	public enum ComponentStartupMode {
@@ -195,8 +200,8 @@ public interface MOVConfiguration {
 	}
 
 	/**
-	 * The property with epoch time, in seconds, of the last time the components
-	 * library has been updated.
+	 * The property name with epoch time, in seconds, of the last time the
+	 * components library has been updated.
 	 */
 	public static final String COMPONENTS_LIBRARY_LAST_UPDATE_NAME = "mov.components-library.last-update";
 
@@ -218,59 +223,49 @@ public interface MOVConfiguration {
 		 *
 		 * @return the behaviour to do after the component has been registered.
 		 */
-		@WithDefault("AUTO_DISCOVER_CONNECTIONS")
-		RegistrationBehavior registerComponent();
+		@WithDefault("AUTO_DISCOVER")
+		TopologyBehavior registerComponent();
 
 		/**
-		 * The time, in seconds, that has to pass before to update the component
-		 * library.
+		 * Specify what the MOV has to do after a connection has been created.
 		 *
-		 * @return the seconds to wait until update the components library.
+		 * @return the behaviour to do after a new topology connection has been created.
 		 */
-		@WithDefault("DELETE_RELATED_CONNECTIONS")
-		UnregistrationBehavior unregisterComponent();
+		@WithDefault("AUTO_DISCOVER")
+		TopologyBehavior createConnection();
+
 	}
 
 	/**
-	 * Enumerates the possible behaviors that can be done when a component has been
-	 * registered.
+	 * The property name with the behaviour to apply when a connection has been
+	 * created.
 	 */
-	public enum RegistrationBehavior {
+	public static final String EVENT_CREATE_CONNECTION_NAME = "mov.events.create-connection";
+
+	/**
+	 * Enumerates the possible behaviors to perform when the topology is modified.
+	 */
+	public enum TopologyBehavior {
+
 		/**
-		 * Do nothing after registering the component.
+		 * Do nothing after the topology has been modified.
 		 */
 		DO_NOTHING,
 
 		/**
-		 * Automatically discover the possible connections for the component.
+		 * Automatically discover and apply possible topology changes.
 		 */
-		AUTO_DISCOVER_CONNECTIONS,
+		AUTO_DISCOVER,
 
 		/**
-		 * Check if the component can be applied to the current topology.
+		 * Apply only the changes defined by the current topology.
 		 */
-		CHECK_APPLICABILITY_TO_TOPOLOGY,
+		APPLY_TOPOLOGY,
 
 		/**
-		 * Try to check if the component follows the topology, and if not, try to auto
-		 * discover the connections.
+		 * If changes are defined in the topology, apply them. Otherwise, automatically
+		 * discover and apply any possible changes.
 		 */
-		CHECK_TOPOLOGY_AND_AUTO_DISCOVER_IF_NEEDED
-	}
-
-	/**
-	 * Enumerates the possible behaviors that can be done when a component is
-	 * unregistered.
-	 */
-	public enum UnregistrationBehavior {
-		/**
-		 * Do nothing after unregistering the component.
-		 */
-		DO_NOTHING,
-
-		/**
-		 * Delete all the related connections for the component.
-		 */
-		DELETE_RELATED_CONNECTIONS
+		APPLY_TOPOLOGY_OR_AUTO_DISCOVER
 	}
 }
