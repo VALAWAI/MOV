@@ -66,7 +66,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	/**
 	 * The queue name to send the create connection events.
 	 */
-	@ConfigProperty(name = "mp.messaging.incoming.create_connection.queue.name", defaultValue = "valawai/topology/change")
+	@ConfigProperty(name = "mp.messaging.incoming.create_connection.queue.name", defaultValue = "valawai/topology/create")
 	String createConnectionQueueName;
 
 	/**
@@ -82,7 +82,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that cannot create with an invalid paload.
+	 * Check that cannot create with an invalid payload.
 	 */
 	@Test
 	public void shouldNotCreateConnectionWithInvalidPayload() {

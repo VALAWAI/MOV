@@ -17,7 +17,6 @@ import java.time.Duration;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.TimeManager;
-import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.events.topology.TopologyAction;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
 import io.quarkus.test.junit.QuarkusTest;
@@ -38,7 +37,7 @@ public class EnableTopologyConnectionTest extends MovPersistenceTestCase {
 	@Test
 	public void shouldNotEnableUndefinedConnection() {
 
-		final var connectionId = ValueGenerator.nextObjectId();
+		final var connectionId = TopologyConnectionEntities.undefined();
 		final var result = this
 				.assertItemNotNull(EnableTopologyConnection.fresh().withConnection(connectionId).execute());
 		assertFalse(result);

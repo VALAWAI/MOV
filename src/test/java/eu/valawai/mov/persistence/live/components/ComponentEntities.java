@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
@@ -167,6 +168,21 @@ public interface ComponentEntities {
 
 		ComponentEntity.deleteAll().await().atMost(Duration.ofSeconds(30));
 
+	}
+
+	/**
+	 * Return an identifier for a component that is not stored in the data base.
+	 *
+	 * @return the identifier of an undefined component.
+	 */
+	public static ObjectId undefined() {
+
+		var id = ValueGenerator.nextObjectId();
+		while (ComponentEntity.findById(id).await().indefinitely() != null) {
+
+			id = ValueGenerator.nextObjectId();
+		}
+		return id;
 	}
 
 }

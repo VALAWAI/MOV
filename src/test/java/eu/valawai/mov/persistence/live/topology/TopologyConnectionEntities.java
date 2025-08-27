@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ChannelSchemaTest;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
@@ -50,11 +52,11 @@ public interface TopologyConnectionEntities {
 	/**
 	 * Create a new topology connection.
 	 *
-	 * @param subsriptionsCount the number of subscriptions for the connection.
+	 * @param notificationsCount the number of subscriptions for the connection.
 	 *
 	 * @return the created connection.
 	 */
-	public static TopologyConnectionEntity nextTopologyConnection(int subsriptionsCount) {
+	public static TopologyConnectionEntity nextTopologyConnection(int notificationsCount) {
 
 		final TopologyConnectionEntity entity = new TopologyConnectionEntity();
 		entity.createTimestamp = nextPastTime();
@@ -127,7 +129,7 @@ public interface TopologyConnectionEntities {
 
 		} while (entity.source.componentId == null || entity.target.componentId == null);
 
-		if (subsriptionsCount > 0) {
+		if (notificationsCount > 0) {
 
 			entity.notifications = new ArrayList<>();
 			do {
@@ -163,7 +165,7 @@ public interface TopologyConnectionEntities {
 					entity.notifications.add(notification);
 				}
 
-			} while (entity.notifications.size() < subsriptionsCount);
+			} while (entity.notifications.size() < notificationsCount);
 		}
 
 		final var stored = entity.persist().onFailure().recoverWithItem(error -> {
@@ -263,6 +265,22 @@ public interface TopologyConnectionEntities {
 
 		TopologyConnectionEntity.deleteAll().await().atMost(Duration.ofSeconds(30));
 
+	}
+
+	/**
+	 * Return an identifier for a topology connection that is not stored in the data
+	 * base.
+	 *
+	 * @return the identifier of an undefined topology connection.
+	 */
+	public static ObjectId undefined() {
+
+		var id = ValueGenerator.nextObjectId();
+		while (TopologyConnectionEntity.findById(id).await().indefinitely() != null) {
+
+			id = ValueGenerator.nextObjectId();
+		}
+		return id;
 	}
 
 }

@@ -11,6 +11,7 @@ package eu.valawai.mov.events.topology;
 import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.valawai.mov.events.Payload;
@@ -25,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author VALAWAI
  */
+@JsonRootName("node_payload")
 public class NodePayload extends Payload {
 
 	/**

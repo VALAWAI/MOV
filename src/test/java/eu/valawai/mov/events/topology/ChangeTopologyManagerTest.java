@@ -17,6 +17,8 @@ import java.time.Duration;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
@@ -77,13 +79,16 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 
 	/**
 	 * Check that cannot change with an undefined connection.
+	 *
+	 * @param action that can not be done.
 	 */
-	@Test
-	public void shouldNotChangeTopologyWithUndefinedConnection() {
+	@ParameterizedTest(name = "Should not change with {0} an undefined connection")
+	@EnumSource(TopologyAction.class)
+	public void shouldNotChangeTopologyWithUndefinedConnection(TopologyAction action) {
 
 		final var payload = new ChangeTopologyPayload();
-		payload.connectionId = ValueGenerator.nextObjectId();
-		payload.action = ValueGenerator.next(TopologyAction.values());
+		payload.connectionId = TopologyConnectionEntities.undefined();
+		payload.action = action;
 
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
 

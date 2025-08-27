@@ -42,7 +42,7 @@ import jakarta.inject.Inject;
 /**
  * The element used to create a new connection of the topology.
  *
- * @see ChangeTopologyPayload
+ * @see CreateConnectionPayload
  *
  * @author VALAWAI
  */
