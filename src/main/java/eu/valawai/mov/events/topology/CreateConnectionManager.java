@@ -295,7 +295,7 @@ public class CreateConnectionManager {
 						}
 					}
 				}
-				return new IllegalArgumentException("The target component does not publish on the channel name");
+				return new IllegalArgumentException("The target component does not subscribe on the channel name");
 
 			}
 
