@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.events.topology;
 
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.valawai.mov.events.Payload;
 import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -67,5 +70,19 @@ public class ConnectionPayload extends Payload {
 	 */
 	@NotNull
 	public boolean enabled;
+
+	/**
+	 * The javaScript code that will be executed to convert the message from the
+	 * source to the message that the target can handle.
+	 */
+	@Nullable
+	@JsonProperty("converter_js_code")
+	public String converterJSCode;
+
+	/**
+	 * The notifications of the connection.
+	 */
+	@Nullable
+	public List<NotificationPayload> notifications;
 
 }

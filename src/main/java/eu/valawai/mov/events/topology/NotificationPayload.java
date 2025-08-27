@@ -11,41 +11,34 @@ package eu.valawai.mov.events.topology;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-import eu.valawai.mov.events.Payload;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * The description of a topology connection that is in VALAWAI.
+ * The description of a notification defined in a topology connection.
  *
- * @see ConnectionsPagePayload
+ * @see ConnectionPayload#notifications
  *
  * @author VALAWAI
  */
-@JsonRootName("create_connection_payload")
-public class CreateConnectionPayload extends Payload {
+@JsonRootName("notification_payload")
+public class NotificationPayload {
 
 	/**
-	 * The node that is the source of the connection.
-	 */
-	@NotNull
-	public NodePayload source;
-
-	/**
-	 * The node that is the target of the connection.
+	 * The node that is the target of the notification.
 	 */
 	@NotNull
 	public NodePayload target;
 
 	/**
-	 * This is {@code true} if the connection has to be enabled.
+	 * This is {@code true} if the notification is enabled.
 	 */
 	@NotNull
 	public boolean enabled;
 
 	/**
 	 * The javaScript code that will be executed to convert the message from the
-	 * source to the message that the target can handle.
+	 * source to the message that the target of the notification can handle.
 	 */
 	@Nullable
 	@JsonProperty("converter_js_code")

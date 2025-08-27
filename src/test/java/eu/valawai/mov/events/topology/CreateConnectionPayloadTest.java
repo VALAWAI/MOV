@@ -42,7 +42,7 @@ public class CreateConnectionPayloadTest extends PayloadTestCase<CreateConnectio
 		payload.source = builder.nextModel();
 		payload.target = builder.nextModel();
 		payload.enabled = flipCoin();
-		payload.target_message_converter_js_code = nextEchoConvertJSCode();
+		payload.converterJSCode = nextEchoConvertJSCode();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class CreateConnectionPayloadTest extends PayloadTestCase<CreateConnectio
 			model.source = NodePayloadTest.from(entity.source);
 			model.target = NodePayloadTest.from(entity.target);
 			model.enabled = entity.enabled;
-			model.target_message_converter_js_code = entity.targetMessageConverterJSCode;
+			model.converterJSCode = entity.targetMessageConverterJSCode;
 			return model;
 
 		}

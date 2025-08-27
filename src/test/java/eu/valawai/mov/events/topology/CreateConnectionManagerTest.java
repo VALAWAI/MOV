@@ -34,6 +34,7 @@ import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.api.v1.components.PayloadSchemaTestCase;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
@@ -76,6 +77,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 				TopologyBehavior.AUTO_DISCOVER.name()));
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, null));
+
 	}
 
 	/**
@@ -300,7 +303,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		final var payload = new CreateConnectionPayloadTest().nextModel();
 		payload.source.componentId = null;
-		payload.target_message_converter_js_code = null;
+		payload.converterJSCode = null;
 		PayloadSchema publish = null;
 		do {
 
@@ -813,6 +816,13 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 				TopologyBehavior.APPLY_TOPOLOGY.name()));
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, null));
+		this.assertNotCeateConnection();
+	}
+
+	/**
+	 * Asert that can not create a connection when no topology is defined
+	 */
+	private void assertNotCeateConnection() {
 
 		final var c0 = this.createComponent(ComponentType.C0);
 		final var c1 = this.createComponent(ComponentType.C1);
@@ -836,6 +846,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
 				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+
 	}
 
 	/**
@@ -847,7 +858,15 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
-		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, null));
+
+		this.assertCreateAutoDiscoverConnectionWithoutNotifications();
+	}
+
+	/**
+	 * Check that can create a connection that is auto discovered without
+	 * notifications.
+	 */
+	private void assertCreateAutoDiscoverConnectionWithoutNotifications() {
 
 		final var payload = new CreateConnectionPayloadTest().nextModel();
 		payload.source.componentId = null;
@@ -910,4 +929,92 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 	}
+
+	/**
+	 * Check that can create a connection where undefined topology when the
+	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 */
+	@Test
+	public void shouldCreateConnectionWhenUndefinedTopologyButApplyTopologyOrAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
+		final var undefined = TopologyGraphEntities.undefined();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, undefined.toHexString()));
+
+		this.assertCreateAutoDiscoverConnectionWithoutNotifications();
+	}
+
+	/**
+	 * Check that can create a connection where empty topology when the behaviour is
+	 * {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 */
+	@Test
+	public void shouldCreateConnectionWhenEmnptyTopologyButApplyTopologyOrAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		topology.nodes = null;
+		this.assertItemNotNull(topology.update());
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		this.assertCreateAutoDiscoverConnectionWithoutNotifications();
+	}
+
+	/**
+	 * Check that can create a connection where topology without connections when
+	 * the behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 */
+	@Test
+	public void shouldCreateConnectionWhenTopologyDoesNotHJaveconnectionsButApplyTopologyOrAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		for (final var node : topology.nodes) {
+
+			node.outputs = null;
+		}
+		this.assertItemNotNull(topology.update());
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		this.assertCreateAutoDiscoverConnectionWithoutNotifications();
+	}
+
+	/**
+	 * Check that can create a connection where is not defined in topology when the
+	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 */
+	@Test
+	public void shouldCreateConnectionWhenConnectionNotDefineInTopologyWhenApplyTopologyOrAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		this.assertCreateAutoDiscoverConnectionWithoutNotifications();
+	}
+
+	/**
+	 * Check that can create a connection where is not defined in topology when the
+	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 */
+	@Test
+	public void shouldCNotCreateConnectionWhenConnectionNotDefineInTopologyWhenApplyTopology() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		this.assertNotCeateConnection();
+	}
+
 }

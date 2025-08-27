@@ -112,7 +112,17 @@ public class CreateConnectionManager {
 								this.discoverNotifications(context);
 								break;
 							case TopologyBehavior.APPLY_TOPOLOGY:
+								this.createDefinedNotifications(context);
+								break;
 							case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+								if (context.definition != null) {
+
+									this.createDefinedNotifications(context);
+
+								} else {
+
+									this.discoverNotifications(context);
+								}
 								break;
 							default:
 								// DO_NOTHING
@@ -177,7 +187,7 @@ public class CreateConnectionManager {
 
 					if (error2 == null) {
 
-						if (context.payload.target_message_converter_js_code == null && !context.sourceChannel.publish
+						if (context.payload.converterJSCode == null && !context.sourceChannel.publish
 								.match(context.targetChannel.subscribe, new HashMap<>())) {
 
 							return Uni.createFrom().failure(new IllegalArgumentException(
@@ -402,9 +412,9 @@ public class CreateConnectionManager {
 			this.add = AddTopologyConnection.fresh().withSourceChannel(payload.source.channelName)
 					.withSourceComponent(payload.source.componentId).withTargetChannel(payload.target.channelName)
 					.withTargetComponent(payload.target.componentId);
-			if (payload.target_message_converter_js_code != null) {
+			if (payload.converterJSCode != null) {
 
-				this.add.withTargetMessageConverterJSCode(payload.target_message_converter_js_code);
+				this.add.withTargetMessageConverterJSCode(payload.converterJSCode);
 			}
 		}
 
@@ -516,4 +526,18 @@ public class CreateConnectionManager {
 
 	}
 
+	/**
+	 * Create the possible notifications defined in the topology.
+	 *
+	 * @param context with the created connection.
+	 */
+	private void createDefinedNotifications(ManagerContext context) {
+
+		if (context.definition.notifications != null) {
+
+			for (final var notification : context.definition.notifications) {
+
+			}
+		}
+	}
 }

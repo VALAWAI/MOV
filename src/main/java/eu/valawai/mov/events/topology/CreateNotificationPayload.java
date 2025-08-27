@@ -8,37 +8,44 @@
 
 package eu.valawai.mov.events.topology;
 
+import org.bson.types.ObjectId;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.valawai.mov.events.Payload;
+import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * The description of a topology connection that is in VALAWAI.
+ * The description of a topology notification that has to be created in the
+ * topology.
  *
  * @see ConnectionsPagePayload
  *
  * @author VALAWAI
  */
-@JsonRootName("create_connection_payload")
-public class CreateConnectionPayload extends Payload {
+@JsonRootName("create_notification_payload")
+public class CreateNotificationPayload extends Payload {
 
 	/**
-	 * The node that is the source of the connection.
+	 * The identifier of the topology connection where the notification is defined.
 	 */
 	@NotNull
-	public NodePayload source;
+	@JsonSerialize(using = ObjectIdSerializer.class)
+	@JsonProperty("connection_id")
+	public ObjectId connectionId;
 
 	/**
-	 * The node that is the target of the connection.
+	 * The node that is the target of the notification.
 	 */
 	@NotNull
 	public NodePayload target;
 
 	/**
-	 * This is {@code true} if the connection has to be enabled.
+	 * This is {@code true} if the notification has to be enabled.
 	 */
 	@NotNull
 	public boolean enabled;
