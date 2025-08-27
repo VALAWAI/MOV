@@ -1,17 +1,21 @@
 asyncapi: '2.6.0'
 info:
- title: Value-Aware Artificial Intelligence API
+ title: Master Of VALAWAI (MOV) API
  version: '1.3.0'
  description: |
-  This API provides the messages that the VALAWAI infrastructure can manage.
-  These messages are used to start/stop the infrastructure and for
-  maintains the data and control topology.
+  This API provides the messages that the Master Of VALAWAI can manage.
+  These messages are used to sinteract with the MOV that control the value-aware
+  application topology.
  license:
   name: GNU General Public License version 3
   url: https://opensource.org/license/gpl-3-0/
  contact:
   name: VALAWAI
   url: https://valawai.eu/
+externalDocs:
+  description: VALAWAI documentation
+  url: https://valawai.github.io/docs/
+ 
 channels:
   valawai/component/register:
     subscribe:
@@ -103,6 +107,18 @@ channels:
       message:
         $ref: '#/components/messages/sent_message'
 
+  valawai/topology/notification/create:
+    subscribe:
+      summary: Used to create a notification to the messages that pass thought a topology connection.
+      message:
+        $ref: '#/components/messages/create_notification'
+
+  valawai/topology/notification/change:
+    subscribe:
+      summary: Used by the chnage a notificvation defined in a topology connection.
+      message:
+        $ref: '#/components/messages/change_notification'
+
 
 components:
   messages:
@@ -160,6 +176,16 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/sent_message_payload'
+
+    create_notification:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/create_notification_payload'
+
+    change_notification:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/change_notification_payload'
 
 
   schemas:
@@ -640,6 +666,16 @@ components:
         enabled:
           description: This is 'true' if the connection is enabled.
           type: boolean
+        converter_js_code:
+          description: The code that is used to convert the published message to the message that the target is subscribed.
+          type: string
+          default: null
+        notifications:
+          description: The components that are notified when a message passes through this connection.
+          type: array
+          items: 
+            - $ref: '#/components/schemas/notification_payload'
+
           
     node_payload:
       type: object
@@ -670,10 +706,11 @@ components:
         enabled:
           description: This is 'true' if the connection has to be enabled.
           type: boolean
-        target_message_converter_js_code:
-          description: The javaScript code that will be executed to convert \
-            the published message by the source to the subscribed message by \
-            the target.
+        converter_js_code:
+          description: |
+            The javaScript code that will be executed to convert 
+            the published message by the source to the subscribed 
+            message by the target.
           type: string
           default: null
 
@@ -722,3 +759,63 @@ components:
           description: The type level of the component in the VALAWAI.
           oneOf:
             - $ref: '#/components/schemas/component_type'
+
+    create_notification_payload:
+      type: object
+      properties:
+        connection_id:
+          description: The identifier of the topology connection where the notification has to be created.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+        target:
+          description: The node that has to be notified.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+        enabled:
+          description: This is 'true' if the notification has to be enabled.
+          type: boolean
+        converter_js_code:
+          description: |
+            The javaScript code that will be executed to convert 
+            the published message by the source to the subscribed
+            message by the target to notify.
+          type: string
+          default: null
+
+    change_notification_payload:
+      type: object
+      properties:
+        action:
+          description: The type of action to do on the notification of the topology connection.
+          type: string
+          enum:
+            - 'ENABLE'
+            - 'DISABLE'
+            - 'REMOVE'
+        connection_id:
+          description: The identifier of the topology connection where is the notification to be changed.
+          type: string
+          pattern: '[0-9a-fA-F]{24}'
+          examples: 
+            - '65c1f59ea4cb169f42f5edc4'
+        target:
+          description: The node that is the target of the notification.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+
+    notification_payload:
+      type: object
+      properties:
+        target:
+          description: The node that that has to be notified.
+          oneOf:
+            - $ref: '#/components/schemas/node_payload'
+        enabled:
+          description: This is 'true' if the notification is enabled.
+          type: boolean
+        converter_js_code:
+          description: The code that is used to convert the published message to the message that the target is subscribed.
+          type: string
+          default: null
