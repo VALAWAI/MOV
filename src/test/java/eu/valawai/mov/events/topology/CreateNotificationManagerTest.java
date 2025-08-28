@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.TimeManager;
@@ -59,6 +60,17 @@ public class CreateNotificationManagerTest extends MovEventTestCase {
 	 */
 	@ConfigProperty(name = "mp.messaging.incoming.create_notification.queue.name", defaultValue = "valawai/topology/notification/create")
 	String createNotificationQueueName;
+
+	/**
+	 * Clear the connections because some of them are not valid and can affect other
+	 * tests.
+	 */
+	@AfterAll
+	public static void clearConnections() {
+
+		TopologyConnectionEntities.clear();
+
+	}
 
 	/**
 	 * Check that cannot create with an invalid payload.

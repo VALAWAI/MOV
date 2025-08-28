@@ -11,6 +11,7 @@ package eu.valawai.mov.events.topology;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import eu.valawai.mov.events.Payload;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
  * @author VALAWAI
  */
 @JsonRootName("notification_payload")
-public class NotificationPayload {
+public class NotificationPayload extends Payload {
 
 	/**
 	 * The node that is the target of the notification.

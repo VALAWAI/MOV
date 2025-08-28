@@ -12,6 +12,8 @@ import static eu.valawai.mov.ValueGenerator.flipCoin;
 import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.nextPastTime;
 
+import java.util.ArrayList;
+
 import eu.valawai.mov.events.PayloadTestCase;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 
@@ -70,7 +72,17 @@ public class ConnectionPayloadTest extends PayloadTestCase<ConnectionPayload> {
 			model.updateTimestamp = entity.updateTimestamp;
 			model.source = NodePayloadTest.from(entity.source);
 			model.target = NodePayloadTest.from(entity.target);
+			model.converterJSCode = entity.targetMessageConverterJSCode;
 			model.enabled = entity.enabled;
+			if (entity.notifications != null) {
+
+				model.notifications = new ArrayList<>();
+				for (final var entityNotification : entity.notifications) {
+
+					final var notification = NotificationPayloadTest.from(entityNotification);
+					model.notifications.add(notification);
+				}
+			}
 			return model;
 
 		}

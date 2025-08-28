@@ -9,14 +9,19 @@
 package eu.valawai.mov.persistence.live.topology;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.BsonField;
 import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UnwindOptions;
 
 import eu.valawai.mov.events.topology.ConnectionsPagePayload;
 import eu.valawai.mov.events.topology.QueryConnectionsPayload;
@@ -223,6 +228,45 @@ public class GetConnectionsPagePayload extends AbstractGetMinPage<ConnectionsPag
 			return Filters.and(filters);
 		}
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected List<Bson> createPipelineBeforeFacet() {
+
+		final var pipeline = super.createPipelineBeforeFacet();
+		pipeline.add(Aggregates.unwind("$notifications", new UnwindOptions().preserveNullAndEmptyArrays(true)));
+		pipeline.add(Aggregates.project(Projections.fields(
+				Projections.include("_id", "createTimestamp", "updateTimestamp", "source", "target", "enabled"),
+				Projections.computed("converterJSCode", "$targetMessageConverterJSCode"),
+				Projections.computed("notification",
+						new Document("target",
+								new Document("componentId", "$notifications.node.componentId").append("channelName",
+										"$notifications.node.channelName"))
+								.append("enabled", "$notifications.enabled")
+								.append("converterJSCode", "$notifications.notificationMessageConverterJSCode")))));
+
+		pipeline.add(Aggregates.group("$_id",
+				new BsonField("createTimestamp", new Document("$first", "$createTimestamp")),
+				new BsonField("updateTimestamp", new Document("$first", "$updateTimestamp")),
+				new BsonField("source", new Document("$first", "$source")),
+				new BsonField("target", new Document("$first", "$target")),
+				new BsonField("enabled", new Document("$first", "$enabled")),
+				new BsonField("converterJSCode", new Document("$first", "$converterJSCode")),
+				new BsonField("notifications",
+						new Document("$push", new Document("$cond", new Document("if", new Document("$eq",
+								Arrays.asList(new Document("$ifNull",
+										Arrays.asList("$notification.target.componentId", null)), null)))
+								.append("then", "$$REMOVE").append("else", "$notification"))))));
+
+		pipeline.add(Aggregates.set(new Field<>("notifications",
+				new Document("$cond",
+						new Document("if", new Document("$eq", Arrays.asList("$notifications", Collections.EMPTY_LIST)))
+								.append("then", null).append("else", "$notifications")))));
+
+		return pipeline;
 	}
 
 }
