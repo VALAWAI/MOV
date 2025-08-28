@@ -177,7 +177,7 @@ public class CreateNotificationManager {
 		final Uni<TopologyConnectionEntity> findConnection = TopologyConnectionEntity.findById(payload.connectionId);
 		return findConnection.chain(connection -> {
 
-			if (connection == null) {
+			if (connection == null || connection.deletedTimestamp != null) {
 
 				return Uni.createFrom().failure(new IllegalArgumentException("The connection is not defined"));
 

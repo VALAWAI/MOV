@@ -21,7 +21,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
 import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.BasicPayloadSchemaTest;
+import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
@@ -80,6 +82,46 @@ public class CreateNotificationManagerTest extends MovEventTestCase {
 
 		final var payload = new CreateNotificationPayloadTest().nextModel();
 		payload.connectionId = TopologyConnectionEntities.undefined();
+		payload.target.componentId = null;
+		payload.converterJSCode = null;
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (channel.subscribe != null) {
+
+						payload.target.componentId = component.id;
+						payload.target.channelName = channel.name;
+						break;
+
+					}
+				}
+			}
+
+		} while (payload.target.componentId == null);
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createNotificationQueueName, payload));
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
+				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+	}
+
+	/**
+	 * Check that cannot create with a deleted connection.
+	 */
+	@Test
+	public void shouldNotCreateNotificationWithDeletedConnection() {
+
+		final var payload = new CreateNotificationPayloadTest().nextModel();
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		payload.connectionId = connection.id;
+		connection.deletedTimestamp = ValueGenerator.nextPastTime();
+		this.assertItemNotNull(connection.update());
+
 		payload.target.componentId = null;
 		payload.converterJSCode = null;
 		do {
@@ -463,6 +505,130 @@ public class CreateNotificationManagerTest extends MovEventTestCase {
 
 						payload.target.componentId = component.id;
 						payload.target.channelName = channel.name;
+						break;
+
+					}
+				}
+			}
+
+		} while (payload.target.componentId == null);
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createNotificationQueueName, payload));
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
+				LogLevel.DEBUG, Json.encodePrettily(payload), now)));
+
+		final TopologyConnectionEntity updated = this
+				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertThat(updated.notifications, is(not(nullValue())));
+
+		final var expected = new TopologyConnectionNotification();
+		expected.enabled = payload.enabled;
+		expected.node = new TopologyNode();
+		expected.node.componentId = payload.target.componentId;
+		expected.node.channelName = payload.target.channelName;
+		expected.notificationMessageConverterJSCode = payload.converterJSCode;
+		assertThat(updated.notifications, hasItem(expected));
+
+	}
+
+	/**
+	 * Check create notification when match schemas.
+	 */
+	@Test
+	public void shoulCreateNotificationBecauseMatchSchemas() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		final var payload = new CreateNotificationPayloadTest().nextModel();
+		payload.connectionId = connection.id;
+		payload.target.componentId = null;
+		payload.converterJSCode = null;
+		PayloadSchema commonSchema = null;
+		final ComponentEntity source = this.assertItemNotNull(ComponentEntity.findById(connection.source.componentId));
+		for (final var channel : source.channels) {
+
+			if (channel.name.equals(connection.source.channelName)) {
+
+				commonSchema = channel.publish;
+				break;
+			}
+
+		}
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (channel.subscribe != null) {
+
+						payload.target.componentId = component.id;
+						payload.target.channelName = channel.name;
+						channel.subscribe = commonSchema;
+						this.assertItemNotNull(component.update());
+						break;
+
+					}
+				}
+			}
+
+		} while (payload.target.componentId == null);
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createNotificationQueueName, payload));
+
+		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
+				LogLevel.DEBUG, Json.encodePrettily(payload), now)));
+
+		final TopologyConnectionEntity updated = this
+				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertThat(updated.notifications, is(not(nullValue())));
+
+		final var expected = new TopologyConnectionNotification();
+		expected.enabled = payload.enabled;
+		expected.node = new TopologyNode();
+		expected.node.componentId = payload.target.componentId;
+		expected.node.channelName = payload.target.channelName;
+		assertThat(updated.notifications, hasItem(expected));
+
+	}
+
+	/**
+	 * Check create notification when match the previous subscription schema.
+	 */
+	@Test
+	public void shoulCreateNotificationBecauseMatchPreviousSchema() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		final var payload = new CreateNotificationPayloadTest().nextModel();
+		payload.connectionId = connection.id;
+		payload.target.componentId = null;
+		payload.converterJSCode = null;
+		PayloadSchema commonSchema = null;
+		final ComponentEntity source = this.assertItemNotNull(ComponentEntity.findById(connection.source.componentId));
+		for (final var channel : source.channels) {
+
+			if (channel.name.equals(connection.source.channelName)) {
+
+				commonSchema = channel.publish;
+				break;
+			}
+
+		}
+		do {
+
+			final var component = ComponentEntities.nextComponent();
+			if (component.channels != null) {
+
+				for (final var channel : component.channels) {
+
+					if (channel.subscribe != null) {
+
+						payload.target.componentId = component.id;
+						payload.target.channelName = channel.name;
+						channel.subscribe = SentMessagePayload.createSentMessagePayloadSchemaFor(commonSchema);
 						this.assertItemNotNull(component.update());
 						break;
 
