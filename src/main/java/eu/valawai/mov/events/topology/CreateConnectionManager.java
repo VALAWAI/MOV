@@ -27,9 +27,6 @@ import eu.valawai.mov.persistence.design.topology.TopologyGraphNodeOutputConnect
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.AddTopologyConnection;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
-import eu.valawai.mov.persistence.live.topology.UpsertNotificationToTopologyConnection;
 import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
@@ -78,6 +75,12 @@ public class CreateConnectionManager {
 	 */
 	@Inject
 	LocalConfigService configuration;
+
+	/**
+	 * Notify that a new connection is created.
+	 */
+	@ConfigProperty(name = "mp.messaging.incoming.create_topology_notification.queue.name", defaultValue = "valawai/topology/notification/create")
+	String createNotificationQueueName;
 
 	/**
 	 * Called when has to create a connection.
@@ -498,29 +501,45 @@ public class CreateConnectionManager {
 
 			if (context.canBeNotification(channel)) {
 				// the component must be subscribed into the connection
-				final var newNotification = new TopologyConnectionNotification();
-				newNotification.node = new TopologyNode();
-				newNotification.node.componentId = target.id;
-				newNotification.node.channelName = channel.name;
-				newNotification.enabled = true;
+				final var payload = new CreateNotificationPayload();
+				payload.connectionId = context.connectionId;
+				payload.enabled = true;
+				payload.target = new NodePayload();
+				payload.target.channelName = channel.name;
+				payload.target.componentId = target.id;
 
-				UpsertNotificationToTopologyConnection.fresh().withConnection(context.connectionId)
-						.withNotification(newNotification).execute().subscribe().with(success -> {
+				this.publish.send(this.createNotificationQueueName, payload).subscribe().with(done -> {
 
-							if (success) {
+					Log.debugv("Sent create a notification for the connection {0}", context.connectionId);
 
-								AddLog.fresh().withInfo().withMessage(
-										"Added notification to the channel {0} of the component {1} into the connection {2}.",
-										channel.name, target.id, context.connectionId).store();
+				}, error -> {
 
-							} else {
+					Log.errorv(error, "Cannot create a notification for the connection {0}", context.connectionId);
+				});
 
-								AddLog.fresh().withError().withMessage(
-										"Could not notify the channel {0} of the component {1} into the connection {2}.",
-										channel.name, target.id, context.connectionId).store();
-							}
-						});
-
+//				final var newNotification = new TopologyConnectionNotification();
+//				newNotification.node = new TopologyNode();
+//				newNotification.node.componentId = target.id;
+//				newNotification.node.channelName = channel.name;
+//				newNotification.enabled = true;
+//
+//				UpsertNotificationToTopologyConnection.fresh().withConnection(context.connectionId)
+//						.withNotification(newNotification).execute().subscribe().with(success -> {
+//
+//							if (success) {
+//
+//								AddLog.fresh().withInfo().withMessage(
+//										"Added notification to the channel {0} of the component {1} into the connection {2}.",
+//										channel.name, target.id, context.connectionId).store();
+//
+//							} else {
+//
+//								AddLog.fresh().withError().withMessage(
+//										"Could not notify the channel {0} of the component {1} into the connection {2}.",
+//										channel.name, target.id, context.connectionId).store();
+//							}
+//						});
+//
 			}
 		}
 

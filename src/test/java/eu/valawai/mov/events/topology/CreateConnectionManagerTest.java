@@ -10,6 +10,9 @@ package eu.valawai.mov.events.topology;
 
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.events.topology.SentMessagePayload.createSentMessagePayloadSchemaFor;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -558,9 +561,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		}
 
 		assertTrue(this.listener.isOpen(payload.source.channelName));
-		assertEquals(2 + last.notifications.size(),
-				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		assertEquals(2, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
 				LogLevel.INFO, ".+" + payload.source.channelName + ".+" + payload.target.channelName + ".+", now)));
 
@@ -654,8 +656,16 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		this.executeAndWaitUntilNewLogs(expectedLogsCount,
 				() -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		final TopologyConnectionEntity last = this
+		TopologyConnectionEntity last = this
 				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
+		while (last.notifications == null || last.notifications.size() < c2s.size()) {
+
+			try {
+				Thread.sleep(500);
+			} catch (final InterruptedException ignored) {
+			}
+			last = this.assertItemNotNull(TopologyConnectionEntity.findById(last.id));
+		}
 		assertTrue(now <= last.createTimestamp);
 		assertTrue(last.createTimestamp <= last.updateTimestamp);
 		assertNull(last.deletedTimestamp);
@@ -670,6 +680,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 				if (notification.node.componentId.equals(c2.id)
 						&& notification.node.channelName.equals(c2.channels.get(0).name)) {
 
+					assertThat(notification.enabled, is(true));
+					assertThat(notification.notificationMessageConverterJSCode, is(nullValue()));
 					continue C2;
 				}
 			}
@@ -678,9 +690,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		}
 
 		assertFalse(this.listener.isOpen(payload.source.channelName));
-		assertEquals(last.notifications.size() + 1,
-				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		assertEquals(1, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
 
 	}
 
