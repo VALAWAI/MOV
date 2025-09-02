@@ -24,6 +24,8 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 
+import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentType;
@@ -83,7 +85,7 @@ public class RegisterComponentManager {
 	 * The local configuration.
 	 */
 	@Inject
-	LocalConfigService conf;
+	LocalConfigService configuration;
 
 	/**
 	 * The keys of the payload to notify that a component is registered.
@@ -134,12 +136,21 @@ public class RegisterComponentManager {
 
 							AddLog.fresh().withInfo().withMessage("Added the component {0}.", source.id)
 									.withPayload(payload).store();
-							final var channelsToIgnore = new HashSet<String>();
-							this.verifySpecialChannels(source, channelsToIgnore);
+							final var behaviour = this.configuration.getPropertyValue(
+									MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME, TopologyBehavior.class,
+									TopologyBehavior.AUTO_DISCOVER);
+							switch (behaviour) {
+							case TopologyBehavior.AUTO_DISCOVER:
+								final var channelsToIgnore = new HashSet<String>();
+								this.verifySpecialChannels(source, channelsToIgnore);
 
-							if (source.channels != null && !source.channels.isEmpty()) {
+								if (source.channels != null && !source.channels.isEmpty()) {
 
-								this.createConnectionsFor(source, channelsToIgnore);
+									this.createConnectionsFor(source, channelsToIgnore);
+								}
+
+							default:
+								// DO_NOTHING
 							}
 							return null;
 						});

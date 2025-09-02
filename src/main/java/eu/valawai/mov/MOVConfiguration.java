@@ -237,6 +237,12 @@ public interface MOVConfiguration {
 	}
 
 	/**
+	 * The property name with the behaviour to apply when a components has been
+	 * registered.
+	 */
+	public static final String EVENT_REGISTER_COMPONENT_NAME = "mov.events.register-component";
+
+	/**
 	 * The property name with the behaviour to apply when a connection has been
 	 * created.
 	 */

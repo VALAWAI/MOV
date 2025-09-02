@@ -25,10 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.mongodb.client.model.Filters;
 
+import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.BasicPayloadFormat;
@@ -46,9 +49,11 @@ import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
+import jakarta.inject.Inject;
 
 /**
  * Test the {@link RegisterComponentManager}.
@@ -65,6 +70,24 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	 */
 	@ConfigProperty(name = "mp.messaging.incoming.register_component.queue.name", defaultValue = "valawai/component/register")
 	String registerComponentQueueName;
+
+	/**
+	 * The local configuration.
+	 */
+	@Inject
+	LocalConfigService configuration;
+
+	/**
+	 * Set auto discover as default.
+	 */
+	@BeforeEach
+	public void setAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.AUTO_DISCOVER.name()));
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, null));
+
+	}
 
 	/**
 	 * Check that cannot register with an invalid payload.
