@@ -83,13 +83,21 @@ public class ValueGenerator {
 	 * @param values to select the next value.
 	 * @param <E>    the element type that the values are defined.
 	 *
-	 * @return the next random element value.
+	 * @return the next random element value, or {@code null} if the list is
+	 *         {@code null} or empty.
 	 *
 	 */
 	public static final <E> E next(final List<E> values) {
 
-		final var index = CURRENT.nextInt(values.size());
-		return values.get(index);
+		if (values == null || values.isEmpty()) {
+
+			return null;
+
+		} else {
+
+			final var index = CURRENT.nextInt(values.size());
+			return values.get(index);
+		}
 
 	}
 

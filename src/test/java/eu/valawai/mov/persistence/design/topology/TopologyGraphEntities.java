@@ -26,6 +26,7 @@ import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntities;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 
 /**
  * Methods to manage the {@like TopologyGraphEntity} over tests.
@@ -110,7 +111,7 @@ public interface TopologyGraphEntities {
 										output.notifications = new ArrayList<>();
 										output.notificationX = rnd().nextDouble(0.0d, 400.0d);
 										output.notificationY = rnd().nextDouble(0.0d, 400.0d);
-										final var maxNotifications = rnd().nextInt(1, 3);
+										final var maxNotifications = rnd().nextInt(1, 5);
 										do {
 											final var notificationNode = ComponentDefinitionEntities
 													.nextComponentDefinitionWithType(ComponentType.C2);
@@ -132,6 +133,11 @@ public interface TopologyGraphEntities {
 														notificaiton.targetChannel = notificationChannel.name;
 														output.notifications.add(notificaiton);
 														notifications++;
+
+														notificationChannel.subscribe = channel.publish;
+														notificationNode.update().subscribe()
+																.withSubscriber(UniAssertSubscriber.create())
+																.awaitItem(Duration.ofSeconds(30)).getItem();
 														break;
 													}
 												}
@@ -140,6 +146,10 @@ public interface TopologyGraphEntities {
 										} while (output.notifications.size() < maxNotifications);
 
 									}
+
+									targetChannel.subscribe = channel.publish;
+									target.update().subscribe().withSubscriber(UniAssertSubscriber.create())
+											.awaitItem(Duration.ofSeconds(30)).getItem();
 
 									node.outputs.add(output);
 									connections++;

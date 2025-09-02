@@ -11,7 +11,9 @@ package eu.valawai.mov.events.topology;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.events.topology.SentMessagePayload.createSentMessagePayloadSchemaFor;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,18 +33,21 @@ import org.junit.jupiter.api.Test;
 import eu.valawai.mov.MOVConfiguration;
 import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.TimeManager;
+import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.PayloadSchema;
 import eu.valawai.mov.api.v1.components.PayloadSchemaTestCase;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
+import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntity;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
@@ -154,11 +159,23 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			}
 
 		} while (payload.source.componentId == null);
+
+		this.assertNoCreateConnection(payload);
+	}
+
+	/**
+	 * Check that can not create a connection with the specified payload.
+	 *
+	 * @param payload of the connection that can not be created.
+	 */
+	private void assertNoCreateConnection(CreateConnectionPayload payload) {
+
 		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
 
 		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
 				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+
 	}
 
 	/**
@@ -187,11 +204,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			}
 
 		} while (payload.source.componentId == null);
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+		this.assertNoCreateConnection(payload);
 	}
 
 	/**
@@ -238,11 +252,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			}
 
 		} while (payload.target.componentId == null);
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+		this.assertNoCreateConnection(payload);
 	}
 
 	/**
@@ -290,11 +301,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			}
 
 		} while (payload.target.componentId == null);
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+		this.assertNoCreateConnection(payload);
 	}
 
 	/**
@@ -346,11 +354,8 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			}
 
 		} while (payload.target.componentId == null);
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.ERROR, Json.encodePrettily(payload), now)));
+		this.assertNoCreateConnection(payload);
 	}
 
 	/**
@@ -364,12 +369,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		payload.source = NodePayloadTest.from(connection.source);
 		payload.target = NodePayloadTest.from(connection.target);
 
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
-
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and payload = ?2 and timestamp >= ?3",
-				LogLevel.ERROR, Json.encodePrettily(payload), now)));
-
+		this.assertNoCreateConnection(payload);
 	}
 
 	/**
@@ -380,25 +380,46 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 		final var payload = this.createValidCreateConnectionPayload();
 		payload.enabled = true;
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.createConnectionQueueName, payload));
 
-		final TopologyConnectionEntity last = this
-				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
-		assertTrue(now <= last.createTimestamp);
+		this.assertCreateConnection(payload);
+	}
+
+	/**
+	 * Check that a connection can be created.
+	 *
+	 * @param payload of the connection to be created.
+	 *
+	 * @return the created connection.
+	 */
+	public TopologyConnectionEntity assertCreateConnection(CreateConnectionPayload payload) {
+
+		final var now = TimeManager.now();
+		final var expectedLogs = payload.enabled ? 2 : 1;
+		this.executeAndWaitUntilNewLogs(expectedLogs,
+				() -> this.assertPublish(this.createConnectionQueueName, payload));
+
+		final TopologyConnectionEntity last = this.assertItemNotNull(TopologyConnectionEntity
+				.find("createTimestamp >= ?1 and enabled = ?2", Sort.descending("_id"), now, payload.enabled)
+				.firstResult());
 		assertTrue(last.createTimestamp <= last.updateTimestamp);
 		assertNull(last.deletedTimestamp);
 		assertEquals(payload.source, NodePayloadTest.from(last.source));
 		assertEquals(payload.target, NodePayloadTest.from(last.target));
-		assertTrue(last.enabled);
 
-		assertTrue(this.listener.isOpen(payload.source.channelName));
+		assertThat(this.listener.isOpen(payload.source.channelName), is(payload.enabled));
 
-		assertEquals(2l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".+" + payload.source.channelName + ".+" + payload.target.channelName + ".+", now)));
+		assertEquals(expectedLogs,
+				this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+						LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		if (payload.enabled) {
 
+			assertEquals(1l,
+					this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
+							LogLevel.INFO, ".+" + payload.source.channelName + ".+" + payload.target.channelName + ".+",
+							now)));
+		}
+
+		return last;
 	}
 
 	/**
@@ -410,23 +431,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		final var payload = this.createValidCreateConnectionPayload();
 		payload.enabled = false;
 
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
-
-		final TopologyConnectionEntity last = this
-				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
-		assertTrue(now <= last.createTimestamp);
-		assertTrue(last.createTimestamp <= last.updateTimestamp);
-		assertNull(last.deletedTimestamp);
-		assertEquals(payload.source, NodePayloadTest.from(last.source));
-		assertEquals(payload.target, NodePayloadTest.from(last.target));
-		assertFalse(last.enabled);
-
-		assertFalse(this.listener.isOpen(payload.source.channelName));
-
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
-
+		this.assertCreateConnection(payload);
 	}
 
 	/**
@@ -533,19 +538,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 		payload.target.channelName = c1.channels.get(0).name;
 		payload.enabled = true;
 
-		var now = TimeManager.now();
-		final var expectedLogsCount = 1 + c2s.size();
-		this.executeAndWaitUntilNewLogs(expectedLogsCount,
-				() -> this.assertPublish(this.createConnectionQueueName, payload));
-
-		final TopologyConnectionEntity last = this
-				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
-		assertTrue(now <= last.createTimestamp);
-		assertTrue(last.createTimestamp <= last.updateTimestamp);
-		assertNull(last.deletedTimestamp);
-		assertEquals(payload.source, NodePayloadTest.from(last.source));
-		assertEquals(payload.target, NodePayloadTest.from(last.target));
-		assertTrue(last.enabled);
+		final TopologyConnectionEntity last = this.assertCreateConnection(payload);
 		assertNotNull(last.notifications);
 		C2: for (final var c2 : c2s) {
 
@@ -560,12 +553,6 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			fail("The c2s " + c2.id.toHexString() + " is not notified");
 		}
 
-		assertTrue(this.listener.isOpen(payload.source.channelName));
-		assertEquals(2, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".+" + payload.source.channelName + ".+" + payload.target.channelName + ".+", now)));
-
 		final var queues = new ArrayList<TestMQQueue>();
 		for (final var c2 : c2s) {
 			final var queue = this.waitOpenQueue(c2.channels.get(0).name);
@@ -573,7 +560,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 			queues.add(queue);
 		}
 		final var msg = new JsonObject();
-		now = TimeManager.now();
+		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLogs(1 + queues.size(), () -> this.assertPublish(c0.channels.get(0).name, msg));
 
 		for (final var queue : queues) {
@@ -879,66 +866,10 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	 */
 	private void assertCreateAutoDiscoverConnectionWithoutNotifications() {
 
-		final var payload = new CreateConnectionPayloadTest().nextModel();
-		payload.source.componentId = null;
-		PayloadSchema publish = null;
-		do {
-
-			final var component = ComponentEntities.nextComponent();
-			if (component.channels != null) {
-
-				for (final var channel : component.channels) {
-
-					if (channel.publish != null) {
-
-						payload.source.componentId = component.id;
-						payload.source.channelName = channel.name;
-						publish = channel.publish;
-						break;
-
-					}
-				}
-			}
-
-		} while (payload.source.componentId == null);
-		payload.target.componentId = null;
-		do {
-
-			final var component = ComponentEntities.nextComponent();
-			if (component.channels != null) {
-
-				for (final var channel : component.channels) {
-
-					if (channel.subscribe != null && !publish.match(channel.subscribe, new HashMap<>())) {
-
-						payload.target.componentId = component.id;
-						payload.target.channelName = channel.name;
-						break;
-
-					}
-				}
-			}
-
-		} while (payload.target.componentId == null);
-
+		final var payload = this.createValidCreateConnectionPayload();
 		payload.enabled = false;
-
-		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.createConnectionQueueName, payload));
-
-		final TopologyConnectionEntity last = this
-				.assertItemNotNull(TopologyConnectionEntity.findAll(Sort.descending("_id")).firstResult());
-		assertTrue(now <= last.createTimestamp);
-		assertTrue(last.createTimestamp <= last.updateTimestamp);
-		assertNull(last.deletedTimestamp);
-		assertEquals(payload.source, NodePayloadTest.from(last.source));
-		assertEquals(payload.target, NodePayloadTest.from(last.target));
-		assertFalse(last.enabled);
-
-		assertFalse(this.listener.isOpen(payload.source.channelName));
-
-		assertEquals(1l, this.assertItemNotNull(LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3",
-				LogLevel.INFO, ".*" + last.id.toHexString() + ".*", now)));
+		final TopologyConnectionEntity last = this.assertCreateConnection(payload);
+		assertThat(last.notifications, is(nullValue()));
 	}
 
 	/**
@@ -1017,7 +948,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
-	public void shouldCNotCreateConnectionWhenConnectionNotDefineInTopologyWhenApplyTopology() {
+	public void shouldNotCreateConnectionWhenConnectionNotDefineInTopologyWhenApplyTopology() {
 
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 				TopologyBehavior.APPLY_TOPOLOGY.name()));
@@ -1026,6 +957,161 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
 
 		this.assertNotCeateConnection();
+	}
+
+	/**
+	 * Create a connection where is not defined in a topology.
+	 */
+	@Test
+	public void shouldCreateConnectionDefinedInTopologyAndEnableNotifications() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		var sourceNode = ValueGenerator.next(topology.nodes);
+		var output = ValueGenerator.next(sourceNode.outputs);
+		while (sourceNode.outputs == null || sourceNode.outputs.isEmpty() || output == null
+				|| output.notifications == null || output.notifications.isEmpty()) {
+
+			sourceNode = ValueGenerator.next(topology.nodes);
+			output = ValueGenerator.next(sourceNode.outputs);
+		}
+		final ComponentDefinitionEntity sourceDef = this
+				.assertItemNotNull(ComponentDefinitionEntity.findById(sourceNode.componentRef));
+		final var source = ComponentEntities.nextComponent();
+		source.channels = sourceDef.channels;
+		this.assertItemNotNull(source.update());
+
+		final var target = ComponentEntities.nextComponent();
+		for (final var node : topology.nodes) {
+
+			if (node.tag.equals(output.targetTag)) {
+
+				final ComponentDefinitionEntity targetDef = this
+						.assertItemNotNull(ComponentDefinitionEntity.findById(node.componentRef));
+				target.channels = targetDef.channels;
+				this.assertItemNotNull(target.update());
+				break;
+			}
+
+		}
+
+		final var expectedNotificationNodes = new ArrayList<TopologyNode>();
+		for (final var notification : output.notifications) {
+
+			final var notificationTarget = ComponentEntities.nextComponent();
+			notificationTarget.channels = null;
+			for (final var node : topology.nodes) {
+
+				if (node.tag.equals(notification.targetTag)) {
+
+					final ComponentDefinitionEntity targetDef = this
+							.assertItemNotNull(ComponentDefinitionEntity.findById(node.componentRef));
+					notificationTarget.channels = targetDef.channels;
+					this.assertItemNotNull(target.update());
+					break;
+				}
+
+			}
+			assertThat(notificationTarget.channels, is(not(nullValue())));
+			this.assertItemNotNull(notificationTarget.update());
+			final var node = new TopologyNode();
+			node.componentId = notificationTarget.id;
+			node.channelName = notification.targetChannel;
+			expectedNotificationNodes.add(node);
+		}
+
+		final var payload = this.createValidCreateConnectionPayload();
+		payload.enabled = true;
+		payload.source = new NodePayload();
+		payload.source.componentId = source.id;
+		payload.source.channelName = output.sourceChannel;
+		payload.target = new NodePayload();
+		payload.target.componentId = target.id;
+		payload.target.channelName = output.targetChannel;
+		payload.converterJSCode = output.convertCode;
+		final var last = this.assertCreateConnection(payload);
+		final TopologyConnectionEntity updated = this.waitUntil(
+				() -> this.assertItemNotNull(TopologyConnectionEntity.findById(last.id)),
+				connection -> connection.notifications != null
+						&& connection.notifications.size() == expectedNotificationNodes.size());
+		assertThat(updated, is(not(nullValue())));
+		assertThat(updated.notifications, is(not(nullValue())));
+		assertThat(updated.notifications, hasSize(expectedNotificationNodes.size()));
+		for (final var notification : updated.notifications) {
+
+			assertThat(expectedNotificationNodes.remove(notification.node), is(true));
+			assertThat(notification.enabled, is(true));
+			for (final var definedNotification : output.notifications) {
+
+				if (definedNotification.targetChannel.equals(notification.node.channelName)) {
+
+					assertThat(notification.notificationMessageConverterJSCode, is(definedNotification.convertCode));
+					break;
+				}
+			}
+
+		}
+
+	}
+
+	/**
+	 * Create a connection where is not defined in a topology.
+	 */
+	@Test
+	public void shouldCreateConnectionDefinedInTopologyWhenBehaviourIsApplyTopologyOrAutoDiscover() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		var sourceNode = ValueGenerator.next(topology.nodes);
+		var output = ValueGenerator.next(sourceNode.outputs);
+		while (sourceNode.outputs == null || sourceNode.outputs.isEmpty() || output == null) {
+
+			sourceNode = ValueGenerator.next(topology.nodes);
+			output = ValueGenerator.next(sourceNode.outputs);
+		}
+		output.notifications = null;
+		this.assertItemNotNull(topology.update());
+
+		final ComponentDefinitionEntity sourceDef = this
+				.assertItemNotNull(ComponentDefinitionEntity.findById(sourceNode.componentRef));
+		final var source = ComponentEntities.nextComponent();
+		source.channels = sourceDef.channels;
+		this.assertItemNotNull(source.update());
+
+		final var target = ComponentEntities.nextComponent();
+		for (final var node : topology.nodes) {
+
+			if (node.tag.equals(output.targetTag)) {
+
+				final ComponentDefinitionEntity targetDef = this
+						.assertItemNotNull(ComponentDefinitionEntity.findById(node.componentRef));
+				target.channels = targetDef.channels;
+				this.assertItemNotNull(target.update());
+				break;
+			}
+
+		}
+
+		final var payload = this.createValidCreateConnectionPayload();
+		payload.enabled = true;
+		payload.source = new NodePayload();
+		payload.source.componentId = source.id;
+		payload.source.channelName = output.sourceChannel;
+		payload.target = new NodePayload();
+		payload.target.componentId = target.id;
+		payload.target.channelName = output.targetChannel;
+		payload.converterJSCode = output.convertCode;
+		final var last = this.assertCreateConnection(payload);
+		assertThat(last.notifications, is(nullValue()));
+
 	}
 
 }

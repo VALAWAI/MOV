@@ -8,13 +8,20 @@
 
 package eu.valawai.mov.events.topology;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CompletionStage;
 
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
+
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Sorts;
 
 import eu.valawai.mov.MOVConfiguration;
 import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
@@ -99,50 +106,59 @@ public class CreateConnectionManager {
 					this.service.decodeAndVerify(content, CreateConnectionPayload.class));
 			context.behaviour = this.configuration.getPropertyValue(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 					TopologyBehavior.class, TopologyBehavior.AUTO_DISCOVER);
-			return this.validate(context).chain(invalid -> {
+			return this.validate(context).onItem().ifNull().switchTo(() -> {
 
-				if (invalid == null) {
+				return context.add.execute().chain(connectionId -> {
 
-					return context.add.execute().chain(connectionId -> {
+					if (connectionId != null) {
 
-						if (connectionId != null) {
+						context.connectionId = connectionId;
+						AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
+								.withPayload(content).store();
+						switch (context.behaviour) {
+						case TopologyBehavior.AUTO_DISCOVER:
+							this.discoverNotifications(context);
+							break;
+						case TopologyBehavior.APPLY_TOPOLOGY:
+							this.createDefinedNotifications(context);
+							break;
+						case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+							if (context.definition != null) {
 
-							context.connectionId = connectionId;
-							AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
-									.withPayload(content).store();
-							switch (context.behaviour) {
-							case TopologyBehavior.AUTO_DISCOVER:
-								this.discoverNotifications(context);
-								break;
-							case TopologyBehavior.APPLY_TOPOLOGY:
 								this.createDefinedNotifications(context);
-								break;
-							case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
-								if (context.definition != null) {
 
-									this.createDefinedNotifications(context);
+							} else {
 
-								} else {
-
-									this.discoverNotifications(context);
-								}
-								break;
-							default:
-								// DO_NOTHING
+								this.discoverNotifications(context);
 							}
-							return Uni.createFrom().nullItem();
-
-						} else {
-
-							return Uni.createFrom().item(new IllegalArgumentException("Cannot store the connection"));
+							break;
+						default:
+							// DO_NOTHING
 						}
 
-					});
+						if (context.payload.enabled) {
 
-				} else {
+							final var change = new ChangeTopologyPayload();
+							change.action = TopologyAction.ENABLE;
+							change.connectionId = context.connectionId;
+							this.publish.send(this.changeTopologyQueueName, change).subscribe().with(done -> {
 
-					return Uni.createFrom().item(invalid);
-				}
+								Log.debugv("Sent enable the connection {0}", context.connectionId);
+
+							}, error -> {
+
+								Log.errorv(error, "Cannot enable the connection {0}", context.connectionId);
+							});
+
+						}
+						return Uni.createFrom().nullItem();
+
+					} else {
+
+						return Uni.createFrom().item(new IllegalArgumentException("Cannot store the connection"));
+					}
+
+				});
 
 			}).onFailure().recoverWithItem(error -> error).subscribeAsCompletionStage().thenCompose(error -> {
 
@@ -182,41 +198,28 @@ public class CreateConnectionManager {
 	 */
 	private Uni<Throwable> validate(ManagerContext context) {
 
-		return this.validateSource(context).chain(error -> {
+		return this.validateSource(context).onItem().ifNull().switchTo(() -> {
 
-			if (error == null) {
+			return this.validateTarget(context).onItem().ifNull().switchTo(() -> {
 
-				return this.validateTarget(context).chain(error2 -> {
+				if (context.payload.converterJSCode == null
+						&& !context.sourceChannel.publish.match(context.targetChannel.subscribe, new HashMap<>())) {
 
-					if (error2 == null) {
+					return Uni.createFrom().item(
+							new IllegalArgumentException("The source payload does not match the target payload."));
 
-						if (context.payload.converterJSCode == null && !context.sourceChannel.publish
-								.match(context.targetChannel.subscribe, new HashMap<>())) {
+				} else if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
+						|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
-							return Uni.createFrom().failure(new IllegalArgumentException(
-									"The source payload does not match the target payload."));
+					return this.validateTopology(context);
 
-						} else if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
-								|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+				} else {
 
-							return this.validateTopology(context);
+					return Uni.createFrom().nullItem();
 
-						} else {
+				}
+			});
 
-							return Uni.createFrom().nullItem();
-
-						}
-
-					} else {
-
-						return Uni.createFrom().item(error2);
-					}
-				});
-
-			} else {
-
-				return Uni.createFrom().item(error);
-			}
 		});
 	}
 
@@ -231,12 +234,7 @@ public class CreateConnectionManager {
 	private Uni<Throwable> validateSource(ManagerContext context) {
 
 		final Uni<ComponentEntity> findSource = ComponentEntity.findById(context.payload.source.componentId);
-		return findSource.onFailure().recoverWithItem(error -> {
-
-			Log.errorv(error, "Cannot obtain the source component.");
-			return null;
-
-		}).map(source -> {
+		return findSource.map(source -> {
 
 			if (source == null) {
 
@@ -273,12 +271,7 @@ public class CreateConnectionManager {
 	private Uni<Throwable> validateTarget(ManagerContext context) {
 
 		final Uni<ComponentEntity> findTarget = ComponentEntity.findById(context.payload.target.componentId);
-		return findTarget.onFailure().recoverWithItem(error -> {
-
-			Log.errorv(error, "Cannot obtain the target component.");
-			return null;
-
-		}).map(target -> {
+		return findTarget.map(target -> {
 
 			if (target == null) {
 
@@ -315,47 +308,45 @@ public class CreateConnectionManager {
 	 */
 	private Uni<Throwable> validateTopology(ManagerContext context) {
 
-		return this.configuration.getTopology().onFailure().recoverWithUni(error -> Uni.createFrom().failure(error))
-				.chain(topology -> {
+		return this.configuration.getTopology().chain(topology -> {
 
-					if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+			if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
-						return Uni.createFrom()
-								.failure(new IllegalStateException("The topology to follow is not defined."));
+				return Uni.createFrom().failure(new IllegalStateException("The topology to follow is not defined."));
 
-					} else if (topology != null) {
+			} else if (topology != null) {
 
-						if (topology.nodes != null) {
+				if (topology.nodes != null) {
 
-							NODE: for (final var node : topology.nodes) {
+					NODE: for (final var node : topology.nodes) {
 
-								if (node.outputs != null) {
+						if (node.outputs != null) {
 
-									for (final var output : node.outputs) {
+							for (final var output : node.outputs) {
 
-										if (output.sourceChannel.equals(context.sourceChannel.name)
-												&& output.targetChannel.equals(context.targetChannel.name)) {
-											// found the connection definition
-											context.definition = output;
-											break NODE;
-										}
-									}
-
+								if (output.sourceChannel.equals(context.sourceChannel.name)
+										&& output.targetChannel.equals(context.targetChannel.name)) {
+									// found the connection definition
+									context.definition = output;
+									break NODE;
 								}
 							}
-						}
-
-						if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
-
-							return Uni.createFrom().failure(new IllegalStateException(
-									"The topology does not contains a definition to match the connection."));
 
 						}
-
 					}
-					return Uni.createFrom().nullItem();
+				}
 
-				});
+				if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
+
+					return Uni.createFrom().failure(new IllegalStateException(
+							"The topology does not contains a definition to match the connection."));
+
+				}
+
+			}
+			return Uni.createFrom().nullItem();
+
+		});
 
 	}
 
@@ -447,31 +438,6 @@ public class CreateConnectionManager {
 	}
 
 	/**
-	 * Enable the created connection if it is necessary.
-	 *
-	 * @param context with the created connection.
-	 */
-	private void enableConnectionIfNecessary(ManagerContext context) {
-
-		if (context.payload.enabled) {
-
-			final var change = new ChangeTopologyPayload();
-			change.action = TopologyAction.ENABLE;
-			change.connectionId = context.connectionId;
-			this.publish.send(this.changeTopologyQueueName, change).subscribe().with(done -> {
-
-				Log.debugv("Sent enable the connection {0}", context.connectionId);
-
-			}, error -> {
-
-				Log.errorv(error, "Cannot enable the connection {0}", context.connectionId);
-			});
-
-		}
-
-	}
-
-	/**
 	 * Discover the possible notifications for a created connection.
 	 *
 	 * @param context with the created connection.
@@ -482,66 +448,17 @@ public class CreateConnectionManager {
 				.find("type = ?1 and channels.subscribe is not null and channels.name like ?2", Sort.ascending("_id"),
 						ComponentType.C2, C2_NOTIFICATION_CHANNEL_NAME_PATTERN)
 				.stream();
-		find.onCompletion().invoke(() -> this.enableConnectionIfNecessary(context)).subscribe().with(
-				component -> this.discoverNotificationsIn(component, context),
-				error -> AddLog.fresh().withError(error));
+		find.subscribe().with(target -> {
 
-	}
+			for (final var channel : target.channels) {
 
-	/**
-	 * Check if a component must be subscribed to the created connection.
-	 *
-	 * @param context with the created connection.
-	 * @param target  component to check it it has to be subscribed into the
-	 *                connection.
-	 */
-	private void discoverNotificationsIn(ComponentEntity target, ManagerContext context) {
+				if (context.canBeNotification(channel)) {
 
-		for (final var channel : target.channels) {
-
-			if (context.canBeNotification(channel)) {
-				// the component must be subscribed into the connection
-				final var payload = new CreateNotificationPayload();
-				payload.connectionId = context.connectionId;
-				payload.enabled = true;
-				payload.target = new NodePayload();
-				payload.target.channelName = channel.name;
-				payload.target.componentId = target.id;
-
-				this.publish.send(this.createNotificationQueueName, payload).subscribe().with(done -> {
-
-					Log.debugv("Sent create a notification for the connection {0}", context.connectionId);
-
-				}, error -> {
-
-					Log.errorv(error, "Cannot create a notification for the connection {0}", context.connectionId);
-				});
-
-//				final var newNotification = new TopologyConnectionNotification();
-//				newNotification.node = new TopologyNode();
-//				newNotification.node.componentId = target.id;
-//				newNotification.node.channelName = channel.name;
-//				newNotification.enabled = true;
-//
-//				UpsertNotificationToTopologyConnection.fresh().withConnection(context.connectionId)
-//						.withNotification(newNotification).execute().subscribe().with(success -> {
-//
-//							if (success) {
-//
-//								AddLog.fresh().withInfo().withMessage(
-//										"Added notification to the channel {0} of the component {1} into the connection {2}.",
-//										channel.name, target.id, context.connectionId).store();
-//
-//							} else {
-//
-//								AddLog.fresh().withError().withMessage(
-//										"Could not notify the channel {0} of the component {1} into the connection {2}.",
-//										channel.name, target.id, context.connectionId).store();
-//							}
-//						});
-//
+					this.createNotification(context, target.id, channel.name, null);
+				}
 			}
-		}
+
+		}, error -> AddLog.fresh().withError(error));
 
 	}
 
@@ -556,7 +473,56 @@ public class CreateConnectionManager {
 
 			for (final var notification : context.definition.notifications) {
 
+				final var pipeline = new ArrayList<Bson>();
+				pipeline.add(Aggregates
+						.match(Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null))));
+				pipeline.add(Aggregates.unwind("$channels"));
+				pipeline.add(Aggregates.match(Filters.and(Filters.eq("channels.name", notification.targetChannel),
+						Filters.exists("channels.subscribe", true), Filters.ne("channels.subscribe", null))));
+				pipeline.add(Aggregates.sort(Sorts.ascending("_id")));
+				pipeline.add(Aggregates.project(Projections.include("_id")));
+				ComponentEntity.mongoCollection().aggregate(pipeline, ComponentEntity.class).collect().first()
+						.subscribe().with(target -> {
+
+							if (target != null) {
+
+								this.createNotification(context, target.id, notification.targetChannel,
+										notification.convertCode);
+
+							} // else no target defined
+						});
+
 			}
 		}
+	}
+
+	/**
+	 * Create a notification.
+	 *
+	 * @param context     with the created connection.
+	 * @param targetId    the target component to notify.
+	 * @param channelName the name of the channel that will subscribe to receive the
+	 *                    notification.
+	 * @param code        to convert the source message to the notification message.
+	 */
+	private void createNotification(ManagerContext context, ObjectId targetId, String channelName, String code) {
+
+		final var payload = new CreateNotificationPayload();
+		payload.connectionId = context.connectionId;
+		payload.enabled = true;
+		payload.target = new NodePayload();
+		payload.target.channelName = channelName;
+		payload.target.componentId = targetId;
+		payload.converterJSCode = code;
+
+		this.publish.send(this.createNotificationQueueName, payload).subscribe().with(done -> {
+
+			Log.debugv("Sent create a notification for the connection {0}", context.connectionId);
+
+		}, error -> {
+
+			Log.errorv(error, "Cannot create a notification for the connection {0}", context.connectionId);
+		});
+
 	}
 }
