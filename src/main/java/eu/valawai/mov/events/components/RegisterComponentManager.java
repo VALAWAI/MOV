@@ -26,7 +26,9 @@ import com.mongodb.client.model.Sorts;
 
 import eu.valawai.mov.MOVConfiguration;
 import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.api.v1.components.ChannelSchema;
+import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
@@ -35,7 +37,6 @@ import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.events.topology.CreateConnectionPayload;
 import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.events.topology.SentMessagePayload;
-import eu.valawai.mov.persistence.live.components.AddComponent;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
@@ -113,65 +114,145 @@ public class RegisterComponentManager {
 		final var content = msg.getPayload();
 		try {
 
-			final var payload = this.service.decodeAndVerify(content, RegisterComponentPayload.class);
-			final var component = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
-			if (component == null) {
+			final var context = new ManagerContext(
+					this.service.decodeAndVerify(content, RegisterComponentPayload.class));
+			context.behaviour = this.configuration.getPropertyValue(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+					TopologyBehavior.class, TopologyBehavior.AUTO_DISCOVER);
+			return this.validate(context).onItem().ifNull().switchTo(() -> {
 
-				AddLog.fresh().withError().withMessage("Received invalid async API.").withPayload(content).store();
-				return msg.nack(new IllegalArgumentException("The async API is not valid."));
+				final var entity = context.createEntity();
+				return entity.persist().chain(componentId -> {
 
-			} else {
-
-				component.type = payload.type;
-				if (payload.name != null) {
-
-					component.name = payload.name;
-				}
-				if (payload.version != null) {
-
-					component.version = payload.version;
-				}
-				final Uni<Throwable> add = AddComponent.fresh().withComponent(component).execute().onItem().ifNull()
-						.failWith(() -> new IllegalStateException("Cannot store the component")).map(source -> {
-
-							AddLog.fresh().withInfo().withMessage("Added the component {0}.", source.id)
-									.withPayload(payload).store();
-							final var behaviour = this.configuration.getPropertyValue(
-									MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME, TopologyBehavior.class,
-									TopologyBehavior.AUTO_DISCOVER);
-							switch (behaviour) {
-							case TopologyBehavior.AUTO_DISCOVER:
-								final var channelsToIgnore = new HashSet<String>();
-								this.verifySpecialChannels(source, channelsToIgnore);
-
-								if (source.channels != null && !source.channels.isEmpty()) {
-
-									this.createConnectionsFor(source, channelsToIgnore);
-								}
-
-							default:
-								// DO_NOTHING
-							}
-							return null;
-						});
-				return add.subscribeAsCompletionStage().thenCompose(error -> {
-
-					if (error == null) {
-
-						return msg.ack();
-
-					} else {
-
-						return msg.nack(error);
+					switch (context.behaviour) {
+					case TopologyBehavior.AUTO_DISCOVER:
+						this.autoDiscoverConnections(entity);
+						break;
+					default:
+						// DO_NOTHING
 					}
+
+					return Uni.createFrom().nullItem();
+
 				});
-			}
+
+			}).onFailure().recoverWithItem(error -> error).subscribeAsCompletionStage().thenCompose(error -> {
+
+				if (error == null) {
+
+					return msg.ack();
+
+				} else {
+
+					AddLog.fresh().withError(error)
+							.withMessage("Received invalid register component payload, because {0}.",
+									error.getMessage())
+							.withPayload(content).store();
+					return msg.nack(error);
+				}
+			});
 
 		} catch (final Throwable error) {
 
 			AddLog.fresh().withError().withMessage("Received invalid register component payload.").withPayload(content)
 					.store();
 			return msg.nack(error);
+		}
+
+	}
+
+	/**
+	 * Check that the component to register is valid.
+	 *
+	 * @param context with the payload to validate.
+	 *
+	 * @return null of the component is valid or the error that explains why is not
+	 *         valid.
+	 */
+	private Uni<Throwable> validate(ManagerContext context) {
+
+		if (context.component == null) {
+
+			return Uni.createFrom().failure(new IllegalArgumentException("The async API is not valid."));
+		}
+		return null;
+
+	}
+
+	/**
+	 * Context used by this manager.
+	 */
+	private class ManagerContext {
+
+		/**
+		 * The received payload.
+		 */
+		public RegisterComponentPayload payload;
+
+		/**
+		 * The behaviour to do after the component has been registered.
+		 */
+		public TopologyBehavior behaviour;
+
+		/**
+		 * The component to be registered.
+		 */
+		public Component component;
+
+		/**
+		 * Create a new context
+		 *
+		 * @param payload with the connection to be created.
+		 */
+		public ManagerContext(RegisterComponentPayload payload) {
+
+			this.payload = payload;
+			this.component = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+			if (this.component != null) {
+
+				this.component.type = payload.type;
+				if (payload.name != null) {
+
+					this.component.name = payload.name;
+				}
+				if (payload.version != null) {
+
+					this.component.version = payload.version;
+				}
+			}
+		}
+
+		/**
+		 * Create the entity to be stored.
+		 *
+		 * @return the entity to be stored.
+		 */
+		public ComponentEntity createEntity() {
+
+			final var entity = new ComponentEntity();
+			entity.name = this.component.name;
+			entity.description = this.component.description;
+			entity.version = this.component.version;
+			entity.apiVersion = this.component.apiVersion;
+			entity.type = this.component.type;
+			entity.since = TimeManager.now();
+			entity.channels = this.component.channels;
+			return entity;
+		}
+	}
+
+	/**
+	 * Auto discover connections.
+	 *
+	 * @param source component to check to create the connection.
+	 */
+	private void autoDiscoverConnections(ComponentEntity source) {
+
+		final var channelsToIgnore = new HashSet<String>();
+		this.verifySpecialChannels(source, channelsToIgnore);
+
+		if (source.channels != null && !source.channels.isEmpty()) {
+
+			this.createConnectionsFor(source, channelsToIgnore);
 		}
 
 	}
