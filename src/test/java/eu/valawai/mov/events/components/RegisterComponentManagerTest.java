@@ -11,6 +11,8 @@ package eu.valawai.mov.events.components;
 import static eu.valawai.mov.ValueGenerator.next;
 import static eu.valawai.mov.ValueGenerator.nextPattern;
 import static eu.valawai.mov.ValueGenerator.rnd;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,6 +46,7 @@ import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
@@ -85,6 +88,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
 				TopologyBehavior.AUTO_DISCOVER.name()));
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.AUTO_DISCOVER.name()));
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, null));
 
 	}
@@ -96,13 +101,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	public void shouldNotRegisterComponentWithInvalidPayload() {
 
 		final var payload = new RegisterComponentPayload();
-		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
-
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
-
-		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
-				.await().atMost(Duration.ofSeconds(30)));
-		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
+		this.assertNotRegister(payload);
 	}
 
 	/**
@@ -113,13 +112,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.asyncapiYaml += "channels:\n\tBad:\n\ttype: string";
-		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
 
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
-
-		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
-				.await().atMost(Duration.ofSeconds(30)));
-		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
+		this.assertNotRegister(payload);
 	}
 
 	/**
@@ -137,6 +131,18 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 				  description: This service is in charge of processing user signups
 				channels:
 				""", 4).trim().replaceAll("\\t", "");
+
+		this.assertNotRegister(payload);
+
+	}
+
+	/**
+	 * Check that can not register a component.
+	 *
+	 * @param payload with the information of the component that can not be
+	 *                registered.
+	 */
+	private void assertNotRegister(RegisterComponentPayload payload) {
 
 		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
 
@@ -336,7 +342,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	 * Check that a component is registered and it is notified when is done.
 	 */
 	@Test
-	public void shouldRegisterComponentCreateçConnectionsAndNotifyWhenIsDone() {
+	public void shouldRegisterComponentCreateConnectionsAndNotifyWhenIsDone() {
 
 		// The message to register the target component of the connection
 		final var componentTypeIndex = rnd().nextInt(0, 3);
@@ -400,8 +406,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		target.channels.add(targetChannel);
 		this.assertItemNotNull(target.persist());
 
-		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
-		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
+		final var expectedConnectionsCount = this.assertItemNotNull(TopologyConnectionEntity.count()) + 2;
+		final var expectedComponentsCount = this.assertItemNotNull(ComponentEntity.count()) + 1;
 		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
 				componentName);
 		final var queue = this.waitOpenQueue(queueName);
@@ -427,7 +433,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 
 		// check updated the components
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
-		assertEquals(countComponentsBefore + 1, countComponentsAfter);
+		assertThat(countComponentsAfter, is(expectedComponentsCount));
 		// Get last component
 		final ComponentEntity lastComponent = this
 				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
@@ -440,8 +446,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		assertEquals(expectedComponent.channels, lastComponent.channels);
 
 		// check updated the connections
-		final var countConnectionsAfter = this.assertItemNotNull(TopologyConnectionEntity.count());
-		assertEquals(countConnectionsBefore + 2, countConnectionsAfter);
+		this.waitUntil(() -> this.assertItemNotNull(TopologyConnectionEntity.count()),
+				count -> expectedConnectionsCount == count);
 
 		// Get last connection
 		final TopologyConnectionEntity lastConnectionWithComponentAsTarget = this
@@ -722,6 +728,240 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		count = this
 				.assertItemNotNull(TopologyConnectionEntity.count(Filters.eq("target.componentId", activeTarget.id)));
 		assertEquals(1, count, "No treated connection with the active target.");
+
+	}
+
+	/**
+	 * Should not register when topology is undefined.
+	 */
+	@Test
+	public void shouldNotRegisterComponentWhenTopologyIsUndefined() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY.name()));
+		final var topologyId = TopologyGraphEntities.undefined();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topologyId.toHexString()));
+
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_notification_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		this.assertNotRegister(payload);
+	}
+
+	/**
+	 * Should not register a component because the topology is not defined.
+	 */
+	@Test
+	public void shouldNotRegisterComponentNotDefinedTopology() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY.name()));
+
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_notification_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		this.assertNotRegister(payload);
+	}
+
+	/**
+	 * Should not register a component because it is not defined in the topology.
+	 */
+	@Test
+	public void shouldNotRegisterComponentUndefinedIntoTopology() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_notification_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		this.assertNotRegister(payload);
+	}
+
+	/**
+	 * Should register an undefined component in the topology when auto discover is
+	 * enabled.
+	 */
+	@Test
+	public void shouldRegisterComponentNotInTopologyBecauseAutoDiscoverIsEnabled() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
+		final var topology = TopologyGraphEntities.nextTopologyGraph();
+		this.assertItemNotNull(
+				this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, topology.id.toHexString()));
+
+		// The message to register the target component of the connection
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_notification_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
+				componentName);
+		final var queue = this.waitOpenQueue(queueName);
+
+		// register the component
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// wait notify the component is registered
+		final var registered = queue.waitReceiveMessage(ComponentPayload.class);
+		assertEquals(payload.name, registered.name);
+		final var expectedComponent = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+		assertEquals(expectedComponent.description, registered.description);
+		assertEquals(payload.version, registered.version);
+		assertEquals(expectedComponent.apiVersion, registered.apiVersion);
+		assertEquals(payload.type, registered.type);
+		assertTrue(now <= registered.since);
+		assertEquals(expectedComponent.channels, registered.channels);
+		this.assertItemNull(this.listener.close(queueName));
+
+	}
+
+	/**
+	 * Check that a component is registered but no connections are created.
+	 */
+	@Test
+	public void shouldRegisterComponentButNoCreateConnections() {
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.DO_NOTHING.name()));
+
+		// The message to register the target component of the connection
+		final var componentTypeIndex = rnd().nextInt(0, 3);
+		final var componentName = nextPattern("component_{0}");
+		final var outFieldName = nextPattern("field_to_test_{0}");
+		final var inFieldName = nextPattern("field_to_test_notification_{0}");
+
+		final var payload = new RegisterComponentPayloadTest().nextModel();
+		payload.type = ComponentType.values()[componentTypeIndex];
+		payload.asyncapiYaml = MessageFormat.format(
+				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				componentName, outFieldName, inFieldName);
+
+		// Create the component that will be the source of the connection
+		final var sourceNext = new ComponentTest().nextModel();
+		final ComponentEntity source = new ComponentEntity();
+		source.apiVersion = sourceNext.apiVersion;
+		source.channels = new ArrayList<ChannelSchema>();
+		source.description = sourceNext.description;
+		source.name = sourceNext.name;
+		source.since = sourceNext.since;
+		source.type = sourceNext.type;
+		while (payload.type == source.type) {
+
+			source.type = next(ComponentType.values());
+		}
+		source.version = sourceNext.version;
+		final var sourceChannel = new ChannelSchema();
+		final var sourceChannelName = nextPattern("test/publish_{0}");
+
+		sourceChannel.name = sourceChannelName;
+		final var sourceObject = new ObjectPayloadSchema();
+		final var basic = new BasicPayloadSchema();
+		basic.format = BasicPayloadFormat.STRING;
+		sourceObject.properties.put(inFieldName, basic);
+		sourceChannel.publish = sourceObject;
+		source.channels.add(sourceChannel);
+		this.assertItemNotNull(source.persist());
+
+		// Create the component that will be the target of the connection
+		final var targetNext = new ComponentTest().nextModel();
+		final ComponentEntity target = new ComponentEntity();
+		target.apiVersion = targetNext.apiVersion;
+		target.channels = new ArrayList<ChannelSchema>();
+		target.description = targetNext.description;
+		target.name = targetNext.name;
+		target.since = targetNext.since;
+		target.type = targetNext.type;
+		while (payload.type == target.type) {
+
+			target.type = next(ComponentType.values());
+		}
+		target.version = targetNext.version;
+		final var targetChannel = new ChannelSchema();
+		final var targetChannelName = nextPattern("test/subscribe_{0}");
+
+		targetChannel.name = targetChannelName;
+		final var targetObject = new ObjectPayloadSchema();
+		targetObject.properties.put(outFieldName, basic);
+		targetChannel.subscribe = targetObject;
+		target.channels.add(targetChannel);
+		this.assertItemNotNull(target.persist());
+
+		final var countConnectionsBefore = this.assertItemNotNull(TopologyConnectionEntity.count());
+		final var countComponentsBefore = this.assertItemNotNull(ComponentEntity.count());
+		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
+				componentName);
+		final var queue = this.waitOpenQueue(queueName);
+
+		// register the component
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLogs(2, () -> this.assertPublish(this.registerComponentQueueName, payload));
+
+		// wait notify the component is registered
+		final var registered = queue.waitReceiveMessage(ComponentPayload.class);
+		assertEquals(payload.name, registered.name);
+		final var expectedComponent = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
+		assertEquals(expectedComponent.description, registered.description);
+		assertEquals(payload.version, registered.version);
+		assertEquals(expectedComponent.apiVersion, registered.apiVersion);
+		assertEquals(payload.type, registered.type);
+		assertTrue(now <= registered.since);
+		assertEquals(expectedComponent.channels, registered.channels);
+
+		// check updated the components
+		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
+		assertEquals(countComponentsBefore + 1, countComponentsAfter);
+		// Get last component
+		final ComponentEntity lastComponent = this
+				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
+		assertEquals(registered.id, lastComponent.id);
+		assertTrue(now <= lastComponent.since);
+		assertEquals(payload.name, lastComponent.name);
+		assertEquals(payload.type, lastComponent.type);
+		assertEquals(payload.version, lastComponent.version);
+		assertEquals(expectedComponent.apiVersion, lastComponent.apiVersion);
+		assertEquals(expectedComponent.channels, lastComponent.channels);
+
+		// check updated the connections
+		final var countConnectionsAfter = this.assertItemNotNull(TopologyConnectionEntity.count());
+		assertEquals(countConnectionsBefore, countConnectionsAfter);
 
 	}
 

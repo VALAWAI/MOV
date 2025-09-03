@@ -16,6 +16,8 @@ import org.bson.types.ObjectId;
 import org.eclipse.microprofile.config.ConfigProvider;
 
 import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.api.v2.design.topologies.Topology;
+import eu.valawai.mov.persistence.design.topology.GetTopology;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
@@ -175,7 +177,7 @@ public class LocalConfigService {
 	 * @return the designed topology to follow or {@code null} if does not have to
 	 *         follow any topology.
 	 */
-	public Uni<TopologyGraphEntity> getTopology() {
+	public Uni<TopologyGraphEntity> getTopologyGraphEntity() {
 
 		final var id = this.getTopologyId();
 		if (id != null) {
@@ -211,6 +213,25 @@ public class LocalConfigService {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the {@link Topology} to follow by the MOV.
+	 *
+	 * @return the designed topology to follow or {@code null} if does not have to
+	 *         follow any topology.
+	 */
+	public Uni<Topology> getTopology() {
+
+		final var id = this.getTopologyId();
+		if (id != null) {
+
+			return GetTopology.fresh().withId(id).execute();
+
+		} else {
+
+			return Uni.createFrom().nullItem();
+		}
 	}
 
 }

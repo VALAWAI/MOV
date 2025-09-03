@@ -10,9 +10,7 @@ package eu.valawai.mov.events.components;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
@@ -32,23 +30,18 @@ import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
+import eu.valawai.mov.api.v2.design.topologies.TopologyNode;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
 import eu.valawai.mov.events.topology.CreateConnectionPayload;
+import eu.valawai.mov.events.topology.CreateNotificationPayload;
 import eu.valawai.mov.events.topology.NodePayload;
 import eu.valawai.mov.events.topology.SentMessagePayload;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
-import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
-import eu.valawai.mov.persistence.live.topology.TopologyNode;
-import eu.valawai.mov.persistence.live.topology.UpsertNotificationToTopologyConnection;
 import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.logging.Log;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheQuery;
-import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -74,19 +67,26 @@ public class RegisterComponentManager {
 	 */
 	@Inject
 	@Channel("send_create_connection")
-	Emitter<CreateConnectionPayload> create;
+	Emitter<CreateConnectionPayload> createConnection;
 
 	/**
 	 * The service to send messages.
 	 */
 	@Inject
-	PublishService publish;
+	PublishService publishRegistered;
 
 	/**
 	 * The local configuration.
 	 */
 	@Inject
 	LocalConfigService configuration;
+
+	/**
+	 * The component to send the message to create a topology notification.
+	 */
+	@Inject
+	@Channel("send_create_notification")
+	Emitter<CreateNotificationPayload> createNotification;
 
 	/**
 	 * The keys of the payload to notify that a component is registered.
@@ -123,14 +123,31 @@ public class RegisterComponentManager {
 				final var entity = context.createEntity();
 				return entity.persist().chain(componentId -> {
 
+					AddLog.fresh().withInfo().withMessage("Registered component {0}.", entity.id).withPayload(content)
+							.store();
+					context.entity = entity;
 					switch (context.behaviour) {
 					case TopologyBehavior.AUTO_DISCOVER:
-						this.autoDiscoverConnections(entity);
+						this.autoDiscover(context);
+						break;
+					case TopologyBehavior.APPLY_TOPOLOGY:
+						this.createTopologyConnections(context);
+						break;
+					case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+						if (context.definition == null) {
+
+							this.autoDiscover(context);
+
+						} else {
+
+							this.createTopologyConnections(context);
+						}
 						break;
 					default:
 						// DO_NOTHING
 					}
 
+					this.notifyComponentRegistered(context);
 					return Uni.createFrom().nullItem();
 
 				});
@@ -173,8 +190,118 @@ public class RegisterComponentManager {
 		if (context.component == null) {
 
 			return Uni.createFrom().failure(new IllegalArgumentException("The async API is not valid."));
+
+		} else {
+
+			if (context.component.channels != null) {
+
+				final var expectedNamePattern = "valawai/" + context.component.type.name().toLowerCase()
+						+ "/\\w+/control/\\w+";
+				for (final var channel : context.component.channels) {
+
+					if (channel.subscribe instanceof final ObjectPayloadSchema schema
+							&& channel.name.matches(expectedNamePattern) && channel.name.endsWith("/registered")
+							&& schema.properties.keySet().containsAll(Arrays.asList(REGISTERED_PAYLOAD_FIELD_NAMES))) {
+
+						context.notifyRegisteredChannel = channel;
+
+					} else if (context.component.type == ComponentType.C2
+							&& channel.subscribe instanceof final ObjectPayloadSchema schema && schema.properties
+									.keySet().containsAll(Arrays.asList(SENT_MESSAGE_PAYLOAD_FIELD_NAMES))) {
+
+						context.notifyChannels.add(channel);
+
+					} else {
+
+						context.posibleConnectionChannels.add(channel);
+					}
+				}
+			}
+
+			if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
+					|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+
+				return this.validateTopology(context);
+
+			} else {
+
+				return Uni.createFrom().nullItem();
+
+			}
+
 		}
-		return null;
+	}
+
+	/**
+	 * Check that the component follow the topology.
+	 *
+	 * @param context with the payload to validate.
+	 *
+	 * @return null of the component follows the topology or the error that explains
+	 *         why is not valid.
+	 */
+	private Uni<Throwable> validateTopology(ManagerContext context) {
+
+		return this.configuration.getTopology().chain(topology -> {
+
+			if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+
+				return Uni.createFrom().failure(new IllegalStateException("The topology to follow is not defined."));
+
+			} else if (topology != null) {
+
+				if (topology.nodes != null) {
+
+					NODE: for (final var node : topology.nodes) {
+
+						if (node.component != null) {
+
+							if (node.component.channels == null || node.component.channels.isEmpty()) {
+
+								if (context.component.channels == null || context.component.channels.isEmpty()) {
+
+									context.definition = node;
+									break;
+								}
+
+							} else if (context.component.channels != null) {
+
+								TOPOLOGY_CHANNEL: for (final var topologyChannel : node.component.channels) {
+
+									for (final var componentChannel : context.component.channels) {
+
+										if (topologyChannel.name.equals(componentChannel.name)
+												|| topologyChannel.publish != null && topologyChannel.publish
+														.match(componentChannel.publish, new HashMap<>())
+												|| topologyChannel.subscribe != null && !topologyChannel.subscribe
+														.match(componentChannel.subscribe, new HashMap<>())) {
+
+											continue TOPOLOGY_CHANNEL;
+										}
+									}
+
+									break NODE;
+								}
+
+								context.definition = node;
+								break;
+							}
+
+						} // else bad defined node
+					}
+				}
+
+				if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
+
+					return Uni.createFrom().failure(new IllegalStateException(
+							"The topology does not contains a definition to match the connection."));
+
+				}
+
+			}
+			return Uni.createFrom().nullItem();
+
+		});
 
 	}
 
@@ -184,9 +311,19 @@ public class RegisterComponentManager {
 	private class ManagerContext {
 
 		/**
-		 * The received payload.
+		 * The channels that can be used to create a connection.
 		 */
-		public RegisterComponentPayload payload;
+		public List<ChannelSchema> posibleConnectionChannels = new ArrayList<>();
+
+		/**
+		 * The channels to be notified when a message pass thought a connection.
+		 */
+		public List<ChannelSchema> notifyChannels = new ArrayList<>();
+
+		/**
+		 * The channel to notify when the component is registered.
+		 */
+		public ChannelSchema notifyRegisteredChannel;
 
 		/**
 		 * The behaviour to do after the component has been registered.
@@ -199,13 +336,22 @@ public class RegisterComponentManager {
 		public Component component;
 
 		/**
+		 * The definition of the component to be registered.
+		 */
+		public TopologyNode definition;
+
+		/**
+		 * The stored component.
+		 */
+		public ComponentEntity entity;
+
+		/**
 		 * Create a new context
 		 *
 		 * @param payload with the connection to be created.
 		 */
 		public ManagerContext(RegisterComponentPayload payload) {
 
-			this.payload = payload;
 			this.component = ComponentBuilder.fromAsyncapi(payload.asyncapiYaml);
 			if (this.component != null) {
 
@@ -238,120 +384,72 @@ public class RegisterComponentManager {
 			entity.channels = this.component.channels;
 			return entity;
 		}
+
 	}
 
 	/**
 	 * Auto discover connections.
 	 *
-	 * @param source component to check to create the connection.
+	 * @param context of the register process.
 	 */
-	private void autoDiscoverConnections(ComponentEntity source) {
+	private void autoDiscover(ManagerContext context) {
 
-		final var channelsToIgnore = new HashSet<String>();
-		this.verifySpecialChannels(source, channelsToIgnore);
+		// Auto discover connections
+		if (!context.posibleConnectionChannels.isEmpty()) {
 
-		if (source.channels != null && !source.channels.isEmpty()) {
+			final var query = Filters.and(Filters.ne("_id", context.entity.id),
+					Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
+					Filters.exists("channels", true), Filters.ne("channels", null),
+					Filters.not(Filters.size("channels", 0)));
+			final Multi<ComponentEntity> findComponents = ComponentEntity.find(query, Sorts.ascending("_id")).stream();
+			findComponents.subscribe().with(target -> {
 
-			this.createConnectionsFor(source, channelsToIgnore);
-		}
+				if (target != null && target.channels != null) {
 
-	}
+					for (final var sourceChannel : context.posibleConnectionChannels) {
 
-	/**
-	 * Check the special channels that can be defined on the specification.
-	 *
-	 * @param entity           of the component that has been registered.
-	 * @param channelsToIgnore collection to add the channels to ignore.
-	 *
-	 * @see #notifyComponentRegistered
-	 * @see #subscribeComponentIntoConnections
-	 */
-	private void verifySpecialChannels(ComponentEntity entity, Collection<String> channelsToIgnore) {
+						for (final var targetChannel : target.channels) {
 
-		if (entity.channels != null) {
-
-			final var expectedNamePattern = "valawai/" + entity.type.name().toLowerCase() + "/\\w+/control/\\w+";
-			final var maybeSubscribeChannels = new ArrayList<ChannelSchema>();
-			for (final var channel : entity.channels) {
-
-				if (channel.subscribe instanceof final ObjectPayloadSchema schema
-						&& channel.name.matches(expectedNamePattern)) {
-					if (channel.name.endsWith("/registered")
-							&& schema.properties.keySet().containsAll(Arrays.asList(REGISTERED_PAYLOAD_FIELD_NAMES))) {
-						channelsToIgnore.add(channel.name);
-						this.notifyComponentRegistered(entity, channel);
-
-					} else if (entity.type == ComponentType.C2 && schema.properties.keySet()
-							.containsAll(Arrays.asList(SENT_MESSAGE_PAYLOAD_FIELD_NAMES))) {
-
-						channelsToIgnore.add(channel.name);
-						maybeSubscribeChannels.add(channel);
+							this.createConnection(context.entity, sourceChannel, target, targetChannel);
+							this.createConnection(target, targetChannel, context.entity, sourceChannel);
+						}
 					}
 				}
-			}
 
-			if (!maybeSubscribeChannels.isEmpty()) {
+			}, error -> Log.errorv(error, "Error when creating the connections."));
 
-				final var paginator = TopologyConnectionEntity
-						.find("notifications.node.componentId != ?1", Sort.ascending("_id"), entity.id)
-						.page(Page.ofSize(10));
-				this.subscribeComponentIntoConnections(entity, maybeSubscribeChannels, paginator);
+			// Create the loop connections
+			for (final var sourceChannel : context.posibleConnectionChannels) {
+
+				for (final var targetChannel : context.posibleConnectionChannels) {
+
+					this.createConnection(context.entity, sourceChannel, context.entity, targetChannel);
+				}
 			}
 
 		}
-	}
 
-	/**
-	 * Check for some connections is the new component must be registered as
-	 * subscriber.
-	 *
-	 * @param entity   of the component that has been registered.
-	 * @param channels that may be notified when a message is pass thought a
-	 *                 topology connection.
-	 */
-	private void subscribeComponentIntoConnections(ComponentEntity entity, List<ChannelSchema> channels,
-			ReactivePanacheQuery<ReactivePanacheMongoEntityBase> paginator) {
+		// Auto discover notifications
+		if (!context.notifyChannels.isEmpty()) {
 
-		final Multi<TopologyConnectionEntity> getter = paginator.stream();
-		getter.onCompletion().invoke(() -> {
+			final Multi<TopologyConnectionEntity> findComponents = TopologyConnectionEntity
+					.find("deletedTimestamp is null and notifications.node.componentId != ?1", Sorts.ascending("_id"),
+							context.entity.id)
+					.stream();
+			findComponents.subscribe().with(target -> this.autoDiscoverNotificationForConnection(target, context),
+					error -> Log.errorv(error, "Error when creating the notifications."));
 
-			paginator.hasNextPage().subscribe().with(hasNext -> {
-
-				if (hasNext) {
-
-					this.subscribeComponentIntoConnections(entity, channels, paginator.nextPage());
-
-				}
-				// else finished nothing to do more
-
-			}, error -> {
-
-				Log.errorv(error,
-						"Error when paginate the topology component that the component maybe has to be subscribed.");
-
-			});
-
-		}).subscribe().with(connection -> {
-
-			this.checkSubscribeNewComponent(entity, channels, connection);
-
-		}, error -> {
-
-			Log.errorv(error, "Error when checking if is necessary a connection.");
-
-		});
+		}
 
 	}
 
 	/**
-	 * Check if must subscribe a new component into a connection.
+	 * Auto discover the possible notification for a connection.
 	 *
-	 * @param entity     of the new component.
-	 * @param channels   to check if has to subscribe the component.
-	 * @param connection to be subscribe the component.
+	 * @param connection to check if exist possible notifications.
+	 * @param context    used in the register process.
 	 */
-	private void checkSubscribeNewComponent(ComponentEntity entity, List<ChannelSchema> channels,
-			TopologyConnectionEntity connection) {
+	private void autoDiscoverNotificationForConnection(TopologyConnectionEntity connection, ManagerContext context) {
 
 		final Uni<ComponentEntity> findSource = ComponentEntity.findById(connection.source.componentId);
 		findSource.onFailure().recoverWithItem(error -> {
@@ -369,32 +467,19 @@ public class RegisterComponentManager {
 
 						final var sentSchema = SentMessagePayload
 								.createSentMessagePayloadSchemaFor(sourceChannel.publish);
-						for (final var channel : channels) {
+						for (final var channel : context.notifyChannels) {
 
 							if (sentSchema.match(channel.subscribe, new HashMap<>())) {
 
-								final var newNotification = new TopologyConnectionNotification();
-								newNotification.node = new TopologyNode();
-								newNotification.node.componentId = entity.id;
-								newNotification.node.channelName = channel.name;
-								newNotification.enabled = true;
-
-								UpsertNotificationToTopologyConnection.fresh().withConnection(connection.id)
-										.withNotification(newNotification).execute().subscribe().with(success -> {
-
-											if (success) {
-
-												AddLog.fresh().withInfo().withMessage(
-														"Added notification to the channel {0} of the component {1} into the connection {2}.",
-														channel.name, entity.id, connection.id).store();
-
-											} else {
-
-												AddLog.fresh().withError().withMessage(
-														"Could not notify the channel {0} of the component {1} into the connection {2}.",
-														channel.name, entity.id, connection.id).store();
-											}
-										});
+								final var payload = new CreateNotificationPayload();
+								payload.connectionId = connection.id;
+								payload.target = new NodePayload();
+								payload.target.componentId = context.entity.id;
+								payload.target.channelName = channel.name;
+								Uni.createFrom().completionStage(this.createNotification.send(payload)).subscribe()
+										.with(any -> Log.debugv("Sent create a notification between {0}", payload),
+												error -> Log.errorv(error, "Cannot create the notification {0}",
+														payload));
 							}
 						}
 						break;
@@ -409,108 +494,37 @@ public class RegisterComponentManager {
 	/**
 	 * Notify the component that is has been registered.
 	 *
-	 * @param entity  of the component that has been registered.
-	 * @param channel that has to be notified that the component is registered.
+	 * @param context with the information of the register process.
 	 */
-	private void notifyComponentRegistered(ComponentEntity entity, ChannelSchema channel) {
+	private void notifyComponentRegistered(ManagerContext context) {
 
-		// found channel to notify the registered component.
-		final var payload = new ComponentPayload();
-		payload.id = entity.id;
-		payload.name = entity.name;
-		payload.description = entity.description;
-		payload.version = entity.version;
-		payload.apiVersion = entity.apiVersion;
-		payload.type = entity.type;
-		payload.since = entity.since;
-		payload.channels = entity.channels;
-		this.publish.send(channel.name, payload).subscribe().with(done -> {
+		if (context.notifyRegisteredChannel != null) {
 
-			AddLog.fresh().withInfo().withMessage("Notified to the component {0} at {1} that it has been registered.",
-					entity.id, channel.name).withPayload(payload).store();
+			// found channel to notify the registered component.
+			final var payload = new ComponentPayload();
+			payload.id = context.entity.id;
+			payload.name = context.entity.name;
+			payload.description = context.entity.description;
+			payload.version = context.entity.version;
+			payload.apiVersion = context.entity.apiVersion;
+			payload.type = context.entity.type;
+			payload.since = context.entity.since;
+			payload.channels = context.entity.channels;
+			this.publishRegistered.send(context.notifyRegisteredChannel.name, payload).subscribe().with(done -> {
 
-		}, error -> {
+				AddLog.fresh().withInfo()
+						.withMessage("Notified to the component {0} at {1} that it has been registered.",
+								context.entity.id, context.notifyRegisteredChannel.name)
+						.withPayload(payload).store();
 
-			AddLog.fresh().withError(error)
-					.withMessage("Cannot notify to the component {0} at {1} that it has been registered.", entity.id,
-							channel.name)
-					.withPayload(payload).store();
-		});
+			}, error -> {
 
-	}
-
-	/**
-	 * Create the connection with the source.
-	 *
-	 * @param source           component to check to create the connection.
-	 * @param channelsToIgnore collection to add the channels to ignore.
-	 */
-	private void createConnectionsFor(ComponentEntity source, Collection<String> channelsToIgnore) {
-
-		final var query = Filters.and(Filters.ne("_id", source.id),
-				Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)),
-				Filters.exists("channels", true), Filters.ne("channels", null),
-				Filters.not(Filters.size("channels", 0)));
-		final Multi<ComponentEntity> findComponents = ComponentEntity.find(query, Sorts.ascending("_id")).stream();
-
-		findComponents.onCompletion().invoke(() -> this.createLoopConnections(source, channelsToIgnore)).subscribe()
-				.with(target -> this.createConnections(source, target, channelsToIgnore),
-						error -> Log.errorv(error, "Error when creating the connections."));
-
-	}
-
-	/**
-	 * Create the loop connection of the new component.
-	 *
-	 * @param source           node of the connection.
-	 * @param channelsToIgnore collection to add the channels to ignore.
-	 */
-	private void createLoopConnections(ComponentEntity source, Collection<String> channelsToIgnore) {
-
-		for (final var sourceChannel : source.channels) {
-
-			if (!channelsToIgnore.contains(sourceChannel.name)) {
-
-				for (final var targetChannel : source.channels) {
-
-					if (!channelsToIgnore.contains(sourceChannel.name)) {
-
-						this.createConnections(source, sourceChannel, source, targetChannel);
-						if (!targetChannel.name.equals(sourceChannel.name)) {
-
-							this.createConnections(source, targetChannel, source, sourceChannel);
-						}
-					}
-
-				}
-			}
+				AddLog.fresh().withError(error)
+						.withMessage("Cannot notify to the component {0} at {1} that it has been registered.",
+								context.entity.id, context.notifyRegisteredChannel.name)
+						.withPayload(payload).store();
+			});
 		}
-
-	}
-
-	/**
-	 * Create the connection between two components.
-	 *
-	 * @param source           node of the connection.
-	 * @param target           node of the connection.
-	 * @param channelsToIgnore collection to add the channels to ignore.
-	 */
-	private void createConnections(ComponentEntity source, ComponentEntity target,
-			Collection<String> channelsToIgnore) {
-
-		for (final var sourceChannel : source.channels) {
-
-			if (!channelsToIgnore.contains(sourceChannel.name)) {
-
-				for (final var targetChannel : target.channels) {
-
-					this.createConnections(source, sourceChannel, target, targetChannel);
-					this.createConnections(target, targetChannel, source, sourceChannel);
-
-				}
-			}
-		}
-
 	}
 
 	/**
@@ -521,7 +535,7 @@ public class RegisterComponentManager {
 	 * @param target        node of the connection.
 	 * @param targetChannel to check if needs connection.
 	 */
-	private void createConnections(ComponentEntity source, ChannelSchema sourceChannel, ComponentEntity target,
+	private void createConnection(ComponentEntity source, ChannelSchema sourceChannel, ComponentEntity target,
 			ChannelSchema targetChannel) {
 
 		if (sourceChannel.publish != null && sourceChannel.publish.match(targetChannel.subscribe, new HashMap<>())) {
@@ -534,12 +548,21 @@ public class RegisterComponentManager {
 			payload.target = new NodePayload();
 			payload.target.componentId = target.id;
 			payload.target.channelName = targetChannel.name;
-			Uni.createFrom().completionStage(this.create.send(payload)).subscribe()
+			Uni.createFrom().completionStage(this.createConnection.send(payload)).subscribe()
 					.with(any -> Log.debugv("Sent create the connection between {0} and {1}", sourceChannel.name,
 							targetChannel.name),
 							error -> Log.errorv(error, "Cannot create the connection between {0} and {1}",
 									sourceChannel.name, targetChannel.name));
 		}
+
+	}
+
+	/**
+	 * Create the connections associated to the new component.
+	 *
+	 * @param context of the register process.
+	 */
+	private void createTopologyConnections(ManagerContext context) {
 
 	}
 

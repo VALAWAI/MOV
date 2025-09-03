@@ -308,7 +308,7 @@ public class CreateConnectionManager {
 	 */
 	private Uni<Throwable> validateTopology(ManagerContext context) {
 
-		return this.configuration.getTopology().chain(topology -> {
+		return this.configuration.getTopologyGraphEntity().chain(topology -> {
 
 			if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
