@@ -1,0 +1,155 @@
+{
+	"name": "Topology to test the component registration",
+	"nodes": [
+		{
+			"tag": "node_1",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c0/component_1/data/output",
+					"targetTag": "node_7",
+					"targetChannel": "valawai/c1/component_7/data/input_1"
+				}
+			]
+		},
+		{
+			"tag": "node_2",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c0/component_2/data/output",
+					"targetTag": "node_7",
+					"targetChannel": "valawai/c1/component_7/data/input_2"
+				}
+			]
+		},
+		{
+			"tag": "node_3",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c0/component_3/data/output",
+					"targetTag": "node_7",
+					"targetChannel": "valawai/c1/component_7/data/input_3",
+					"notifications": [
+						{
+							"targetTag": "node_14",
+							"targetChannel": "valawai/c2/component_14/data/input"
+						},
+						{
+							"targetTag": "node_15",
+							"targetChannel": "valawai/c2/component_15/data/input"
+						},
+						{
+							"targetTag": "node_16",
+							"targetChannel": "valawai/c2/component_16/data/input"
+						}
+					]
+				}
+			]
+		},
+		{
+			"tag": "node_4",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c0/component_4/data/output",
+					"targetTag": "node_7",
+					"targetChannel": "valawai/c1/component_7/data/input_4"
+				}
+			]
+		},
+		{
+			"tag": "node_5",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c0/component_5/data/output",
+					"targetTag": "node_7",
+					"targetChannel": "valawai/c1/component_7/data/input_4"
+				}
+			]
+		},
+		{
+			"tag": "node_6",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c0/component_6/data/output",
+					"targetTag": "node_7",
+					"targetChannel": "valawai/c1/component_7/data/input_4",
+					"notifications": [
+						{
+							"targetTag": "node_14",
+							"targetChannel": "valawai/c2/component_14/data/input"
+						},
+						{
+							"targetTag": "node_15",
+							"targetChannel": "valawai/c2/component_15/data/input"
+						},
+						{
+							"targetTag": "node_16",
+							"targetChannel": "valawai/c2/component_16/data/input"
+						}
+					]
+				}
+			]
+		},
+		{
+			"tag": "node_7",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c1/component_7/data/output_1",
+					"targetTag": "node_8",
+					"targetChannel": "valawai/c2/component_8/data/input"
+				},
+				{
+					"sourceChannel": "valawai/c1/component_7/data/output_2",
+					"targetTag": "node_9",
+					"targetChannel": "valawai/c2/component_9/data/input"
+				},
+				{
+					"sourceChannel": "valawai/c1/component_7/data/output_3",
+					"targetTag": "node_10",
+					"targetChannel": "valawai/c2/component_10/data/input"
+				},
+				{
+					"sourceChannel": "valawai/c1/component_7/data/output_4",
+					"targetTag": "node_11",
+					"targetChannel": "valawai/c2/component_11/data/input"
+				},
+				{
+					"sourceChannel": "valawai/c1/component_7/data/output_4",
+					"targetTag": "node_12",
+					"targetChannel": "valawai/c2/component_12/data/input"
+				},
+				{
+					"sourceChannel": "valawai/c1/component_7/data/output_4",
+					"targetTag": "node_13",
+					"targetChannel": "valawai/c2/component_13/data/input"
+				}
+			]
+		},
+		{
+			"tag": "node_8"
+		},
+		{
+			"tag": "node_9"
+		},
+		{
+			"tag": "node_10"
+		},
+		{
+			"tag": "node_11"
+		},
+		{
+			"tag": "node_12"
+		},
+		{
+			"tag": "node_13"
+		},
+		{
+			"tag": "node_14"
+		},
+		{
+			"tag": "node_15"
+		},
+		{
+			"tag": "node_16"
+		}
+	]
+}

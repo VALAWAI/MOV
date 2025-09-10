@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -30,6 +32,9 @@ import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
+import eu.valawai.mov.api.v2.design.topologies.Topology;
+import eu.valawai.mov.api.v2.design.topologies.TopologyConnection;
+import eu.valawai.mov.api.v2.design.topologies.TopologyConnectionEndpoint;
 import eu.valawai.mov.api.v2.design.topologies.TopologyNode;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
@@ -42,6 +47,7 @@ import eu.valawai.mov.persistence.live.logs.AddLog;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.logging.Log;
+import io.quarkus.mongodb.FindOptions;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -250,9 +256,10 @@ public class RegisterComponentManager {
 
 			} else if (topology != null) {
 
+				context.topology = topology;
 				if (topology.nodes != null) {
 
-					NODE: for (final var node : topology.nodes) {
+					for (final var node : topology.nodes) {
 
 						if (node.component != null) {
 
@@ -264,24 +271,8 @@ public class RegisterComponentManager {
 									break;
 								}
 
-							} else if (context.component.channels != null) {
-
-								TOPOLOGY_CHANNEL: for (final var topologyChannel : node.component.channels) {
-
-									for (final var componentChannel : context.component.channels) {
-
-										if (topologyChannel.name.equals(componentChannel.name)
-												|| topologyChannel.publish != null && topologyChannel.publish
-														.match(componentChannel.publish, new HashMap<>())
-												|| topologyChannel.subscribe != null && !topologyChannel.subscribe
-														.match(componentChannel.subscribe, new HashMap<>())) {
-
-											continue TOPOLOGY_CHANNEL;
-										}
-									}
-
-									break NODE;
-								}
+							} else if (context.component.channels != null
+									&& this.match(node.component.channels, context.component.channels)) {
 
 								context.definition = node;
 								break;
@@ -294,7 +285,7 @@ public class RegisterComponentManager {
 				if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
 
 					return Uni.createFrom().failure(new IllegalStateException(
-							"The topology does not contains a definition to match the connection."));
+							"The topology does not contains a definition to match the component."));
 
 				}
 
@@ -341,6 +332,11 @@ public class RegisterComponentManager {
 		public TopologyNode definition;
 
 		/**
+		 * The topology to follow.
+		 */
+		public Topology topology;
+
+		/**
 		 * The stored component.
 		 */
 		public ComponentEntity entity;
@@ -383,6 +379,26 @@ public class RegisterComponentManager {
 			entity.since = TimeManager.now();
 			entity.channels = this.component.channels;
 			return entity;
+		}
+
+		/**
+		 * Check if the definition match the specified endpoint.
+		 *
+		 * @param endpoint to check if match.
+		 *
+		 * @return {@code true} if the defined node for the component match the
+		 *         endpoint.
+		 */
+		public boolean definitionMatch(TopologyConnectionEndpoint endpoint) {
+
+			if (endpoint == null || endpoint.nodeTag == null || endpoint.channel == null || this.definition == null) {
+
+				return false;
+
+			} else {
+
+				return this.definition.tag.equals(endpoint.nodeTag);
+			}
 		}
 
 	}
@@ -548,12 +564,21 @@ public class RegisterComponentManager {
 			payload.target = new NodePayload();
 			payload.target.componentId = target.id;
 			payload.target.channelName = targetChannel.name;
-			Uni.createFrom().completionStage(this.createConnection.send(payload)).subscribe()
-					.with(any -> Log.debugv("Sent create the connection between {0} and {1}", sourceChannel.name,
-							targetChannel.name),
-							error -> Log.errorv(error, "Cannot create the connection between {0} and {1}",
-									sourceChannel.name, targetChannel.name));
+			this.send(payload);
 		}
+
+	}
+
+	/**
+	 * Send the message to create a connection.
+	 *
+	 * @param payload with the connection to create.
+	 */
+	private void send(CreateConnectionPayload payload) {
+
+		Uni.createFrom().completionStage(this.createConnection.send(payload)).subscribe().with(
+				any -> Log.debugv("Sent  the {0}", payload),
+				error -> Log.errorv(error, "Cannot send the {0}", payload));
 
 	}
 
@@ -564,6 +589,179 @@ public class RegisterComponentManager {
 	 */
 	private void createTopologyConnections(ManagerContext context) {
 
+		if (context.topology.connections != null) {
+
+			for (final var connection : context.topology.connections) {
+
+				if (context.definitionMatch(connection.source)) {
+
+					if (context.definitionMatch(connection.target)) {
+						// loop
+						this.sendCreateConnection(connection, context.entity.id, context.entity.id);
+
+					} else {
+
+						this.searchComponent(connection.target, context,
+								target -> this.sendCreateConnection(connection, context.entity.id, target.id));
+					}
+
+				} else if (context.definitionMatch(connection.target)) {
+
+					this.searchComponent(connection.source, context,
+							source -> this.sendCreateConnection(connection, source.id, context.entity.id));
+
+				} else if (connection.notifications != null) {
+
+					for (final var notification : connection.notifications) {
+
+						if (context.definitionMatch(notification.target)) {
+
+							// search for a connection that can be used to add to add the notification.
+						}
+					}
+
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Send the message to create the connection between the specified components.
+	 *
+	 * @param connection to create.
+	 * @param sourceId   identifier of the source component.
+	 * @param targetId   identifier of the target component
+	 */
+	private void sendCreateConnection(TopologyConnection connection, ObjectId sourceId, ObjectId targetId) {
+
+		TopologyConnectionEntity.count("""
+						source.componentId = ?1 and source.channelName = ?2
+						and target.componentId = ?3 and target.channelName = ?4
+				""", sourceId, connection.source.channel, targetId, connection.target.channel).onFailure()
+				.recoverWithItem(error -> {
+
+					Log.errorv(error, "Cannot count the connections.");
+					return 1l;
+
+				}).subscribe().with(count -> {
+
+					if (count == 0l) {
+
+						final var payload = new CreateConnectionPayload();
+						payload.enabled = true;
+						payload.source = new NodePayload();
+						payload.source.componentId = sourceId;
+						payload.source.channelName = connection.source.channel;
+						payload.target = new NodePayload();
+						payload.target.componentId = targetId;
+						payload.target.channelName = connection.target.channel;
+						payload.converterJSCode = connection.convertCode;
+						this.send(payload);
+
+					}
+
+				});
+
+	}
+
+	/**
+	 * Check if the defined channels match the channels of a component.
+	 *
+	 * @param source to check if match the other channels.
+	 * @param target to check if match the defined.
+	 *
+	 * @return {@code true} if the defined channels match the registered channels.
+	 */
+	private boolean match(List<ChannelSchema> source, List<ChannelSchema> target) {
+
+		int matches = 0;
+		for (final var defined : source) {
+
+			for (final var registered : target) {
+
+				if (defined.name.equals(registered.name) && (defined.subscribe != null
+						&& defined.subscribe.match(registered.subscribe, new HashMap<>())
+						|| defined.publish != null && defined.publish.match(registered.publish, new HashMap<>()))) {
+					matches++;
+					break;
+				}
+			}
+
+		}
+
+		return matches == source.size();
+
+	}
+
+	/**
+	 * Search for the component that match the specified defined node.
+	 *
+	 * @param context  of the register process.
+	 * @param endpoint to get the component that match it.
+	 */
+	private void searchComponent(TopologyConnectionEndpoint endpoint, ManagerContext context,
+			Consumer<ComponentEntity> found) {
+
+		for (final var node : context.topology.nodes) {
+
+			if (node.tag.equals(endpoint.nodeTag) && node.component != null && node.component.channels != null) {
+
+				final var channelByName = this.channelByName(node.component.channels, endpoint.channel);
+				if (channelByName != null) {
+
+					final var filter = Filters.and(Filters.eq("type", node.component.type),
+							Filters.exists("channels", true), Filters.ne("channels", null),
+							Filters.eq("channels.name", endpoint.channel),
+							Filters.or(Filters.exists("finishedTime", false), Filters.eq("finishedTime", null)));
+					final var options = new FindOptions().sort(Sorts.ascending("_id")).limit(1);
+					ComponentEntity.mongoCollection().find(filter, ComponentEntity.class, options).select()
+							.where(component -> {
+
+								final var componentChannel = this.channelByName(component.channels, channelByName.name);
+								return componentChannel != null && (channelByName.subscribe != null
+										&& channelByName.subscribe.match(componentChannel.subscribe, new HashMap<>())
+										|| channelByName.publish != null && channelByName.publish
+												.match(componentChannel.publish, new HashMap<>()));
+
+							}, 1).collect().first().onFailure().recoverWithItem(error -> {
+
+								Log.errorv(error, "Cannot find the component");
+								return null;
+
+							}).subscribe().with(component -> {
+
+								if (component != null) {
+
+									found.accept(component);
+								}
+
+							});
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Return the channel that has the specified name.
+	 *
+	 * @param channels to search.
+	 * @param name     of the channel to search.
+	 *
+	 * @return the channel that has the specified name, or {@code null} if not
+	 *         found.
+	 */
+	private ChannelSchema channelByName(List<ChannelSchema> channels, String name) {
+
+		for (final var channel : channels) {
+
+			if (channel.name.equals(name)) {
+
+				return channel;
+			}
+		}
+		return null;
 	}
 
 }

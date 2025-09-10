@@ -18,15 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,19 +40,13 @@ import eu.valawai.mov.api.v1.components.ComponentBuilder;
 import eu.valawai.mov.api.v1.components.ComponentTest;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
-import eu.valawai.mov.api.v1.logs.LogLevel;
-import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
-import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
-import eu.valawai.mov.services.LocalConfigService;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
-import io.vertx.core.json.Json;
-import jakarta.inject.Inject;
 
 /**
  * Test the {@link RegisterComponentManager}.
@@ -66,19 +56,7 @@ import jakarta.inject.Inject;
  * @author VALAWAI
  */
 @QuarkusTest
-public class RegisterComponentManagerTest extends MovEventTestCase {
-
-	/**
-	 * The name of the queue to send the register component events.
-	 */
-	@ConfigProperty(name = "mp.messaging.incoming.register_component.queue.name", defaultValue = "valawai/component/register")
-	String registerComponentQueueName;
-
-	/**
-	 * The local configuration.
-	 */
-	@Inject
-	LocalConfigService configuration;
+public class RegisterComponentManagerTest extends RegisterComponentManagerTestCase {
 
 	/**
 	 * Set auto discover as default.
@@ -137,24 +115,6 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that can not register a component.
-	 *
-	 * @param payload with the information of the component that can not be
-	 *                registered.
-	 */
-	private void assertNotRegister(RegisterComponentPayload payload) {
-
-		final var countComponents = ComponentEntity.count().await().atMost(Duration.ofSeconds(30));
-
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
-
-		assertEquals(1l, LogEntity.count("level = ?1 and payload = ?2", LogLevel.ERROR, Json.encodePrettily(payload))
-				.await().atMost(Duration.ofSeconds(30)));
-		assertEquals(countComponents, ComponentEntity.count().await().atMost(Duration.ofSeconds(30)));
-
-	}
-
-	/**
 	 * Check that a component is created and is created a connection as the
 	 * registered component as source.
 	 */
@@ -176,9 +136,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		payload.name = MessageFormat.format("c{0}_{1}", componentTypeIndex, componentName);
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_be_source.pattern.yml"),
-				componentTypeIndex, componentName, apiVersion, apiDescription, actionName, sourceChannelDescription,
-				fieldName);
+				this.loadResourceContent("component_to_register_and_be_source.pattern.yml"), componentTypeIndex,
+				componentName, apiVersion, apiDescription, actionName, sourceChannelDescription, fieldName);
 
 		// Create the component that will be the target of the connection
 		ComponentEntity target = ComponentEntities.nextComponent();
@@ -268,9 +227,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		payload.name = MessageFormat.format("c{0}_{1}", componentTypeIndex, componentName);
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_be_target.pattern.yml"),
-				componentTypeIndex, componentName, apiVersion, apiDescription, actionName, targetChannelDescription,
-				fieldName);
+				this.loadResourceContent("component_to_register_and_be_target.pattern.yml"), componentTypeIndex,
+				componentName, apiVersion, apiDescription, actionName, targetChannelDescription, fieldName);
 
 		// Create the component that will be the source of the connection
 		ComponentEntity source = ComponentEntities.nextComponent();
@@ -353,7 +311,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		// Create the component that will be the source of the connection
@@ -487,30 +445,6 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that is load an specification resource.
-	 *
-	 * @param name of the resource to load.
-	 *
-	 * @return the string of the loaded resource template.
-	 */
-	private String loadAsyncapiResourceTemplate(String name) {
-
-		try {
-
-			final var loader = RegisterComponentPayloadTest.class.getClassLoader();
-			final var stream = loader.getResourceAsStream("eu/valawai/mov/events/components/" + name);
-			final var bytes = stream.readAllBytes();
-			return new String(bytes, StandardCharsets.UTF_8);
-
-		} catch (final Throwable error) {
-
-			fail(error.getMessage());
-			return null;
-		}
-
-	}
-
-	/**
 	 * Check that a component is registered and is subscribed to come connections
 	 * that it may be notified.
 	 */
@@ -524,8 +458,8 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var fieldName = nextPattern("subscribe_into_connection_field_to_test_{0}");
 		payload.type = ComponentType.C2;
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_subscribe.pattern.yml"), componentName,
-				actionName, fieldName);
+				this.loadResourceContent("component_to_register_and_subscribe.pattern.yml"), componentName, actionName,
+				fieldName);
 
 		// create the connections where the component must be subscribed
 		final var connectionSchema = new ObjectPayloadSchema();
@@ -616,7 +550,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
@@ -696,7 +630,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, subscribeFiledName, publishFiledName);
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.registerComponentQueueName, payload));
 
@@ -751,7 +685,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		this.assertNotRegister(payload);
@@ -774,7 +708,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		this.assertNotRegister(payload);
@@ -800,7 +734,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		this.assertNotRegister(payload);
@@ -828,7 +762,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		final var queueName = MessageFormat.format("valawai/c{0}/{1}/control/registered", componentTypeIndex,
@@ -871,7 +805,7 @@ public class RegisterComponentManagerTest extends MovEventTestCase {
 		final var payload = new RegisterComponentPayloadTest().nextModel();
 		payload.type = ComponentType.values()[componentTypeIndex];
 		payload.asyncapiYaml = MessageFormat.format(
-				this.loadAsyncapiResourceTemplate("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
+				this.loadResourceContent("component_to_register_and_notity.pattern.yml"), componentTypeIndex,
 				componentName, outFieldName, inFieldName);
 
 		// Create the component that will be the source of the connection

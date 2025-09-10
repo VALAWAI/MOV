@@ -10,6 +10,7 @@ package eu.valawai.mov;
 
 import java.text.MessageFormat;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -222,6 +223,16 @@ public class ValueGenerator {
 				export {convert};
 				""" + "\n" + ValueGenerator.nextPattern("// code {0}");
 
+	}
+
+	/**
+	 * Shuffle a list.
+	 *
+	 * @param values to shuffle.
+	 */
+	public static void shuffle(List<?> values) {
+
+		Collections.shuffle(values, CURRENT);
 	}
 
 }
