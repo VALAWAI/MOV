@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.Json;
 
 /**
@@ -437,8 +439,8 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 			assertThat(connection.source.componentId, is(source.id));
 			assertThat(connection.target, is(not(nullValue())));
 			assertThat(connection.target.componentId, is(target.id));
-			assertThat(connection.createTimestamp, is(greaterThanOrEqualTo(source.since)));
-			assertThat(connection.updateTimestamp, is(greaterThanOrEqualTo(source.since)));
+			assertThat(connection.createTimestamp, is(greaterThanOrEqualTo(target.since)));
+			assertThat(connection.updateTimestamp, is(greaterThanOrEqualTo(target.since)));
 			assertThat(connection.enabled, is(true));
 			assertThat(connection.notifications, is(nullValue()));
 			assertThat(connection.deletedTimestamp, is(nullValue()));
@@ -448,4 +450,162 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 
 	}
 
+	/**
+	 * Should create a connection with notifications.
+	 */
+	@Test
+	public void shouldCreateConnectionWithNotifications() {
+
+		final var notificationTargets = new ArrayList<ComponentEntity>();
+		for (var i = 13; i < this.topology.nodes.size(); i++) {
+
+			final var node = this.topology.nodes.get(i);
+			final var notificationTarget = this.createComponentForRef(node.componentRef);
+			notificationTargets.add(notificationTarget);
+		}
+
+		final var source = this.createComponentForRef(this.topology.nodes.get(5).componentRef);
+		final var target = this.assertRegisterComponentSevenAndCreateConnection(1);
+
+		final var connection = this.getLastCreatedConnections(1).get(0);
+		assertThat(connection.source, is(not(nullValue())));
+		assertThat(connection.source.componentId, is(source.id));
+		assertThat(connection.target, is(not(nullValue())));
+		assertThat(connection.target.componentId, is(target.id));
+		assertThat(connection.createTimestamp, is(greaterThanOrEqualTo(target.since)));
+		assertThat(connection.updateTimestamp, is(greaterThanOrEqualTo(target.since)));
+		assertThat(connection.enabled, is(true));
+		assertThat(connection.deletedTimestamp, is(nullValue()));
+		assertThat(connection.targetMessageConverterJSCode, is(nullValue()));
+
+		final var updated = this.waitUntilHasNotifications(connection.id, notificationTargets.size());
+
+		NOTIFICATION: for (final var notification : updated.notifications) {
+
+			assertThat(notification.node, is(not(nullValue())));
+			assertThat(notification.enabled, is(true));
+			assertThat(notification.notificationMessageConverterJSCode, is(nullValue()));
+
+			for (var i = 0; i < notificationTargets.size(); i++) {
+
+				final var notificationTarget = notificationTargets.get(i);
+				if (notificationTarget.id.equals(notification.node.componentId)) {
+
+					notificationTargets.remove(i);
+					continue NOTIFICATION;
+				}
+
+			}
+
+			fail("Unexpected notification target");
+		}
+	}
+
+	/**
+	 * Wait until the connection has the specified number of notifications.
+	 *
+	 * @param connectionId          identifier of the connection.
+	 * @param expectedNotifications the number of notifications that are expected.
+	 *
+	 * @return the updated connection.
+	 */
+	private TopologyConnectionEntity waitUntilHasNotifications(final ObjectId connectionId,
+			final int expectedNotifications) {
+
+		final var updated = this.waitUntil(() -> {
+
+			final Uni<TopologyConnectionEntity> find = TopologyConnectionEntity.findById(connectionId);
+			return this.assertItemNotNull(find);
+
+		}, c -> c.notifications != null && c.notifications.size() == expectedNotifications);
+		assertThat(updated.notifications, is(not(nullValue())));
+		assertThat(updated.notifications, hasSize(expectedNotifications));
+		return updated;
+	}
+
+	/**
+	 * Should create full topology.
+	 */
+	@Test
+	public void shouldCreateFullTopology() {
+
+		final var components = new ArrayList<ComponentEntity>();
+		for (var i = 0; i < this.topology.nodes.size(); i++) {
+
+			if (i != 6) {
+
+				final var node = this.topology.nodes.get(i);
+				final var component = this.createComponentForRef(node.componentRef);
+				components.add(component);
+			}
+		}
+
+		final var expectedConnections = 12;
+		final var middle = this.assertRegisterComponentSevenAndCreateConnection(expectedConnections);
+
+		final var connections = this.getLastCreatedConnections(expectedConnections);
+		for (var connection : connections) {
+
+			ComponentEntity source = null;
+			ComponentEntity target = null;
+			for (var i = 0; i < components.size(); i++) {
+
+				final var component = components.get(i);
+				if (connection.source != null && component.id.equals(connection.source.componentId)) {
+
+					source = component;
+					target = middle;
+					break;
+
+				} else if (connection.target != null && component.id.equals(connection.target.componentId)) {
+
+					source = middle;
+					target = component;
+					break;
+				}
+			}
+
+			assertThat(source, is(not(nullValue())));
+			assertThat(target, is(not(nullValue())));
+			assertThat(connection.source, is(not(nullValue())));
+			assertThat(connection.source.componentId, is(source.id));
+			assertThat(connection.target, is(not(nullValue())));
+			assertThat(connection.target.componentId, is(target.id));
+			assertThat(connection.createTimestamp, is(greaterThanOrEqualTo(middle.since)));
+			assertThat(connection.updateTimestamp, is(greaterThanOrEqualTo(middle.since)));
+			assertThat(connection.enabled, is(true));
+			assertThat(connection.deletedTimestamp, is(nullValue()));
+			assertThat(connection.targetMessageConverterJSCode, is(nullValue()));
+
+			if ("valawai/c0/component_3/data/output".equals(connection.source.channelName)
+					&& "valawai/c1/component_7/data/input_3".equals(connection.target.channelName)
+					|| "valawai/c0/component_6/data/output".equals(connection.source.channelName)
+							&& "valawai/c1/component_7/data/input_4".equals(connection.target.channelName)) {
+
+				connection = this.waitUntilHasNotifications(connection.id, 3);
+
+				NOTIFICATION: for (final var notification : connection.notifications) {
+
+					assertThat(notification.node, is(not(nullValue())));
+					assertThat(notification.enabled, is(true));
+					assertThat(notification.notificationMessageConverterJSCode, is(nullValue()));
+
+					for (var i = components.size() - 1; i > 11; i--) {
+
+						final var notificationTarget = components.get(i);
+						if (notificationTarget.id.equals(notification.node.componentId)) {
+
+							continue NOTIFICATION;
+						}
+
+					}
+
+					fail("Unexpected notification target");
+				}
+
+			}
+
+		}
+
+	}
 }
