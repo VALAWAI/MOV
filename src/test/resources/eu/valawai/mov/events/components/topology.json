@@ -150,6 +150,16 @@
 		},
 		{
 			"tag": "node_16"
+		},
+		{
+			"tag": "node_17",
+			"outputs": [
+				{
+					"sourceChannel": "valawai/c1/component_17/data/loop_output",
+					"targetTag": "node_17",
+					"targetChannel": "valawai/c1/component_17/data/loop_input"
+				}
+			]
 		}
 	]
 }

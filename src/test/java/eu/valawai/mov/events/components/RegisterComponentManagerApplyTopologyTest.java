@@ -41,6 +41,7 @@ import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
@@ -57,11 +58,6 @@ import io.vertx.core.json.Json;
  */
 @QuarkusTest
 public class RegisterComponentManagerApplyTopologyTest extends RegisterComponentManagerTestCase {
-
-	/**
-	 * The payload to register the component 7.
-	 */
-	private final RegisterComponentPayload registerComponentSevenPayload = this.registerComponentSevenPayload();
 
 	/**
 	 * The topology definition o use in the tests.
@@ -106,15 +102,24 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 				}
 			}
 			final var componentDef = ComponentDefinitionEntities.nextComponentDefinitionWithType(type);
-			if (componentDef.channels == null) {
-
-				componentDef.channels = new ArrayList<>();
-
-			} else if (type == ComponentType.C1) {
+			if ("node_7".equals(node.tag)) {
 
 				componentDef.channels = ComponentBuilder
-						.fromAsyncapi(this.registerComponentSevenPayload.asyncapiYaml).channels;
+						.fromAsyncapi(this.registerComponentPayloadFor(7).asyncapiYaml).channels;
 
+			} else if ("node_17".equals(node.tag)) {
+
+				componentDef.channels = ComponentBuilder
+						.fromAsyncapi(this.registerComponentPayloadFor(17).asyncapiYaml).channels;
+
+			} else if ("node_16".equals(node.tag)) {
+
+				componentDef.channels = ComponentBuilder
+						.fromAsyncapi(this.registerComponentPayloadFor(16).asyncapiYaml).channels;
+
+			} else if (componentDef.channels == null) {
+
+				componentDef.channels = new ArrayList<>();
 			}
 			node.componentRef = componentDef.id;
 			created.put(node.tag, componentDef);
@@ -173,13 +178,13 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 	/**
 	 * The payload to register the component 7.
 	 */
-	private RegisterComponentPayload registerComponentSevenPayload() {
+	private RegisterComponentPayload registerComponentPayloadFor(int index) {
 
 		final var payload = new RegisterComponentPayload();
-		payload.name = "c1_component_7";
-		payload.version = "2.0.0";
+		payload.name = "c1_component_" + index;
+		payload.version = index + ".0.0";
 		payload.type = ComponentType.C1;
-		payload.asyncapiYaml = this.loadResourceContent("component_7.asyncapi.yml");
+		payload.asyncapiYaml = this.loadResourceContent("component_" + index + ".asyncapi.yml");
 		return payload;
 	}
 
@@ -209,14 +214,15 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 	}
 
 	/**
-	 * Check that the component 7 is been registered.
+	 * Check that the component is been registered.
+	 *
+	 * @param payload of the component to register.
 	 */
-	protected ComponentEntity assertRegisterComponentSeven() {
+	protected ComponentEntity assertRegisterComponent(RegisterComponentPayload payload) {
 
 		final var expectedComponentscount = this.assertItemNotNull(ComponentEntity.count()) + 1;
 		final var now = TimeManager.now();
-		this.executeAndWaitUntilNewLogs(2,
-				() -> this.assertPublish(this.registerComponentQueueName, this.registerComponentSevenPayload));
+		this.executeAndWaitUntilNewLogs(1, () -> this.assertPublish(this.registerComponentQueueName, payload));
 
 		final var countComponentsAfter = this.assertItemNotNull(ComponentEntity.count());
 		assertThat(countComponentsAfter, is(expectedComponentscount));
@@ -224,9 +230,9 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 		final ComponentEntity component = this
 				.assertItemNotNull(ComponentEntity.findAll(Sort.descending("_id")).firstResult());
 		assertThat(component.since, is(greaterThanOrEqualTo(now)));
-		assertThat(component.name, is(this.registerComponentSevenPayload.name));
+		assertThat(component.name, is(payload.name));
 		assertThat(component.type, is(ComponentType.C1));
-		assertThat(component.version, is(this.registerComponentSevenPayload.version));
+		assertThat(component.version, is(payload.version));
 		assertThat(component.apiVersion, is("1.0.0"));
 		assertThat(component.finishedTime, is(nullValue()));
 		assertThat(component.channels, is(not(nullValue())));
@@ -241,7 +247,7 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 	@Test
 	public void shouldOnlyRegisterComponent() {
 
-		this.assertRegisterComponentSeven();
+		this.assertRegisterComponent(this.registerComponentPayloadFor(7));
 
 	}
 
@@ -257,18 +263,20 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 	}
 
 	/**
-	 * Check that the component 7 is been registered and create the number of
+	 * Check that the component is been registered and create the number of
 	 * connections.
 	 *
-	 * @param offset the number of connection to create.
+	 * @param payload to register the component.
+	 * @param offset  the number of connection to create.
 	 *
 	 * @return the registered component.
 	 */
-	protected ComponentEntity assertRegisterComponentSevenAndCreateConnection(long offset) {
+	protected ComponentEntity assertRegisterComponentAndCreateConnection(RegisterComponentPayload payload,
+			long offset) {
 
 		final var expectedConnectionCount = this
 				.assertItemNotNull(TopologyConnectionEntity.count("deletedTimestamp is null")) + offset;
-		final var component = this.assertRegisterComponentSeven();
+		final var component = this.assertRegisterComponent(payload);
 		this.waitUntilConnectionCountIs(expectedConnectionCount);
 		return component;
 
@@ -298,7 +306,7 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 
 		final var target = this.createComponentForRef(this.topology.nodes.get(8).componentRef);
 
-		final var source = this.assertRegisterComponentSevenAndCreateConnection(1);
+		final var source = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(7), 1);
 
 		final var connection = this.getLastCreatedConnections(1).get(0);
 		assertThat(connection.source, is(not(nullValue())));
@@ -337,7 +345,8 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 			}
 		}
 
-		final var source = this.assertRegisterComponentSevenAndCreateConnection(expectedConnections);
+		final var source = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(7),
+				expectedConnections);
 
 		final var lastConnections = this.getLastCreatedConnections(expectedConnections);
 		for (final var connection : lastConnections) {
@@ -386,7 +395,7 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 
 		final var source = this.createComponentForRef(this.topology.nodes.get(0).componentRef);
 
-		final var target = this.assertRegisterComponentSevenAndCreateConnection(1);
+		final var target = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(7), 1);
 
 		final var connection = this.getLastCreatedConnections(1).get(0);
 		assertThat(connection.source, is(not(nullValue())));
@@ -417,7 +426,8 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 			sources.add(source);
 		}
 
-		final var target = this.assertRegisterComponentSevenAndCreateConnection(expectedConnections);
+		final var target = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(7),
+				expectedConnections);
 
 		final var lastConnections = this.getLastCreatedConnections(expectedConnections);
 		for (final var connection : lastConnections) {
@@ -457,7 +467,7 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 	public void shouldCreateConnectionWithNotifications() {
 
 		final var notificationTargets = new ArrayList<ComponentEntity>();
-		for (var i = 13; i < this.topology.nodes.size(); i++) {
+		for (var i = 13; i < 16; i++) {
 
 			final var node = this.topology.nodes.get(i);
 			final var notificationTarget = this.createComponentForRef(node.componentRef);
@@ -465,7 +475,7 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 		}
 
 		final var source = this.createComponentForRef(this.topology.nodes.get(5).componentRef);
-		final var target = this.assertRegisterComponentSevenAndCreateConnection(1);
+		final var target = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(7), 1);
 
 		final var connection = this.getLastCreatedConnections(1).get(0);
 		assertThat(connection.source, is(not(nullValue())));
@@ -541,7 +551,8 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 		}
 
 		final var expectedConnections = 12;
-		final var middle = this.assertRegisterComponentSevenAndCreateConnection(expectedConnections);
+		final var middle = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(7),
+				expectedConnections);
 
 		final var connections = this.getLastCreatedConnections(expectedConnections);
 		for (var connection : connections) {
@@ -590,7 +601,7 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 					assertThat(notification.enabled, is(true));
 					assertThat(notification.notificationMessageConverterJSCode, is(nullValue()));
 
-					for (var i = components.size() - 1; i > 11; i--) {
+					for (var i = components.size() - 1; i > -1; i--) {
 
 						final var notificationTarget = components.get(i);
 						if (notificationTarget.id.equals(notification.node.componentId)) {
@@ -603,9 +614,65 @@ public class RegisterComponentManagerApplyTopologyTest extends RegisterComponent
 					fail("Unexpected notification target");
 				}
 
-			}
+			} else {
 
+				assertThat(connection.notifications, is(nullValue()));
+			}
 		}
+	}
+
+	/**
+	 * Check that a loop connection is created.
+	 */
+	@Test
+	public void shouldCreateLoopConnection() {
+
+		final var component = this.assertRegisterComponentAndCreateConnection(this.registerComponentPayloadFor(17), 1);
+		final var connection = this.getLastCreatedConnections(1).get(0);
+		assertThat(connection.source, is(not(nullValue())));
+		assertThat(connection.source.componentId, is(component.id));
+		assertThat(connection.target, is(not(nullValue())));
+		assertThat(connection.target.componentId, is(component.id));
+		assertThat(connection.createTimestamp, is(greaterThanOrEqualTo(component.since)));
+		assertThat(connection.updateTimestamp, is(greaterThanOrEqualTo(component.since)));
+		assertThat(connection.enabled, is(true));
+		assertThat(connection.deletedTimestamp, is(nullValue()));
+		assertThat(connection.targetMessageConverterJSCode, is(nullValue()));
 
 	}
+
+	/**
+	 * Check that create the notifications to the registered component.
+	 */
+	@Test
+	public void shouldEnablenotificationsToRegisterComponent() {
+
+		final var source = this.createComponentForRef(this.topology.nodes.get(5).componentRef);
+		final var target = this.createComponentForRef(this.topology.nodes.get(6).componentRef);
+		var connection = new TopologyConnectionEntity();
+		connection.createTimestamp = ValueGenerator.nextPastTime();
+		connection.updateTimestamp = connection.createTimestamp;
+		connection.source = new TopologyNode();
+		connection.source.componentId = source.id;
+		connection.source.channelName = "valawai/c0/component_6/data/output";
+		connection.target = new TopologyNode();
+		connection.target.componentId = target.id;
+		connection.target.channelName = "valawai/c1/component_7/data/input_4";
+		connection.enabled = ValueGenerator.flipCoin();
+		this.assertItemNotNull(connection.persist());
+
+		final var now = TimeManager.now();
+		final var componentNode16 = this.assertRegisterComponent(this.registerComponentPayloadFor(16));
+		connection = this.waitUntilHasNotifications(connection.id, 1);
+
+		final var notification = connection.notifications.get(0);
+		assertThat(notification.node, is(not(nullValue())));
+		assertThat(notification.enabled, is(true));
+		assertThat(notification.notificationMessageConverterJSCode, is(nullValue()));
+		assertThat(notification.node.componentId, is(componentNode16.id));
+		assertThat(notification.node.channelName, is("valawai/c2/component_16/data/input"));
+		assertThat(connection.updateTimestamp, is(greaterThanOrEqualTo(now)));
+
+	}
+
 }

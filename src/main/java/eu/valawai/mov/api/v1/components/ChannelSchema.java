@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.api.v1.components;
 
+import java.util.HashMap;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
@@ -47,4 +49,34 @@ public class ChannelSchema extends Model {
 	 */
 	@Schema(description = "The content of the messages that the component can send thought this channel.")
 	public PayloadSchema publish;
+
+	/**
+	 * Check if this channel match another.
+	 *
+	 * @param other to check.
+	 *
+	 * @return {@code true} if this channels is equivalent to the other schema.
+	 */
+	public boolean match(ChannelSchema other) {
+
+		if (other == null || this.name == null && other.name != null
+				|| this.name != null && !this.name.equals(other.name)) {
+
+			return false;
+
+		} else if (this.subscribe != null) {
+
+			return this.subscribe.match(other.subscribe, new HashMap<>());
+
+		} else if (this.publish != null) {
+
+			return this.publish.match(other.publish, new HashMap<>());
+
+		} else {
+
+			return false;
+		}
+
+	}
+
 }

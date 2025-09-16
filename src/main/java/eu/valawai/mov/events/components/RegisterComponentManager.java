@@ -35,6 +35,7 @@ import eu.valawai.mov.api.v1.components.ObjectPayloadSchema;
 import eu.valawai.mov.api.v2.design.topologies.Topology;
 import eu.valawai.mov.api.v2.design.topologies.TopologyConnection;
 import eu.valawai.mov.api.v2.design.topologies.TopologyConnectionEndpoint;
+import eu.valawai.mov.api.v2.design.topologies.TopologyConnectionNotification;
 import eu.valawai.mov.api.v2.design.topologies.TopologyNode;
 import eu.valawai.mov.events.PayloadService;
 import eu.valawai.mov.events.PublishService;
@@ -616,7 +617,7 @@ public class RegisterComponentManager {
 
 						if (context.definitionMatch(notification.target)) {
 
-							// search for a connection that can be used to add to add the notification.
+							this.searchMathingConnectionWith(notification, context, connection);
 						}
 					}
 
@@ -680,9 +681,8 @@ public class RegisterComponentManager {
 
 			for (final var registered : target) {
 
-				if (defined.name.equals(registered.name) && (defined.subscribe != null
-						&& defined.subscribe.match(registered.subscribe, new HashMap<>())
-						|| defined.publish != null && defined.publish.match(registered.publish, new HashMap<>()))) {
+				if (defined.match(registered)) {
+
 					matches++;
 					break;
 				}
@@ -719,10 +719,7 @@ public class RegisterComponentManager {
 							.where(component -> {
 
 								final var componentChannel = this.channelByName(component.channels, channelByName.name);
-								return componentChannel != null && (channelByName.subscribe != null
-										&& channelByName.subscribe.match(componentChannel.subscribe, new HashMap<>())
-										|| channelByName.publish != null && channelByName.publish
-												.match(componentChannel.publish, new HashMap<>()));
+								return channelByName.match(componentChannel);
 
 							}, 1).collect().first().onFailure().recoverWithItem(error -> {
 
@@ -744,6 +741,10 @@ public class RegisterComponentManager {
 	}
 
 	/**
+	 * Check if two channels match.
+	 */
+
+	/**
 	 * Return the channel that has the specified name.
 	 *
 	 * @param channels to search.
@@ -762,6 +763,116 @@ public class RegisterComponentManager {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Return the channel definition of the specified endpoint.
+	 *
+	 * @param endpoint to get the channel.
+	 * @param context  of the register process.
+	 *
+	 * @return the channel associated to the endpoint, or {@code null} if not found.
+	 */
+	private ChannelSchema channelOf(TopologyConnectionEndpoint endpoint, ManagerContext context) {
+
+		for (final var node : context.topology.nodes) {
+
+			if (node.tag.equals(endpoint.nodeTag) && node.component != null && node.component.channels != null) {
+
+				return this.channelByName(node.component.channels, endpoint.channel);
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Send the message to create a notification for a connection.
+	 *
+	 * @param notification to create.
+	 * @param connectionId identifier of the connection to add the notification.
+	 * @param targetId     identifier of the target component
+	 */
+	private void sendCreateNotification(TopologyConnectionNotification notification, ObjectId connectionId,
+			ObjectId targetId) {
+
+		final var payload = new CreateNotificationPayload();
+		payload.enabled = true;
+		payload.connectionId = connectionId;
+		payload.target = new NodePayload();
+		payload.target.componentId = targetId;
+		payload.target.channelName = notification.target.channel;
+		payload.converterJSCode = notification.convertCode;
+		Uni.createFrom().completionStage(this.createNotification.send(payload)).subscribe().with(
+				any -> Log.debugv("Sent  the {0}", payload),
+				error -> Log.errorv(error, "Cannot send the {0}", payload));
+
+	}
+
+	/**
+	 * Check if exist a connection that match the specified notification.
+	 *
+	 * @param notification to create.
+	 * @param context      of the register process.
+	 * @param connection   where the notification will be defined.
+	 */
+	public void searchMathingConnectionWith(TopologyConnectionNotification notification, ManagerContext context,
+			TopologyConnection connection) {
+
+		final var sourceNodeChannel = this.channelOf(connection.source, context);
+		final var targetNodeChannel = this.channelOf(connection.target, context);
+		final Multi<TopologyConnectionEntity> find = TopologyConnectionEntity
+				.find("source.channelName = ?1 and target.channelName = ?2 and deletedTimestamp is null",
+						connection.source.channel, connection.target.channel)
+				.stream();
+		find.select().when(liveConnection -> {
+
+			return this.componentHasChannel(liveConnection.source.componentId, sourceNodeChannel).chain(hasSource -> {
+
+				if (hasSource) {
+
+					return this.componentHasChannel(liveConnection.target.componentId, targetNodeChannel);
+
+				} else {
+
+					return Uni.createFrom().item(false);
+				}
+
+			});
+
+		}).subscribe().with(liveConnection -> {
+
+			if (liveConnection != null) {
+
+				this.sendCreateNotification(notification, liveConnection.id, context.entity.id);
+			}
+
+		}, error -> Log.errorv(error, "Cannot find the connection."));
+	}
+
+	/**
+	 * Check if a component has the specified channel.
+	 *
+	 * @param componetId identifier of the component to check.
+	 * @param channel    to be defined in the component.
+	 *
+	 * @return {@code true} if the component has the specified channel.
+	 */
+	private Uni<Boolean> componentHasChannel(ObjectId componetId, ChannelSchema channel) {
+
+		final Uni<ComponentEntity> find = ComponentEntity.findById(componetId);
+		return find.onFailure().recoverWithNull().onItem().transform(component -> {
+
+			var match = false;
+			if (component != null) {
+
+				final var defined = this.channelByName(component.channels, channel.name);
+				match = defined != null && channel.match(defined);
+			}
+			return match;
+
+		});
+
 	}
 
 }
