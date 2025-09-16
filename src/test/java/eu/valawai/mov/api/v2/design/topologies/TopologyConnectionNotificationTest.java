@@ -11,6 +11,7 @@ package eu.valawai.mov.api.v2.design.topologies;
 import eu.valawai.mov.ValueGenerator;
 import eu.valawai.mov.api.ModelTestCase;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphConnectionNotification;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphConnectionType;
 
 /**
  * Test the {@link TopologyConnectionNotification}.
@@ -38,6 +39,7 @@ public class TopologyConnectionNotificationTest extends ModelTestCase<TopologyCo
 
 		model.target = new TopologyConnectionEndpointTest().nextModel();
 		model.convertCode = ValueGenerator.nextPattern("//Convert {0}");
+		model.type = ValueGenerator.next(TopologyGraphConnectionType.values());
 	}
 
 	/**
@@ -58,6 +60,7 @@ public class TopologyConnectionNotificationTest extends ModelTestCase<TopologyCo
 		}
 
 		model.convertCode = entity.convertCode;
+		model.type = entity.type;
 		return model;
 	}
 

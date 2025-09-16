@@ -137,6 +137,7 @@ public class UpdateTopology extends AbstractEntityOperator<Boolean, UpdateTopolo
 									graphNotification.targetTag = notification.target.nodeTag;
 									graphNotification.targetChannel = notification.target.channel;
 									graphNotification.convertCode = notification.convertCode;
+									graphNotification.type = notification.type;
 									output.notifications.add(graphNotification);
 								}
 							}

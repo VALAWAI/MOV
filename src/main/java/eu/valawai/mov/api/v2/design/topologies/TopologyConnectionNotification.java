@@ -11,6 +11,8 @@ package eu.valawai.mov.api.v2.design.topologies;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import eu.valawai.mov.api.Model;
+import eu.valawai.mov.persistence.design.topology.TopologyGraphConnectionType;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -40,4 +42,12 @@ public class TopologyConnectionNotification extends Model {
 	 */
 	@Schema(description = "An optional code or identifier for transforming the notification's content to the target channel's format.")
 	public String convertCode;
+
+	/**
+	 * Explain how the connection has to be painted.
+	 */
+	@Schema(description = "Explain how the connection has to be painted.")
+	@Nullable
+	public TopologyGraphConnectionType type;
+
 }

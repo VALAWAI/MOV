@@ -175,7 +175,8 @@ public class GetTopology extends AbstractEntityOperator<Topology, GetTopology> {
 										           "nodeTag":"$$notification.targetTag",
 										           "channel":"$$notification.targetChannel"
 										         },
-										         "convertCode":"$$notification.convertCode"
+										         "convertCode":"$$notification.convertCode",
+										         "type":"$$notification.type"
 										       }
 										     }
 										 }""")))));

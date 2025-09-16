@@ -866,6 +866,14 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 		this.updatedGraph();
 	}
 
+	/**
+	 * Use the current defined topology as the one to follow.
+	 */
+	public setTopologyToFollow() {
+
+
+	}
+
 }
 
 /**
