@@ -1,0 +1,22 @@
+<h2 mat-dialog-title class="text-lg font-bold mb-4"
+	i18n="Title of the dialog to confirm to apply a topology@@main_topology_editor-dialog-confirm-apply-topology-title">
+	Apply Topology</h2>
+<mat-dialog-content class="text-gray-600 mb-4">
+<p class="text-lg"
+	i18n="Question of the dialog to confirm to apply a topology@@main_topology_editor-dialog-confirm-apply-topology-question">
+	Applying the <span class="font-bold ">{{data.name}}</span> topology
+	will cause the Master Of VALAWAI to follow its defined connections.
+	This means that only the connections specified in the topology will be
+	generated.
+</p>
+<p>Do you want to continue with this action?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+<button matButton color="warn" [mat-dialog-close]="false"
+	i18n="Cancel label of the dialog to confirm to apply a topology@@main_topology_editor-dialog-confirm-apply-topology-cancel-label">
+	Cancel</button>
+<button matButton color="primary" [mat-dialog-close]="true"
+	cdkFocusInitial
+	i18n="OK label of the dialog to confirm to apply a topology@@main_topology_editor-dialog-confirm-apply-topology-ok-label">
+	Apply topology</button>
+</mat-dialog-actions>

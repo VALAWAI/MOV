@@ -23,6 +23,7 @@ import { MinTopology, MinTopologyPage, MovApiService } from '@app/shared/mov-api
 import { MainService } from 'src/app/main';
 import { ConfirmRemoveTopologyDialog } from './confirm-remove-topology.dialog';
 import { toPattern } from '@app/shared';
+import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-topology';
 
 /**
  * Thei component allow to edit the seakerurtion of the MOV.
@@ -42,7 +43,8 @@ import { toPattern } from '@app/shared';
 		MatPaginatorModule,
 		MessageComponent,
 		RouterModule,
-		MatDialogModule
+		MatDialogModule,
+		ApplyTopologyModule
 	],
 	templateUrl: './seaker.component.html'
 })
@@ -92,11 +94,15 @@ export class TopologySeakerComponent implements OnInit {
 	 */
 	public pageIndex: number = 0;
 
-
 	/**
 	 * The service to manage the dialogs.
 	 */
 	private dialog = inject(MatDialog);
+
+	/**
+	 * The service to manage the topology application.
+	 */
+	private applyTopologyService = inject(ApplyTopologyService);
 
 
 	/**
@@ -169,4 +175,11 @@ export class TopologySeakerComponent implements OnInit {
 
 	}
 
+	/**
+	 * Called when has to delete a topology.
+	 */
+	public apply(topology: MinTopology) {
+
+		this.applyTopologyService.confirmAndApplyTopology(topology);
+	}
 }

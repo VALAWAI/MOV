@@ -44,8 +44,7 @@ import {
 	ComponentType,
 	ChannelSchema,
 	matchPayloadSchema,
-	ComponentDefinition,
-	LiveConfiguration
+	ComponentDefinition
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -70,6 +69,7 @@ import {
 import { TopologyFormComponent } from './topology-form.component';
 import { EditorEndpoint } from './editor-endpoint.model';
 import { SelectChannelDialog } from './select-channel.dialog';
+import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-topology';
 
 
 @Component({
@@ -88,7 +88,8 @@ import { SelectChannelDialog } from './select-channel.dialog';
 		TopologyFormComponent,
 		GraphModule,
 		EditorModule,
-		ToCssVariablePipe
+		ToCssVariablePipe,
+		ApplyTopologyModule
 	],
 	templateUrl: './editor.component.html',
 	styleUrls: ['./editor.component.css'],
@@ -175,6 +176,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 * The service of teh editor.
 	 */
 	public readonly topology = inject(TopologyEditorService);
+
+	/**
+	 * The service to apply a topology.
+	 */
+	public readonly applyTopologyService = inject(ApplyTopologyService);
 
 	/**
 	 * Called when the window is resized.
@@ -870,12 +876,12 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	/**
 	 * Use the current defined topology as the one to follow.
 	 */
-	public setTopologyToFollow() {
+	public applyEditingTopology() {
 
 		if (this.topology.isEmpty) {
 
 			this.messages.showError(
-				$localize`:Error message when try to set the topology to follow and the topology is empty@@main_topology_editor_code_set-topology-to-follow-empty-error-msg:Cannot set an empty topology as the one to follow.`
+				$localize`:Error message when try to apply an empty topology@@main_topology_editor_code_apply-topology-empty-error-msg:Cannot use an empty topology as the one to follow.`
 			);
 
 		} else if (this.topology.unsaved) {
@@ -886,7 +892,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 						if (stored) {
 
-							this.setDesignTopologyAsLive();
+							this.applyTopologyService.confirmAndApplyTopology(this.topology.model);
 						}
 					}
 				}
@@ -894,34 +900,11 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 
 		} else {
 
-			this.setDesignTopologyAsLive();
+			this.applyTopologyService.confirmAndApplyTopology(this.topology.model);
 		}
 
 	}
 
-	/**
-	 * Set the editiing topology as the one to follow.
-	 */
-	private setDesignTopologyAsLive() {
-
-		var liveConf = new LiveConfiguration();
-		liveConf.topologyId = this.topology.model.id;
-		liveConf.createConnection = 'APPLY_TOPOLOGY';
-		liveConf.registerComponent = 'APPLY_TOPOLOGY';
-		this.api.setLiveConfiguration(liveConf).subscribe(
-			{
-				next: () => this.messages.showSuccess(
-					$localize`:Success message when set the topology to follow@@main_topology_editor_code_set-topology-to-follow-success-msg:Topology set as the one to follow.`
-				),
-				error: err => {
-					console.error(err);
-					this.messages.showError(
-						$localize`:Error message when not set the topology to follow@@main_topology_editor_code_set-topology-to-follow-error-msg:Topology canot be set as the one to follow.`
-					);
-				}
-			}
-		);
-	}
 
 }
 

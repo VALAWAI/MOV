@@ -7,6 +7,6 @@
 */
 
 
-export { TopologySeakerComponent } from './seaker.component';
-
-export { ConfirmRemoveTopologyDialog } from './confirm-remove-topology.dialog';
+export { ApplyTopologyModule } from './apply-topology.module';
+export { ApplyTopologyService } from './apply-topology.service';
+export { ConfirmApplyTopologyDialog } from './confirm-apply-topology.dialog';
