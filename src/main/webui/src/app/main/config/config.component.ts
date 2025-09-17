@@ -127,21 +127,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 
 		this.api.getLiveConfiguration().subscribe(
 			{
-				next: (conf) => {
-
-					this.liveConfiguration = conf;
-					this.confForm.patchValue(
-						{
-							liveTopologyId: conf.topologyId,
-							liveRegisterComponentBehaviour: conf.registerComponent,
-							liveCreateConnectionBehaviour: conf.createConnection
-						},
-						{
-							emitEvent: false
-						}
-					);
-
-				}
+				next: (conf) => this.updateLiveConfiguration(conf)
 			}
 		);
 
@@ -173,8 +159,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 						{
 							next: topology => {
 
-								this.liveConfiguration.topologyId = topology.id;
-								this.applyTopologyService.confirmAndApplyTopology(topology);
+								this.applyTopologyService.confirmAndApplyTopology(topology, updated => this.updateLiveConfiguration(updated));
 							},
 							error: err => {
 
@@ -203,6 +188,25 @@ export class ConfigComponent implements OnInit, OnDestroy {
 				this.storeLiveConfiguration();
 			}
 		);
+	}
+
+	/**
+	 * Called when want to update the live configuration.
+	 */
+	private updateLiveConfiguration(conf: LiveConfiguration) {
+
+		this.liveConfiguration = conf;
+		this.confForm.patchValue(
+			{
+				liveTopologyId: conf.topologyId,
+				liveRegisterComponentBehaviour: conf.registerComponent,
+				liveCreateConnectionBehaviour: conf.createConnection
+			},
+			{
+				emitEvent: false
+			}
+		);
+
 	}
 
 	/**
