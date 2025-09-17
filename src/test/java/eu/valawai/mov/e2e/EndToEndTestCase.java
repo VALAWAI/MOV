@@ -16,8 +16,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.charset.StandardCharsets;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import com.mongodb.client.model.Filters;
 
+import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.api.v1.components.Component;
 import eu.valawai.mov.api.v1.components.ComponentType;
 import eu.valawai.mov.api.v1.components.MinComponentPage;
@@ -26,8 +30,12 @@ import eu.valawai.mov.events.components.ComponentPayload;
 import eu.valawai.mov.events.components.RegisterComponentPayload;
 import eu.valawai.mov.events.components.RegisterComponentPayloadTest;
 import eu.valawai.mov.events.components.UnregisterComponentPayload;
+import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.services.LocalConfigService;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -36,6 +44,29 @@ import jakarta.ws.rs.core.Response.Status;
  * @author VALAWAI
  */
 public class EndToEndTestCase extends MovEventTestCase {
+
+	/**
+	 * The local configuration.
+	 */
+	@Inject
+	LocalConfigService configuration;
+
+	/**
+	 * Set auto discover as default.
+	 */
+	@BeforeEach
+	public void setAutoDiscover() {
+
+		ComponentEntities.clear();
+		TopologyConnectionEntities.clear();
+
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+				TopologyBehavior.AUTO_DISCOVER.name()));
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+				TopologyBehavior.AUTO_DISCOVER.name()));
+		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.TOPOLOGY_ID_NAME, null));
+
+	}
 
 	/**
 	 * Register a component.

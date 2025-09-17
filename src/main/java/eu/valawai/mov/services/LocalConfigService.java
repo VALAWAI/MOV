@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import org.eclipse.microprofile.config.ConfigProvider;
 
 import eu.valawai.mov.MOVConfiguration;
+import eu.valawai.mov.MOVConfiguration.TopologyBehavior;
 import eu.valawai.mov.api.v2.design.topologies.Topology;
 import eu.valawai.mov.persistence.design.topology.GetTopology;
 import eu.valawai.mov.persistence.design.topology.TopologyGraphEntity;
@@ -150,24 +151,20 @@ public class LocalConfigService {
 	 */
 	public <T> T getPropertyValue(String key, Class<T> type, T defaultValue) {
 
-		T value = null;
 		try {
 
-			value = ConfigProvider.getConfig().getValue(key, type);
+			final var value = ConfigProvider.getConfig().getOptionalValue(key, type);
+			if (value.isPresent()) {
+
+				return value.get();
+			}
 
 		} catch (final Throwable cause) {
 
 			Log.debugv(cause, "Cannot get the property {0}.", key);
 		}
 
-		if (value == null) {
-
-			return defaultValue;
-
-		} else {
-
-			return value;
-		}
+		return defaultValue;
 
 	}
 
@@ -232,6 +229,33 @@ public class LocalConfigService {
 
 			return Uni.createFrom().nullItem();
 		}
+	}
+
+	/**
+	 * Get the {@link TopologyBehavior} defined in a property.
+	 *
+	 * @param name of the property to get its behaviour.
+	 *
+	 * @return the topology behaviour defined in a property.
+	 */
+	public TopologyBehavior getTopologyBehaviour(String name) {
+
+		final var value = this.getPropertyValue(name, String.class, null);
+		if (value != null) {
+
+			try {
+
+				return TopologyBehavior.valueOf(value);
+
+			} catch (final Error error) {
+
+				Log.errorv(error, "Cannot get the configured topology behaviour from {0}.", value);
+
+			}
+
+		}
+
+		return TopologyBehavior.AUTO_DISCOVER;
 	}
 
 }

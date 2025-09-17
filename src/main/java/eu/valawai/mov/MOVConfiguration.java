@@ -249,7 +249,7 @@ public interface MOVConfiguration {
 	public static final String EVENT_CREATE_CONNECTION_NAME = "mov.events.create-connection";
 
 	/**
-	 * Enumerates the possible behaviors to perform when the topology is modified.
+	 * Enumerates the possible behaviors to do when process an event.
 	 */
 	public enum TopologyBehavior {
 
