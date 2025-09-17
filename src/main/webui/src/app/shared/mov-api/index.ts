@@ -100,3 +100,5 @@ export function sortChannelSchemaByName(channels: ChannelSchema[]): void {
 		return source.localeCompare(target);
 	});
 }
+
+export { TopologyBehaviourToNamePipe } from './live/configurations/topology-behaviour-to-name.pipe';

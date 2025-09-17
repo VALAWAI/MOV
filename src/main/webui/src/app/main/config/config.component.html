@@ -8,7 +8,8 @@
 			type="number"> <mat-hint
 			i18n="The hint of the polling time@@main_config_polling-time-hint">The
 		miliseconds to poll to the MOV API.</mat-hint>
-		@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+		@if(confForm.controls.pollingTime.hasError('required')||confForm.controls.pollingTime.hasError('min')){
+		<mat-error
 			i18n="The error message if no polling time is defined@@main_config_polling-time-required-error">The
 		polling time must be equals or more than 1000.</mat-error> } </mat-form-field>
 		<mat-form-field> <mat-label
@@ -17,7 +18,8 @@
 			class="w-full p-2" type="number"> <mat-hint
 			i18n="The hint of the polling iterations@@main_config_polling-iterations-hint">The
 		number of times to polling before stopping.</mat-hint>
-		@if(confForm.controls.pollingIterations.hasError('min')){ <mat-error
+		@if(confForm.controls.pollingIterations.hasError('required')||confForm.controls.pollingIterations.hasError('min')){
+		<mat-error
 			i18n="The error message if no polling iterations is defined@@main_config_polling-iterations-required-error">The
 		polling iterations must be equals or more than 10.</mat-error> } </mat-form-field>
 		<fieldset class="w-full border-base-300 rounded-box border p-4 ">
@@ -39,21 +41,23 @@
 					color="primary"> Autoload the last topology when
 				open the editor. </mat-slide-toggle>
 				<mat-form-field> <mat-label
-					i18n="The label of the editor of the polling time@@main_config_editor-last-topology-id-label">Last
+					i18n="The label of the editor of the identifier of the topology to edit@@main_config_editor-last-topology-id-label">Last
 				topology identifier </mat-label> <input matInput
 					formControlName="editorLastStoredTopologyId" class="w-full p-2"
 					type="string">
 				@if(confForm.controls.editorLastStoredTopologyId.hasError('pattern')){
 				<mat-error
-					i18n="The error message if the last topology identifier is not a valid@@main_config_last-topology-id-pattern-error">The
-				identifier is not valid.</mat-error> } </mat-form-field>
+					i18n="The error message if the last topology identifier is not a valid@@main_config_last-topology-id-pattern-error">
+				Please enter a valid topology identifier.</mat-error> } </mat-form-field>
 				<mat-form-field> <mat-label
 					i18n="The label of the editor autosave time@@main_config_editor-autosave-time-label">Autosave
 				time </mat-label> <input matInput formControlName="editorAutosaveTime"
 					class="w-full p-2" type="number"> <mat-hint
 					i18n="The hint of the editor atuosave time@@main_config_editor-autosave-time-hint">The
 				time (in ms) that the editor must wait before autosave the editing
-				topology.</mat-hint> @if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+				topology.</mat-hint>
+				@if(confForm.controls.pollingTime.hasError('required')||confForm.controls.pollingTime.hasError('min')){
+				<mat-error
 					i18n="The error message if autosave timi is not reach the minimum@@main_config_editor-autosave-time-min-error">The
 				autosave time can not be less than 1000 ms.</mat-error> } </mat-form-field>
 				<mat-form-field> <mat-label
@@ -62,7 +66,8 @@
 					class="w-full p-2" type="number"> <mat-hint
 					i18n="The hint of the editor atuosave time@@main_config_editor-max-history-hint">The
 				number maximum number of changes to be stored for Undo/Redo.</mat-hint>
-				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+				@if(confForm.controls.pollingTime.hasError('required')||confForm.controls.pollingTime.hasError('min')){
+				<mat-error
 					i18n="The error message if autosave timi is not reach the minimum@@main_config_editor-max-history-min-error">The
 				max history can not be less than 0.</mat-error> } </mat-form-field>
 			</div>
@@ -99,10 +104,48 @@
 					class="w-full p-2" type="number"> <mat-hint
 					i18n="The hint of the polling time@@main_config_live-max-nodes-hint">The
 				maximum number of nodes to view in the graph.</mat-hint>
-				@if(confForm.controls.pollingTime.hasError('min')){ <mat-error
+				@if(confForm.controls.pollingTime.hasError('required')||confForm.controls.pollingTime.hasError('min')){
+				<mat-error
 					i18n="The error message if the number of nodes not reach the minimum@@main_config_live-max-nodes-min-error">The
 				number of nodes can not be less than 100.</mat-error> } </mat-form-field>
 			</div>
 		</fieldset>
+
+		<fieldset class="w-full border-base-300 rounded-box border p-4 ">
+			<legend
+				i18n="The legend to edit the live configuration@@main_config_live-configuration-legend"
+				class="p-2"> Live configuration </legend>
+			<div class="w-full flex flex-col gap-3">
+				<div
+					i18n="The desciprion of the live configuration@@main_config_live-configuration-description">
+					In this section you can modify the parameters used by the Master Of
+					VALAWAI to manage the live topology.</div>
+				<mat-form-field> <mat-label
+					i18n="The label of the live topology identifier@@main_config_live-configuration-topology-id-label">Topology
+				to follow by the MOV </mat-label> <input matInput
+					formControlName="liveTopologyId" class="w-full p-2" type="string">
+				@if(confForm.controls.liveTopologyId.hasError('pattern')){ <mat-error
+					i18n="The error message if the live topology identifier is not valid@@main_config_live-configuration-topology-id-pattern-error">
+				Please enter a valid topology identifier.</mat-error> }
+				@if(confForm.controls.liveTopologyId.hasError('notFound')){ <mat-error
+					i18n="The error message if the live topology identifier is not found@@main_config_live-configuration-topology-id-not-found-error">
+				The specified topology identifier was not found.</mat-error> } </mat-form-field>
+				<mat-form-field> <mat-label
+					i18n="The label of the live configuration register component behaviour@@main_config_editor-live-register-component-behaviour-label">When
+				register a component </mat-label> <mat-select
+					formControlName="liveRegisterComponentBehaviour">
+				@for(behaviour of topologyBehaviorNames; track behaviour) { <mat-option
+					[value]="behaviour">{{behaviour|topologyBehaviourToName}}</mat-option>
+				} </mat-select> </mat-form-field>
+				<mat-form-field> <mat-label
+					i18n="The label of the live configuration create connection behaviour@@main_config_editor-live-create-connection-behaviour-label">When
+				create a connection </mat-label> <mat-select
+					formControlName="liveCreateConnectionBehaviour">
+				@for(behaviour of topologyBehaviorNames; track behaviour) { <mat-option
+					[value]="behaviour">{{behaviour|topologyBehaviourToName}}</mat-option>
+				} </mat-select> </mat-form-field>
+			</div>
+		</fieldset>
+
 	</form>
 </div>
