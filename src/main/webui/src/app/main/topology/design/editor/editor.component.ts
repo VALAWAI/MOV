@@ -44,7 +44,8 @@ import {
 	ComponentType,
 	ChannelSchema,
 	matchPayloadSchema,
-	ComponentDefinition
+	ComponentDefinition,
+	LiveConfiguration
 } from '@app/shared/mov-api';
 import { IPoint, PointExtensions } from '@foblex/2d';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -871,7 +872,55 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public setTopologyToFollow() {
 
+		if (this.topology.isEmpty) {
 
+			this.messages.showError(
+				$localize`:Error message when try to set the topology to follow and the topology is empty@@main_topology_editor_code_set-topology-to-follow-empty-error-msg:Cannot set an empty topology as the one to follow.`
+			);
+
+		} else if (this.topology.unsaved) {
+
+			this.storeBeforeLeave().subscribe(
+				{
+					next: stored => {
+
+						if (stored) {
+
+							this.setDesignTopologyAsLive();
+						}
+					}
+				}
+			);
+
+		} else {
+
+			this.setDesignTopologyAsLive();
+		}
+
+	}
+
+	/**
+	 * Set the editiing topology as the one to follow.
+	 */
+	private setDesignTopologyAsLive() {
+
+		var liveConf = new LiveConfiguration();
+		liveConf.topologyId = this.topology.model.id;
+		liveConf.createConnection = 'APPLY_TOPOLOGY';
+		liveConf.registerComponent = 'APPLY_TOPOLOGY';
+		this.api.setLiveConfiguration(liveConf).subscribe(
+			{
+				next: () => this.messages.showSuccess(
+					$localize`:Success message when set the topology to follow@@main_topology_editor_code_set-topology-to-follow-success-msg:Topology set as the one to follow.`
+				),
+				error: err => {
+					console.error(err);
+					this.messages.showError(
+						$localize`:Error message when not set the topology to follow@@main_topology_editor_code_set-topology-to-follow-error-msg:Topology canot be set as the one to follow.`
+					);
+				}
+			}
+		);
 	}
 
 }

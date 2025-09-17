@@ -27,6 +27,7 @@ import { MinTopology } from './design/topologies/min-topology.model';
 import { ComponentsLibraryStatus } from './design/components/components-library-status.model';
 import { ComponentDefinition } from './design/components/component-definition.model';
 import { LiveTopology } from './live/topologies/live-topology.model';
+import { LiveConfiguration } from './live/configurations/live-configuration.model';
 
 
 /**
@@ -361,4 +362,21 @@ export class MovApiService {
 		);
 	}
 
+	/**
+	 * Set the live configuration. 
+	 */
+	public setLiveConfiguration(configuration: LiveConfiguration): Observable<LiveConfiguration> {
+
+		var url = this.url('/v2/live/configurations');
+		return this.http.put<LiveConfiguration>(url, configuration);
+	}
+
+	/**
+	 * Get the live configuration. 
+	 */
+	public getLiveConfiguration(): Observable<LiveConfiguration> {
+
+		var url = this.url('/v2/live/configurations');
+		return this.http.get<LiveConfiguration>(url);
+	}
 }
