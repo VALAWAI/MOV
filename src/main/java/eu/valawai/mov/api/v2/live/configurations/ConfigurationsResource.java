@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.Response;
  *
  * @author VALAWAI
  */
-@Path("/v2/life/configurations")
+@Path("/v2/live/configurations")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ConfigurationsResource {

@@ -49,7 +49,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 	@Test
 	public void shouldNotSetBadTopologyId() {
 
-		given().contentType(ContentType.JSON).body(new Document("topologyId", 3)).when().put("/v2/life/configurations")
+		given().contentType(ContentType.JSON).body(new Document("topologyId", 3)).when().put("/v2/live/configurations")
 				.then().statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
@@ -61,7 +61,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 	public void shouldNotSetBadRegisterComponent() {
 
 		given().contentType(ContentType.JSON).body(new Document("registerComponent", "undefined")).when()
-				.put("/v2/life/configurations").then().statusCode(Status.BAD_REQUEST.getStatusCode());
+				.put("/v2/live/configurations").then().statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
 
@@ -72,7 +72,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 	public void shouldNotSetBadCreateConnection() {
 
 		given().contentType(ContentType.JSON).body(new Document("createConnection", "undefined")).when()
-				.put("/v2/life/configurations").then().statusCode(Status.BAD_REQUEST.getStatusCode());
+				.put("/v2/live/configurations").then().statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
 
@@ -84,7 +84,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 
 		final var configuration = new LiveConfigurationTest().nextModel();
 		configuration.topologyId = TopologyGraphEntities.undefined();
-		given().contentType(ContentType.JSON).body(configuration).when().put("/v2/life/configurations").then()
+		given().contentType(ContentType.JSON).body(configuration).when().put("/v2/live/configurations").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode());
 
 	}
@@ -98,7 +98,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 		final var configuration = new LiveConfiguration();
 		configuration.topologyId = TopologyGraphEntities.minTopologies(1).get(0).id;
 		final var updated = given().contentType(ContentType.JSON).body(configuration).when()
-				.put("/v2/life/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
+				.put("/v2/live/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(LiveConfiguration.class);
 		assertThat(updated.topologyId, is(configuration.topologyId));
 		assertThat(updated.topologyId, is(this.currentConfiguration.getTopologyId()));
@@ -121,7 +121,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 		configuration.createConnection = ValueGenerator.next(TopologyBehavior.values());
 
 		final var updated = given().contentType(ContentType.JSON).body(configuration).when()
-				.put("/v2/life/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
+				.put("/v2/live/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(LiveConfiguration.class);
 		assertThat(updated.topologyId, is(nullValue()));
 		assertThat(updated.createConnection, is(configuration.createConnection));
@@ -144,7 +144,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 		configuration.registerComponent = ValueGenerator.next(TopologyBehavior.values());
 
 		final var updated = given().contentType(ContentType.JSON).body(configuration).when()
-				.put("/v2/life/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
+				.put("/v2/live/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(LiveConfiguration.class);
 		assertThat(updated.topologyId, is(nullValue()));
 		assertThat(updated.createConnection,
@@ -169,7 +169,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 		configuration.topologyId = TopologyGraphEntities.minTopologies(1).get(0).id;
 
 		final var updated = given().contentType(ContentType.JSON).body(configuration).when()
-				.put("/v2/life/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
+				.put("/v2/live/configurations").then().statusCode(Status.OK.getStatusCode()).extract()
 				.as(LiveConfiguration.class);
 		assertThat(updated, is(configuration));
 		assertThat(updated.topologyId, is(this.currentConfiguration.getTopologyId()));
@@ -186,7 +186,7 @@ public class ConfigurationsResourceTest extends APITestCase {
 	@Test
 	public void shouldGetConfiguration() {
 
-		final var liveConfiguration = given().when().get("/v2/life/configurations").then()
+		final var liveConfiguration = given().when().get("/v2/live/configurations").then()
 				.statusCode(Status.OK.getStatusCode()).extract().as(LiveConfiguration.class);
 		assertThat(liveConfiguration.topologyId, is(this.currentConfiguration.getTopologyId()));
 		assertThat(liveConfiguration.createConnection,
