@@ -8,6 +8,7 @@
 
 package eu.valawai.mov.events.topology;
 
+import eu.valawai.mov.TimeManager;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.logging.Log;
 
@@ -23,7 +24,32 @@ public class MessageConverterContext {
 	/**
 	 * The entity with the connection information.
 	 */
-	private final TopologyConnectionEntity entity;
+	protected final TopologyConnectionEntity entity;
+
+	/**
+	 * The entity with the connection information.
+	 */
+	protected final long now = TimeManager.now();
+
+	/**
+	 * Create a context for an entity.
+	 *
+	 * @param entity for the context.
+	 */
+	public MessageConverterContext(TopologyConnectionEntity entity) {
+
+		this.entity = entity;
+	}
+
+	/**
+	 * Return the current time.
+	 *
+	 * @return the current time.
+	 */
+	public long now() {
+
+		return this.now;
+	}
 
 	/**
 	 * Add a log entry at error level.
@@ -74,16 +100,6 @@ public class MessageConverterContext {
 	}
 
 	/**
-	 * Create a context for an entity.
-	 *
-	 * @param entity for the context.
-	 */
-	public MessageConverterContext(TopologyConnectionEntity entity) {
-
-		this.entity = entity;
-	}
-
-	/**
 	 * Return the identifier of the connection.
 	 *
 	 * @return the connection identifier.
@@ -91,6 +107,66 @@ public class MessageConverterContext {
 	public String connectionId() {
 
 		return this.entity.id.toHexString();
+	}
+
+	/**
+	 * Return the identifier of the source node.
+	 *
+	 * @return the source node identifier.
+	 */
+	public String sourceId() {
+
+		return this.entity.source.componentId.toHexString();
+	}
+
+	/**
+	 * Return the type of the source node.
+	 *
+	 * @return the source node type.
+	 */
+	public String sourceType() {
+
+		return this.entity.source.inferComponentType().name();
+	}
+
+	/**
+	 * Return the name of the source node.
+	 *
+	 * @return the source node name.
+	 */
+	public String sourceName() {
+
+		return this.entity.source.inferComponentName();
+	}
+
+	/**
+	 * Return the identifier of the target node.
+	 *
+	 * @return the target node identifier.
+	 */
+	public String targetId() {
+
+		return this.entity.target.componentId.toHexString();
+	}
+
+	/**
+	 * Return the type of the target node.
+	 *
+	 * @return the target node type.
+	 */
+	public String targetType() {
+
+		return this.entity.target.inferComponentType().name();
+	}
+
+	/**
+	 * Return the name of the target node.
+	 *
+	 * @return the target node name.
+	 */
+	public String targetName() {
+
+		return this.entity.target.inferComponentName();
 	}
 
 }

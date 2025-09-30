@@ -71,7 +71,13 @@ public class ChangeTopologyManager {
 	 * Factory to create the conversion.
 	 */
 	@Inject
-	ScriptInterfaceFactory<MessageConverter, MessageConverterContext> converterFactory;
+	ScriptInterfaceFactory<MessageConverter, MessageConverterContext> messageConverterFactory;
+
+	/**
+	 * Factory to create the conversion.
+	 */
+	@Inject
+	ScriptInterfaceFactory<NotificationConverter, NotificationConverterContext> notificationConverterFactory;
 
 	/**
 	 * Called when has to register a component.
@@ -348,8 +354,9 @@ public class ChangeTopologyManager {
 			try {
 
 				final var context = new MessageConverterContext(connection);
-				final var converter = this.converterFactory.create(connection.targetMessageConverterJSCode, context);
-				msg = converter.convertMessage(msg);
+				final var converter = this.messageConverterFactory.create(connection.targetMessageConverterJSCode,
+						context);
+				return converter.convertMessage(msg);
 
 			} catch (final Throwable error) {
 
@@ -360,6 +367,7 @@ public class ChangeTopologyManager {
 			}
 
 		}
+
 		return msg;
 	}
 
@@ -377,6 +385,26 @@ public class ChangeTopologyManager {
 	private Object convertSourceMessageToNotificationMessage(TopologyConnectionEntity connection,
 			TopologyConnectionNotification notification, JsonObject msg, long now) {
 
+		if (notification.notificationMessageConverterJSCode != null) {
+
+			try {
+
+				final var context = new NotificationConverterContext(connection, notification);
+				final var converter = this.notificationConverterFactory
+						.create(notification.notificationMessageConverterJSCode, context);
+				return converter.convertNotification(msg);
+
+			} catch (final Throwable error) {
+
+				AddLog.fresh().withError(error)
+						.withMessage("Cannot convert the notification that pass thought the connection {0} for {1}",
+								connection.toLogId(), notification.node)
+						.store();
+			}
+
+		}
+
+		// if the conversion has not been done or it has failed, send a default
 		final var payload = new SentMessagePayload();
 		payload.source = new MinComponentPayload();
 		payload.target = new MinComponentPayload();
@@ -390,10 +418,7 @@ public class ChangeTopologyManager {
 		payload.target.type = connection.target.inferComponentType();
 		payload.target.name = connection.target.inferComponentName();
 
-		if (notification.notificationMessageConverterJSCode != null) {
-			// adapt the msg to send to the notification target
-
-		}
 		return payload;
+
 	}
 }

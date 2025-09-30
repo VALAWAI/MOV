@@ -9,6 +9,7 @@
 package eu.valawai.mov.events.topology;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
@@ -28,9 +30,12 @@ import eu.valawai.mov.api.v1.logs.LogLevel;
 import eu.valawai.mov.events.MovEventTestCase;
 import eu.valawai.mov.events.RabbitMQService;
 import eu.valawai.mov.events.TestQueue;
+import eu.valawai.mov.persistence.live.components.ComponentEntities;
 import eu.valawai.mov.persistence.live.logs.LogEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
+import eu.valawai.mov.persistence.live.topology.TopologyNode;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -486,6 +491,135 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 		assertThat(target.containsKey("connectionId"), is(true));
 		assertThat(target.getString("connectionId"), is(connection.id.toHexString()));
 
+	}
+
+	/**
+	 * Check the notification is converted using a java-script code.
+	 */
+	@Test
+	public void shouldConvertNotificationWithCode() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		connection.enabled = false;
+		connection.notifications = new ArrayList<>();
+		final var notification = new TopologyConnectionNotification();
+		notification.enabled = true;
+		notification.node = new TopologyNode();
+		var targetNode = ComponentEntities.nextComponent();
+		while (targetNode.channels == null || targetNode.channels.isEmpty()
+				|| targetNode.channels.get(0).subscribe == null) {
+
+			targetNode = ComponentEntities.nextComponent();
+		}
+		notification.node.componentId = targetNode.id;
+		notification.node.channelName = targetNode.channels.get(0).name;
+		notification.notificationMessageConverterJSCode = """
+				function convertEncodedNotification(source){
+
+					NotificationConverter_Builtins.debug("Debug {0}", source);
+					var msg = JSON.parse(source);
+					var connectionId = NotificationConverter_Builtins.connectionId();
+				    var target = {
+				    	"notification":msg,
+				    	"connectionId":connectionId
+				    };
+					return JSON.stringify(target);
+				}
+				export {convertEncodedNotification};
+				""";
+		connection.notifications.add(notification);
+		this.assertItemNotNull(connection.update());
+		this.assertEnable(connection);
+
+		final var queue = this.waitOpenQueue(notification.node.channelName);
+		final var source = ValueGenerator.nextJsonObject();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(connection.source.channelName, source));
+		final var target = queue.waitReceiveMessage();
+		assertThat(target.containsKey("notification"), is(true));
+		assertThat(target.getJsonObject("notification"), is(source));
+		assertThat(target.containsKey("connectionId"), is(true));
+		assertThat(target.getString("connectionId"), is(connection.id.toHexString()));
+	}
+
+	/**
+	 * Check the notification is converted using the default with code.
+	 */
+	@Test
+	public void shouldConvertNotificationWithCodeAsDefault() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		connection.enabled = false;
+		connection.notifications = new ArrayList<>();
+		final var notification = new TopologyConnectionNotification();
+		notification.enabled = true;
+		notification.node = new TopologyNode();
+		var targetNode = ComponentEntities.nextComponent();
+		while (targetNode.channels == null || targetNode.channels.isEmpty()
+				|| targetNode.channels.get(0).subscribe == null) {
+
+			targetNode = ComponentEntities.nextComponent();
+		}
+		notification.node.componentId = targetNode.id;
+		notification.node.channelName = targetNode.channels.get(0).name;
+		notification.notificationMessageConverterJSCode = """
+				function convertEncodedNotification(source){
+
+					NotificationConverter_Builtins.debug("Debug {0}", source);
+					var msg = JSON.parse(source);
+					var connectionId = NotificationConverter_Builtins.connectionId();
+				    var target = {
+				    	"messagePayload":msg,
+				    	"timestamp":NotificationConverter_Builtins.now(),
+				    	"connectionId":connectionId,
+				    	"source":{
+				    		"id": NotificationConverter_Builtins.sourceId(),
+				             "type": NotificationConverter_Builtins.sourceType(),
+				             "name": NotificationConverter_Builtins.sourceName()
+				    	},
+				    	"target":{
+				    		"id": NotificationConverter_Builtins.targetId(),
+				             "type": NotificationConverter_Builtins.targetType(),
+				             "name": NotificationConverter_Builtins.targetName()
+				    	}
+				    };
+					return JSON.stringify(target);
+				}
+				export {convertEncodedNotification};
+				""";
+		connection.notifications.add(notification);
+		this.assertItemNotNull(connection.update());
+		this.assertEnable(connection);
+
+		final var queue = this.waitOpenQueue(notification.node.channelName);
+		final var source = ValueGenerator.nextJsonObject();
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(connection.source.channelName, source));
+		final var target = queue.waitReceiveMessage();
+		assertEquals(0l, LogEntity.count("level = ?1 and message like ?2 and timestamp >= ?3", LogLevel.ERROR,
+				".*" + connection.toLogId() + ".*", now).await().atMost(Duration.ofSeconds(30)));
+
+		assertThat(target.containsKey("messagePayload"), is(true));
+		assertThat(target.getJsonObject("messagePayload"), is(source));
+		assertThat(target.containsKey("connectionId"), is(true));
+		assertThat(target.getString("connectionId"), is(connection.id.toHexString()));
+		assertThat(target.containsKey("timestamp"), is(true));
+		assertThat(target.getLong("timestamp"), is(greaterThanOrEqualTo(now)));
+		assertThat(target.containsKey("source"), is(true));
+		final var sourceOnConvertedMsg = target.getJsonObject("source");
+		assertThat(sourceOnConvertedMsg.containsKey("id"), is(true));
+		assertThat(sourceOnConvertedMsg.getString("id"), is(connection.source.componentId.toHexString()));
+		assertThat(sourceOnConvertedMsg.containsKey("type"), is(true));
+		assertThat(sourceOnConvertedMsg.getString("type"), is(connection.source.inferComponentType().name()));
+		assertThat(sourceOnConvertedMsg.containsKey("name"), is(true));
+		assertThat(sourceOnConvertedMsg.getString("name"), is(connection.source.inferComponentName()));
+		assertThat(target.containsKey("source"), is(true));
+		final var targetOnConvertedMsg = target.getJsonObject("target");
+		assertThat(targetOnConvertedMsg.containsKey("id"), is(true));
+		assertThat(targetOnConvertedMsg.getString("id"), is(connection.target.componentId.toHexString()));
+		assertThat(targetOnConvertedMsg.containsKey("type"), is(true));
+		assertThat(targetOnConvertedMsg.getString("type"), is(connection.target.inferComponentType().name()));
+		assertThat(targetOnConvertedMsg.containsKey("name"), is(true));
+		assertThat(targetOnConvertedMsg.getString("name"), is(connection.target.inferComponentName()));
 	}
 
 }
