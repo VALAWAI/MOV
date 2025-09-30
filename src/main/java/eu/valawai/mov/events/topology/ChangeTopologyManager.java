@@ -24,6 +24,7 @@ import eu.valawai.mov.persistence.live.topology.DeleteTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.EnableTopologyConnection;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionNotification;
+import io.quarkiverse.quickjs4j.ScriptInterfaceFactory;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -65,6 +66,12 @@ public class ChangeTopologyManager {
 	 */
 	@Inject
 	EventBus bus;
+
+	/**
+	 * Factory to create the conversion.
+	 */
+	@Inject
+	ScriptInterfaceFactory<MessageConverter, MessageConverterContext> converterFactory;
 
 	/**
 	 * Called when has to register a component.
@@ -337,7 +344,20 @@ public class ChangeTopologyManager {
 	private JsonObject convertSourceMessageToTargetMessage(TopologyConnectionEntity connection, JsonObject msg) {
 
 		if (connection.targetMessageConverterJSCode != null) {
-			// adapt the msg to send to the notification target
+
+			try {
+
+				final var context = new MessageConverterContext(connection);
+				final var converter = this.converterFactory.create(connection.targetMessageConverterJSCode, context);
+				msg = converter.convertMessage(msg);
+
+			} catch (final Throwable error) {
+
+				AddLog.fresh().withError(error)
+						.withMessage("Cannot convert the message that pass thought the connection {0}",
+								connection.toLogId())
+						.store();
+			}
 
 		}
 		return msg;

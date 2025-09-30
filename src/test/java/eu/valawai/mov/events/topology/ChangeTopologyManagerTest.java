@@ -8,6 +8,8 @@
 
 package eu.valawai.mov.events.topology;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -384,7 +386,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 	 * Check that can enable and remove a connection but not remove a second time.
 	 */
 	@Test
-	public void shouldEnableAndRemoveButNotremoveAsecondTime() {
+	public void shouldEnableAndRemoveButNotRemoveASecondTime() {
 
 		var connection = TopologyConnectionEntities.nextTopologyConnection();
 		while (connection.enabled) {
@@ -392,25 +394,12 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 			connection = TopologyConnectionEntities.nextTopologyConnection();
 		}
 
+		this.assertEnable(connection);
+
 		final var payload = new ChangeTopologyPayload();
 		payload.connectionId = connection.id;
-		payload.action = TopologyAction.ENABLE;
-
-		var now = TimeManager.now();
-		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
-		assertEquals(1l,
-				LogEntity
-						.count("level = ?1 and message like ?2", LogLevel.INFO,
-								"Enabled .*" + connection.id.toHexString() + ".*")
-						.await().atMost(Duration.ofSeconds(30)));
-
-		TopologyConnectionEntity current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
-		assertTrue(now <= current.updateTimestamp);
-		assertTrue(current.enabled);
-		assertTrue(this.listener.isOpen(connection.source.channelName));
-
 		payload.action = TopologyAction.REMOVE;
-		now = TimeManager.now();
+		final var now = TimeManager.now();
 		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
 		assertEquals(1l,
 				LogEntity
@@ -418,7 +407,8 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 								"Removed .*" + connection.id.toHexString() + ".*")
 						.await().atMost(Duration.ofSeconds(30)));
 
-		current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		final TopologyConnectionEntity current = this
+				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
 		assertNotNull(current.deletedTimestamp);
 		assertTrue(now <= current.deletedTimestamp);
 		assertFalse(this.listener.isOpen(connection.source.channelName));
@@ -434,4 +424,68 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 		assertFalse(this.listener.isOpen(connection.source.channelName));
 
 	}
+
+	/**
+	 * Check that a connection can be enabled.
+	 *
+	 * @param connection to enable.
+	 *
+	 * @return the enabled connection.
+	 */
+	private TopologyConnectionEntity assertEnable(TopologyConnectionEntity connection) {
+
+		final var payload = new ChangeTopologyPayload();
+		payload.connectionId = connection.id;
+		payload.action = TopologyAction.ENABLE;
+
+		final var now = TimeManager.now();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(this.changeTopologyQueueName, payload));
+		assertEquals(1l,
+				LogEntity
+						.count("level = ?1 and message like ?2", LogLevel.INFO,
+								"Enabled .*" + connection.id.toHexString() + ".*")
+						.await().atMost(Duration.ofSeconds(30)));
+
+		final TopologyConnectionEntity current = this
+				.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
+		assertTrue(now <= current.updateTimestamp);
+		assertTrue(current.enabled);
+		assertTrue(this.listener.isOpen(connection.source.channelName));
+		return current;
+
+	}
+
+	/**
+	 * Check the message is converted using a java-script code.
+	 */
+	@Test
+	public void shouldConvertMessageWithCode() {
+
+		final var connection = TopologyConnectionEntities.nextTopologyConnection();
+		connection.enabled = false;
+		connection.targetMessageConverterJSCode = """
+				function convertEncodedMessage(source){
+
+					MessageConverter_Builtins.debug("Debug {0}", source);
+					var msg = JSON.parse(source);
+					var connectionId = MessageConverter_Builtins.connectionId();
+				    var target = {"message":msg,"connectionId":connectionId};
+					return JSON.stringify(target);
+				}
+				export {convertEncodedMessage};
+				""";
+		this.assertItemNotNull(connection.update());
+		this.assertEnable(connection);
+
+		final var queue = this.waitOpenQueue(connection.target.channelName);
+		final var source = ValueGenerator.nextJsonObject();
+		this.executeAndWaitUntilNewLog(() -> this.assertPublish(connection.source.channelName, source));
+		final var target = queue.waitReceiveMessage();
+		assertThat(target.containsKey("message"), is(true));
+		assertThat(target.getJsonObject("message"), is(source));
+		assertThat(target.containsKey("connectionId"), is(true));
+		assertThat(target.getString("connectionId"), is(connection.id.toHexString()));
+
+	}
+
 }

@@ -58,6 +58,8 @@ import jakarta.inject.Inject;
 /**
  * The element used to manage the registration of a component.
  *
+ * @see RegisterComponentPayload
+ *
  * @author VALAWAI
  */
 @ApplicationScoped
