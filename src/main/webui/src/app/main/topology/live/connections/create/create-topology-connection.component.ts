@@ -12,26 +12,28 @@ import { MessagesService } from 'src/app/shared/messages';
 import { ConnectionToCreate, MovApiService, Component as MOVComponent, LogRecord, ChannelSchema } from 'src/app/shared/mov-api';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';
 import { ComponentSelectorComponent } from '@app/shared/component/selector';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatOption, MatSelect } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { LoadingComponent } from '@app/shared/loading';
+import { MatOptionModule } from '@angular/material/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
 	standalone: true,
 	selector: 'app-topology-connections-create',
 	imports: [
-		NgIf,
+		CommonModule,
 		ReactiveFormsModule,
 		ComponentSelectorComponent,
-		MatFormField,
-		MatLabel,
-		MatSelect,
-		MatOption,
-		NgIf,
-		MatError,
-		LoadingComponent
+		MatFormFieldModule,
+		MatSelectModule,
+		MatOptionModule,
+		LoadingComponent,
+		MatButtonModule,
+		MatCheckboxModule
 	],
 	templateUrl: './create-topology-connection.component.html',
 	styleUrls: ['./create-topology-connection.component.css']
