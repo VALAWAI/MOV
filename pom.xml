@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.valawai</groupId>
 	<artifactId>master-of-valawai</artifactId>
@@ -12,13 +14,13 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.28.1</quarkus.platform.version>
+		<quarkus.platform.version>3.29.3</quarkus.platform.version>
 		<skipITs>true</skipITs>
-		<surefire-plugin.version>3.5.3</surefire-plugin.version>
+		<surefire-plugin.version>3.5.4</surefire-plugin.version>
 		<resources-plugin.version>3.3.1</resources-plugin.version>
-		<jacoco.version>0.8.12</jacoco.version>
+		<jacoco.version>0.8.13</jacoco.version>
 		<quarkus.quinoa.version>2.6.2</quarkus.quinoa.version>
-		<quarkus-quickjs4j.version>0.0.1</quarkus-quickjs4j.version>
+		<quarkus-quickjs4j.version>0.0.3</quarkus-quickjs4j.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -78,10 +80,10 @@
 			<version>${quarkus.quinoa.version}</version>
 		</dependency>
 		<dependency>
-    <groupId>io.quarkiverse.quickjs4j</groupId>
-    <artifactId>quarkus-quickjs4j</artifactId>
-    <version>${quarkus-quickjs4j.version}</version>
-</dependency>
+			<groupId>io.quarkiverse.quickjs4j</groupId>
+			<artifactId>quarkus-quickjs4j</artifactId>
+			<version>${quarkus-quickjs4j.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-rest-client-jackson</artifactId>
@@ -126,14 +128,14 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-    			<artifactId>maven-clean-plugin</artifactId>
+				<artifactId>maven-clean-plugin</artifactId>
 				<version>${clean-plugin.version}</version>
 				<configuration>
 					<filesets>
-  						<fileset>
-    						<directory>config</directory>
-						    <followSymlinks>false</followSymlinks>
-  						</fileset>
+						<fileset>
+							<directory>config</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
@@ -184,12 +186,12 @@
 				<configuration>
 					<parameters>true</parameters>
 					<annotationProcessorPaths>
-                    	<path>
-                        	<groupId>io.quarkiverse.quickjs4j</groupId>
-                        	<artifactId>quarkus-quickjs4j</artifactId>
-                        	<version>${quarkus-quickjs4j.version}</version>
-                    	</path>
-                	</annotationProcessorPaths>
+						<path>
+							<groupId>io.quarkiverse.quickjs4j</groupId>
+							<artifactId>quarkus-quickjs4j</artifactId>
+							<version>${quarkus-quickjs4j.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -243,7 +245,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<profiles>
 		<profile>
 			<id>native</id>
