@@ -126,7 +126,7 @@ export class TopologySeakerComponent implements OnInit {
 
 
 	/**
-	 * Called wjhen has to update the search.
+	 * Called when has to update the search.
 	 */
 	public updatePage() {
 
