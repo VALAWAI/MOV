@@ -55,11 +55,6 @@ public class TopologyConnectionEntity extends ReactivePanacheMongoEntity impleme
 	public TopologyNode source;
 
 	/**
-	 * The name of the connection.
-	 */
-	public String name;
-
-	/**
 	 * The node that is the target of the connection.
 	 */
 	public TopologyNode target;

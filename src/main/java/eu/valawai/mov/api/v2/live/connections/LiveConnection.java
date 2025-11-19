@@ -8,22 +8,28 @@
 
 package eu.valawai.mov.api.v2.live.connections;
 
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import eu.valawai.mov.api.Model;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.mongodb.panache.common.jackson.ObjectIdSerializer;
 import io.smallrye.common.constraint.NotNull;
 
 /**
  * A connection that is active in the topology.
  *
+ * @see TopologyConnectionEntity
+ *
  * @author VALAWAI
  */
 @Schema(title = "A connection that is active in the topology.")
-public class LiveConnection {
+public class LiveConnection extends Model {
 
 	/**
 	 * The identifier of the live topology connection.
@@ -39,5 +45,39 @@ public class LiveConnection {
 	@Schema(description = "This is true if the connection is enabled.")
 	@NotNull
 	public boolean enabled;
+
+	/**
+	 * The epoch time, in seconds, when the connection has been created.
+	 */
+	@Schema(description = "The epoch time, in seconds, when the connection has been created.")
+	@NotNull
+	public long createTimestamp;
+
+	/**
+	 * The epoch time, in seconds, when the connection has been updated.
+	 */
+	@Schema(description = "The epoch time, in seconds, when the connection has been updated.")
+	@NotNull
+	public long updateTimestamp;
+
+	/**
+	 * The source of the connection.
+	 */
+	@Schema(description = "The source of the connection.")
+	@NotNull
+	public LiveEndPoint source;
+
+	/**
+	 * The target of the connection.
+	 */
+	@Schema(description = "The target of the connection.")
+	@NotNull
+	public LiveEndPoint target;
+
+	/**
+	 * The notifications to do when a message pass thought the connection.
+	 */
+	@Schema(description = "The notifications to do when a message pass thought the connection.")
+	public List<LiveNotification> notifications;
 
 }
