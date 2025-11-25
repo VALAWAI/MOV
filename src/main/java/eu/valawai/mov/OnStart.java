@@ -42,7 +42,7 @@ public class OnStart {
 	/**
 	 * The pattern to check the on page resource.
 	 */
-	private static final Pattern INDEX_PATTERN = Pattern.compile("^.*(/[a-z]{2})(/.*)?$");
+	private static final Pattern INDEX_PATTERN = Pattern.compile("(?:\\/|^)([a-z]{2})(?:[_\\/-]|$)");
 
 	/**
 	 * The name of the context variable that is used to mark that the request is
@@ -161,7 +161,7 @@ public class OnStart {
 				}
 				// Redirect for one Page Angular
 				rc.put(REROUTING_SOURCE, path);
-				Log.warnv("Rerouting to {0}{1}/index.html", this.uiRootPath, lang);
+				Log.infov("Rerouting {0} to {1}{2}/index.html", path, this.uiRootPath, lang);
 				rc.reroute(this.uiRootPath + lang + "/index.html");
 
 			} else {
