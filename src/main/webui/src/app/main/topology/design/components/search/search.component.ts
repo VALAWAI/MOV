@@ -22,7 +22,7 @@ import { RouterModule } from '@angular/router';
 import { toPattern } from '@app/shared';
 import { MessageComponent, MessagesService } from '@app/shared/messages';
 import { MovApiService, ComponentDefinitionPage, ComponentDefinition, ComponentType } from '@app/shared/mov-api';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 
 /**
  * This is used to search for a component defined in the library of components.
@@ -31,18 +31,18 @@ import { MainService } from 'src/app/main';
 	standalone: true,
 	selector: 'app-topology-design-components-search-library',
 	imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatMenuModule,
-    MessageComponent,
-    RouterModule,
-    MatButtonModule,
-    MatSelectModule
-],
+		ReactiveFormsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatIconModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatMenuModule,
+		MessageComponent,
+		RouterModule,
+		MatButtonModule,
+		MatSelectModule
+	],
 	templateUrl: './search.component.html'
 })
 export class SearchLibraryComponent implements OnInit {

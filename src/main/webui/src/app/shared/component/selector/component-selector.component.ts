@@ -6,12 +6,12 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatError, MatFormField, MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { MinComponent, MinComponentPage, MovApiService, Component as MOVComponent } from 'src/app/shared/mov-api';
+import { MinComponent, MinComponentPage, MovApiService, Component as MOVComponent } from '@shared/mov-api';
 
 import { MatLabel, MatOption } from '@angular/material/select';
 import { toPattern } from '@app/shared';
@@ -36,19 +36,29 @@ export function requiredMinComponent(): ValidatorFn {
 	standalone: true,
 	selector: 'app-component-selector',
 	imports: [
-    ReactiveFormsModule,
-    MatInput,
-    MatLabel,
-    MatAutocomplete,
-    MatFormField,
-    MatError,
-    MatOption,
-    MatAutocompleteTrigger
-],
+		ReactiveFormsModule,
+		MatInput,
+		MatLabel,
+		MatAutocomplete,
+		MatFormField,
+		MatError,
+		MatOption,
+		MatAutocompleteTrigger
+	],
 	templateUrl: './component-selector.component.html',
 	styleUrls: ['./component-selector.component.css'],
 })
 export class ComponentSelectorComponent implements OnInit, OnDestroy {
+
+	/**
+	 * The MOV APi service.
+	 */
+	private readonly mov = inject(MovApiService);
+
+	/**
+	 * Form, builder service.
+	 */
+	private readonly fb = inject(FormBuilder);
 
 	/**
 	 * The label of the selector.
@@ -98,15 +108,6 @@ export class ComponentSelectorComponent implements OnInit, OnDestroy {
 	 * The last selected component.
 	 */
 	private lastSelectedComponent: MOVComponent | null = null;
-
-	/**
-	 * Create the component.
-	 */
-	constructor(
-		private fb: FormBuilder,
-		private mov: MovApiService
-	) { }
-
 
 	/**
 	 * Display a component.

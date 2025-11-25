@@ -6,12 +6,12 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MainService } from 'src/app/main';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { MainService } from '@app/main';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
-import { MessageComponent } from 'src/app/shared/messages';
+import { MessageComponent } from '@shared/messages';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -29,24 +29,49 @@ import { ConfigService, toPattern } from '@app/shared';
 	standalone: true,
 	selector: 'app-topology-connections-search',
 	imports: [
-    ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatInput,
-    MatCheckbox,
-    MatButton,
-    RouterLink,
-    MatMenuModule,
-    MatIcon,
-    MatPaginator,
-    MatTableModule,
-    MessageComponent
-],
+		ReactiveFormsModule,
+		MatFormField,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		MatInput,
+		MatCheckbox,
+		MatButton,
+		RouterLink,
+		MatMenuModule,
+		MatIcon,
+		MatPaginator,
+		MatTableModule,
+		MessageComponent
+	],
 	templateUrl: './search.component.html'
 })
 export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
+
+	/**
+	 *  The header service.
+	 */
+	private readonly header = inject(MainService);
+
+	/**
+	 * The MOV APi service.
+	 */
+	private readonly mov = inject(MovApiService);
+
+	/**
+	 * Form builder service.
+	 */
+	private readonly fb = inject(FormBuilder);
+
+	/**
+	 * The configuration service.
+	 */
+	private readonly conf = inject(ConfigService);
+
+	/**
+	 * Form route of the page.
+	 */
+	private readonly route = inject(ActivatedRoute);
 
 	/**
 	 * The columns to display.
@@ -97,19 +122,6 @@ export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {
 	 * Subscription for the component identifier changes.
 	 */
 	private componentIdChanged: Subscription | null = null;
-
-	/**
-	 *  Create the component.
-	 */
-	constructor(
-		private header: MainService,
-		private mov: MovApiService,
-		private fb: FormBuilder,
-		private route: ActivatedRoute,
-		private conf: ConfigService
-	) {
-
-	}
 
 	/**
 	 * Initialize the component.

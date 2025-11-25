@@ -6,10 +6,10 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnInit } from '@angular/core';
-import { MainService } from 'src/app/main';
-import { MessagesService } from 'src/app/shared/messages';
-import { ConnectionToCreate, MovApiService, Component as MOVComponent, LogRecord, ChannelSchema } from 'src/app/shared/mov-api';
+import { Component, inject, OnInit } from '@angular/core';
+import { MainService } from '@app/main';
+import { MessagesService } from '@shared/messages';
+import { ConnectionToCreate, MovApiService, Component as MOVComponent, LogRecord, ChannelSchema } from '@shared/mov-api';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComponentSelectorComponent } from '@app/shared/component/selector';
@@ -25,19 +25,44 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 	standalone: true,
 	selector: 'app-topology-connections-create',
 	imports: [
-    ReactiveFormsModule,
-    ComponentSelectorComponent,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatOptionModule,
-    LoadingComponent,
-    MatButtonModule,
-    MatCheckboxModule
-],
+		ReactiveFormsModule,
+		ComponentSelectorComponent,
+		MatFormFieldModule,
+		MatSelectModule,
+		MatOptionModule,
+		LoadingComponent,
+		MatButtonModule,
+		MatCheckboxModule
+	],
 	templateUrl: './create-topology-connection.component.html',
 	styleUrls: ['./create-topology-connection.component.css']
 })
 export class CreateTopologyConnectionComponent implements OnInit {
+
+	/**
+	 *  The header service.
+	 */
+	private readonly header = inject(MainService);
+
+	/**
+	 * The MOV APi service.
+	 */
+	private readonly mov = inject(MovApiService);
+
+	/**
+	 * Form builder service.
+	 */
+	private readonly fb = inject(FormBuilder);
+
+	/**
+	 * The messages service.
+	 */
+	private readonly messages = inject(MessagesService);
+
+	/**
+	 * Form router service.
+	 */
+	private readonly router = inject(Router);
 
 	/**
 	 * The form to define the connection to add.
@@ -79,19 +104,6 @@ export class CreateTopologyConnectionComponent implements OnInit {
 	 * The timestamp of the last log.
 	 */
 	private lastLogTimestamp: number = 0;
-
-	/**
-	 *  Create the component.
-	 */
-	constructor(
-		private header: MainService,
-		private fb: FormBuilder,
-		private mov: MovApiService,
-		private messages: MessagesService,
-		private router: Router
-	) {
-
-	}
 
 	/**
 	 * Initialize the component.

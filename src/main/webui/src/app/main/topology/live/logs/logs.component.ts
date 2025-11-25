@@ -6,12 +6,12 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
-import { MainService } from 'src/app/main';
-import { COMPONENT_TYPE_NAMES, LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from 'src/app/shared/mov-api';
+import { MainService } from '@app/main';
+import { COMPONENT_TYPE_NAMES, LOG_LEVEL_NAMES, LogRecord, LogRecordPage, MovApiService } from '@shared/mov-api';
 import { ShowLogDialog } from './show-log.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -29,23 +29,48 @@ import { ConfigService, toPattern } from '@app/shared';
 	standalone: true,
 	selector: 'app-logs',
 	imports: [
-    ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    TimestampPipe,
-    MatIcon,
-    ComponentNameBeautifier,
-    MatPaginator,
-    MatCheckbox,
-    MatTableModule
-],
+		ReactiveFormsModule,
+		MatFormField,
+		MatInput,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		TimestampPipe,
+		MatIcon,
+		ComponentNameBeautifier,
+		MatPaginator,
+		MatCheckbox,
+		MatTableModule
+	],
 	templateUrl: './logs.component.html',
 	styleUrl: './logs.component.css'
 })
 export class LogsComponent implements OnInit, OnDestroy {
+
+	/**
+	 *  The header service.
+	 */
+	private readonly header = inject(MainService);
+
+	/**
+	 * The MOV APi service.
+	 */
+	private readonly mov = inject(MovApiService);
+
+	/**
+	 * Form builder service.
+	 */
+	private readonly fb = inject(FormBuilder);
+
+	/**
+	 * Dialog service.
+	 */
+	private readonly dialog = inject(MatDialog);
+
+	/**
+	 * Configuration service.
+	 */
+	private readonly conf = inject(ConfigService);
 
 	/**
 	 * The columns to display.
@@ -100,18 +125,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 	 */
 	public componentTypeNames = COMPONENT_TYPE_NAMES;
 
-	/**
-	 *  Create the component.
-	 */
-	constructor(
-		private header: MainService,
-		private mov: MovApiService,
-		private fb: FormBuilder,
-		private dialog: MatDialog,
-		private conf: ConfigService
-	) {
 
-	}
 
 	/**
 	 * Initialize the component.

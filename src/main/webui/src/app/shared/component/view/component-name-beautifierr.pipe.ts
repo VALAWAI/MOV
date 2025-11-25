@@ -7,7 +7,7 @@
 */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { MinComponent} from 'src/app/shared/mov-api';
+import { MinComponent } from '@shared/mov-api';
 
 /*
  * Beautify the name of a component.
@@ -25,28 +25,28 @@ export class ComponentNameBeautifier implements PipeTransform {
 	/**
 	 * Convert the time stmap to a string.
 	 */
-	transform(value: MinComponent | null | undefined): string  {
+	transform(value: MinComponent | null | undefined): string {
 
 		if (value != null && value.name != null) {
 
 			var name = value.name.trim();
-			if( name.startsWith("valawai/") ){
-				
+			if (name.startsWith("valawai/")) {
+
 				name = name.substring(8);
 			}
-			
-			if( name.match(/^[c|C][0|1|2]_.+/) ){
+
+			if (name.match(/^[c|C][0|1|2]_.+/)) {
 
 				name = name.substring(3);
 			}
 
-			name = name.replaceAll("_"," ");
-			name = name.charAt(0).toUpperCase()+ name.substring(1);
-			
+			name = name.replaceAll("_", " ");
+			name = name.charAt(0).toUpperCase() + name.substring(1);
+
 			return name;
 
-		}else{
-			
+		} else {
+
 			return '';
 		}
 

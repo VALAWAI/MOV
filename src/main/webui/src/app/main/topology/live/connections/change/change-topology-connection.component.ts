@@ -7,9 +7,9 @@
 */
 
 import { Component, OnDestroy } from '@angular/core';
-import { MainService } from 'src/app/main';
-import { MessagesService } from 'src/app/shared/messages';
-import { ChangeConnection, MovApiService, TOPOLOGY_ACTION_NAMES, TopologyAction } from 'src/app/shared/mov-api';
+import { MainService } from '@app/main';
+import { MessagesService } from '@shared/messages';
+import { ChangeConnection, MovApiService, TOPOLOGY_ACTION_NAMES, TopologyAction } from '@shared/mov-api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
 import { Subscription } from 'rxjs';
@@ -21,11 +21,11 @@ import { MatButton } from '@angular/material/button';
 	standalone: true,
 	selector: 'app-topology-connections-change',
 	imports: [
-    LoadingComponent,
-    MatButton,
-    RouterLink,
-    AsyncPipe
-],
+		LoadingComponent,
+		MatButton,
+		RouterLink,
+		AsyncPipe
+	],
 	templateUrl: './change-topology-connection.component.html',
 	styleUrls: ['./change-topology-connection.component.css']
 })

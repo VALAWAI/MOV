@@ -11,7 +11,7 @@ import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, 
 import { ConfigService } from '@app/shared';
 import { PointExtensions } from '@foblex/2d';
 import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { GraphModule } from '@app/shared/graph/graph.module';
 import { Subscription, switchMap, timer, retry } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';

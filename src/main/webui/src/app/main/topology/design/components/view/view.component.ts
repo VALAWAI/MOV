@@ -8,7 +8,7 @@
 
 import { Component, inject } from '@angular/core';
 import { ComponentDefinition } from '@app/shared/mov-api';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
 import { CommonModule } from '@angular/common';
 import { VersionInfoViewComponent } from '@app/shared/version-info/';

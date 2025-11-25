@@ -20,7 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { MessageComponent, MessagesService } from '@app/shared/messages';
 import { MinTopology, MinTopologyPage, MovApiService } from '@app/shared/mov-api';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { ConfirmRemoveTopologyDialog } from './confirm-remove-topology.dialog';
 import { toPattern } from '@app/shared';
 import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-topology';
@@ -32,19 +32,19 @@ import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-top
 	standalone: true,
 	selector: 'app-topology-design-seaker',
 	imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MessageComponent,
-    RouterModule,
-    MatDialogModule,
-    ApplyTopologyModule
-],
+		ReactiveFormsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatIconModule,
+		MatButtonModule,
+		MatMenuModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MessageComponent,
+		RouterModule,
+		MatDialogModule,
+		ApplyTopologyModule
+	],
 	templateUrl: './seaker.component.html'
 })
 export class TopologySeakerComponent implements OnInit {

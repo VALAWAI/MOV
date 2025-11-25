@@ -8,7 +8,7 @@
 
 import { Component, inject } from '@angular/core';
 import { ChannelSchema, ComponentDefinition, ComponentType, VersionInfo } from '@app/shared/mov-api';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
 
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -54,14 +54,14 @@ export function jsonValidator(control: AbstractControl): ValidationErrors | null
 	standalone: true,
 	selector: 'app-topology-design-component-edit',
 	imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    VersionInfoEditorComponent
-],
+		ReactiveFormsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatIconModule,
+		MatButtonModule,
+		MatSelectModule,
+		VersionInfoEditorComponent
+	],
 	templateUrl: './edit.component.html'
 })
 export class EditComponent extends AbstractComponentDefinitionComponent {

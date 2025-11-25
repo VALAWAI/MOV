@@ -10,8 +10,8 @@ import { Injectable, OnInit } from '@angular/core';
 
 import { Observable, EMPTY } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
-import { MessagesService } from 'src/app/shared/messages';
-import { MovApiService, TopologyConnection } from 'src/app/shared/mov-api';
+import { MessagesService } from '@shared/messages';
+import { MovApiService, TopologyConnection } from '@shared/mov-api';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable()

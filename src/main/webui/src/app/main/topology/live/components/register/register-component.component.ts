@@ -8,40 +8,65 @@
 
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { MainService } from 'src/app/main';
-import { MessagesService } from 'src/app/shared/messages';
-import { LoadingComponent } from 'src/app/shared/loading';
-import { ComponentType, LogRecord, MovApiService } from 'src/app/shared/mov-api';
-import { ComponentToRegister } from 'src/app/shared/mov-api/components/component-to-register.model';
+import { MainService } from '@app/main';
+import { MessagesService } from '@shared/messages';
+import { LoadingComponent } from '@shared/loading';
+import { ComponentType, LogRecord, MovApiService } from '@shared/mov-api';
+import { ComponentToRegister } from '@shared/mov-api/components/component-to-register.model';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 
 @Component({
 	standalone: true,
-    selector: 'app-components-register',
-    imports: [
-    ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatInput,
-    MatError,
-    MatButton,
-    LoadingComponent,
-    CdkTextareaAutosize
-],
-    templateUrl: './register-component.component.html',
-    styleUrl: './register-component.component.css'
+	selector: 'app-components-register',
+	imports: [
+		ReactiveFormsModule,
+		MatFormField,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		MatInput,
+		MatError,
+		MatButton,
+		LoadingComponent,
+		CdkTextareaAutosize
+	],
+	templateUrl: './register-component.component.html',
+	styleUrl: './register-component.component.css'
 })
 export class RegisterComponentComponent implements OnInit {
+
+	/**
+	  *  The header service.
+	  */
+	private readonly header = inject(MainService);
+
+	/**
+	 * The MOV APi service.
+	 */
+	private readonly mov = inject(MovApiService);
+
+	/**
+	 * Form builder service.
+	 */
+	private readonly fb = inject(FormBuilder);
+
+	/**
+	 * The messages service.
+	 */
+	private readonly messages = inject(MessagesService);
+
+	/**
+	 * Form router service.
+	 */
+	private readonly router = inject(Router);
 
 	/**
 	 * The form to define the component to register.
@@ -66,20 +91,6 @@ export class RegisterComponentComponent implements OnInit {
 	private lastLogTimestamp: number = 0;
 
 	/**
-	 *  Create the component.
-	 */
-	constructor(
-		private header: MainService,
-		private mov: MovApiService,
-		private messages: MessagesService,
-		private fb: FormBuilder,
-		private router: Router
-	) {
-
-	}
-
-
-	/**
 	 * Initialize the component.
 	 */
 	public ngOnInit(): void {
@@ -97,7 +108,7 @@ export class RegisterComponentComponent implements OnInit {
 		if (this.form.valid) {
 
 			this.registering = true;
-			this.mov.getLogRecordPage(null, null,null, null, "-timestamp", 0, 1).subscribe(
+			this.mov.getLogRecordPage(null, null, null, null, "-timestamp", 0, 1).subscribe(
 				{
 					next: page => {
 

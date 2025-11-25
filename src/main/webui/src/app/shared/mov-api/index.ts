@@ -11,17 +11,17 @@ import { PayloadSchema } from './components/payload-schema.model';
 
 export { MovApiService } from './mov-api.service';
 export { Info } from './info.model';
-export { HealthInfo, HealthStatus, HealthCheck } from './health-info.model';
-export { LOG_LEVEL_NAMES, LogLevel } from './logs/log-level.model';
+export { HealthInfo, type HealthStatus, HealthCheck } from './health-info.model';
+export { LOG_LEVEL_NAMES, type LogLevel } from './logs/log-level.model';
 export { LogRecord } from './logs/log-record.model';
 export { LogRecordPage } from './logs/log-record-page.model';
 export { MinComponent } from './components/min-component.model';
 export { MinComponentPage } from './components/min-component-page.model';
 export { Component } from './components/component.model';
-export { COMPONENT_TYPE_NAMES, ComponentType } from './components/component-type.model';
+export { COMPONENT_TYPE_NAMES, type ComponentType } from './components/component-type.model';
 export { ChannelSchema } from './components/channel-schema.model';
-export { PayloadSchema, PayloadType } from './components/payload-schema.model';
-export { BasicPayloadFormat, BASIC_PAYLOAD_FORMAT_NAMES } from './components/basic-payload-format.model';
+export { type PayloadSchema, type PayloadType } from './components/payload-schema.model';
+export { type BasicPayloadFormat, BASIC_PAYLOAD_FORMAT_NAMES } from './components/basic-payload-format.model';
 export { BasicPayloadSchema } from './components/basic-payload-schema.model';
 export { EnumPayloadSchema } from './components/enum-payload-schema.model';
 export { ObjectPayloadSchema } from './components/object-payload-schema.model';
@@ -30,7 +30,7 @@ export { MinConnection } from './topology/min-connection.model';
 export { MinConnectionPage } from './topology/min-connection-page.model';
 export { TopologyConnection } from './topology/topology-connection.model';
 export { TopologyConnectionNode } from './topology/topology-connection-node.model';
-export { TOPOLOGY_ACTION_NAMES, TopologyAction } from './topology/topology-action.model';
+export { TOPOLOGY_ACTION_NAMES, type TopologyAction } from './topology/topology-action.model';
 export { ChangeConnection } from './topology/change-connection.model';
 export { ConnectionToCreate } from './topology/connection-to-create.model';
 export { ConstantPayloadSchema } from './components/constant-payload-schema.model';
@@ -59,7 +59,7 @@ export { LiveTopologyComponentOutConnection } from './live/topologies/live-topol
 export { LiveTopologyConnectionEndpoint } from './live/topologies/live-topology-connection-endpoint.model';
 
 export { LiveConfiguration } from './live/configurations/live-configuration.model';
-export { TopologyBehavior, TOPOLOGY_BEHAVIOR_NAMES } from './live/configurations/topology-behaviour.model';
+export { type TopologyBehavior, TOPOLOGY_BEHAVIOR_NAMES } from './live/configurations/topology-behaviour.model';
 
 /**
  * Check if two payload schemas match.

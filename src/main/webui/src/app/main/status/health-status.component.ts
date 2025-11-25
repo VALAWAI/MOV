@@ -9,18 +9,18 @@
 import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { HealthStatus } from 'src/app/shared/mov-api';
+import { HealthStatus } from '@shared/mov-api';
 
 
 @Component({
 	standalone: true,
-    selector: 'app-health-status',
-    imports: [
-        NgIf,
+	selector: 'app-health-status',
+	imports: [
+		NgIf,
 		MatIcon
-	    ],
-    templateUrl: './health-status.component.html',
-    styleUrl: './health-status.component.css'
+	],
+	templateUrl: './health-status.component.html',
+	styleUrl: './health-status.component.css'
 })
 export class HealthStatusComponent {
 

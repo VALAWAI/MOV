@@ -35,7 +35,7 @@ export const LIVE_ROUTES: Routes = [
 			},
 			{
 				path: '**',
-				loadComponent: () => import('src/app/shared/not-found').then(m => m.NotFoundComponent)
+				loadComponent: () => import('@shared/not-found').then(m => m.NotFoundComponent)
 			}
 		]
 	}

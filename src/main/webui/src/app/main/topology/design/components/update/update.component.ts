@@ -13,7 +13,7 @@ import { ConfigService } from '@app/shared';
 import { LoadingComponent } from '@app/shared/loading';
 import { MessagesService } from '@app/shared/messages';
 import { MovApiService } from '@app/shared/mov-api';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 
 /**
  * This is used to manage the posible update taht cna be used into the design of a topology.
@@ -22,8 +22,8 @@ import { MainService } from 'src/app/main';
 	standalone: true,
 	selector: 'app-topology-design-components-update-library',
 	imports: [
-    LoadingComponent
-],
+		LoadingComponent
+	],
 	templateUrl: './update.component.html'
 })
 export class UpdateLibraryComponent implements OnInit {

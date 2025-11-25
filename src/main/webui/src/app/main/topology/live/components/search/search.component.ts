@@ -7,12 +7,12 @@
 */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
-import { MessageComponent } from 'src/app/shared/messages';
-import { COMPONENT_TYPE_NAMES, MinComponentPage, MovApiService } from 'src/app/shared/mov-api';
+import { MessageComponent } from '@shared/messages';
+import { COMPONENT_TYPE_NAMES, MinComponentPage, MovApiService } from '@shared/mov-api';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -29,21 +29,21 @@ import { ConfigService, toPattern } from '@app/shared';
 	standalone: true,
 	selector: 'app-components-search',
 	imports: [
-    ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatInput,
-    MatCheckbox,
-    MatButton,
-    RouterLink,
-    MatIcon,
-    MatPaginator,
-    MatTableModule,
-    MatMenuModule,
-    MessageComponent
-],
+		ReactiveFormsModule,
+		MatFormField,
+		MatLabel,
+		MatSelect,
+		MatOption,
+		MatInput,
+		MatCheckbox,
+		MatButton,
+		RouterLink,
+		MatIcon,
+		MatPaginator,
+		MatTableModule,
+		MatMenuModule,
+		MessageComponent
+	],
 	templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit, OnDestroy {

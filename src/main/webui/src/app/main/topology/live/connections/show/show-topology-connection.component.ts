@@ -7,9 +7,9 @@
 */
 
 import { Component, OnDestroy } from '@angular/core';
-import { MainService } from 'src/app/main';
-import { MessagesService } from 'src/app/shared/messages';
-import { MovApiService } from 'src/app/shared/mov-api';
+import { MainService } from '@app/main';
+import { MessagesService } from '@shared/messages';
+import { MovApiService } from '@shared/mov-api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
 import { Subscription } from 'rxjs';

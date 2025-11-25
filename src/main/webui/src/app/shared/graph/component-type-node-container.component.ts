@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
-import { ComponentType } from 'src/app/shared/mov-api';
+import { ComponentType } from '@shared/mov-api';
 
 @Component({
 	standalone: true,

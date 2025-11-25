@@ -8,7 +8,7 @@
 
 import { Component, inject } from '@angular/core';
 import { ComponentDefinition } from '@app/shared/mov-api';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -23,11 +23,11 @@ import { RouterModule } from '@angular/router';
 	standalone: true,
 	selector: 'app-topology-design-component-view',
 	imports: [
-    MatButtonModule,
-    MatIconModule,
-    LoadingComponent,
-    RouterModule
-],
+		MatButtonModule,
+		MatIconModule,
+		LoadingComponent,
+		RouterModule
+	],
 	templateUrl: './remove.component.html'
 })
 export class RemoveComponent extends AbstractComponentDefinitionComponent {

@@ -12,19 +12,19 @@ import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { TimestampPipe } from '@app/shared/timestamp';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
-import { LogRecord } from 'src/app/shared/mov-api';
+import { LogRecord } from '@shared/mov-api';
 
 @Component({
 	standalone: true,
 	selector: 'app-show-log-dialog',
 	imports: [
-    MatDialogContent,
-    MatDialogActions,
-    MatButton,
-    NgxJsonViewerModule,
-    MatDialogClose,
-    TimestampPipe
-],
+		MatDialogContent,
+		MatDialogActions,
+		MatButton,
+		NgxJsonViewerModule,
+		MatDialogClose,
+		TimestampPipe
+	],
 	templateUrl: './show-log.dialog.html',
 	styleUrl: './show-log.dialog.css'
 })

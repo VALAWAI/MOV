@@ -12,7 +12,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ConfigService } from '@app/shared';
-import { MainService } from 'src/app/main';
+import { MainService } from '@app/main';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
@@ -35,14 +35,14 @@ import { ApplyTopologyService } from '@app/shared/apply-topology';
 	standalone: true,
 	selector: 'app-config',
 	imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    RouterModule,
-    MatSelectModule,
-    TopologyBehaviourToNamePipe
-],
+		ReactiveFormsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSlideToggleModule,
+		RouterModule,
+		MatSelectModule,
+		TopologyBehaviourToNamePipe
+	],
 	templateUrl: './config.component.html'
 })
 export class ConfigComponent implements OnInit, OnDestroy {
@@ -58,9 +58,9 @@ export class ConfigComponent implements OnInit, OnDestroy {
 	private conf = inject(ConfigService);
 
 	/**
-	 * The component to create forms.
+	 * Form builder service.
 	 */
-	private fb = inject(FormBuilder);
+	private readonly fb = inject(FormBuilder);
 
 	/**
 	 * The subscription to the changes.
