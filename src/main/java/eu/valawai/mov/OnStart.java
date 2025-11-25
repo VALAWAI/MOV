@@ -10,6 +10,8 @@ package eu.valawai.mov;
 
 import java.util.regex.Pattern;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import eu.valawai.mov.MOVConfiguration.UpdateMode;
 import eu.valawai.mov.persistence.live.components.ComponentEntity;
 import eu.valawai.mov.persistence.live.components.FinishAllComponents;
@@ -18,6 +20,7 @@ import eu.valawai.mov.persistence.live.topology.DeleteAllTopologyConnections;
 import eu.valawai.mov.persistence.live.topology.DisableAllTopologyConnections;
 import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import eu.valawai.mov.services.ComponenetLibraryService;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
 import io.smallrye.config.Priorities;
 import io.vertx.mutiny.core.http.HttpHeaders;
@@ -37,21 +40,27 @@ import jakarta.inject.Inject;
 public class OnStart {
 
 	/**
-	 * The configuration of the MOV.
-	 */
-	@Inject
-	MOVConfiguration conf;
-
-	/**
 	 * The pattern to check the on page resource.
 	 */
-	private static final Pattern INDEX_PATTERN = Pattern.compile(".*(/[a-z]{2})(/.*)?");
+	private static final Pattern INDEX_PATTERN = Pattern.compile("^.*(/[a-z]{2})(/.*)?$");
 
 	/**
 	 * The name of the context variable that is used to mark that the request is
 	 * re-routing.
 	 */
 	private static final String REROUTING_SOURCE = "re-routing-source";
+
+	/**
+	 * The UI root path.
+	 */
+	@ConfigProperty(name = "quarkus.http.root-path", defaultValue = "/")
+	String uiRootPath;
+
+	/**
+	 * The configuration of the MOV.
+	 */
+	@Inject
+	MOVConfiguration conf;
 
 	/**
 	 * The service to update the library.
@@ -92,11 +101,11 @@ public class OnStart {
 
 		final var mode = this.conf.init().components();
 		final var action = switch (mode) {
-		case FINISH -> FinishAllComponents.fresh().execute()
-				.chain(any -> AddLog.fresh().withInfo().withMessage("Finished the previous components").execute());
-		case DROP -> ComponentEntity.mongoCollection().drop()
-				.chain(any -> AddLog.fresh().withInfo().withMessage("Dropped the previous components").execute());
-		default -> AddLog.fresh().withInfo().withMessage("Preserve the previous components").execute();
+			case FINISH -> FinishAllComponents.fresh().execute()
+					.chain(any -> AddLog.fresh().withInfo().withMessage("Finished the previous components").execute());
+			case DROP -> ComponentEntity.mongoCollection().drop()
+					.chain(any -> AddLog.fresh().withInfo().withMessage("Dropped the previous components").execute());
+			default -> AddLog.fresh().withInfo().withMessage("Preserve the previous components").execute();
 		};
 
 		action.onFailure().recoverWithUni(
@@ -112,13 +121,13 @@ public class OnStart {
 
 		final var mode = this.conf.init().connections();
 		final var action = switch (mode) {
-		case DISABLE -> DisableAllTopologyConnections.fresh().execute()
-				.chain(any -> AddLog.fresh().withInfo().withMessage("Disable the previous connections").execute());
-		case DELETE -> DeleteAllTopologyConnections.fresh().execute()
-				.chain(any -> AddLog.fresh().withInfo().withMessage("Delete the previous connections").execute());
-		case DROP -> TopologyConnectionEntity.mongoCollection().drop()
-				.chain(any -> AddLog.fresh().withInfo().withMessage("Dropped the previous connections").execute());
-		default -> AddLog.fresh().withInfo().withMessage("Preserve the previous connections").execute();
+			case DISABLE -> DisableAllTopologyConnections.fresh().execute()
+					.chain(any -> AddLog.fresh().withInfo().withMessage("Disable the previous connections").execute());
+			case DELETE -> DeleteAllTopologyConnections.fresh().execute()
+					.chain(any -> AddLog.fresh().withInfo().withMessage("Delete the previous connections").execute());
+			case DROP -> TopologyConnectionEntity.mongoCollection().drop()
+					.chain(any -> AddLog.fresh().withInfo().withMessage("Dropped the previous connections").execute());
+			default -> AddLog.fresh().withInfo().withMessage("Preserve the previous connections").execute();
 		};
 
 		action.onFailure().recoverWithUni(
@@ -134,7 +143,7 @@ public class OnStart {
 	 */
 	public void init(@Observes Router router) {
 
-		router.getWithRegex("/.*").last().handler(rc -> {
+		router.get().last().handler(rc -> {
 
 			final var path = rc.normalizedPath();
 			if (path.endsWith("env.js")) {
@@ -152,10 +161,12 @@ public class OnStart {
 				}
 				// Redirect for one Page Angular
 				rc.put(REROUTING_SOURCE, path);
-				rc.reroute("/" + lang + "/index.html");
+				Log.warnv("Rerouting to {0}{1}/index.html", this.uiRootPath, lang);
+				rc.reroute(this.uiRootPath + lang + "/index.html");
 
 			} else {
 				// Must be handled by another
+				Log.warnv("Unexpected routing to {0}", path);
 				rc.next();
 			}
 
