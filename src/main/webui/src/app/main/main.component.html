@@ -1,203 +1,209 @@
 <div class="flex flex-col gap-3 min-h-screen">
-	<header
-		class="z-50	w-full text-center border-b border-grey p-4 sticky top-0  bg-green-700 text-slate-100 flex flex-row flex-wrap">
-		<button mat-icon-button [matMenuTriggerFor]="movMenu">
-			<mat-icon>menu</mat-icon>
-		</button>
-		<mat-menu #movMenu="matMenu">
-		<button mat-menu-item
-			i18n="The menu item to go to the status@@main_menu_status"
-			routerLink="/main/status">Dashboard</button>
-		<button mat-menu-item [matMenuTriggerFor]="liveMenu">
-			<mat-icon matListItemIcon>sensors</mat-icon>
-			<span
-				i18n="The menu item that show the live status@@main_menu_live_status">
+  <header
+    class="z-50	w-full text-center border-b border-grey p-4 sticky top-0  bg-green-700 text-slate-100 flex flex-row flex-wrap">
+    <button mat-icon-button [matMenuTriggerFor]="movMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #movMenu="matMenu">
+      <button mat-menu-item
+        i18n="The menu item to go to the status@@main_menu_status"
+      routerLink="/main/status">Dashboard</button>
+      <button mat-menu-item [matMenuTriggerFor]="liveMenu">
+        <mat-icon matListItemIcon>sensors</mat-icon>
+        <span
+          i18n="The menu item that show the live status@@main_menu_live_status">
 				Live Topology</span>
-		</button>
-		<button mat-menu-item [matMenuTriggerFor]="designMenu">
-			<mat-icon matListItemIcon>design_services</mat-icon>
-			<span
-				i18n="The menu item that show the design status@@main_menu_design_status">
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="designMenu">
+        <mat-icon matListItemIcon>design_services</mat-icon>
+        <span
+          i18n="The menu item that show the design status@@main_menu_design_status">
 				Design Topology</span>
-		</button>
-		<button mat-menu-item
-			i18n="The menu item that go to the MOV configuration@@main_menu_config"
-			routerLink="/main/config">Settings</button>
-		<a
-			href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
-			target="_blank">
-			<button mat-menu-item
-				i18n="The menu item that go to the MOV help site@@main_menu_help">Help</button>
-		</a> </mat-menu>
-		<mat-menu #liveMenu="matMenu">
-		<button mat-menu-item
-			i18n="The menu item to go to the topology live status@@main_menu_topology-live-status"
-			routerLink="/main/topology/live/status">View Live Status</button>
-		<button mat-menu-item
-			i18n="The menu item to go to the topology live components@@main_menu_topology-live-components"
-			routerLink="/main/topology/live/components">Active
+      </button>
+      <button mat-menu-item
+        i18n="The menu item that go to the MOV configuration@@main_menu_config"
+      routerLink="/main/config">Settings</button>
+      <a
+        href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
+        target="_blank">
+        <button mat-menu-item
+        i18n="The menu item that go to the MOV help site@@main_menu_help">Help</button>
+      </a> </mat-menu>
+      <mat-menu #liveMenu="matMenu">
+        <button mat-menu-item
+          i18n="The menu item to go to the topology live status@@main_menu_topology-live-status"
+        routerLink="/main/topology/live/status">View Live Status</button>
+        <button mat-menu-item
+          i18n="The menu item to go to the topology live components@@main_menu_topology-live-components"
+          routerLink="/main/topology/live/components">Active
 			Components</button>
-		<button mat-menu-item
-			i18n="The menu item to go to the topology live connections@@main_menu_topology-live-connections"
-			routerLink="/main/topology/live/connections">Live
+        <button mat-menu-item
+          i18n="The menu item to go to the topology live connections@@main_menu_topology-live-connections"
+          routerLink="/main/topology/live/connections">Live
 			Connections</button>
-		<button mat-menu-item
-			i18n="The menu item to go to the topology live logs@@main_menu_topology-live-logs"
-			routerLink="/main/topology/live/logs">Execution Logs</button>
-		</mat-menu>
-		<mat-menu #designMenu="matMenu">
-		<button mat-menu-item
-			i18n="The menu item to go to the topology design editor@@main_menu_topology-design-editor"
-			routerLink="/main/topology/design/editor">Editor</button>
-		<button mat-menu-item
-			i18n="The menu item to go to the topology design seaker@@main_menu_topology-design-seaker"
-			routerLink="/main/topology/design/search">Defined Topologies</button>
-		<button mat-menu-item
-			i18n="The menu item to go to the topology design components@@main_menu_topology-design-components"
-			[matMenuTriggerFor]="designComponentsMenu">Component Library</button>
-		</mat-menu>
-		<mat-menu #designComponentsMenu="matMenu">
-		<button mat-menu-item
-			i18n="The menu item to search for the components taht can be used in teh design@@main_menu_topology-design-components-search"
-			routerLink="/main/topology/design/components/search">Library</button>
-		<button mat-menu-item
-			i18n="The menu item to update for the components taht can be used in teh design@@main_menu_topology-design-components-update"
-			routerLink="/main/topology/design/components/update">Update
+        <button mat-menu-item
+          i18n="The menu item to go to the topology live logs@@main_menu_topology-live-logs"
+        routerLink="/main/topology/live/logs">Execution Logs</button>
+      </mat-menu>
+      <mat-menu #designMenu="matMenu">
+        <button mat-menu-item
+          i18n="The menu item to go to the topology design editor@@main_menu_topology-design-editor"
+        routerLink="/main/topology/design/editor">Editor</button>
+        <button mat-menu-item
+          i18n="The menu item to go to the topology design seaker@@main_menu_topology-design-seaker"
+        routerLink="/main/topology/design/search">Defined Topologies</button>
+        <button mat-menu-item
+          i18n="The menu item to go to the topology design components@@main_menu_topology-design-components"
+        [matMenuTriggerFor]="designComponentsMenu">Component Library</button>
+      </mat-menu>
+      <mat-menu #designComponentsMenu="matMenu">
+        <button mat-menu-item
+          i18n="The menu item to search for the components taht can be used in teh design@@main_menu_topology-design-components-search"
+        routerLink="/main/topology/design/components/search">Library</button>
+        <button mat-menu-item
+          i18n="The menu item to update for the components taht can be used in teh design@@main_menu_topology-design-components-update"
+          routerLink="/main/topology/design/components/update">Update
 			library</button>
-		</mat-menu>
-		<div class="grow text-center font-bold text-2xl">{{headerTitle|async}}</div>
-		<button mat-icon-button [matMenuTriggerFor]="localeMenu"
-			class="flex-none text-right">
-			<mat-icon>language</mat-icon>
-		</button>
-		<mat-menu #localeMenu="matMenu">
-		<button *ngIf="!isLocalizedIn('ca')" mat-menu-item
-			(click)="changeLocaleTo('ca')">Català</button>
-		<button *ngIf="!isLocalizedIn('en')" mat-menu-item
-			(click)="changeLocaleTo('en')">English</button>
-		<button *ngIf="!isLocalizedIn('es')" mat-menu-item
-			(click)="changeLocaleTo('es')">Español</button>
-		</mat-menu>
-	</header>
-	<div class="grow w-full h-full">
-		<router-outlet></router-outlet>
-	</div>
-	<footer class="p-11 gap-7 bg-green-950 text-slate-50 flex flex-col">
-		<div
-			class="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+      </mat-menu>
+      <div class="grow text-center font-bold text-2xl">{{headerTitle|async}}</div>
+      <button mat-icon-button [matMenuTriggerFor]="localeMenu"
+        class="flex-none text-right">
+        <mat-icon>language</mat-icon>
+      </button>
+      <mat-menu #localeMenu="matMenu">
+        @if (!isLocalizedIn('ca')) {
+          <button mat-menu-item
+          (click)="changeLocaleTo('ca')">Català</button>
+        }
+        @if (!isLocalizedIn('en')) {
+          <button mat-menu-item
+          (click)="changeLocaleTo('en')">English</button>
+        }
+        @if (!isLocalizedIn('es')) {
+          <button mat-menu-item
+          (click)="changeLocaleTo('es')">Español</button>
+        }
+      </mat-menu>
+    </header>
+    <div class="grow w-full h-full">
+      <router-outlet></router-outlet>
+    </div>
+    <footer class="p-11 gap-7 bg-green-950 text-slate-50 flex flex-col">
+      <div
+        class="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
 
-			<div>
-				<h3 class="font-bold text-lg mb-4 text-purple-300">General</h3>
-				<ul class="space-y-2">
-					<li><a routerLink="/main/status"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the status@@main_menu_status">Dashboard</a>
-					</li>
-					<li><a routerLink="/main/config"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item that go to the MOV configuration@@main_menu_config">Settings</a>
-					</li>
-					<li><a
-						href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
-						target="_blank" rel="noopener noreferrer"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item that go to the MOV help site@@main_menu_help">Help</a>
-					</li>
-				</ul>
-			</div>
+        <div>
+          <h3 class="font-bold text-lg mb-4 text-purple-300">General</h3>
+          <ul class="space-y-2">
+            <li><a routerLink="/main/status"
+              class="hover:text-purple-400 transition-colors duration-200"
+            i18n="The menu item to go to the status@@main_menu_status">Dashboard</a>
+          </li>
+          <li><a routerLink="/main/config"
+            class="hover:text-purple-400 transition-colors duration-200"
+          i18n="The menu item that go to the MOV configuration@@main_menu_config">Settings</a>
+        </li>
+        <li><a
+          href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface"
+          target="_blank" rel="noopener noreferrer"
+          class="hover:text-purple-400 transition-colors duration-200"
+        i18n="The menu item that go to the MOV help site@@main_menu_help">Help</a>
+      </li>
+    </ul>
+  </div>
 
-			<div>
-				<h3 class="font-bold text-lg mb-4 text-purple-300">Live
-					Topology</h3>
-				<ul class="space-y-2">
-					<li><a routerLink="/main/topology/live/status"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology live status@@main_menu_topology-live-status">View
+  <div>
+    <h3 class="font-bold text-lg mb-4 text-purple-300">Live
+    Topology</h3>
+    <ul class="space-y-2">
+      <li><a routerLink="/main/topology/live/status"
+        class="hover:text-purple-400 transition-colors duration-200"
+        i18n="The menu item to go to the topology live status@@main_menu_topology-live-status">View
 							Live Status</a></li>
-					<li><a routerLink="/main/topology/live/components"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology live components@@main_menu_topology-live-components">Active
+      <li><a routerLink="/main/topology/live/components"
+        class="hover:text-purple-400 transition-colors duration-200"
+        i18n="The menu item to go to the topology live components@@main_menu_topology-live-components">Active
 							Components</a></li>
-					<li><a routerLink="/main/topology/live/connections"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology live connections@@main_menu_topology-live-connections">Live
+      <li><a routerLink="/main/topology/live/connections"
+        class="hover:text-purple-400 transition-colors duration-200"
+        i18n="The menu item to go to the topology live connections@@main_menu_topology-live-connections">Live
 							Connections</a></li>
-					<li><a routerLink="/main/topology/live/logs"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology live logs@@main_menu_topology-live-logs">Execution
+      <li><a routerLink="/main/topology/live/logs"
+        class="hover:text-purple-400 transition-colors duration-200"
+        i18n="The menu item to go to the topology live logs@@main_menu_topology-live-logs">Execution
 							Logs</a></li>
-				</ul>
-			</div>
+    </ul>
+  </div>
 
-			<div>
-				<h3 class="font-bold text-lg mb-4 text-purple-300">Design
-					Topology</h3>
-				<ul class="space-y-2">
-					<li><a routerLink="/main/topology/design/editor"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology design editor@@main_menu_topology-design-editor">Editor</a>
-					</li>
-					<li><a routerLink="/main/topology/design/search"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology design seaker@@main_menu_topology-design-seaker">Defined
+  <div>
+    <h3 class="font-bold text-lg mb-4 text-purple-300">Design
+    Topology</h3>
+    <ul class="space-y-2">
+      <li><a routerLink="/main/topology/design/editor"
+        class="hover:text-purple-400 transition-colors duration-200"
+      i18n="The menu item to go to the topology design editor@@main_menu_topology-design-editor">Editor</a>
+    </li>
+    <li><a routerLink="/main/topology/design/search"
+      class="hover:text-purple-400 transition-colors duration-200"
+      i18n="The menu item to go to the topology design seaker@@main_menu_topology-design-seaker">Defined
 							Topologies</a></li>
-					<li><a routerLink="/main/topology/design/components"
-						class="hover:text-purple-400 transition-colors duration-200"
-						i18n="The menu item to go to the topology design components@@main_menu_topology-design-components">Component
+    <li><a routerLink="/main/topology/design/components"
+      class="hover:text-purple-400 transition-colors duration-200"
+      i18n="The menu item to go to the topology design components@@main_menu_topology-design-components">Component
 							Library</a></li>
-				</ul>
-			</div>
+  </ul>
+</div>
 
-			<div>
-				<h3 class="font-bold text-lg mb-4 text-purple-300"
-					i18n="The menu acknowledgement item@@main_menu-acknowledgement">Acknowledgement</h3>
-				<div class="text-gray-300 text-sm mb-4"
-					i18n="The acknowledgement text@@main_acknowledgement-text">
+<div>
+  <h3 class="font-bold text-lg mb-4 text-purple-300"
+  i18n="The menu acknowledgement item@@main_menu-acknowledgement">Acknowledgement</h3>
+  <div class="text-gray-300 text-sm mb-4"
+    i18n="The acknowledgement text@@main_acknowledgement-text">
 					VALAWAI project is funded by the European Union under the European
 					Innovation Council (EIC) research and innovation programme under
 					Grant Agreement number 101070930.</div>
-				<div class="min-w-80">
-					<img class="h-16 w-auto"
-						src="images/EN-Funded-by-the-EU-NEG-768x161.png"
-						alt="EU funding logo">
-				</div>
-			</div>
+  <div class="min-w-80">
+    <img class="h-16 w-auto"
+      src="images/EN-Funded-by-the-EU-NEG-768x161.png"
+      alt="EU funding logo">
+  </div>
+</div>
 
-			<div>
-				<h3 class="font-bold text-lg mb-4 text-purple-300">Links</h3>
-				<ul class="space-y-2">
-					<li><a href="https://valawai.eu/" target="_blank"
-						rel="noopener noreferrer"
-						class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
-						i18n="The menu item to go to the project web page@@main_menu_project-web-page">
+<div>
+  <h3 class="font-bold text-lg mb-4 text-purple-300">Links</h3>
+  <ul class="space-y-2">
+    <li><a href="https://valawai.eu/" target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
+      i18n="The menu item to go to the project web page@@main_menu_project-web-page">
 							Project web page <mat-icon class="ml-1 text-sm">arrow_outward</mat-icon>
 					</a></li>
-					<li><a href="https://valawai.github.io/docs/" target="_blank"
-						rel="noopener noreferrer"
-						class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
-						i18n="The menu item to go to the project documentation web page@@main_menu_project-documentation-web-page">
+    <li><a href="https://valawai.github.io/docs/" target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
+      i18n="The menu item to go to the project documentation web page@@main_menu_project-documentation-web-page">
 							Project documentation <mat-icon class="ml-1 text-sm">arrow_outward</mat-icon>
 					</a></li>
-					<li><a href="https://twitter.com/ValawaiEU" target="_blank"
-						rel="noopener noreferrer"
-						class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
-						i18n="The menu item to go to the project twitter@@main_menu_project-twitter">
+    <li><a href="https://twitter.com/ValawaiEU" target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
+      i18n="The menu item to go to the project twitter@@main_menu_project-twitter">
 							Twitter <mat-icon class="ml-1 text-sm">arrow_outward</mat-icon>
 					</a></li>
-					<li><a href="https://github.com/VALAWAI/" target="_blank"
-						rel="noopener noreferrer"
-						class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
-						i18n="The menu item to go to the project GitHub@@main_menu_project-github">
+    <li><a href="https://github.com/VALAWAI/" target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-purple-400 transition-colors duration-200 flex items-center text-sm"
+      i18n="The menu item to go to the project GitHub@@main_menu_project-github">
 							GitHub <mat-icon class="ml-1 text-sm">arrow_outward</mat-icon>
 					</a></li>
-				</ul>
-			</div>
-		</div>
+  </ul>
+</div>
+</div>
 
-		<div class="flex justify-center text-xs"
-			i18n="The copyright text@@main_copyright-text">
+<div class="flex justify-center text-xs"
+  i18n="The copyright text@@main_copyright-text">
 			Copyright © 2022-2026 <img class="h-4" src="images/logo.png"
 				alt="VALAWAI logo">
 		</div>
-	</footer>
+</footer>
 </div>

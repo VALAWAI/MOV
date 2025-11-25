@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
@@ -18,10 +18,9 @@ import { LiveTopologyComponentOutConnection } from '@app/shared/mov-api';
 	standalone: true,
 	selector: 'app-notification-node-detail',
 	imports: [
-		CommonModule,
-		RouterModule,
-		MatIconModule
-	],
+    RouterModule,
+    MatIconModule
+],
 	templateUrl: './notification-node-detail.component.html'
 })
 export class NotificationNodeDetailComponent extends AbstractConnectionDetailComponent {

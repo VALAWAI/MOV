@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
@@ -24,14 +24,13 @@ import { ChangeTopologyDescription, ChangeTopologyName } from './actions';
 	standalone: true,
 	selector: 'app-topology-form',
 	imports: [
-		CommonModule,
-		MatAutocompleteModule,
-		MatInputModule,
-		MatFormFieldModule,
-		ReactiveFormsModule,
-		MatSelectModule,
-		MatIconModule
-	],
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatIconModule
+],
 	templateUrl: './topology-form.component.html'
 })
 export class TopologyFormComponent implements OnInit, OnDestroy {

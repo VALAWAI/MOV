@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule, } from '@angular/common';
+
 import { Component, inject, Input, OnDestroy } from '@angular/core';
 import { VersionInfo } from '../mov-api';
 import { AbstractControl, ControlValueAccessor, FormBuilder, NG_VALIDATORS, NG_VALUE_ACCESSOR, ReactiveFormsModule, TouchedChangeEvent, Validator, Validators } from '@angular/forms';
@@ -20,12 +20,11 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 	standalone: true,
 	selector: 'app-version-info-editor',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatDatepickerModule
-	],
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule
+],
 	templateUrl: './version-info-editor.component.html',
 	providers: [
 		{

@@ -1,59 +1,86 @@
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
-	*ngIf="changing || connection$ == null || action == null; else changeView">
-	<app-loading></app-loading>
-</div>
-<ng-template #changeView>
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
-	*ngIf="connection$ |async as connection">
-	<div class="text-xl font-bold">
-		<div [ngSwitch]="action">
-			<div *ngSwitchCase="'ENABLE'"
-				i18n="The label of the question button to enable a connection@@main_topology_connections_change_question-enable-label">
+@if (changing || connection$ == null || action == null) {
+  <div
+    class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+    >
+    <app-loading></app-loading>
+  </div>
+} @else {
+  @if (connection$ |async; as connection) {
+    <div
+      class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+      >
+      <div class="text-xl font-bold">
+        <div>
+          @switch (action) {
+            @case ('ENABLE') {
+              <div
+                i18n="The label of the question button to enable a connection@@main_topology_connections_change_question-enable-label">
 				Are you sure the enable the connection between <b>{{connection.source?.channel?.name}}</b>
 				and <b>{{connection.target?.channel?.name}}</b>?
 			</div>
-			<div *ngSwitchCase="'DISABLE'"
-				i18n="The label of the question button to disable a connection@@main_topology_connections_change_question-disable-label">
+            }
+            @case ('DISABLE') {
+              <div
+                i18n="The label of the question button to disable a connection@@main_topology_connections_change_question-disable-label">
 				Are you sure the disable the connection between <b>{{connection.source?.channel?.name}}</b>
 				and <b>{{connection.target?.channel?.name}}</b>?
 			</div>
-			<div *ngSwitchDefault
-				i18n="The label of the question button to remove a connection@@main_topology_connections_change_question-remove-label">
+            }
+            @default {
+              <div
+                i18n="The label of the question button to remove a connection@@main_topology_connections_change_question-remove-label">
 				Are you sure the remove the connection between <b>{{connection.source?.channel?.name}}</b>
 				and <b>{{connection.target?.channel?.name}}</b>?
 			</div>
-		</div>
-	</div>
-	<div class="gap-3 flex flex-row">
-		<button mat-raised-button color="warn" (click)="doAction()">
-			<div [ngSwitch]="action">
-				<div *ngSwitchCase="'ENABLE'"
-					i18n="The label of the ok button to enable a connection@@main_topology_connections_change_ok-enable-label">
+            }
+          }
+        </div>
+      </div>
+      <div class="gap-3 flex flex-row">
+        <button mat-raised-button color="warn" (click)="doAction()">
+          <div>
+            @switch (action) {
+              @case ('ENABLE') {
+                <div
+                  i18n="The label of the ok button to enable a connection@@main_topology_connections_change_ok-enable-label">
 					Yes, enable the connection</div>
-				<div *ngSwitchCase="'DISABLE'"
-					i18n="The label of the ok button to disable a connection@@main_topology_connections_change_ok-disable-label">
+              }
+              @case ('DISABLE') {
+                <div
+                  i18n="The label of the ok button to disable a connection@@main_topology_connections_change_ok-disable-label">
 					Yes, disable the connection</div>
-				<div *ngSwitchDefault
-					i18n="The label of the ok button to remove a connection@@main_topology_connections_change_ok-remove-label">
+              }
+              @default {
+                <div
+                  i18n="The label of the ok button to remove a connection@@main_topology_connections_change_ok-remove-label">
 					Yes, remove the connection</div>
-			</div>
-		</button>
-		<button mat-raised-button color="primary"
-			routerLink="/main/topology/live/connections">
-			<div [ngSwitch]="action">
-				<div *ngSwitchCase="'ENABLE'"
-					i18n="The label of the cancel button to enable a connection@@main_topology_connections_change_cancel-enable-label">
+              }
+            }
+          </div>
+        </button>
+        <button mat-raised-button color="primary"
+          routerLink="/main/topology/live/connections">
+          <div>
+            @switch (action) {
+              @case ('ENABLE') {
+                <div
+                  i18n="The label of the cancel button to enable a connection@@main_topology_connections_change_cancel-enable-label">
 					No, do not enable the connection</div>
-				<div *ngSwitchCase="'DISABLE'"
-					i18n="The label of the cancel button to disable a connection@@main_topology_connections_change_cancel-disable-label">
+              }
+              @case ('DISABLE') {
+                <div
+                  i18n="The label of the cancel button to disable a connection@@main_topology_connections_change_cancel-disable-label">
 					No, do not disable the connection</div>
-				<div *ngSwitchDefault
-					i18n="The label of the cancel button to remove a connection@@main_topology_connections_change_cancel-remove-label">
+              }
+              @default {
+                <div
+                  i18n="The label of the cancel button to remove a connection@@main_topology_connections_change_cancel-remove-label">
 					No, do not remove the connection</div>
-			</div>
-		</button>
-	</div>
-</div>
-</ng-template>
+              }
+            }
+          </div>
+        </button>
+      </div>
+    </div>
+  }
+}

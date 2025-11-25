@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,11 +17,10 @@ import { GraphModule } from '@app/shared/graph';
 	standalone: true,
 	selector: 'app-connection-detail',
 	imports: [
-		CommonModule,
-		RouterModule,
-		MatIconModule,
-		GraphModule
-	],
+    RouterModule,
+    MatIconModule,
+    GraphModule
+],
 	templateUrl: './connection-detail.component.html'
 })
 export class ConnectionDetailComponent extends AbstractConnectionDetailComponent {

@@ -1,31 +1,33 @@
 <div
-	class="p-3 gap-7 flex flex-col items-center justify-center content-center">
-	<div class="max-w-sm">
-		<div class="flex flex-row gap-1">
-			<div class="font-bold"
-				i18n="The label of the status with the MOV version@@main_status_version-label">
+  class="p-3 gap-7 flex flex-col items-center justify-center content-center">
+  <div class="max-w-sm">
+    <div class="flex flex-row gap-1">
+      <div class="font-bold"
+        i18n="The label of the status with the MOV version@@main_status_version-label">
 				Version:</div>
-			<div>{{info?.version}}</div>
-		</div>
-		<div class="flex flex-row gap-1">
-			<div class="font-bold"
-				i18n="The label of the status with the MOV profile@@main_status_profile-label">
+      <div>{{info?.version}}</div>
+    </div>
+    <div class="flex flex-row gap-1">
+      <div class="font-bold"
+        i18n="The label of the status with the MOV profile@@main_status_profile-label">
 				Profile:</div>
-			<div>{{info?.profile}}</div>
-		</div>
-		<div class="flex flex-row gap-1">
-			<div class="font-bold"
-				i18n="The label of the status with the MOV health@@main_status_health-label">
+      <div>{{info?.profile}}</div>
+    </div>
+    <div class="flex flex-row gap-1">
+      <div class="font-bold"
+        i18n="The label of the status with the MOV health@@main_status_health-label">
 				Health:</div>
-			<app-health-status [status]="health?.status"></app-health-status>
-		</div>
-		<div class="col-start-2 col-span-2"
-			*ngFor="let check of health?.checks||[]">
-			<div class="flex flex-row gap-1">
-				<div class="w-7"></div>
-				<div class="italic font-bold">{{check.name}}:</div>
-				<app-health-status [status]="check.status"></app-health-status>
-			</div>
-		</div>
-	</div>
+      <app-health-status [status]="health?.status"></app-health-status>
+    </div>
+    @for (check of health?.checks||[]; track check) {
+      <div class="col-start-2 col-span-2"
+        >
+        <div class="flex flex-row gap-1">
+          <div class="w-7"></div>
+          <div class="italic font-bold">{{check.name}}:</div>
+          <app-health-status [status]="check.status"></app-health-status>
+        </div>
+      </div>
+    }
+  </div>
 </div>

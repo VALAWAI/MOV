@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { NgIf } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
@@ -18,14 +18,13 @@ import { LogRecord } from 'src/app/shared/mov-api';
 	standalone: true,
 	selector: 'app-show-log-dialog',
 	imports: [
-		NgIf,
-		MatDialogContent,
-		MatDialogActions,
-		MatButton,
-		NgxJsonViewerModule,
-		MatDialogClose,
-		TimestampPipe
-	],
+    MatDialogContent,
+    MatDialogActions,
+    MatButton,
+    NgxJsonViewerModule,
+    MatDialogClose,
+    TimestampPipe
+],
 	templateUrl: './show-log.dialog.html',
 	styleUrl: './show-log.dialog.css'
 })

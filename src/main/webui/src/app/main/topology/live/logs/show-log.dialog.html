@@ -1,36 +1,54 @@
 <mat-dialog-content>
-<div class="grid grid-cols-3 gap-3">
-	<div class="font-bold"
-		i18n="The label of the log level attribute@@main_logs_dialog-level-label">Level</div>
-	<div class="col-span-2">{{data.level}}</div>
-	<div class="font-bold"
-		i18n="The label of the log message attribute@@main_logs_dialog-message-label">Message</div>
-	<div class="col-span-2">{{data.message}}</div>
-	<div class="font-bold"
-		i18n="The label of the log timestamp attribute@@main_logs_dialog-timestamp-label">Timestamp</div>
-	<div class="col-span-2">{{data.timestamp|timestamp:'short'}}</div>
-	<div *ngIf="data.payload" class="font-bold"
-		i18n="The label of the payload of the log@@main_logs_dialog-payload-label">Payload</div>
-	<ngx-json-viewer class="col-span-2" *ngIf="payload" [json]="payload"
-		[depth]="1"></ngx-json-viewer>
-	<div *ngIf="data.component" class="font-bold col-span-3"
-		i18n="The label of the payload of the compoennt@@main_logs_dialog-component-label">Component</div>
-	<div *ngIf="data.component && data.component.type"
-		class="font-bold col-start-2"
-		i18n="The label of the payload of the compoennt type@@main_logs_dialog-component-type-label">Type</div>
-	<div *ngIf="data.component && data.component.type">{{data.component.type}}</div>
-	<div *ngIf="data.component && data.component.name"
-		class="font-bold col-start-2"
-		i18n="The label of the payload of the compoennt name@@main_logs_dialog-component-name-label">Name</div>
-	<div *ngIf="data.component &&data.component.name">{{data.component.name}}</div>
-	<div *ngIf="data.component && data.component.description"
-		class="font-bold col-start-2"
-		i18n="The label of the payload of the compoennt description@@main_logs_dialog-component-description-label">Description</div>
-	<div *ngIf="data.component &&data.component.description">{{data.component.description}}</div>
-</div>
+  <div class="grid grid-cols-3 gap-3">
+    <div class="font-bold"
+    i18n="The label of the log level attribute@@main_logs_dialog-level-label">Level</div>
+    <div class="col-span-2">{{data.level}}</div>
+    <div class="font-bold"
+    i18n="The label of the log message attribute@@main_logs_dialog-message-label">Message</div>
+    <div class="col-span-2">{{data.message}}</div>
+    <div class="font-bold"
+    i18n="The label of the log timestamp attribute@@main_logs_dialog-timestamp-label">Timestamp</div>
+    <div class="col-span-2">{{data.timestamp|timestamp:'short'}}</div>
+    @if (data.payload) {
+      <div class="font-bold"
+      i18n="The label of the payload of the log@@main_logs_dialog-payload-label">Payload</div>
+    }
+    @if (payload) {
+      <ngx-json-viewer class="col-span-2" [json]="payload"
+      [depth]="1"></ngx-json-viewer>
+    }
+    @if (data.component) {
+      <div class="font-bold col-span-3"
+      i18n="The label of the payload of the compoennt@@main_logs_dialog-component-label">Component</div>
+    }
+    @if (data.component && data.component.type) {
+      <div
+        class="font-bold col-start-2"
+      i18n="The label of the payload of the compoennt type@@main_logs_dialog-component-type-label">Type</div>
+    }
+    @if (data.component && data.component.type) {
+      <div>{{data.component.type}}</div>
+    }
+    @if (data.component && data.component.name) {
+      <div
+        class="font-bold col-start-2"
+      i18n="The label of the payload of the compoennt name@@main_logs_dialog-component-name-label">Name</div>
+    }
+    @if (data.component &&data.component.name) {
+      <div>{{data.component.name}}</div>
+    }
+    @if (data.component && data.component.description) {
+      <div
+        class="font-bold col-start-2"
+      i18n="The label of the payload of the compoennt description@@main_logs_dialog-component-description-label">Description</div>
+    }
+    @if (data.component &&data.component.description) {
+      <div>{{data.component.description}}</div>
+    }
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-<button mat-raised-button color="primary" [mat-dialog-close]="true"
-	i18n="Label of the button to close the log dialog@@main_logs_dialog-close">Close</button>
-<div></div>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true"
+  i18n="Label of the button to close the log dialog@@main_logs_dialog-close">Close</button>
+  <div></div>
 </mat-dialog-actions>

@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,15 +35,14 @@ import { ApplyTopologyService } from '@app/shared/apply-topology';
 	standalone: true,
 	selector: 'app-config',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatSlideToggleModule,
-		RouterModule,
-		MatSelectModule,
-		TopologyBehaviourToNamePipe
-	],
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    RouterModule,
+    MatSelectModule,
+    TopologyBehaviourToNamePipe
+],
 	templateUrl: './config.component.html'
 })
 export class ConfigComponent implements OnInit, OnDestroy {

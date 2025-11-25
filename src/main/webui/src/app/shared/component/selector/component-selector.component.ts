@@ -12,7 +12,7 @@ import { MatError, MatFormField, MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MinComponent, MinComponentPage, MovApiService, Component as MOVComponent } from 'src/app/shared/mov-api';
-import { NgIf } from '@angular/common';
+
 import { MatLabel, MatOption } from '@angular/material/select';
 import { toPattern } from '@app/shared';
 
@@ -36,16 +36,15 @@ export function requiredMinComponent(): ValidatorFn {
 	standalone: true,
 	selector: 'app-component-selector',
 	imports: [
-		ReactiveFormsModule,
-		MatInput,
-		MatLabel,
-		MatAutocomplete,
-		MatFormField,
-		MatError,
-		NgIf,
-		MatOption,
-		MatAutocompleteTrigger
-	],
+    ReactiveFormsModule,
+    MatInput,
+    MatLabel,
+    MatAutocomplete,
+    MatFormField,
+    MatError,
+    MatOption,
+    MatAutocompleteTrigger
+],
 	templateUrl: './component-selector.component.html',
 	styleUrls: ['./component-selector.component.css'],
 })

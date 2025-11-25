@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from '@app/shared';
@@ -22,9 +22,8 @@ import { MainService } from 'src/app/main';
 	standalone: true,
 	selector: 'app-topology-design-components-update-library',
 	imports: [
-		CommonModule,
-		LoadingComponent
-	],
+    LoadingComponent
+],
 	templateUrl: './update.component.html'
 })
 export class UpdateLibraryComponent implements OnInit {

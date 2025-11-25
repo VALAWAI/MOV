@@ -7,7 +7,7 @@
 */
 
 
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,19 +31,18 @@ import { MainService } from 'src/app/main';
 	standalone: true,
 	selector: 'app-topology-design-components-search-library',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatIconModule,
-		MatTableModule,
-		MatPaginatorModule,
-		MatMenuModule,
-		MessageComponent,
-		RouterModule,
-		MatButtonModule,
-		MatSelectModule
-	],
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatMenuModule,
+    MessageComponent,
+    RouterModule,
+    MatButtonModule,
+    MatSelectModule
+],
 	templateUrl: './search.component.html'
 })
 export class SearchLibraryComponent implements OnInit {

@@ -10,7 +10,7 @@ import { Component, inject } from '@angular/core';
 import { ComponentDefinition } from '@app/shared/mov-api';
 import { MainService } from 'src/app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LoadingComponent } from '@app/shared/loading';
@@ -23,12 +23,11 @@ import { RouterModule } from '@angular/router';
 	standalone: true,
 	selector: 'app-topology-design-component-view',
 	imports: [
-		CommonModule,
-		MatButtonModule,
-		MatIconModule,
-		LoadingComponent,
-		RouterModule
-	],
+    MatButtonModule,
+    MatIconModule,
+    LoadingComponent,
+    RouterModule
+],
 	templateUrl: './remove.component.html'
 })
 export class RemoveComponent extends AbstractComponentDefinitionComponent {

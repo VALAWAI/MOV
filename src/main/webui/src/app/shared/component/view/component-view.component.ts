@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { ChannelsViewComponent } from '@app/shared/channels-view';
 import { LoadingComponent } from '@app/shared/loading';
@@ -17,11 +17,10 @@ import { Component as MOVComponent } from 'src/app/shared/mov-api';
 	standalone: true,
 	selector: 'app-component-view',
 	imports: [
-		CommonModule,
-		LoadingComponent,
-		TimestampPipe,
-		ChannelsViewComponent
-	],
+    LoadingComponent,
+    TimestampPipe,
+    ChannelsViewComponent
+],
 	templateUrl: './component-view.component.html'
 })
 export class ComponentViewComponent {

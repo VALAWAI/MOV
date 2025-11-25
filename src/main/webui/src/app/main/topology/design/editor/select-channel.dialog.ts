@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from "@angular/common";
+
 import { Component, inject } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -23,15 +23,14 @@ import { ChannelSchemaViewComponent } from "./channel-view.component";
 	selector: 'dialog-select-channel',
 	templateUrl: './select-channel.dialog.html',
 	imports: [
-		CommonModule,
-		MatButtonModule,
-		MatIconModule,
-		MatDialogModule,
-		GraphModule,
-		MatListModule,
-		ReactiveFormsModule,
-		ChannelSchemaViewComponent
-	],
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    GraphModule,
+    MatListModule,
+    ReactiveFormsModule,
+    ChannelSchemaViewComponent
+],
 })
 export class SelectChannelDialog {
 

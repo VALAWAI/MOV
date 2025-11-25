@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { LoadingComponent } from '@app/shared/loading';
 import { MatOptionModule } from '@angular/material/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -25,16 +25,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 	standalone: true,
 	selector: 'app-topology-connections-create',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		ComponentSelectorComponent,
-		MatFormFieldModule,
-		MatSelectModule,
-		MatOptionModule,
-		LoadingComponent,
-		MatButtonModule,
-		MatCheckboxModule
-	],
+    ReactiveFormsModule,
+    ComponentSelectorComponent,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    LoadingComponent,
+    MatButtonModule,
+    MatCheckboxModule
+],
 	templateUrl: './create-topology-connection.component.html',
 	styleUrls: ['./create-topology-connection.component.css']
 })

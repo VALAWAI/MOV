@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EndpointEditorComponent } from './endpoint-editor.component';
@@ -31,17 +31,16 @@ import { GraphModule } from '@app/shared/graph';
 	standalone: true,
 	selector: 'app-topology-connection-form',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		EndpointEditorComponent,
-		MatFormFieldModule,
-		MatInputModule,
-		MatSelectModule,
-		MatSlideToggleModule,
-		MatButtonModule,
-		MatIconModule,
-		GraphModule
-	],
+    ReactiveFormsModule,
+    EndpointEditorComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatIconModule,
+    GraphModule
+],
 	templateUrl: './connection-form.component.html'
 })
 export class TopologyConnectionFormComponent implements OnInit, OnDestroy {

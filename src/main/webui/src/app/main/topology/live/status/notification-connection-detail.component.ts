@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
@@ -18,11 +18,10 @@ import { GraphModule } from '@app/shared/graph';
 	standalone: true,
 	selector: 'app-notification-connection-detail',
 	imports: [
-		CommonModule,
-		RouterModule,
-		MatIconModule,
-		GraphModule
-	],
+    RouterModule,
+    MatIconModule,
+    GraphModule
+],
 	templateUrl: './notification-connection-detail.component.html'
 })
 export class NotificationConnectionDetailComponent extends AbstractConnectionDetailComponent {

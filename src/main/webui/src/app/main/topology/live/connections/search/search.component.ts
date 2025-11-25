@@ -23,28 +23,27 @@ import { MinConnectionPage, MovApiService } from '@app/shared/mov-api';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService, toPattern } from '@app/shared';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
 	standalone: true,
 	selector: 'app-topology-connections-search',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormField,
-		MatLabel,
-		MatSelect,
-		MatOption,
-		MatInput,
-		MatCheckbox,
-		MatButton,
-		RouterLink,
-		MatMenuModule,
-		MatIcon,
-		MatPaginator,
-		MatTableModule,
-		MessageComponent
-	],
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    MatCheckbox,
+    MatButton,
+    RouterLink,
+    MatMenuModule,
+    MatIcon,
+    MatPaginator,
+    MatTableModule,
+    MessageComponent
+],
 	templateUrl: './search.component.html'
 })
 export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {

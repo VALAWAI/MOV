@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -19,10 +19,9 @@ import { ChannelSchema } from '@app/shared/mov-api';
 	standalone: true,
 	selector: 'app-channel-schema-view',
 	imports: [
-		CommonModule,
-		GraphModule,
-		MatIconModule
-	],
+    GraphModule,
+    MatIconModule
+],
 	templateUrl: './channel-view.component.html'
 })
 export class ChannelSchemaViewComponent {

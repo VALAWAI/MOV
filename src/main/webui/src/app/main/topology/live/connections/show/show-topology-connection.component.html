@@ -1,91 +1,114 @@
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
-	*ngIf="connection$ |async as connection; else loading">
-	<div class="max-w-3xl grid grid-cols-2 gap-3">
-		<div class="text-left font-bold"
-			i18n="The label of the connection enabled attribute@@main_topology_connections_show_enabled-label">Enabled</div>
-		<div class="text-left">
-			<mat-icon *ngIf="connection.enabled" color="primary">wifi_on</mat-icon>
-			<mat-icon *ngIf="!connection.enabled" color="warn">wifi_off</mat-icon>
-		</div>
-		<div class="text-left font-bold"
-			i18n="The label of the connection created attribute@@main_topology_connections_show_create-timestamp-label">Created
+@if (connection$ |async; as connection) {
+  <div
+    class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+    >
+    <div class="max-w-3xl grid grid-cols-2 gap-3">
+      <div class="text-left font-bold"
+      i18n="The label of the connection enabled attribute@@main_topology_connections_show_enabled-label">Enabled</div>
+      <div class="text-left">
+        @if (connection.enabled) {
+          <mat-icon color="primary">wifi_on</mat-icon>
+        }
+        @if (!connection.enabled) {
+          <mat-icon color="warn">wifi_off</mat-icon>
+        }
+      </div>
+      <div class="text-left font-bold"
+        i18n="The label of the connection created attribute@@main_topology_connections_show_create-timestamp-label">Created
 			at</div>
-		<div class="text-left">{{connection.createTimestamp|timestamp:'short'}}</div>
-		<div class="text-left font-bold"
-			i18n="The label of the connection updated attribute@@main_topology_connections_show_update-timestamp-label">Updated
+      <div class="text-left">{{connection.createTimestamp|timestamp:'short'}}</div>
+      <div class="text-left font-bold"
+        i18n="The label of the connection updated attribute@@main_topology_connections_show_update-timestamp-label">Updated
 			at</div>
-		<div class="text-left">{{connection.updateTimestamp|timestamp:'short'}}</div>
-		<div class="text-left font-bold col-span-2"
-			i18n="The label of the connection source attribute@@main_topology_connections_show_source-label">Source</div>
-		<div class="text-left pl-7 font-bold"
-			i18n="The label of the connection source attribute@@main_topology_connections_show_node-component-label">Component</div>
-		<div class="text-left">
-			{{connection.source?.component?.name}}
-			<button mat-icon-button color="primary"
-				[routerLink]="['/main/topology/live/components',connection.source?.component?.id,'show']"
-				[queryParams]="{'connectionId':connection.id}">
-				<mat-icon>link</mat-icon>
-			</button>
-		</div>
-		<div class="text-left pl-7 col-span-2"
-			*ngIf="connection.source?.component?.description">{{connection.source?.component?.description}}</div>
-		<div class="text-left pl-7 font-bold"
-			i18n="The label of the connection source node channel@@main_topology_connections_show_node-channel-label">Channel</div>
-		<div class="text-left">{{connection.source?.channel?.name}}</div>
-		<div class="text-left pl-7 col-span-2"
-			*ngIf="connection.source?.channel?.description">{{connection.source?.channel?.description}}</div>
-		<app-channels-view class="text-left pl-7 col-span-2"
-			[channels]="connection.source?.channel"></app-channels-view>
-		<div class="text-left font-bold col-span-2"
-			i18n="The label of the connection target attribute@@main_topology_connections_show_target-label">Target</div>
-		<div class="text-left pl-7 font-bold"
-			i18n="The label of the connection target attribute@@main_topology_connections_show_node-component-label">Component</div>
-		<div class="text-left">
-			{{connection.target?.component?.name}}
-			<button mat-icon-button color="primary"
-				[routerLink]="['/main/topology/live/components',connection.target?.component?.id,'show']"
-				[queryParams]="{'connectionId':connection.id}">
-				<mat-icon>link</mat-icon>
-			</button>
-		</div>
-		<div class="text-left pl-7 col-span-2"
-			*ngIf="connection.target?.component?.description">{{connection.target?.component?.description}}</div>
-		<div class="text-left pl-7 font-bold"
-			i18n="The label of the connection target node channel@@main_topology_connections_show_node-channel-label">Channel</div>
-		<div class="text-left">{{connection.target?.channel?.name}}</div>
-		<div class="text-left pl-7 col-span-2"
-			*ngIf="connection.target?.channel?.description">{{connection.target?.channel?.description}}</div>
-		<div class="text-left pl-11 font-bold"
-			*ngIf="connection.target?.channel?.subscribe"
-			i18n="The label of the connection target node channel subscribe@@main_topology_connections_show_node-channel-subscribe-label">Subscribe</div>
-		<app-channels-view class="text-left pl-7 col-span-2"
-			[channels]="connection.target?.channel"></app-channels-view>
-		<div class="text-left font-bold col-span-2"
-			*ngIf="connection.subscriptions"
-			i18n="The label of the connection subscriptions attribute@@main_topology_connections_show_subscriptions-label">Subscriptions</div>
-		<div class="text-left pl-11 col-span-2"
-			*ngIf="connection.subscriptions">
-			<div *ngFor="let subscrition of connection.subscriptions">
-				{{subscrition.channel?.name}}
-				<button mat-icon-button color="primary"
-					[routerLink]="['/main/topology/live/components',subscrition.component?.id,'show']"
-					[queryParams]="{'connectionId':connection.id}">
-					<mat-icon>link</mat-icon>
-				</button>
-			</div>
-		</div>
-	</div>
-	<div class="gap-3 flex flex-row">
-		<button mat-raised-button color="primary"
-			routerLink="/main/topology/live/connections"
-			i18n="The label of the button to go back to the connections@@main_topology_connections_show_go-back-label">Go
+      <div class="text-left">{{connection.updateTimestamp|timestamp:'short'}}</div>
+      <div class="text-left font-bold col-span-2"
+      i18n="The label of the connection source attribute@@main_topology_connections_show_source-label">Source</div>
+      <div class="text-left pl-7 font-bold"
+      i18n="The label of the connection source attribute@@main_topology_connections_show_node-component-label">Component</div>
+      <div class="text-left">
+        {{connection.source?.component?.name}}
+        <button mat-icon-button color="primary"
+          [routerLink]="['/main/topology/live/components',connection.source?.component?.id,'show']"
+          [queryParams]="{'connectionId':connection.id}">
+          <mat-icon>link</mat-icon>
+        </button>
+      </div>
+      @if (connection.source?.component?.description) {
+        <div class="text-left pl-7 col-span-2"
+        >{{connection.source?.component?.description}}</div>
+      }
+      <div class="text-left pl-7 font-bold"
+      i18n="The label of the connection source node channel@@main_topology_connections_show_node-channel-label">Channel</div>
+      <div class="text-left">{{connection.source?.channel?.name}}</div>
+      @if (connection.source?.channel?.description) {
+        <div class="text-left pl-7 col-span-2"
+        >{{connection.source?.channel?.description}}</div>
+      }
+      <app-channels-view class="text-left pl-7 col-span-2"
+      [channels]="connection.source?.channel"></app-channels-view>
+      <div class="text-left font-bold col-span-2"
+      i18n="The label of the connection target attribute@@main_topology_connections_show_target-label">Target</div>
+      <div class="text-left pl-7 font-bold"
+      i18n="The label of the connection target attribute@@main_topology_connections_show_node-component-label">Component</div>
+      <div class="text-left">
+        {{connection.target?.component?.name}}
+        <button mat-icon-button color="primary"
+          [routerLink]="['/main/topology/live/components',connection.target?.component?.id,'show']"
+          [queryParams]="{'connectionId':connection.id}">
+          <mat-icon>link</mat-icon>
+        </button>
+      </div>
+      @if (connection.target?.component?.description) {
+        <div class="text-left pl-7 col-span-2"
+        >{{connection.target?.component?.description}}</div>
+      }
+      <div class="text-left pl-7 font-bold"
+      i18n="The label of the connection target node channel@@main_topology_connections_show_node-channel-label">Channel</div>
+      <div class="text-left">{{connection.target?.channel?.name}}</div>
+      @if (connection.target?.channel?.description) {
+        <div class="text-left pl-7 col-span-2"
+        >{{connection.target?.channel?.description}}</div>
+      }
+      @if (connection.target?.channel?.subscribe) {
+        <div class="text-left pl-11 font-bold"
+        i18n="The label of the connection target node channel subscribe@@main_topology_connections_show_node-channel-subscribe-label">Subscribe</div>
+      }
+      <app-channels-view class="text-left pl-7 col-span-2"
+      [channels]="connection.target?.channel"></app-channels-view>
+      @if (connection.subscriptions) {
+        <div class="text-left font-bold col-span-2"
+        i18n="The label of the connection subscriptions attribute@@main_topology_connections_show_subscriptions-label">Subscriptions</div>
+      }
+      @if (connection.subscriptions) {
+        <div class="text-left pl-11 col-span-2"
+          >
+          @for (subscrition of connection.subscriptions; track subscrition) {
+            <div>
+              {{subscrition.channel?.name}}
+              <button mat-icon-button color="primary"
+                [routerLink]="['/main/topology/live/components',subscrition.component?.id,'show']"
+                [queryParams]="{'connectionId':connection.id}">
+                <mat-icon>link</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+    <div class="gap-3 flex flex-row">
+      <button mat-raised-button color="primary"
+        routerLink="/main/topology/live/connections"
+        i18n="The label of the button to go back to the connections@@main_topology_connections_show_go-back-label">Go
 			to connections</button>
-		<button *ngIf="componentId!=null" mat-raised-button color="primary"
-			routerLink="/main/topology/live/connections"
-			[queryParams]="{'componentId':componentId}"
-			i18n="The label of the button to go back to the component connections@@main_topology_connections_show_go-back-to-component-connections-label">Go
+      @if (componentId!=null) {
+        <button mat-raised-button color="primary"
+          routerLink="/main/topology/live/connections"
+          [queryParams]="{'componentId':componentId}"
+          i18n="The label of the button to go back to the component connections@@main_topology_connections_show_go-back-to-component-connections-label">Go
 			to component connections</button>
-	</div>
-</div>
-<ng-template #loading> <app-loading></app-loading> </ng-template>
+      }
+    </div>
+  </div>
+} @else {
+  <app-loading></app-loading>
+}

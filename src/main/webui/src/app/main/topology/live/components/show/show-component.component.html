@@ -1,21 +1,26 @@
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
-	*ngIf="component$ |async as component; else loading">
-	<app-component-view [component]="component"></app-component-view>
-	<div class="gap-3 flex flex-row">
-		<button mat-raised-button color="primary"
-			routerLink="/main/topology/live/components"
-			i18n="The label of the button to go back to the components from the show component@@main_components_show_go-back-label">Go
+@if (component$ |async; as component) {
+  <div
+    class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+    >
+    <app-component-view [component]="component"></app-component-view>
+    <div class="gap-3 flex flex-row">
+      <button mat-raised-button color="primary"
+        routerLink="/main/topology/live/components"
+        i18n="The label of the button to go back to the components from the show component@@main_components_show_go-back-label">Go
 			to components</button>
-		<button mat-raised-button color="primary"
-			routerLink="/main/topology/live/connections"
-			[queryParams]="{'componentId':component.id}"
-			i18n="The label of the button to show the component connections@@main_components_show_connections-label">Show
+      <button mat-raised-button color="primary"
+        routerLink="/main/topology/live/connections"
+        [queryParams]="{'componentId':component.id}"
+        i18n="The label of the button to show the component connections@@main_components_show_connections-label">Show
 			connections</button>
-		<button *ngIf="connectionId!=null" mat-raised-button color="primary"
-			[routerLink]="['/main/topology/live/connections',connectionId,'show']"
-			i18n="The label of the button to go back to the connection that has this component@@main_components_show_go-back-to-connection-label">Go
+      @if (connectionId!=null) {
+        <button mat-raised-button color="primary"
+          [routerLink]="['/main/topology/live/connections',connectionId,'show']"
+          i18n="The label of the button to go back to the connection that has this component@@main_components_show_go-back-to-connection-label">Go
 			to the connection</button>
-	</div>
-</div>
-<ng-template #loading> <app-loading></app-loading> </ng-template>
+      }
+    </div>
+  </div>
+} @else {
+  <app-loading></app-loading>
+}

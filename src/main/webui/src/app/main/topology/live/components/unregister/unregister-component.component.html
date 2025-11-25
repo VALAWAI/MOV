@@ -1,23 +1,26 @@
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
-	*ngIf="unregistering || component$ == null; else unregisterView">
-	<app-loading></app-loading>
-</div>
-<ng-template #unregisterView>
-<div
-	class="p-7 gap-3 flex flex-col items-center justify-center content-center"
-	*ngIf="component$ |async as component">
-	<div class="text-xl font-bold"
-		i18n="The question to gurantee that the user is sure to unregister the component@@main_components_unregister_question">
+@if (unregistering || component$ == null) {
+  <div
+    class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+    >
+    <app-loading></app-loading>
+  </div>
+} @else {
+  @if (component$ |async; as component) {
+    <div
+      class="p-7 gap-3 flex flex-col items-center justify-center content-center"
+      >
+      <div class="text-xl font-bold"
+        i18n="The question to gurantee that the user is sure to unregister the component@@main_components_unregister_question">
 		Are you sure to unregister the component {{component.name}}?</div>
-	<div class="gap-3 flex flex-row">
-		<button mat-raised-button color="warn"
-			i18n="The label of the button to accept to unregister a component@@main_components_unregister_ok-label"
-			(click)="unregister()">Yes, unregister it!</button>
-		<button mat-raised-button color="primary"
-			routerLink="/main/topology/live/components"
-			i18n="The label of the button to no unregister the components@@main_components_unregister_cancel-label">
+      <div class="gap-3 flex flex-row">
+        <button mat-raised-button color="warn"
+          i18n="The label of the button to accept to unregister a component@@main_components_unregister_ok-label"
+        (click)="unregister()">Yes, unregister it!</button>
+        <button mat-raised-button color="primary"
+          routerLink="/main/topology/live/components"
+          i18n="The label of the button to no unregister the components@@main_components_unregister_cancel-label">
 			No, do not unregister and go to the components</button>
-	</div>
-</div>
-</ng-template>
+      </div>
+    </div>
+  }
+}

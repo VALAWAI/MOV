@@ -1,99 +1,101 @@
 <div
-	class="p-3 gap-7 flex flex-col items-center justify-center content-center"
-	[formGroup]="form">
-	<div class="max-w-3xl grid grid-cols-2 gap-3">
-		<mat-form-field class="text-left col-span-2"> <mat-label
-			i18n="The label of the field to match the name or desciption of the compponent@@main_components_search-label">Name
+  class="p-3 gap-7 flex flex-col items-center justify-center content-center"
+  [formGroup]="form">
+  <div class="max-w-3xl grid grid-cols-2 gap-3">
+    <mat-form-field class="text-left col-span-2"> <mat-label
+      i18n="The label of the field to match the name or desciption of the compponent@@main_components_search-label">Name
 		or description</mat-label> <input matInput type="text" formControlName="pattern">
-		</mat-form-field>
+  </mat-form-field>
 
-		<mat-form-field class="text-left"> <mat-label
-			i18n="The label to select the order of the components@@main_components_order-by-label">Order
+  <mat-form-field class="text-left"> <mat-label
+    i18n="The label to select the order of the components@@main_components_order-by-label">Order
 		by</mat-label> <mat-select formControlName="orderBy"> <mat-option
-			value="type"
-			i18n="The option to order by type@@main_components_order-by-type">Type</mat-option>
-		<mat-option value="name"
-			i18n="The option to order by name@@main_components_order-by-name">Name</mat-option>
-		<mat-option value="description"
-			i18n="The option to order by description@@main_components_order-by-description">Description</mat-option>
-		</mat-select> </mat-form-field>
-		<mat-checkbox class="text-left" formControlName="reverse"
-			i18n="The label of the checkbox to order in reverse order@@main_components_order-by-reverse-label">In
+  value="type"
+i18n="The option to order by type@@main_components_order-by-type">Type</mat-option>
+<mat-option value="name"
+i18n="The option to order by name@@main_components_order-by-name">Name</mat-option>
+<mat-option value="description"
+i18n="The option to order by description@@main_components_order-by-description">Description</mat-option>
+</mat-select> </mat-form-field>
+<mat-checkbox class="text-left" formControlName="reverse"
+  i18n="The label of the checkbox to order in reverse order@@main_components_order-by-reverse-label">In
 		reverse order</mat-checkbox>
-		<mat-form-field class="text-left col-span-2"> <mat-label
-			i18n="The label to select the type of the component messages@@main_components_types-label">
+<mat-form-field class="text-left col-span-2"> <mat-label
+  i18n="The label to select the type of the component messages@@main_components_types-label">
 		Filter components by type: </mat-label> <mat-select formControlName="types"
-			multiple> <mat-option
-			*ngFor="let type of componentTypeNames" [value]="type">{{type}}</mat-option>
-		</mat-select> </mat-form-field>
-	</div>
-	<button
-		i18n="Label of the button to register a components@@main_components_register-label"
-		routerLink="/main/topology/live/components/register" mat-raised-button
-		color="primary" class="max-w-72">
+multiple> @for (type of componentTypeNames; track type) {
+<mat-option
+[value]="type">{{type}}</mat-option>
+}
+</mat-select> </mat-form-field>
+</div>
+<button
+  i18n="Label of the button to register a components@@main_components_register-label"
+  routerLink="/main/topology/live/components/register" mat-raised-button
+  color="primary" class="max-w-72">
 		<mat-icon>add</mat-icon>
 		Register a new component
 	</button>
-	<div
-		*ngIf="page && page.components && page.components.length > 0;else noComponents">
-		<table mat-table [dataSource]="page.components"
-			class="mat-elevation-z8 w-full max-w-3xl">
-
-			<ng-container matColumnDef="type">
-			<th mat-header-cell *matHeaderCellDef
-				i18n="The label of the component type column header@@main_components_type-header-label">Type</th>
-			<td mat-cell *matCellDef="let element">{{element.type}}</td>
-			</ng-container>
-
-			<ng-container matColumnDef="name">
-			<th mat-header-cell *matHeaderCellDef
-				i18n="The label of the component name column header@@main_components_name-header-label">Name</th>
-			<td mat-cell *matCellDef="let element"
-				class="wrap-break-word max-w-32 sm:max-w-40 md:max-w-96">{{element.name}}</td>
-			</ng-container>
-
-			<ng-container matColumnDef="description">
-			<th mat-header-cell *matHeaderCellDef
-				i18n="The label of the component description column header@@main_components_description-header-label">Description</th>
-			<td mat-cell *matCellDef="let element">{{element.description}}</td>
-			</ng-container>
-
-			<ng-container matColumnDef="actions">
-			<th mat-header-cell *matHeaderCellDef
-				i18n="The label of the component actions column header@@main_components_actions-header-label">Actions</th>
-			<td mat-cell *matCellDef="let element">
-				<button mat-icon-button aria-label="Component menu"
-					[matMenuTriggerFor]="componentMenu">
-					<mat-icon>more_vert</mat-icon>
-				</button> <mat-menu #componentMenu="matMenu">
-				<button mat-menu-item
-					i18n="The label of the menu to show a component@@main_components_show-menu-label"
-					[routerLink]="['/main/topology/live/components',element.id,'show']">Show</button>
-				<button mat-menu-item
-					i18n="The label of the menu to unregister a component@@main_components_unregister-menu-label"
-					[routerLink]="['/main/topology/live/components',element.id,'unregister']">Unregister</button>
-				<button mat-menu-item
-					i18n="The label of the menu to show the connection to a component@@main_components_show-connections-label"
-					routerLink="/main/topology/live/connections"
-					[queryParams]="{'componentId':element.id}">Show
+@if (page && page.components && page.components.length > 0) {
+  <div
+    >
+    <table mat-table [dataSource]="page.components"
+      class="mat-elevation-z8 w-full max-w-3xl">
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef
+        i18n="The label of the component type column header@@main_components_type-header-label">Type</th>
+        <td mat-cell *matCellDef="let element">{{element.type}}</td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef
+        i18n="The label of the component name column header@@main_components_name-header-label">Name</th>
+        <td mat-cell *matCellDef="let element"
+        class="wrap-break-word max-w-32 sm:max-w-40 md:max-w-96">{{element.name}}</td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef
+        i18n="The label of the component description column header@@main_components_description-header-label">Description</th>
+        <td mat-cell *matCellDef="let element">{{element.description}}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef
+        i18n="The label of the component actions column header@@main_components_actions-header-label">Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button aria-label="Component menu"
+            [matMenuTriggerFor]="componentMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button> <mat-menu #componentMenu="matMenu">
+          <button mat-menu-item
+            i18n="The label of the menu to show a component@@main_components_show-menu-label"
+          [routerLink]="['/main/topology/live/components',element.id,'show']">Show</button>
+          <button mat-menu-item
+            i18n="The label of the menu to unregister a component@@main_components_unregister-menu-label"
+          [routerLink]="['/main/topology/live/components',element.id,'unregister']">Unregister</button>
+          <button mat-menu-item
+            i18n="The label of the menu to show the connection to a component@@main_components_show-connections-label"
+            routerLink="/main/topology/live/connections"
+            [queryParams]="{'componentId':element.id}">Show
 					connections</button>
-				</mat-menu>
-			</td>
-			</ng-container>
-
-			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-		</table>
-	</div>
-	<ng-template #noComponents> <app-message type="WARN"
-		i18n="The warning message when no components found@@main_components_no-components-found-warning-msg"
-		class="max-w-md"> No components found that meet the
+        </mat-menu>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+} @else {
+  <app-message type="WARN"
+    i18n="The warning message when no components found@@main_components_no-components-found-warning-msg"
+    class="max-w-md"> No components found that meet the
 	specified requirements. Consider reviewing your filtering conditions or
-	expanding your search parameters.</app-message> </ng-template>
-	<div *ngIf="page && page.total > 5">
-		<mat-paginator [length]="page.total"
-			[pageSizeOptions]="[5,10, 50, 100]" [pageSize]="pageSize"
-			[pageIndex]="pageIndex" (page)="pageChanged($event)"
-			aria-label="Select page"> </mat-paginator>
-	</div>
+	expanding your search parameters.</app-message> 
+}
+@if (page && page.total > 5) {
+  <div>
+    <mat-paginator [length]="page.total"
+      [pageSizeOptions]="[5,10, 50, 100]" [pageSize]="pageSize"
+      [pageIndex]="pageIndex" (page)="pageChanged($event)"
+    aria-label="Select page"> </mat-paginator>
+  </div>
+}
 </div>

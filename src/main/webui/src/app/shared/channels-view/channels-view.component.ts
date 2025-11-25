@@ -8,16 +8,15 @@
 
 import { Component, Input } from '@angular/core';
 import { ChannelSchema } from '../mov-api';
-import { CommonModule } from '@angular/common';
+
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
 	standalone: true,
 	selector: 'app-channels-view',
 	imports: [
-		CommonModule,
-		NgxJsonViewerModule
-	],
+    NgxJsonViewerModule
+],
 	templateUrl: './channels-view.component.html'
 })
 export class ChannelsViewComponent {

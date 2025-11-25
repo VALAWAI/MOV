@@ -7,7 +7,7 @@
 */
 
 
-import { NgIf } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -27,18 +27,17 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 	standalone: true,
     selector: 'app-components-register',
     imports: [
-        NgIf,
-        ReactiveFormsModule,
-        MatFormField,
-		MatLabel,
-        MatSelect,
-        MatOption,
-        MatInput,
-        MatError,
-		MatButton,
-		LoadingComponent,
-		CdkTextareaAutosize
-    ],
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    MatError,
+    MatButton,
+    LoadingComponent,
+    CdkTextareaAutosize
+],
     templateUrl: './register-component.component.html',
     styleUrl: './register-component.component.css'
 })

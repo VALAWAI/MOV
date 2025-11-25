@@ -1,8 +1,10 @@
 <mat-form-field class="w-full"> <mat-label>{{label}}</mat-label>
 <input type="text" matInput [formControl]="name"
-	[matAutocomplete]="matchingComponents"> <mat-autocomplete
-	#matchingComponents="matAutocomplete"
-	[displayWith]="displayComponentName"> @for (option
-of page?.components; track option) { <mat-option [value]="option">{{option.name}}</mat-option>
-} </mat-autocomplete> <mat-error *ngIf="name.touched && name.hasError('required')">{{requiredError}}</mat-error>
+  [matAutocomplete]="matchingComponents"> <mat-autocomplete
+  #matchingComponents="matAutocomplete"
+  [displayWith]="displayComponentName"> @for (option
+  of page?.components; track option) { <mat-option [value]="option">{{option.name}}</mat-option>
+} </mat-autocomplete> @if (name.touched && name.hasError('required')) {
+<mat-error>{{requiredError}}</mat-error>
+}
 </mat-form-field>

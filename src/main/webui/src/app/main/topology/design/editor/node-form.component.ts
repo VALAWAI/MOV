@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MessagesService } from '@app/shared/messages';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -43,19 +43,18 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
 	standalone: true,
 	selector: 'app-topology-node-form',
 	imports: [
-		CommonModule,
-		MatAutocompleteModule,
-		MatInputModule,
-		MatFormFieldModule,
-		ReactiveFormsModule,
-		MatSelectModule,
-		MatIconModule,
-		EditorModule,
-		MatButtonModule,
-		GraphModule,
-		MatDialogModule,
-		ChannelSchemaViewComponent
-	],
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatIconModule,
+    EditorModule,
+    MatButtonModule,
+    GraphModule,
+    MatDialogModule,
+    ChannelSchemaViewComponent
+],
 	templateUrl: './node-form.component.html'
 })
 export class TopologyNodeFormComponent implements OnInit, OnDestroy {

@@ -13,7 +13,7 @@ import { ChangeConnection, MovApiService, TOPOLOGY_ACTION_NAMES, TopologyAction 
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractTopologyConnectionComponent } from '../abstract-topology-connection.component';
 import { Subscription } from 'rxjs';
-import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { LoadingComponent } from '@app/shared/loading';
 import { MatButton } from '@angular/material/button';
 
@@ -21,15 +21,11 @@ import { MatButton } from '@angular/material/button';
 	standalone: true,
 	selector: 'app-topology-connections-change',
 	imports: [
-		NgIf,
-		LoadingComponent,
-		NgSwitch,
-		NgSwitchCase,
-		NgSwitchDefault,
-		MatButton,
-		RouterLink,
-		AsyncPipe
-	],
+    LoadingComponent,
+    MatButton,
+    RouterLink,
+    AsyncPipe
+],
 	templateUrl: './change-topology-connection.component.html',
 	styleUrls: ['./change-topology-connection.component.css']
 })

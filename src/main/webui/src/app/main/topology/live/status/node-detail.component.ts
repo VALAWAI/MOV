@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
@@ -20,9 +20,9 @@ import { GraphModule } from '@app/shared/graph';
 	standalone: true,
 	selector: 'app-node-detail',
 	imports: [
-		CommonModule,
-		RouterModule, GraphModule
-	],
+    RouterModule,
+    GraphModule
+],
 	templateUrl: './node-detail.component.html'
 })
 export class NodeDetailComponent {

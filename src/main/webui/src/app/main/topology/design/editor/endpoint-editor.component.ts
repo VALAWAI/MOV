@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -76,13 +76,12 @@ export function requiredChannel(): ValidatorFn {
 	standalone: true,
 	selector: 'app-topology-endpoint-editor',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatAutocompleteModule,
-		GraphModule
-	],
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    GraphModule
+],
 	templateUrl: './endpoint-editor.component.html'
 })
 export class EndpointEditorComponent implements OnInit, OnDestroy {

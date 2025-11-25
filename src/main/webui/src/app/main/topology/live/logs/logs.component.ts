@@ -23,26 +23,25 @@ import { ComponentNameBeautifier } from '@app/shared/component/view';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { ConfigService, toPattern } from '@app/shared';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
 	standalone: true,
 	selector: 'app-logs',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormField,
-		MatInput,
-		MatLabel,
-		MatSelect,
-		MatOption,
-		TimestampPipe,
-		MatIcon,
-		ComponentNameBeautifier,
-		MatPaginator,
-		MatCheckbox,
-		MatTableModule
-	],
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    TimestampPipe,
+    MatIcon,
+    ComponentNameBeautifier,
+    MatPaginator,
+    MatCheckbox,
+    MatTableModule
+],
 	templateUrl: './logs.component.html',
 	styleUrl: './logs.component.css'
 })

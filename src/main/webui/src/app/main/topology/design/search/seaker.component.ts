@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,20 +32,19 @@ import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-top
 	standalone: true,
 	selector: 'app-topology-design-seaker',
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatIconModule,
-		MatButtonModule,
-		MatMenuModule,
-		MatTableModule,
-		MatPaginatorModule,
-		MessageComponent,
-		RouterModule,
-		MatDialogModule,
-		ApplyTopologyModule
-	],
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MessageComponent,
+    RouterModule,
+    MatDialogModule,
+    ApplyTopologyModule
+],
 	templateUrl: './seaker.component.html'
 })
 export class TopologySeakerComponent implements OnInit {
