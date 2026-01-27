@@ -16,7 +16,7 @@ import { GraphModule } from '@app/shared/graph/graph.module';
 import { Subscription, switchMap, timer, retry } from 'rxjs';
 import { MessagesService } from '@app/shared/messages';
 import { LiveTopology, LiveTopologyComponent, LiveTopologyComponentOutConnection, MovApiService } from '@app/shared/mov-api';
-import { DagreLayoutService } from '@app/shared/graph';
+import { LayoutService } from '@app/shared/graph';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -121,7 +121,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 	/**
 	 * The serv ice to layout the graph.
 	 */
-	private readonly dagre = inject(DagreLayoutService);
+	private readonly layout = inject(LayoutService);
 
 	/**
 	 * Called when the window is resized.
@@ -240,7 +240,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 	 */
 	private updateLayoutGraph() {
 
-		this.dagre.createGraph().subscribe(
+		this.layout.createGraph().subscribe(
 			{
 				next: graph => {
 

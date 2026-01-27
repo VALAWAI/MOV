@@ -7,14 +7,15 @@
 */
 
 import { Injectable } from '@angular/core';
-import * as dagre from "@dagrejs/dagre";
 import { IPoint } from '@foblex/2d';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
+import { Graph } from '@dagrejs/graphlib';
+import { GraphLabel } from '@dagrejs/dagre';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class DagreLayoutService {
+export class LayoutService {
 
 
 	/**
@@ -37,13 +38,13 @@ export class DagreGraph {
 	/**
 	 * The graph that is
 	 */
-	private graph = new dagre.graphlib.Graph({ directed: true, compound: true, multigraph: true });
+	private graph = new Graph({ directed: true, compound: true, multigraph: true });
 
 	/**
 	 * Create the default configuration with the specified dirction.
 	 * Read more about it at: https://github.com/dagrejs/dagre/wiki#configuring-the-layout
 	 */
-	private configWithDirection(dir: string): dagre.GraphLabel {
+	private configWithDirection(dir: string): GraphLabel {
 
 		return {
 			rankdir: dir,
@@ -52,7 +53,7 @@ export class DagreGraph {
 			edgesep: 250,
 			marginx: 150,
 			marginy: 150
-		} as dagre.GraphLabel;
+		} as GraphLabel;
 	}
 
 
@@ -95,8 +96,22 @@ export class DagreGraph {
 	 */
 	public layout(): boolean {
 
+		from(this.aLayout()).subscribe(
+			{
+				error: err => console.error(err)
+			}
+		);
+		return true;
+	}
+
+	/**
+	 * The function lo load dynamic reuired.
+	 */
+	private async aLayout(): Promise<boolean> {
+
 		try {
 
+			const dagre = await import("@dagrejs/dagre");
 			dagre.layout(this.graph);
 			return true;
 

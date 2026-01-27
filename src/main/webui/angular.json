@@ -60,6 +60,14 @@
 				},
 				"serve": {
 					"builder": "@angular/build:dev-server",
+					"options": {
+						"prebundle": {
+							"exclude": [
+								"@dagrejs/dagre",
+								"@dagrejs/graphlib"
+							]
+						}
+					},
 					"configurations": {
 						"production": {
 							"buildTarget": "mov:build:production"

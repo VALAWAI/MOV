@@ -51,7 +51,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';
 import { ActivatedRoute } from '@angular/router';
-import { DagreLayoutService, GraphModule } from '@app/shared/graph';
+import { LayoutService, GraphModule } from '@app/shared/graph';
 import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@angular/router';
 import { EditorNode } from './editor-node.model';
 import { EditorConnection } from './editor-connection.model';
@@ -163,9 +163,9 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	private subscriptions: Subscription[] = [];
 
 	/**
-	 * The layout manager using dagre.
+	 * The layout manager.
 	 */
-	private readonly dagre = inject(DagreLayoutService);
+	private readonly layout = inject(LayoutService);
 
 	/**
 	 * The component that do zooms.
@@ -699,7 +699,7 @@ export class TopologyEditorComponent implements OnInit, OnDestroy {
 	 */
 	public changeLayout(direction: 'horizontal' | 'vertical') {
 
-		this.dagre.createGraph().subscribe(
+		this.layout.createGraph().subscribe(
 			{
 				next: graph => {
 
