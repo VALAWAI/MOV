@@ -24,7 +24,7 @@
     "@dagrejs/dagre": "^2.0.3",
     "@foblex/2d": "^1.2.2",
     "@foblex/drag-toolkit": "^1.1.1",
-    "@foblex/flow": "^17.9.81",
+    "@foblex/flow": "^18.0.0",
     "@foblex/mediator": "^1.1.3",
     "@foblex/platform": "^1.0.4",
     "@foblex/utils": "^1.1.1",
