@@ -52,8 +52,7 @@ public class ComponentDefinitionEntity extends ReactivePanacheMongoEntity implem
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The categorical type of this component (e.g., 'Source', 'Processor', 'Sink').
-	 * This helps in classifying and filtering components.
+	 * The type of this component: C0, C1 or C2.
 	 */
 	public ComponentType type;
 
