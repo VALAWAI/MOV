@@ -11,9 +11,11 @@ package eu.valawai.mov.events.topology;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
@@ -382,7 +384,7 @@ public class ChangeTopologyManagerTest extends MovEventTestCase {
 						.await().atMost(Duration.ofSeconds(30)));
 
 		current = this.assertItemNotNull(TopologyConnectionEntity.findById(connection.id));
-		assertNotNull(current.deletedTimestamp);
+		assertThat(current.deletedTimestamp, is(not(nullValue())));
 		assertTrue(now <= current.deletedTimestamp);
 		assertFalse(this.listener.isOpen(connection.source.channelName));
 	}

@@ -11,9 +11,9 @@ package eu.valawai.mov.api.v1.topology;
 import static eu.valawai.mov.ValueGenerator.nextObjectId;
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

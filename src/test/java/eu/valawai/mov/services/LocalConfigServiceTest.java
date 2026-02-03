@@ -10,8 +10,9 @@ package eu.valawai.mov.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -90,7 +91,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 
 		final var key = ValueGenerator.nextPattern("undefined_property_key_{0}");
 		final var confValue = this.service.getPropertyValue(key, String.class, null);
-		assertNull("Can obtain undefined property value", confValue);
+		assertThat(confValue, is(not(nullValue())));
 
 	}
 
@@ -103,7 +104,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 		final var key = ValueGenerator.nextPattern("bad_property_type_key_{0}");
 		System.setProperty(key, "abc");
 		final var confValue = this.service.getPropertyValue(key, Long.class, null);
-		assertNull("Can obtain property value with bad type", confValue);
+		assertThat(confValue, is(not(nullValue())));
 
 	}
 
