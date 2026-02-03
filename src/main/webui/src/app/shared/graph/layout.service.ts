@@ -7,10 +7,11 @@
 */
 
 import { Injectable } from '@angular/core';
+import * as dagre from 'dagre';
 import { IPoint } from '@foblex/2d';
+import { graphlib } from 'dagre';
+import Graph = graphlib.Graph;
 import { Observable, of, from } from 'rxjs';
-import { Graph } from '@dagrejs/graphlib';
-import { GraphLabel } from '@dagrejs/dagre';
 
 @Injectable({
 	providedIn: 'root'
@@ -44,7 +45,7 @@ export class DagreGraph {
 	 * Create the default configuration with the specified dirction.
 	 * Read more about it at: https://github.com/dagrejs/dagre/wiki#configuring-the-layout
 	 */
-	private configWithDirection(dir: string): GraphLabel {
+	private configWithDirection(dir: string): dagre.GraphLabel {
 
 		return {
 			rankdir: dir,
@@ -53,7 +54,7 @@ export class DagreGraph {
 			edgesep: 250,
 			marginx: 150,
 			marginy: 150
-		} as GraphLabel;
+		} as dagre.GraphLabel;
 	}
 
 
@@ -111,7 +112,6 @@ export class DagreGraph {
 
 		try {
 
-			const dagre = await import("@dagrejs/dagre");
 			dagre.layout(this.graph);
 			return true;
 

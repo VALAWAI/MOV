@@ -69,10 +69,10 @@
       <button mat-icon-button color="primary" (click)="fit()">
         <mat-icon>aspect_ratio</mat-icon>
       </button>
-      <button mat-icon-button color="primary" (click)="topology.undo()" [disabled]="!topology.canUndo">
+      <button mat-icon-button color="primary" (click)="topology.undo()">
         <mat-icon>undo</mat-icon>
       </button>
-      <button mat-icon-button color="primary" (click)="topology.redo()" [disabled]="!topology.canRedo">
+      <button mat-icon-button color="primary" (click)="topology.redo()">
         <mat-icon>redo</mat-icon>
       </button>
       <button mat-icon-button color="primary" [matMenuTriggerFor]="editorMenu">
@@ -178,12 +178,12 @@
       </mat-menu>
       <mat-menu #layoutsMenu="matMenu">
         <!-- TO DO Enable when the dagree can be used because not have dynamic require.-->
-        <button mat-menu-item (click)="changeLayout('horizontal')" [disabled]="true">
+        <button mat-menu-item (click)="changeLayout('horizontal')">
           <span
             i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
         </button>
         <!-- TO DO Enable when the dagree can be used because not have dynamic require.-->
-        <button mat-menu-item (click)="changeLayout('vertical')" [disabled]="true">
+        <button mat-menu-item (click)="changeLayout('vertical')">
           <span
             i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
         </button>
