@@ -16,7 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import eu.valawai.mov.persistence.live.connections.GetLiveConnection;
-import eu.valawai.mov.persistence.live.topology.GetLiveConnectionPage;
+import eu.valawai.mov.persistence.live.connections.GetLiveConnectionPage;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;
@@ -58,8 +58,8 @@ public class LiveConnectionsResource {
 			@Parameter(description = "The index of the first live connection component to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of live connection components to return") @QueryParam("limit") @DefaultValue("100") @Valid @Min(1) final int limit) {
 
-		return GetLiveConnectionPage.fresh().withOffset(offset).withLimit(limit).execute()
-				.map(connection -> Response.ok(connection).build());
+		return GetLiveConnectionPage.fresh().withOffset(offset).withLimit(limit).execute().onItem().ifNull()
+				.continueWith(() -> new LiveConnectionPage()).map(connection -> Response.ok(connection).build());
 
 	}
 

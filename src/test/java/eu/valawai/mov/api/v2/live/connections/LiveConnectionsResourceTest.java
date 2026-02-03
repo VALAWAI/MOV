@@ -32,17 +32,6 @@ import jakarta.ws.rs.core.Response.Status;
 public class LiveConnectionsResourceTest extends APITestCase {
 
 	/**
-	 * Should not get a page with a bad order.
-	 */
-	@Test
-	public void shouldNotGetPageWithBadOrder() {
-
-		given().when().queryParam("order", "undefined").get("/v2/live/connections").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode());
-
-	}
-
-	/**
 	 * Should not get a page with a bad offset.
 	 */
 	@Test

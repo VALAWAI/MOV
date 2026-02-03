@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.persistence.live.topology;
+package eu.valawai.mov.persistence.live.connections;
 
 import static eu.valawai.mov.ValueGenerator.rnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +27,10 @@ import eu.valawai.mov.api.v1.topology.MinConnectionPage;
 import eu.valawai.mov.api.v1.topology.MinConnectionTest;
 import eu.valawai.mov.persistence.MovPersistenceTestCase;
 import eu.valawai.mov.persistence.live.components.ComponentEntities;
+import eu.valawai.mov.persistence.live.connections.GetLiveConnectionPage;
+import eu.valawai.mov.persistence.live.topology.GetMinConnectionPage;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntities;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.quarkus.test.junit.QuarkusTest;
 
 /**

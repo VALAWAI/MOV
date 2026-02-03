@@ -54,8 +54,8 @@ public class LiveTopologiesResource {
 			@Parameter(description = "The index of the first live topology component to return") @QueryParam("offset") @DefaultValue("0") @Valid @Min(0) final int offset,
 			@Parameter(description = "The maximum number of live topology components to return") @QueryParam("limit") @DefaultValue("100") @Valid @Min(1) final int limit) {
 
-		return GetLiveTopology.fresh().withOffset(offset).withLimit(limit).execute()
-				.map(topology -> Response.ok(topology).build());
+		return GetLiveTopology.fresh().withOffset(offset).withLimit(limit).execute().onItem().ifNull()
+				.continueWith(() -> new LiveTopology()).map(topology -> Response.ok(topology).build());
 
 	}
 

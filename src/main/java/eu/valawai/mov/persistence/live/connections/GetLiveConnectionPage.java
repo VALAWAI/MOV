@@ -6,19 +6,22 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-package eu.valawai.mov.persistence.live.topology;
+package eu.valawai.mov.persistence.live.connections;
 
 import java.util.List;
 
 import org.bson.conversions.Bson;
 
+import com.mongodb.client.model.Filters;
+
 import eu.valawai.mov.api.v2.live.connections.LiveConnection;
 import eu.valawai.mov.api.v2.live.connections.LiveConnectionPage;
 import eu.valawai.mov.persistence.AbstractGetPage;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.smallrye.mutiny.Uni;
 
 /**
- * The operation to obtain some {@link LiveConnection}s from teh database.
+ * The operation to obtain some {@link LiveConnection}s from the database.
  *
  * @see LiveConnection
  * @see LiveConnectionPage
@@ -51,7 +54,9 @@ public class GetLiveConnectionPage extends AbstractGetPage<LiveConnectionPage, G
 	@Override
 	protected Uni<LiveConnectionPage> getPageWith(List<Bson> pipeline) {
 
-		return null;
+		return TopologyConnectionEntity.mongoCollection().aggregate(pipeline, LiveConnectionPage.class).collect()
+				.first();
+
 	}
 
 	/**
@@ -60,7 +65,7 @@ public class GetLiveConnectionPage extends AbstractGetPage<LiveConnectionPage, G
 	@Override
 	protected Bson createFilter() {
 
-		return null;
+		return Filters.or(Filters.exists("deletedTimestamp", false), Filters.eq("deletedTimestamp", null));
 	}
 
 }

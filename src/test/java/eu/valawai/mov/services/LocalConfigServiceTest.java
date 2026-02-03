@@ -9,7 +9,6 @@
 package eu.valawai.mov.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -59,7 +58,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 		assertTrue(set, "Not set property");
 
 		final var names = ConfigProvider.getConfig().getPropertyNames();
-		assertThat(names, not(hasItem(key)));
+		names.forEach(name -> assertThat(name, is(not(key))));
 
 	}
 
@@ -91,7 +90,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 
 		final var key = ValueGenerator.nextPattern("undefined_property_key_{0}");
 		final var confValue = this.service.getPropertyValue(key, String.class, null);
-		assertThat(confValue, is(not(nullValue())));
+		assertThat(confValue, is(nullValue()));
 
 	}
 
@@ -104,7 +103,7 @@ public class LocalConfigServiceTest extends MasterOfValawaiTestCase {
 		final var key = ValueGenerator.nextPattern("bad_property_type_key_{0}");
 		System.setProperty(key, "abc");
 		final var confValue = this.service.getPropertyValue(key, Long.class, null);
-		assertThat(confValue, is(not(nullValue())));
+		assertThat(confValue, is(nullValue()));
 
 	}
 

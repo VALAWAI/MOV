@@ -10,16 +10,19 @@ package eu.valawai.mov.persistence.live.connections;
 
 import java.util.ArrayList;
 
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 
 import eu.valawai.mov.api.v2.design.topologies.Topology;
 import eu.valawai.mov.api.v2.live.connections.LiveConnection;
 import eu.valawai.mov.persistence.AbstractEntityOperator;
-import eu.valawai.mov.persistence.design.component.ComponentDefinitionEntity;
+import eu.valawai.mov.persistence.live.components.ComponentEntity;
+import eu.valawai.mov.persistence.live.topology.TopologyConnectionEntity;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -76,7 +79,18 @@ public class GetLiveConnection extends AbstractEntityOperator<LiveConnection, Ge
 		final var pipeline = new ArrayList<Bson>();
 		pipeline.add(Aggregates.match(Filters.eq("_id", this.id)));
 
-		return ComponentDefinitionEntity.mongoCollection().aggregate(pipeline, LiveConnection.class).collect().first();
+		pipeline.add(
+				Aggregates.lookup(ComponentEntity.COLLECTION_NAME, "source.componentId", "_id", "sourceComponent"));
+		pipeline.add(
+				Aggregates.lookup(ComponentEntity.COLLECTION_NAME, "target.componentId", "_id", "targetComponent"));
+
+		pipeline.add(Aggregates.project(Projections.fields(
+				Projections.include("id", "enabled", "createTimestamp", "updateTimestamp", "source", "target",
+						"notifications"),
+				Projections.computed("source.component", new Document("$first", "$sourceComponent")),
+				Projections.computed("target.component", new Document("$first", "$targetComponent")))));
+
+		return TopologyConnectionEntity.mongoCollection().aggregate(pipeline, LiveConnection.class).collect().first();
 
 	}
 
