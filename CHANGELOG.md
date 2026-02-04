@@ -1,6 +1,6 @@
 # Master Of Valawai (MOV)
 
-## Version 2.0.0 (November 19,2025)
+## Version 2.0.0 (February 4,2026)
 
  - Show active topology in a graph.
  - Allow to define a Topology using a graph editor.
