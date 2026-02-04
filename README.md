@@ -9,9 +9,9 @@ topology, promoting component independence and decoupling.
 ## Summary
 
 *   **Name:** Master Of VALAWAI (MOV)
-*   **Version:** 2.0.0 (August 6, 2025)
-*   **ASYNCAPI:** [1.2.0 (May 9, 2024)](https://raw.githubusercontent.com/VALAWAI/MOV/ASYNCAPI_1.2.0/asyncapi.yml)
-*   **OPENAPI:** [2.0.0 (August 6, 2025)](https://raw.githubusercontent.com/VALAWAI/MOV/API_2.0.0/openapi.yml)
+*   **Version:** 2.0.1 (February 4, 2026)
+*   **ASYNCAPI:** [1.3.0 (February 4, 2026)](https://raw.githubusercontent.com/VALAWAI/MOV/ASYNCAPI_1.3.0/asyncapi.yml)
+*   **OPENAPI:** [2.0.0 (February 4, 2026)](https://raw.githubusercontent.com/VALAWAI/MOV/API_2.0.0/openapi.yml)
 *   **Developed by:** [IIIA-CSIC](https://www.iiia.csic.es)
 *   **License:** [GPL3](LICENSE)
 
