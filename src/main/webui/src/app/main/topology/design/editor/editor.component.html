@@ -51,10 +51,13 @@
         } @for(connection of topology.connections;track connection.id){ <f-connection
           [fReassignDisabled]="connection.target.channel==null" [fType]="connection.type|toConnectionType"
           [fConnectionId]="connection.id" [fOutputId]="connection.source.id" [fInputId]="connection.target.id"
-          [fStartColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"
-          [fEndColor]="connection.colorFor(connection.id==selected?.id)|toCssVar" class="hover:stroke-7"
+          class="hover:stroke-7"
           [ngClass]="{'stroke-3':connection.id==selected?.id,'stroke-2':connection.id!=selected?.id,'notification':connection.isNotification}">
-          [fOffset]="30"> <app-connection-markers [color]="connection.fillColorFor(false)"
+          [fOffset]="30">
+          <f-connection-gradient [fStartColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"
+            [fEndColor]="connection.colorFor(connection.id==selected?.id)|toCssVar">
+          </f-connection-gradient>
+          <app-connection-markers [color]="connection.fillColorFor(false)"
             [selectedColor]="connection.fillColorFor(true)"></app-connection-markers>
         </f-connection> }
       </f-canvas> </f-flow>

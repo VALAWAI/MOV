@@ -1,70 +1,63 @@
-<div
-	class="p-1 flex flex-col md:flex-row flex-wrap gap-3 items-center justify-center content-center">
+<div class="p-1 flex flex-col md:flex-row flex-wrap gap-3 items-center justify-center content-center">
 	<div class="w-full h-full bg-gray-50 p-2">
-		<div [ngStyle]="{'height.px':height}"
-			class="w-sm sm:w-md md:w-full md:min-w-xl">
+		<div [ngStyle]="{'height.px':height}" class="w-sm sm:w-md md:w-full md:min-w-xl">
 			<f-flow fDraggable (fSelectionChange)="selectionChanged($event)">
-			@if(conf.liveShowGrid$|async){ <f-background> <f-circle-pattern></f-circle-pattern>
-			</f-background> } <f-line-alignment [fAlignThreshold]="10"></f-line-alignment> <f-selection-area></f-selection-area>
-			<f-canvas fZoom> @for(node of nodes;track node.id){
-			<div fNode [fNodeId]="node.id" fDragHandle
-				[fNodePosition]="node.position">
-				@if(node.type != null){
-				<app-component-type-node-container [type]="node.type"
-					[isSelected]="node.id === selected?.id" (width)="node.width=$event"
-					(height)="node.height=$event">
-				<div
-					class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
-					<app-content-type-badge [type]="node.type"></app-content-type-badge>
-					<div
-						class="grow text-wrap font-bold text-lg max-w-48 wrap-break-word">{{node.name}}</div>
-				</div>
-				@for(endpoint of node.endpoints;track endpoint.id){
-				@if(endpoint.isSource){
-				<div class="grow rounded-lg p-2 gap-2" fNodeOutput
-					[fOutputId]="endpoint.id" [fOutputMultiple]="true"
-					fOutputConnectableSide="right" fNodeOutlet>
-					<mat-icon color="primary" fontIcon="publish"></mat-icon>
-					{{endpoint.channel|toChannelName}}
-				</div>
-				} @else{
-				<div class="grow rounded-lg p-2 gap-2" fNodeInput
-					[fInputId]="endpoint.id" [fInputMultiple]="true"
-					fInputConnectableSide="left">
-					<mat-icon color="primary" fontIcon="download"></mat-icon>
-					{{endpoint.channel|toChannelName}}
-				</div>
-				} } </app-component-type-node-container>
-				} @else{
-				<div class="rounded-full border-2 w-6 h-6 hover:stroke-7"
-					[ngClass]="{'border-red-400 bg-red-800':isSelected(node),'border-sky-400 bg-sky-400':!isSelected(node)}"
-					fNodeOutput fNodeInput [fInputId]="node.endpoints[0].id"
-					[fInputMultiple]="true" [fOutputId]="node.endpoints[1].id"
-					[fOutputMultiple]="true" fNodeOutlet fInputConnectableSide="top"
-					fOutputConnectableSide="bottom"></div>
-				}
-			</div>
-			} @for(connection of connections;track connection.id){ <f-connection
-				[fType]="conf.liveEdgeType$ | async | toConnectionType"
-				[fConnectionId]="connection.id" [fOutputId]="connection.source.id"
-				[fInputId]="connection.target.id"
-				[fStartColor]="connection.color(isSelected(connection))"
-				[fEndColor]="connection.color(isSelected(connection))"
-				class="hover:stroke-7"
-				[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
-				[fOffset]="30"> <app-connection-markers
-				[color]="connection.enabled?'fill-sky-400':'fill-gray-200'"
-				selectedColor="fill-red-800"></app-connection-markers> </f-connection> } </f-canvas> </f-flow>
+				@if(conf.liveShowGrid$|async){ <f-background> <f-circle-pattern></f-circle-pattern>
+				</f-background> } <f-line-alignment [fAlignThreshold]="10"></f-line-alignment>
+				<f-selection-area></f-selection-area>
+				<f-canvas fZoom> @for(node of nodes;track node.id){
+					<div fNode [fNodeId]="node.id" fDragHandle [fNodePosition]="node.position">
+						@if(node.type != null){
+						<app-component-type-node-container [type]="node.type" [isSelected]="node.id === selected?.id"
+							(width)="node.width=$event" (height)="node.height=$event">
+							<div class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
+								<app-content-type-badge [type]="node.type"></app-content-type-badge>
+								<div class="grow text-wrap font-bold text-lg max-w-48 wrap-break-word">{{node.name}}
+								</div>
+							</div>
+							@for(endpoint of node.endpoints;track endpoint.id){
+							@if(endpoint.isSource){
+							<div class="grow rounded-lg p-2 gap-2" fNodeOutput [fOutputId]="endpoint.id"
+								[fOutputMultiple]="true" fOutputConnectableSide="right" fNodeOutlet>
+								<mat-icon color="primary" fontIcon="publish"></mat-icon>
+								{{endpoint.channel|toChannelName}}
+							</div>
+							} @else{
+							<div class="grow rounded-lg p-2 gap-2" fNodeInput [fInputId]="endpoint.id"
+								[fInputMultiple]="true" fInputConnectableSide="left">
+								<mat-icon color="primary" fontIcon="download"></mat-icon>
+								{{endpoint.channel|toChannelName}}
+							</div>
+							} }
+						</app-component-type-node-container>
+						} @else{
+						<div class="rounded-full border-2 w-6 h-6 hover:stroke-7"
+							[ngClass]="{'border-red-400 bg-red-800':isSelected(node),'border-sky-400 bg-sky-400':!isSelected(node)}"
+							fNodeOutput fNodeInput [fInputId]="node.endpoints[0].id" [fInputMultiple]="true"
+							[fOutputId]="node.endpoints[1].id" [fOutputMultiple]="true" fNodeOutlet
+							fInputConnectableSide="top" fOutputConnectableSide="bottom"></div>
+						}
+					</div>
+					} @for(connection of connections;track connection.id){ <f-connection
+						[fType]="conf.liveEdgeType$ | async | toConnectionType" [fConnectionId]="connection.id"
+						[fOutputId]="connection.source.id" [fInputId]="connection.target.id" class="hover:stroke-7"
+						[ngClass]="{'stroke-3':isSelected(connection),'stroke-2':!isSelected(connection)}"
+						[fOffset]="30">
+						<f-connection-gradient [fStartColor]="connection.color(isSelected(connection))"
+							[fEndColor]="connection.color(isSelected(connection))">
+						</f-connection-gradient>
+						<app-connection-markers [color]="connection.enabled?'fill-sky-400':'fill-gray-200'"
+							selectedColor="fill-red-800"></app-connection-markers>
+					</f-connection> }
+				</f-canvas> </f-flow>
 		</div>
 	</div>
 	@switch(selectedType){ @case('COMPONENT'){
 	<app-node-detail [node]="selectedStatusNode"></app-node-detail>
 	} @case('NOTIFICATION'){
-	<app-notification-node-detail [nodes]="nodes"
-		[node]="selectedStatusNode"></app-notification-node-detail>
+	<app-notification-node-detail [nodes]="nodes" [node]="selectedStatusNode"></app-notification-node-detail>
 	} @case('CONNECTION'){
-	<app-connection-detail [nodes]="nodes"
-		[connection]="selectedStatusConnection"></app-connection-detail>
+	<app-connection-detail [nodes]="nodes" [connection]="selectedStatusConnection"></app-connection-detail>
 	} @case('NOTIFICATION_CONNECTION'){
 	<app-notification-connection-detail [nodes]="nodes"
 		[connection]="selectedStatusConnection"></app-notification-connection-detail>

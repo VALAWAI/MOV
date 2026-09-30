@@ -22,7 +22,7 @@ import { MainService } from '@app/main/main.service';
 import { MessagesService } from '@app/shared/messages';
 import {
 	FCanvasComponent,
-	FExternalItemDirective,
+	FExternalItem,
 	FFlowModule,
 	FSelectionChangeEvent,
 	FCreateNodeEvent,
@@ -81,7 +81,7 @@ import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-top
 		MatButtonModule,
 		MatIconModule,
 		MatMenuModule,
-		FExternalItemDirective,
+		FExternalItem,
 		TopologyNodeFormComponent,
 		TopologyConnectionFormComponent,
 		MatDialogModule,
