@@ -11,7 +11,7 @@ import { provideRouter } from '@angular/router';
 
 import { APP_ROUTES } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
 		provideZoneChangeDetection({ eventCoalescing: true }), 
 		provideRouter(APP_ROUTES), 
 		provideAnimationsAsync(),
-		provideHttpClient(),
+		provideHttpClient(withXhr()),
 		DatePipe
 	]
 };

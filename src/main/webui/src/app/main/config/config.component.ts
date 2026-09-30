@@ -7,7 +7,7 @@
 */
 
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -43,6 +43,7 @@ import { ApplyTopologyService } from '@app/shared/apply-topology';
 		MatSelectModule,
 		TopologyBehaviourToNamePipe
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './config.component.html'
 })
 export class ConfigComponent implements OnInit, OnDestroy {

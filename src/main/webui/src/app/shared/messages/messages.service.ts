@@ -6,7 +6,7 @@
 	https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, Inject, Injectable } from '@angular/core';
+import { Component, Inject, Injectable, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarLabel } from '@angular/material/snack-bar';
 import { MessageComponent, MessageType } from './message.component';
 
@@ -107,6 +107,7 @@ export class SnackBarMessageData {
 	standalone: true,
 	selector: 'app-snack-bar-message',
 	template: '<app-message matSnackBarLabel [type]="data.type">{{data.text}}</app-message>',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [MessageComponent, MatSnackBarLabel],
 })
 export class SnackBarMessage {

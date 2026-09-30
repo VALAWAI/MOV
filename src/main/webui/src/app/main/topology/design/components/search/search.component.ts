@@ -8,7 +8,7 @@
 
 
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,6 +43,7 @@ import { MainService } from '@app/main';
 		MatButtonModule,
 		MatSelectModule
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './search.component.html'
 })
 export class SearchLibraryComponent implements OnInit {

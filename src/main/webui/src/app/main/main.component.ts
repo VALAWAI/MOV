@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MainService } from './main.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +27,7 @@ import { LOCALE_ID, Inject } from '@angular/core';
 		AsyncPipe
 	],
 	templateUrl: './main.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './main.component.css'
 })
 export class MainComponent {

@@ -3,9 +3,9 @@
 		i18n="The mesage that is the detail of a status node@@main_topology_live_status_node-detail_msg">
 		This <a
 			class="font-semibold text-purple-700 hover:text-purple-900 underline transition-colors duration-200"
-			[routerLink]="['/main/topology/live/components',node?.id,'show']">node</a>
+			[routerLink]="['/main/topology/live/components',$safeNavigationMigration(node?.id),'show']">node</a>
 		is a
-		<app-content-type-badge [type]="node?.type"></app-content-type-badge>
+		<app-content-type-badge [type]="$safeNavigationMigration(node?.type)"></app-content-type-badge>
 		<span class="italic text-gray-500"> @switch(node?.type){
 			@case('C0'){ (Data extraction & task execution) } @case('C1'){ (Data
 			integration & decision-making) } @default{ (Value-based reasoning &

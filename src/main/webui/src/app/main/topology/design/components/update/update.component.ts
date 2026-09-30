@@ -7,7 +7,7 @@
 */
 
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from '@app/shared';
 import { LoadingComponent } from '@app/shared/loading';
@@ -24,6 +24,7 @@ import { MainService } from '@app/main';
 	imports: [
 		LoadingComponent
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './update.component.html'
 })
 export class UpdateLibraryComponent implements OnInit {

@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { MovApiService, Info, HealthInfo } from '@shared/mov-api';
 import { HealthStatusComponent } from './health-status.component';
@@ -20,6 +20,7 @@ import { HealthStatusComponent } from './health-status.component';
 		HealthStatusComponent
 	],
 	templateUrl: './status.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './status.component.css'
 })
 export class StatusComponent implements OnInit, OnDestroy {

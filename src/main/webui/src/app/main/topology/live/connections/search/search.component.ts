@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -44,6 +44,7 @@ import { ConfigService, toPattern } from '@app/shared';
 		MatTableModule,
 		MessageComponent
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './search.component.html'
 })
 export class TopologyConnectionsSearchComponent implements OnInit, OnDestroy {

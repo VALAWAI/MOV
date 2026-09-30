@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject, model, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, model, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -31,6 +31,7 @@ function requiredTopologyValidator(control: AbstractControl): ValidationErrors |
 	standalone: true,
 	selector: 'dialog-select-topology-to-open',
 	templateUrl: 'select-topology-to-open.dialog.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [
 		MatButtonModule,
 		MatFormFieldModule,

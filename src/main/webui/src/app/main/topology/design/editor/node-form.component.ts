@@ -7,7 +7,7 @@
 */
 
 
-import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MessagesService } from '@app/shared/messages';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
@@ -55,6 +55,7 @@ function requiredComponentValidator(control: AbstractControl): ValidationErrors 
     MatDialogModule,
     ChannelSchemaViewComponent
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './node-form.component.html'
 })
 export class TopologyNodeFormComponent implements OnInit, OnDestroy {

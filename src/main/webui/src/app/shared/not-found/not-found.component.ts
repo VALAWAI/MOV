@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 
@@ -15,6 +15,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-not-found',
     imports: [RouterLink],
     templateUrl: './not-found.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent {

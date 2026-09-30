@@ -7,7 +7,7 @@
 */
 
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { GraphModule } from '@app/shared/graph';
@@ -22,6 +22,7 @@ import { ChannelSchema } from '@app/shared/mov-api';
     GraphModule,
     MatIconModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './channel-view.component.html'
 })
 export class ChannelSchemaViewComponent {

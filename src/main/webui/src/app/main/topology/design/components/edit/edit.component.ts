@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ChannelSchema, ComponentDefinition, ComponentType, VersionInfo } from '@app/shared/mov-api';
 import { MainService } from '@app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
@@ -62,6 +62,7 @@ export function jsonValidator(control: AbstractControl): ValidationErrors | null
 		MatSelectModule,
 		VersionInfoEditorComponent
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './edit.component.html'
 })
 export class EditComponent extends AbstractComponentDefinitionComponent {

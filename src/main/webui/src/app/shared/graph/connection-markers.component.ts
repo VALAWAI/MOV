@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { EFMarkerType, FFlowModule } from '@foblex/flow';
 
 
@@ -18,6 +18,7 @@ import { EFMarkerType, FFlowModule } from '@foblex/flow';
 		CommonModule,
 		FFlowModule
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './connection-markers.component.html'
 })
 export class ConnectionMarkersComponent {

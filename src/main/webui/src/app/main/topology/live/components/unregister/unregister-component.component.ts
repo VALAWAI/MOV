@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { MessagesService } from '@shared/messages';
 import { MovApiService } from '@shared/mov-api';
@@ -25,6 +25,7 @@ import { MatButton } from '@angular/material/button';
 		MatButton
 	],
 	templateUrl: './unregister-component.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './unregister-component.component.css'
 })
 export class UnregisterComponentComponent extends AbstractComponentComponent {

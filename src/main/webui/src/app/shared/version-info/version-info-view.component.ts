@@ -7,13 +7,14 @@
 */
 
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { VersionInfo } from '../mov-api';
 
 @Component({
 	standalone: true,
 	selector: 'app-version-info-view',
 	imports: [CommonModule,DatePipe],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './version-info-view.component.html',
 })
 export class VersionInfoViewComponent {

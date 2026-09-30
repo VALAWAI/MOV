@@ -7,7 +7,7 @@
 */
 
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
 import { GraphModule } from '@app/shared/graph';
@@ -23,6 +23,7 @@ import { GraphModule } from '@app/shared/graph';
     RouterModule,
     GraphModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './node-detail.component.html'
 })
 export class NodeDetailComponent {

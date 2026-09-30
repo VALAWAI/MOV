@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentDefinition } from '@app/shared/mov-api';
 import { MainService } from '@app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
@@ -28,6 +28,7 @@ import { RouterModule } from '@angular/router';
 		LoadingComponent,
 		RouterModule
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './remove.component.html'
 })
 export class RemoveComponent extends AbstractComponentDefinitionComponent {

@@ -7,7 +7,7 @@
 */
 
 
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { TimestampPipe } from '@app/shared/timestamp';
@@ -26,6 +26,7 @@ import { LogRecord } from '@shared/mov-api';
 		TimestampPipe
 	],
 	templateUrl: './show-log.dialog.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './show-log.dialog.css'
 })
 export class ShowLogDialog {

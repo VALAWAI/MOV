@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { MessagesService } from '@shared/messages';
 import { ChangeConnection, MovApiService, TOPOLOGY_ACTION_NAMES, TopologyAction } from '@shared/mov-api';
@@ -27,6 +27,7 @@ import { MatButton } from '@angular/material/button';
 		AsyncPipe
 	],
 	templateUrl: './change-topology-connection.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrls: ['./change-topology-connection.component.css']
 })
 export class ChangeTopologyConnectionComponent extends AbstractTopologyConnectionComponent implements OnDestroy {

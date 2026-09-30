@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ConfigService } from '@app/shared';
 import { PointExtensions } from '@foblex/2d';
 import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
@@ -49,6 +49,7 @@ export type SelectedType = 'COMPONENT' | 'NOTIFICATION' | 'CONNECTION' | 'NOTIFI
 		NotificationNodeDetailComponent
 	],
 	templateUrl: './status.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrls: ['./status.component.css']
 })
 export class StatusComponent implements OnInit, OnDestroy {

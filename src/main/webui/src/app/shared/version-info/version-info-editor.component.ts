@@ -7,7 +7,7 @@
 */
 
 
-import { Component, inject, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { VersionInfo } from '../mov-api';
 import { AbstractControl, ControlValueAccessor, FormBuilder, NG_VALIDATORS, NG_VALUE_ACCESSOR, ReactiveFormsModule, TouchedChangeEvent, Validator, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +26,7 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
     MatDatepickerModule
 ],
 	templateUrl: './version-info-editor.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

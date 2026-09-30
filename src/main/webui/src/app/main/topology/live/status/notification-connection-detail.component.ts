@@ -7,7 +7,7 @@
 */
 
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StatusNode } from './status-node.model';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +22,7 @@ import { GraphModule } from '@app/shared/graph';
     MatIconModule,
     GraphModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './notification-connection-detail.component.html'
 })
 export class NotificationConnectionDetailComponent extends AbstractConnectionDetailComponent {

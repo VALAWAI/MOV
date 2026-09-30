@@ -8,7 +8,7 @@
 
 
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
@@ -39,6 +39,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 		CdkTextareaAutosize
 	],
 	templateUrl: './register-component.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './register-component.component.css'
 })
 export class RegisterComponentComponent implements OnInit {

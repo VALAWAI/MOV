@@ -7,7 +7,7 @@
 */
 
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,6 +31,7 @@ import { ChangeTopologyDescription, ChangeTopologyName } from './actions';
     MatSelectModule,
     MatIconModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './topology-form.component.html'
 })
 export class TopologyFormComponent implements OnInit, OnDestroy {

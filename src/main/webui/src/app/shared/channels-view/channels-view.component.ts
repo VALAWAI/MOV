@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ChannelSchema } from '../mov-api';
 
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
@@ -17,6 +17,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 	imports: [
     NgxJsonViewerModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './channels-view.component.html'
 })
 export class ChannelsViewComponent {

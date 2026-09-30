@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MinTopology } from "@app/shared/mov-api";
@@ -16,6 +16,7 @@ import { MinTopology } from "@app/shared/mov-api";
 	standalone: true,
 	selector: 'dialog-confirm-remove-topology',
 	templateUrl: 'confirm-remove-topology.dialog.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [
 		MatButtonModule,
 		MatDialogModule

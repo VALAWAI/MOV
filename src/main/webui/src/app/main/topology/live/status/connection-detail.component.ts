@@ -7,7 +7,7 @@
 */
 
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AbstractConnectionDetailComponent } from './abstract-connection-detail.component';
@@ -21,6 +21,7 @@ import { GraphModule } from '@app/shared/graph';
     MatIconModule,
     GraphModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './connection-detail.component.html'
 })
 export class ConnectionDetailComponent extends AbstractConnectionDetailComponent {

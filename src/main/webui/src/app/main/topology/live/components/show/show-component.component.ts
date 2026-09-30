@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { MessagesService } from '@shared/messages';
 import { MovApiService } from '@shared/mov-api';
@@ -31,6 +31,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 		RouterLink
 	],
 	templateUrl: './show-component.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './show-component.component.css'
 })
 export class ShowComponentComponent extends AbstractComponentComponent implements OnDestroy {

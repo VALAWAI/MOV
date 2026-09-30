@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentType } from '@shared/mov-api';
 
 @Component({
@@ -16,6 +16,7 @@ import { ComponentType } from '@shared/mov-api';
 	imports: [
 		CommonModule
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './component-type-badge.component.html'
 })
 export class ComponentTypeBadgeComponent {

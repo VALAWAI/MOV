@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { MessagesService } from '@shared/messages';
 import { MovApiService } from '@shared/mov-api';
@@ -34,6 +34,7 @@ import { ChannelsViewComponent } from '@app/shared/channels-view';
 		AsyncPipe,
 		ChannelsViewComponent
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './show-topology-connection.component.html'
 })
 export class ShowTopologyConnectionComponent extends AbstractTopologyConnectionComponent implements OnDestroy {

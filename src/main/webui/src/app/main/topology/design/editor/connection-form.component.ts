@@ -7,7 +7,7 @@
 */
 
 
-import { Component, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EndpointEditorComponent } from './endpoint-editor.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -41,6 +41,7 @@ import { GraphModule } from '@app/shared/graph';
     MatIconModule,
     GraphModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './connection-form.component.html'
 })
 export class TopologyConnectionFormComponent implements OnInit, OnDestroy {

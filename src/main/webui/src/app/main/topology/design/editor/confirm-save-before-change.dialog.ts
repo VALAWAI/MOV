@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, model } from "@angular/core";
+import { Component, model, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
 
@@ -15,6 +15,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 	standalone: true,
 	selector: 'dialog-confirm-save-before-change',
 	templateUrl: 'confirm-save-before-change.dialog.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [
 		MatButtonModule,
 		MatDialogModule

@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MainService } from '@app/main';
 import { MessagesService } from '@shared/messages';
 import { ConnectionToCreate, MovApiService, Component as MOVComponent, LogRecord, ChannelSchema } from '@shared/mov-api';
@@ -35,6 +35,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 		MatCheckboxModule
 	],
 	templateUrl: './create-topology-connection.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrls: ['./create-topology-connection.component.css']
 })
 export class CreateTopologyConnectionComponent implements OnInit {

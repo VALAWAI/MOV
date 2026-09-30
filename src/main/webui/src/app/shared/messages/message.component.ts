@@ -7,7 +7,7 @@
 */
 
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 export const MESSAGE_TYPE_NAMES = ['ERROR', 'WARN', 'INFO', 'SUCCESS'] as const;
 
@@ -21,6 +21,7 @@ export type MessageType = typeof MESSAGE_TYPE_NAMES[number];
 		NgClass
 	],
 	templateUrl: './message.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './message.component.css'
 })
 export class MessageComponent {

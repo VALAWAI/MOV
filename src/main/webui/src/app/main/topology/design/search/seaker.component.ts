@@ -7,7 +7,7 @@
 */
 
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -45,6 +45,7 @@ import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-top
 		MatDialogModule,
 		ApplyTopologyModule
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './seaker.component.html'
 })
 export class TopologySeakerComponent implements OnInit {

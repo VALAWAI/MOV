@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, retry, Subscription, switchMap, timer } from 'rxjs';
@@ -43,6 +43,7 @@ import { ConfigService, toPattern } from '@app/shared';
 		MatTableModule
 	],
 	templateUrl: './logs.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './logs.component.css'
 })
 export class LogsComponent implements OnInit, OnDestroy {

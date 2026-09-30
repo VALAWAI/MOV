@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentDefinition } from '@app/shared/mov-api';
 import { MainService } from '@app/main';
 import { AbstractComponentDefinitionComponent } from '../abstract-component-definition.component';
@@ -35,6 +35,7 @@ import { ChannelsViewComponent } from '@app/shared/channels-view';
 		LoadingComponent,
 		ChannelsViewComponent
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './view.component.html'
 })
 export class ViewComponent extends AbstractComponentDefinitionComponent {

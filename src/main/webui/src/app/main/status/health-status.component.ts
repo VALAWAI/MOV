@@ -7,7 +7,7 @@
 */
 
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { HealthStatus } from '@shared/mov-api';
 
@@ -20,6 +20,7 @@ import { HealthStatus } from '@shared/mov-api';
 		MatIcon
 	],
 	templateUrl: './health-status.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrl: './health-status.component.css'
 })
 export class HealthStatusComponent {

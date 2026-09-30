@@ -7,7 +7,7 @@
 */
 
 
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
@@ -22,6 +22,7 @@ import { ChannelSchemaViewComponent } from "./channel-view.component";
 	standalone: true,
 	selector: 'dialog-select-channel',
 	templateUrl: './select-channel.dialog.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [
     MatButtonModule,
     MatIconModule,

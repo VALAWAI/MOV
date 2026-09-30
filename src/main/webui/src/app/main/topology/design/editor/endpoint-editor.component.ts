@@ -7,7 +7,7 @@
 */
 
 
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ChannelSchema, sortChannelSchemaByName, } from '@app/shared/mov-api';
@@ -82,6 +82,7 @@ export function requiredChannel(): ValidatorFn {
     MatAutocompleteModule,
     GraphModule
 ],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './endpoint-editor.component.html'
 })
 export class EndpointEditorComponent implements OnInit, OnDestroy {

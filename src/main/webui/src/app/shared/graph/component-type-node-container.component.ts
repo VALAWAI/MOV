@@ -7,7 +7,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentType } from '@shared/mov-api';
 
 @Component({
@@ -16,6 +16,7 @@ import { ComponentType } from '@shared/mov-api';
 	imports: [
 		CommonModule
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './component-type-node-container.component.html'
 })
 export class ComponentTypeNodeContainerComponent implements AfterViewInit {

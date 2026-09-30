@@ -28,7 +28,7 @@
       <div class="text-left">
         {{connection.source?.component?.name}}
         <button mat-icon-button color="primary"
-          [routerLink]="['/main/topology/live/components',connection.source?.component?.id,'show']"
+          [routerLink]="['/main/topology/live/components',$safeNavigationMigration(connection.source?.component?.id),'show']"
           [queryParams]="{'connectionId':connection.id}">
           <mat-icon>link</mat-icon>
         </button>
@@ -45,7 +45,7 @@
         >{{connection.source?.channel?.description}}</div>
       }
       <app-channels-view class="text-left pl-7 col-span-2"
-      [channels]="connection.source?.channel"></app-channels-view>
+      [channels]="$safeNavigationMigration(connection.source?.channel)"></app-channels-view>
       <div class="text-left font-bold col-span-2"
       i18n="The label of the connection target attribute@@main_topology_connections_show_target-label">Target</div>
       <div class="text-left pl-7 font-bold"
@@ -53,7 +53,7 @@
       <div class="text-left">
         {{connection.target?.component?.name}}
         <button mat-icon-button color="primary"
-          [routerLink]="['/main/topology/live/components',connection.target?.component?.id,'show']"
+          [routerLink]="['/main/topology/live/components',$safeNavigationMigration(connection.target?.component?.id),'show']"
           [queryParams]="{'connectionId':connection.id}">
           <mat-icon>link</mat-icon>
         </button>
@@ -74,7 +74,7 @@
         i18n="The label of the connection target node channel subscribe@@main_topology_connections_show_node-channel-subscribe-label">Subscribe</div>
       }
       <app-channels-view class="text-left pl-7 col-span-2"
-      [channels]="connection.target?.channel"></app-channels-view>
+      [channels]="$safeNavigationMigration(connection.target?.channel)"></app-channels-view>
       @if (connection.subscriptions) {
         <div class="text-left font-bold col-span-2"
         i18n="The label of the connection subscriptions attribute@@main_topology_connections_show_subscriptions-label">Subscriptions</div>
@@ -86,7 +86,7 @@
             <div>
               {{subscrition.channel?.name}}
               <button mat-icon-button color="primary"
-                [routerLink]="['/main/topology/live/components',subscrition.component?.id,'show']"
+                [routerLink]="['/main/topology/live/components',$safeNavigationMigration(subscrition.component?.id),'show']"
                 [queryParams]="{'connectionId':connection.id}">
                 <mat-icon>link</mat-icon>
               </button>

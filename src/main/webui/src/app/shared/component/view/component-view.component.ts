@@ -7,7 +7,7 @@
 */
 
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ChannelsViewComponent } from '@app/shared/channels-view';
 import { LoadingComponent } from '@app/shared/loading';
 import { TimestampPipe } from '@app/shared/timestamp';
@@ -21,6 +21,7 @@ import { Component as MOVComponent } from '@shared/mov-api';
 		TimestampPipe,
 		ChannelsViewComponent
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './component-view.component.html'
 })
 export class ComponentViewComponent {

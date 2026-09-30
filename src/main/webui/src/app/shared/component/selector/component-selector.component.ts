@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatError, MatFormField, MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
@@ -46,6 +46,7 @@ export function requiredMinComponent(): ValidatorFn {
 		MatAutocompleteTrigger
 	],
 	templateUrl: './component-selector.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrls: ['./component-selector.component.css'],
 })
 export class ComponentSelectorComponent implements OnInit, OnDestroy {

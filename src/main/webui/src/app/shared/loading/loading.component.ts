@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
@@ -14,6 +14,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 	selector: 'app-loading',
 	imports: [MatProgressSpinner],
 	templateUrl: './loading.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent {
