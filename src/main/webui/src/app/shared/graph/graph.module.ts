@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
 import { ComponentTypeNodeContainerComponent } from './component-type-node-container.component';
 import { ComponentTypeBadgeComponent } from './component-type-badge.component';
 import { LayoutService } from './layout.service';
-import { ConnectionMarkersComponent } from './connection-markers.component';
 import { ToConnectionTypePipe } from './to-connection-type.pipe';
 import { ToChannelNamePipe } from './to-channel-name.pipe';
 
@@ -22,14 +21,12 @@ import { ToChannelNamePipe } from './to-channel-name.pipe';
 		CommonModule,
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
-		ConnectionMarkersComponent,
 		ToConnectionTypePipe,
 		ToChannelNamePipe
 	],
 	exports: [
 		ComponentTypeNodeContainerComponent,
 		ComponentTypeBadgeComponent,
-		ConnectionMarkersComponent,
 		ToConnectionTypePipe,
 		ToChannelNamePipe
 	],

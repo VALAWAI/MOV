@@ -21,6 +21,7 @@
 		<jacoco.version>0.8.13</jacoco.version>
 		<quarkus.quinoa.version>2.9.2</quarkus.quinoa.version>
 		<quarkus-quickjs4j.version>0.0.3</quarkus-quickjs4j.version>
+		<argLine>--enable-native-access=ALL-UNNAMED</argLine>
 	</properties>
 	<dependencyManagement>
 		<dependencies>

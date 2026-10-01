@@ -46,8 +46,8 @@
 						<f-connection-gradient [fStartColor]="connection.color(isSelected(connection))"
 							[fEndColor]="connection.color(isSelected(connection))">
 						</f-connection-gradient>
-						<app-connection-markers [color]="connection.enabled?'fill-sky-400':'fill-gray-200'"
-							selectedColor="fill-red-800"></app-connection-markers>
+						<f-connection-marker-arrow>
+						</f-connection-marker-arrow>
 					</f-connection> }
 				</f-canvas> </f-flow>
 		</div>

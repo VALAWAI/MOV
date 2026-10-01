@@ -1,3 +1,11 @@
 ::ng-deep.f-connection-drag-handle {
 	fill: transparent;
 }
+
+:host ::ng-deep f-connection {
+	fill: #60a5fa !important;
+}
+
+:host ::ng-deep f-connection.f-selected {
+	fill: #f87171 !important;
+}

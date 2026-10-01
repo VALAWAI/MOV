@@ -1,66 +1,96 @@
 <div class="flex flex-col sm:flex-row gap-3 items-center justify-center content-center">
-  <div class="relative grow bg-gray-50 w-gull h-full p-2" [ngStyle]="{'height.px':height,'width.px':width}">
+  <div class="relative grow bg-gray-50 w-full h-full p-2" [ngStyle]="{'height.px': height, 'width.px': width}">
     <f-flow fDraggable (fSelectionChange)="onSelectionChange($event)" (fCreateNode)="onCreateNode($event)"
       (fCreateConnection)="onConnectionAdded($event)" (fReassignConnection)="onReassignConnection($event)"
       class="w-full">
-      @if(conf.editorShowGrid == true){ <f-background> <f-circle-pattern></f-circle-pattern>
-      </f-background>} <f-line-alignment [fAlignThreshold]="10"></f-line-alignment>
+
+      @if (conf.editorShowGrid === true) {
+      <f-background>
+        <f-circle-pattern></f-circle-pattern>
+      </f-background>
+      }
+
+      <f-line-alignment [fAlignThreshold]="10"></f-line-alignment>
       <f-selection-area></f-selection-area>
-      <f-canvas fZoom> <f-connection-for-create></f-connection-for-create>
-        @for(node of topology.nodes;track node.id){
+
+      <f-canvas fZoom>
+        <f-connection-for-create></f-connection-for-create>
+
+        <!-- NODES -->
+        @for (node of topology.nodes; track node.id) {
         <div fNode [fNodeId]="node.id" fDragHandle [fNodePosition]="node.position"
-          (fNodePositionChange)="onNodePositionChange(node,$event)">
-          @if( node.sourceNotification == null ){
+          (fNodePositionChange)="onNodePositionChange(node, $event)">
+
+          @if (node.sourceNotification == null) {
           <!-- Component node -->
           <app-component-type-node-container [type]="node.component!.type!" [isSelected]="node.id === selected?.id"
-            (width)="node.width=$event" (height)="node.height=$event">
+            (width)="node.width = $event" (height)="node.height = $event">
             <div class="flex flex-row gap-2 items-center justify-center bg-gray-100 rounded-lg p-2">
               <app-content-type-badge [type]="node.component!.type!" class="grow-0"></app-content-type-badge>
-              <div class="text-wrap font-bold text-lg wrap-break-word">{{node.component!.name}}</div>
-            </div>
-            @for(endpoint of node.endpoints;track endpoint.id){
-            @if(endpoint.isSource){
-            <div class="grow p-2 gap-2" fNodeOutput [fOutputId]="endpoint.id" [fOutputMultiple]="true"
-              fOutputConnectableSide="right" fNodeOutlet>
-              <mat-icon color="primary" fontIcon="publish"></mat-icon>
-              {{endpoint.channel|toChannelName}}
+              <div class="text-wrap font-bold text-lg wrap-break-word">{{ node.component!.name }}</div>
             </div>
 
-            } @else{
-            <div class="grow p-2 gap-2" fNodeInput [fInputId]="endpoint.id" [fInputMultiple]="true"
-              fInputConnectableSide="left">
-              <mat-icon color="primary" fontIcon="download"></mat-icon>
-              {{endpoint.channel|toChannelName}}
+            @for (endpoint of node.endpoints; track endpoint.id) {
+            @if (endpoint.isSource) {
+            <!-- V19 Connector Source -->
+            <div class="grow p-2 gap-2" fConnector [fConnectorId]="endpoint.id" fConnectorType="source"
+              fConnectorSide="right">
+              <mat-icon color="primary" fontIcon="publish"></mat-icon>
+              {{ endpoint.channel | toChannelName }}
             </div>
-            } }
+            } @else {
+            <!-- V19 Connector Target -->
+            <div class="grow p-2 gap-2" fConnector [fConnectorId]="endpoint.id" fConnectorType="target"
+              fConnectorSide="left">
+              <mat-icon color="primary" fontIcon="download"></mat-icon>
+              {{ endpoint.channel | toChannelName }}
+            </div>
+            }
+            }
           </app-component-type-node-container>
-          }@else{
+          } @else {
           <!-- Notification node -->
           <div class="rounded-full border-2 w-6 h-6 hover:stroke-7 relative"
-            [ngClass]="{'border-red-400 bg-red-800':node.id === selected?.id,'border-sky-400 bg-sky-400':node.id !== selected?.id}">
-            <div fNodeInput [fInputId]="node.notificationTarget!.id" [fInputMultiple]="true"
-              fInputConnectableSide="top"></div>
-            <div fNodeOutput [fOutputId]="node.notificationSource!.id" [fOutputMultiple]="true"
-              fOutputConnectableSide="bottom"></div>
-            <div fNodeOutlet class="absolute top-5 start-4 text-sky-800 border border-sky-800 rounded-full text-sm">
+            [ngClass]="{'border-red-400 bg-red-800': node.id === selected?.id, 'border-sky-400 bg-sky-400': node.id !== selected?.id}">
+            <!-- V19 Target Connector -->
+            <div fConnector [fConnectorId]="node.notificationTarget!.id" fConnectorType="target" fConnectorSide="top">
+            </div>
+
+            <!-- V19 Source Connector -->
+            <div fConnector [fConnectorId]="node.notificationSource!.id" fConnectorType="source"
+              fConnectorSide="bottom"></div>
+
+            <div class="absolute top-5 start-4 text-sky-800 border border-sky-800 rounded-full text-sm">
               <mat-icon class="scale-75">arrow_downward</mat-icon>
             </div>
           </div>
           }
         </div>
-        } @for(connection of topology.connections;track connection.id){ <f-connection
-          [fReassignDisabled]="connection.target.channel==null" [fType]="connection.type|toConnectionType"
-          [fConnectionId]="connection.id" [fOutputId]="connection.source.id" [fInputId]="connection.target.id"
-          class="hover:stroke-7"
-          [ngClass]="{'stroke-3':connection.id==selected?.id,'stroke-2':connection.id!=selected?.id,'notification':connection.isNotification}">
-          [fOffset]="30">
-          <f-connection-gradient [fStartColor]="connection.colorFor(connection.id==selected?.id)|toCssVar"
-            [fEndColor]="connection.colorFor(connection.id==selected?.id)|toCssVar">
+        }
+
+        <!-- CONNECTIONS -->
+        @for (connection of topology.connections; track connection.id) {
+        <f-connection [fReassignDisabled]="connection.target.channel == null"
+          [fType]="connection.type | toConnectionType" [fConnectionId]="connection.id"
+          [fSourceId]="connection.source.id" [fTargetId]="connection.target.id" [fOffset]="30" class="hover:stroke-7"
+          [ngClass]="{
+              'stroke-3': connection.id == selected?.id,
+              'stroke-2': connection.id != selected?.id,
+              'notification': connection.isNotification
+            }">
+
+          <!-- V19 Gradient declaration -->
+          <f-connection-gradient [fStartColor]="connection.colorFor(connection.id == selected?.id) | toCssVar"
+            [fEndColor]="connection.colorFor(connection.id == selected?.id) | toCssVar">
           </f-connection-gradient>
-          <app-connection-markers [color]="connection.fillColorFor(false)"
-            [selectedColor]="connection.fillColorFor(true)"></app-connection-markers>
-        </f-connection> }
-      </f-canvas> </f-flow>
+          <f-connection-marker-arrow>
+          </f-connection-marker-arrow>
+        </f-connection>
+
+        }
+      </f-canvas>
+    </f-flow>
+
     <!-- TOOLBAR -->
     <div class="absolute top-2 end-2">
       <button mat-icon-button color="primary" (click)="zoomIn()">
@@ -89,17 +119,16 @@
         <a href="https://valawai.github.io/docs/architecture/implementations/mov/user_interface" target="_blank">
           <button mat-menu-item
             i18n="The menu item that go to the Editor help site@@main_topology_editor-menu-help">Help</button>
-        </a> </mat-menu>
+        </a>
+      </mat-menu>
       <mat-menu #fileMenu="matMenu">
         <button mat-menu-item (click)="changeTopology()">
           <mat-icon>note_add</mat-icon>
-          <span i18n="The menu item that create a new topology@@main_topology_editor-menu-file-new">New
-            topology</span>
+          <span i18n="The menu item that create a new topology@@main_topology_editor-menu-file-new">New topology</span>
         </button>
         <button mat-menu-item (click)="openTopology()">
           <mat-icon>folder_open</mat-icon>
-          <span i18n="The menu item that save the current topology@@main_topology_editor-menu-file-open">
-            Open... </span>
+          <span i18n="The menu item that save the current topology@@main_topology_editor-menu-file-open">Open...</span>
         </button>
         <button mat-menu-item (click)="saveTopology()">
           <mat-icon>save</mat-icon>
@@ -128,13 +157,11 @@
         </button>
         <button mat-menu-item [matMenuTriggerFor]="addNodeMenu">
           <mat-icon color="primary">add</mat-icon>
-          <span i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add
-            node</span>
+          <span i18n="The menu label to add a node@@main_topology_editor-menu-add-node">Add node</span>
         </button>
         <button mat-menu-item [matMenuTriggerFor]="selectNodeMenu" [disabled]="topology.nodes.length==0">
           <mat-icon color="warn">select</mat-icon>
-          <span i18n="The menu label to select a node@@main_topology_editor-menu-select-node">Select
-            node</span>
+          <span i18n="The menu label to select a node@@main_topology_editor-menu-select-node">Select node</span>
         </button>
       </mat-menu>
       <mat-menu #addNodeMenu="matMenu">
@@ -142,94 +169,92 @@
         <button mat-menu-item (click)="addNodeByType('C1')">C1</button>
         <button mat-menu-item (click)="addNodeByType('C2')">C2</button>
       </mat-menu>
-      <mat-menu #selectNodeMenu="matMenu"> @for(node of
-        topology.nodes;track node.id){
+      <mat-menu #selectNodeMenu="matMenu">
+        @for (node of topology.nodes; track node.id) {
         <button mat-menu-item (click)="selected = node">
-          @if(node.component != null){ {{node.component.name}} } @else{
-          Notification from {{node.sourceNotification?.channel}} }</button>
-        } </mat-menu>
+          @if (node.component != null) { {{ node.component.name }} }
+          @else { Notification from {{ node.sourceNotification?.channel }} }
+        </button>
+        }
+      </mat-menu>
       <mat-menu #viewMenu="matMenu">
         <button mat-menu-item (click)="fit()">
           <mat-icon>aspect_ratio</mat-icon>
-          <span i18n="The menu label to fit@@main_topology_editor-menu-fit">Fit
-            to Screen </span>
+          <span i18n="The menu label to fit@@main_topology_editor-menu-fit">Fit to Screen</span>
         </button>
         <button mat-menu-item (click)="zoomIn()">
           <mat-icon>zoom_in</mat-icon>
-          <span i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-in">Zoom
-            in</span>
+          <span i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-in">Zoom in</span>
         </button>
         <button mat-menu-item (click)="zoomOut()">
           <mat-icon>zoom_out</mat-icon>
-          <span i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-out">Zoom
-            out</span>
+          <span i18n="The menu label to zoom in@@main_topology_editor-menu-zoon-out">Zoom out</span>
         </button>
         <button mat-menu-item (click)="toogleGrid()">
-          <!-- The icon is the reverse because the action what to do the reverse of the current status -->
-          @if (conf.editorShowGrid===true) {
-          <mat-icon>grid_off
-          </mat-icon>
+          @if (conf.editorShowGrid === true) {
+          <mat-icon>grid_off</mat-icon>
           } @else {
           <mat-icon>grid_on</mat-icon>
           }
-          <span i18n="The menu label to toogle grid@@main_topology_editor-menu-toogle-grid">Toggle
-            Grid</span>
+          <span i18n="The menu label to toogle grid@@main_topology_editor-menu-toogle-grid">Toggle Grid</span>
         </button>
         <button mat-menu-item [matMenuTriggerFor]="layoutsMenu">
           <span i18n="The menu label to change the layout@@main_topology_editor-menu-layouts">Layouts</span>
         </button>
       </mat-menu>
       <mat-menu #layoutsMenu="matMenu">
-        <!-- TO DO Enable when the dagree can be used because not have dynamic require.-->
         <button mat-menu-item (click)="changeLayout('horizontal')">
           <span
             i18n="The menu label to change the layout to horizontal@@main_topology_editor-menu-layout-horizontal">Horizontal</span>
         </button>
-        <!-- TO DO Enable when the dagree can be used because not have dynamic require.-->
         <button mat-menu-item (click)="changeLayout('vertical')">
           <span
             i18n="The menu label to change the layout to vertical@@main_topology_editor-menu-layout-vertical">Vertical</span>
         </button>
       </mat-menu>
     </div>
-    <!-- PALETE -->
+
+    <!-- PALETTE -->
     <div class="absolute start-2 top-2/5">
       <div class="flex flex-col gap-2">
-        <button class="p-2" fExternalItem [fPreview]="c0PreviewTemplate" fData="C0"
+        <button fExternalItem [fPreview]="c0PreviewTemplate" fData="C0"
           class="border bg-white border-indigo-500 text-indigo-500 p-1 hover:font-bold hover:text-xl">C0
         </button>
-        <button class="p-2" fExternalItem [fPreview]="c1PreviewTemplate" fData="C1"
+        <button fExternalItem [fPreview]="c1PreviewTemplate" fData="C1"
           class="border bg-white border-purple-500 text-purple-500 p-1 hover:font-bold hover:text-xl">C1
         </button>
         <button fExternalItem [fPreview]="c2PreviewTemplate" fData="C2"
-          class="border bg-white border-slky-500 text-sky-500 p-1 hover:font-bold hover:text-xl">C2</button>
+          class="border bg-white border-sky-500 text-sky-500 p-1 hover:font-bold hover:text-xl">C2
+        </button>
+
         <ng-template #c0PreviewTemplate>
           <div
-            class="border bg-white border-indigo-500 text-indigo-500 flex flex flex-col items-center justify-center content-center">
+            class="border bg-white border-indigo-500 text-indigo-500 flex flex-col items-center justify-center content-center">
             <div>C0</div>
           </div>
         </ng-template>
         <ng-template #c1PreviewTemplate>
           <div
-            class="border bg-white border-purple-500 text-purple-500 flex flex flex-col items-center justify-center content-center">
+            class="border bg-white border-purple-500 text-purple-500 flex flex-col items-center justify-center content-center">
             <div>C1</div>
           </div>
         </ng-template>
         <ng-template #c2PreviewTemplate>
           <div
-            class="border bg-white border-sky-500 text-sky-500 flex flex flex-col items-center justify-center content-center">
+            class="border bg-white border-sky-500 text-sky-500 flex flex-col items-center justify-center content-center">
             <div>C2</div>
           </div>
         </ng-template>
       </div>
     </div>
   </div>
+
   <div class="sm:w-96 p-2">
-    @if( selected == null ){
-    <app-topology-form> </app-topology-form>
-    } @else if( selectedEditorNode != null){
+    @if (selected == null) {
+    <app-topology-form></app-topology-form>
+    } @else if (selectedEditorNode != null) {
     <app-topology-node-form [node]="selectedEditorNode"></app-topology-node-form>
-    } @else if( selectedEditorConnection != null){
+    } @else if (selectedEditorConnection != null) {
     <app-topology-connection-form [connection]="selectedEditorConnection"></app-topology-connection-form>
     }
   </div>
