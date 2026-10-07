@@ -71,7 +71,6 @@ import { EditorEndpoint } from './editor-endpoint.model';
 import { SelectChannelDialog } from './select-channel.dialog';
 import { ApplyTopologyModule, ApplyTopologyService } from '@app/shared/apply-topology';
 
-
 @Component({
 	standalone: true,
 	selector: 'app-topology-editor',

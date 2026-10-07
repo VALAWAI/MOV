@@ -12,6 +12,13 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${MQ_USER:-mov}
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD:-password}
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 1m
+      start_interval: 5s
 
   mongo:
     image: mongo:latest
@@ -30,10 +37,17 @@ services:
       MOV_DB_USER_NAME: ${MOV_DB_USER_NAME:-mov}
       MOV_DB_USER_PASSWORD: ${MOV_DB_USER_PASSWORD:-password}
     volumes:
-      - ${MONGO_LOCAL_DATA:-~/.mongo_data/movDB}:/data/db
+      - ${MONGO_LOCAL_DATA:-../.mongo}:/data/db
     configs:
       - source: initialize-movDB.js
         target: /docker-entrypoint-initdb.d/init-mongo.js
+    healthcheck:
+      test: [ "CMD-SHELL", "mongosh --quiet localhost/${MOV_DB_NAME:-movDB} --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'" ]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 1m
+      start_interval: 5s
 
   mongo_express:
     image: mongo-express:latest
@@ -44,7 +58,7 @@ services:
       - mongo
     ports:
       - ${MONGO_ADMIN_PORT:-8082}:8081
-    networks:  
+    networks:
       - mov_dev
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_ADMIN_USER:-admin}
