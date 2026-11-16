@@ -125,7 +125,7 @@ public class RegisterComponentManager {
 
 			final var context = new ManagerContext(
 					this.service.decodeAndVerify(content, RegisterComponentPayload.class));
-			context.behaviour = this.configuration.getPropertyValue(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
+			context.behavior = this.configuration.getPropertyValue(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME,
 					TopologyBehavior.class, TopologyBehavior.AUTO_DISCOVER);
 			return this.validate(context).onItem().ifNull().switchTo(() -> {
 
@@ -135,25 +135,25 @@ public class RegisterComponentManager {
 					AddLog.fresh().withInfo().withMessage("Registered component {0}.", entity.id).withPayload(content)
 							.store();
 					context.entity = entity;
-					switch (context.behaviour) {
-					case TopologyBehavior.AUTO_DISCOVER:
-						this.autoDiscover(context);
-						break;
-					case TopologyBehavior.APPLY_TOPOLOGY:
-						this.createTopologyConnections(context);
-						break;
-					case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
-						if (context.definition == null) {
-
+					switch (context.behavior) {
+						case TopologyBehavior.AUTO_DISCOVER:
 							this.autoDiscover(context);
-
-						} else {
-
+							break;
+						case TopologyBehavior.APPLY_TOPOLOGY:
 							this.createTopologyConnections(context);
-						}
-						break;
-					default:
-						// DO_NOTHING
+							break;
+						case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+							if (context.definition == null) {
+
+								this.autoDiscover(context);
+
+							} else {
+
+								this.createTopologyConnections(context);
+							}
+							break;
+						default:
+							// DO_NOTHING
 					}
 
 					this.notifyComponentRegistered(context);
@@ -227,8 +227,8 @@ public class RegisterComponentManager {
 				}
 			}
 
-			if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
-					|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+			if (context.behavior == TopologyBehavior.APPLY_TOPOLOGY
+					|| context.behavior == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
 				return this.validateTopology(context);
 
@@ -253,7 +253,7 @@ public class RegisterComponentManager {
 
 		return this.configuration.getTopology().chain(topology -> {
 
-			if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+			if (topology == null && context.behavior != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
 				return Uni.createFrom().failure(new IllegalStateException("The topology to follow is not defined."));
 
@@ -285,7 +285,7 @@ public class RegisterComponentManager {
 					}
 				}
 
-				if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
+				if (context.definition == null && context.behavior == TopologyBehavior.APPLY_TOPOLOGY) {
 
 					return Uni.createFrom().failure(new IllegalStateException(
 							"The topology does not contains a definition to match the component."));
@@ -320,9 +320,9 @@ public class RegisterComponentManager {
 		public ChannelSchema notifyRegisteredChannel;
 
 		/**
-		 * The behaviour to do after the component has been registered.
+		 * The behavior to do after the component has been registered.
 		 */
-		public TopologyBehavior behaviour;
+		public TopologyBehavior behavior;
 
 		/**
 		 * The component to be registered.

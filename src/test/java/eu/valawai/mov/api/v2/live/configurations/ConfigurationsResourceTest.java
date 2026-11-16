@@ -103,17 +103,17 @@ public class ConfigurationsResourceTest extends APITestCase {
 		assertThat(updated.topologyId, is(configuration.topologyId));
 		assertThat(updated.topologyId, is(this.currentConfiguration.getTopologyId()));
 		assertThat(updated.createConnection,
-				is(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME)));
+				is(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME)));
 		assertThat(updated.registerComponent,
-				is(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME)));
+				is(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME)));
 
 	}
 
 	/**
-	 * Should set the create connection behaviour.
+	 * Should set the create connection behavior.
 	 */
 	@Test
-	public void shouldSetCreateConnectionBehaviour() {
+	public void shouldSetCreateConnectionBehavior() {
 
 		this.currentConfiguration.setPropertyAsync(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME, null);
 
@@ -125,18 +125,18 @@ public class ConfigurationsResourceTest extends APITestCase {
 				.as(LiveConfiguration.class);
 		assertThat(updated.topologyId, is(nullValue()));
 		assertThat(updated.createConnection, is(configuration.createConnection));
-		assertThat(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME),
+		assertThat(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME),
 				is(configuration.createConnection));
 		assertThat(updated.registerComponent,
-				is(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME)));
+				is(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME)));
 
 	}
 
 	/**
-	 * Should set the register component behaviour.
+	 * Should set the register component behavior.
 	 */
 	@Test
-	public void shouldSetRegisterComponentBehaviour() {
+	public void shouldSetRegisterComponentBehavior() {
 
 		this.currentConfiguration.setPropertyAsync(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME, null);
 
@@ -148,9 +148,9 @@ public class ConfigurationsResourceTest extends APITestCase {
 				.as(LiveConfiguration.class);
 		assertThat(updated.topologyId, is(nullValue()));
 		assertThat(updated.createConnection,
-				is(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME)));
+				is(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME)));
 		assertThat(updated.registerComponent, is(configuration.registerComponent));
-		assertThat(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME),
+		assertThat(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME),
 				is(configuration.registerComponent));
 
 	}
@@ -173,9 +173,9 @@ public class ConfigurationsResourceTest extends APITestCase {
 				.as(LiveConfiguration.class);
 		assertThat(updated, is(configuration));
 		assertThat(updated.topologyId, is(this.currentConfiguration.getTopologyId()));
-		assertThat(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME),
+		assertThat(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME),
 				is(configuration.createConnection));
-		assertThat(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME),
+		assertThat(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME),
 				is(configuration.registerComponent));
 
 	}
@@ -190,9 +190,9 @@ public class ConfigurationsResourceTest extends APITestCase {
 				.statusCode(Status.OK.getStatusCode()).extract().as(LiveConfiguration.class);
 		assertThat(liveConfiguration.topologyId, is(this.currentConfiguration.getTopologyId()));
 		assertThat(liveConfiguration.createConnection,
-				is(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME)));
+				is(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME)));
 		assertThat(liveConfiguration.registerComponent,
-				is(this.currentConfiguration.getTopologyBehaviour(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME)));
+				is(this.currentConfiguration.getTopologyBehavior(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME)));
 	}
 
 }

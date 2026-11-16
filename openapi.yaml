@@ -407,7 +407,7 @@ components:
           readOnly: true
           examples:
           - DO_NOTHING
-          description: The behaviour to follow when a component is registered in the
+          description: The behavior to follow when a component is registered in the
             MOV.
         createConnection:
           $ref: "#/components/schemas/TopologyBehavior"
@@ -415,7 +415,7 @@ components:
           readOnly: true
           examples:
           - DO_NOTHING
-          description: The behaviour to follow when a connection is created in the
+          description: The behavior to follow when a connection is created in the
             MOV.
     LiveConnection:
       type: object

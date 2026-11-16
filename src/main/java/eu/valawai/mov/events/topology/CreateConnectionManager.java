@@ -104,7 +104,7 @@ public class CreateConnectionManager {
 
 			final var context = new ManagerContext(
 					this.service.decodeAndVerify(content, CreateConnectionPayload.class));
-			context.behaviour = this.configuration.getPropertyValue(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
+			context.behavior = this.configuration.getPropertyValue(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 					TopologyBehavior.class, TopologyBehavior.AUTO_DISCOVER);
 			return this.validate(context).onItem().ifNull().switchTo(() -> {
 
@@ -115,25 +115,25 @@ public class CreateConnectionManager {
 						context.connectionId = connectionId;
 						AddLog.fresh().withInfo().withMessage("Created the connection {0}.", connectionId)
 								.withPayload(content).store();
-						switch (context.behaviour) {
-						case TopologyBehavior.AUTO_DISCOVER:
-							this.discoverNotifications(context);
-							break;
-						case TopologyBehavior.APPLY_TOPOLOGY:
-							this.createDefinedNotifications(context);
-							break;
-						case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
-							if (context.definition != null) {
-
-								this.createDefinedNotifications(context);
-
-							} else {
-
+						switch (context.behavior) {
+							case TopologyBehavior.AUTO_DISCOVER:
 								this.discoverNotifications(context);
-							}
-							break;
-						default:
-							// DO_NOTHING
+								break;
+							case TopologyBehavior.APPLY_TOPOLOGY:
+								this.createDefinedNotifications(context);
+								break;
+							case TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER:
+								if (context.definition != null) {
+
+									this.createDefinedNotifications(context);
+
+								} else {
+
+									this.discoverNotifications(context);
+								}
+								break;
+							default:
+								// DO_NOTHING
 						}
 
 						if (context.payload.enabled) {
@@ -208,8 +208,8 @@ public class CreateConnectionManager {
 					return Uni.createFrom().item(
 							new IllegalArgumentException("The source payload does not match the target payload."));
 
-				} else if (context.behaviour == TopologyBehavior.APPLY_TOPOLOGY
-						|| context.behaviour == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+				} else if (context.behavior == TopologyBehavior.APPLY_TOPOLOGY
+						|| context.behavior == TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
 					return this.validateTopology(context);
 
@@ -310,7 +310,7 @@ public class CreateConnectionManager {
 
 		return this.configuration.getTopologyGraphEntity().chain(topology -> {
 
-			if (topology == null && context.behaviour != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
+			if (topology == null && context.behavior != TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER) {
 
 				return Uni.createFrom().failure(new IllegalStateException("The topology to follow is not defined."));
 
@@ -336,7 +336,7 @@ public class CreateConnectionManager {
 					}
 				}
 
-				if (context.definition == null && context.behaviour == TopologyBehavior.APPLY_TOPOLOGY) {
+				if (context.definition == null && context.behavior == TopologyBehavior.APPLY_TOPOLOGY) {
 
 					return Uni.createFrom().failure(new IllegalStateException(
 							"The topology does not contains a definition to match the connection."));
@@ -361,9 +361,9 @@ public class CreateConnectionManager {
 		public AddTopologyConnection add;
 
 		/**
-		 * The behaviour to do after the connection has been created.
+		 * The behavior to do after the connection has been created.
 		 */
-		public TopologyBehavior behaviour;
+		public TopologyBehavior behavior;
 
 		/**
 		 * The received payload.

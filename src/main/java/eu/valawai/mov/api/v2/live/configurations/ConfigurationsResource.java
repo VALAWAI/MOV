@@ -154,9 +154,9 @@ public class ConfigurationsResource {
 		final var configuration = new LiveConfiguration();
 		configuration.topologyId = this.configuration.getTopologyId();
 		configuration.createConnection = this.configuration
-				.getTopologyBehaviour(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME);
+				.getTopologyBehavior(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME);
 		configuration.registerComponent = this.configuration
-				.getTopologyBehaviour(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME);
+				.getTopologyBehavior(MOVConfiguration.EVENT_REGISTER_COMPONENT_NAME);
 		return Uni.createFrom().item(Response.ok(configuration).build());
 
 	}

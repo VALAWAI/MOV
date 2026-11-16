@@ -59,7 +59,7 @@ export { LiveTopologyComponentOutConnection } from './live/topologies/live-topol
 export { LiveTopologyConnectionEndpoint } from './live/topologies/live-topology-connection-endpoint.model';
 
 export { LiveConfiguration } from './live/configurations/live-configuration.model';
-export { type TopologyBehavior, TOPOLOGY_BEHAVIOR_NAMES } from './live/configurations/topology-behaviour.model';
+export { type TopologyBehaviour, TOPOLOGY_BEHAVIOUR_NAMES } from './live/configurations/topology-behaviour.model';
 
 /**
  * Check if two payload schemas match.

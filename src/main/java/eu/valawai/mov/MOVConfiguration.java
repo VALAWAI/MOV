@@ -206,7 +206,7 @@ public interface MOVConfiguration {
 	public static final String COMPONENTS_LIBRARY_LAST_UPDATE_NAME = "mov.components-library.last-update";
 
 	/**
-	 * The configurations used to determine the behaviour of the MOV when receive an
+	 * The configurations used to determine the behavior of the MOV when receive an
 	 * event.
 	 *
 	 * @return the configuration of the events management.
@@ -214,14 +214,14 @@ public interface MOVConfiguration {
 	public Events events();
 
 	/**
-	 * Determine the behaviour of the MOV when receive some specific events.
+	 * Determine the behavior of the MOV when receive some specific events.
 	 */
 	interface Events {
 
 		/**
 		 * Specify what the MOV has to do after a component has been registered.
 		 *
-		 * @return the behaviour to do after the component has been registered.
+		 * @return the behavior to do after the component has been registered.
 		 */
 		@WithDefault("AUTO_DISCOVER")
 		TopologyBehavior registerComponent();
@@ -229,7 +229,7 @@ public interface MOVConfiguration {
 		/**
 		 * Specify what the MOV has to do after a connection has been created.
 		 *
-		 * @return the behaviour to do after a new topology connection has been created.
+		 * @return the behavior to do after a new topology connection has been created.
 		 */
 		@WithDefault("AUTO_DISCOVER")
 		TopologyBehavior createConnection();
@@ -237,13 +237,13 @@ public interface MOVConfiguration {
 	}
 
 	/**
-	 * The property name with the behaviour to apply when a components has been
+	 * The property name with the behavior to apply when a components has been
 	 * registered.
 	 */
 	public static final String EVENT_REGISTER_COMPONENT_NAME = "mov.events.register-component";
 
 	/**
-	 * The property name with the behaviour to apply when a connection has been
+	 * The property name with the behavior to apply when a connection has been
 	 * created.
 	 */
 	public static final String EVENT_CREATE_CONNECTION_NAME = "mov.events.create-connection";

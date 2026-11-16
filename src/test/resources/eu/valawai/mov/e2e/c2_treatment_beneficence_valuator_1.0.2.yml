@@ -281,7 +281,7 @@ components:
                 - $ref: '#/components/schemas/payload_schema'
 
     parameters_payload:
-      description: The parameters that can change the component behaviour
+      description: The parameters that can change the component behavior
       type: object
       properties:
         max_new_tokens:

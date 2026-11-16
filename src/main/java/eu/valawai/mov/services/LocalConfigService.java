@@ -234,11 +234,11 @@ public class LocalConfigService {
 	/**
 	 * Get the {@link TopologyBehavior} defined in a property.
 	 *
-	 * @param name of the property to get its behaviour.
+	 * @param name of the property to get its behavior.
 	 *
-	 * @return the topology behaviour defined in a property.
+	 * @return the topology behavior defined in a property.
 	 */
-	public TopologyBehavior getTopologyBehaviour(String name) {
+	public TopologyBehavior getTopologyBehavior(String name) {
 
 		final var value = this.getPropertyValue(name, String.class, null);
 		if (value != null) {
@@ -249,7 +249,7 @@ public class LocalConfigService {
 
 			} catch (final Error error) {
 
-				Log.errorv(error, "Cannot get the configured topology behaviour from {0}.", value);
+				Log.errorv(error, "Cannot get the configured topology behavior from {0}.", value);
 
 			}
 

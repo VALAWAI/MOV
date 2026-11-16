@@ -38,16 +38,16 @@ public class LiveConfiguration extends Model {
 	public ObjectId topologyId;
 
 	/**
-	 * The behaviour to follow when a component is registered in the MOV.
+	 * The behavior to follow when a component is registered in the MOV.
 	 */
-	@Schema(description = "The behaviour to follow when a component is registered in the MOV.", readOnly = true, examples = "DO_NOTHING")
+	@Schema(description = "The behavior to follow when a component is registered in the MOV.", readOnly = true, examples = "DO_NOTHING")
 	@Nullable
 	public TopologyBehavior registerComponent;
 
 	/**
-	 * The behaviour to follow when a component is registered in the MOV.
+	 * The behavior to follow when a component is registered in the MOV.
 	 */
-	@Schema(description = "The behaviour to follow when a connection is created in the MOV.", readOnly = true, examples = "DO_NOTHING")
+	@Schema(description = "The behavior to follow when a connection is created in the MOV.", readOnly = true, examples = "DO_NOTHING")
 	@Nullable
 	public TopologyBehavior createConnection;
 

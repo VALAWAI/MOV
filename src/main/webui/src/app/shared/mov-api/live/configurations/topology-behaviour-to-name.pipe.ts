@@ -8,10 +8,10 @@
 
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { TopologyBehavior } from './topology-behaviour.model';
+import { TopologyBehaviour } from './topology-behaviour.model';
 
 /*
- * Convert a TopologyBehavior to a name.
+ * Convert a TopologyBehaviour to a name.
  * See:
  *   DatePipe
 */
@@ -25,7 +25,7 @@ export class TopologyBehaviourToNamePipe implements PipeTransform {
 	/**
 	 * Convert the time stmap to a string.
 	 */
-	transform(value: TopologyBehavior | string | null | undefined): string {
+	transform(value: TopologyBehaviour | string | null | undefined): string {
 
 		if (value != null) {
 

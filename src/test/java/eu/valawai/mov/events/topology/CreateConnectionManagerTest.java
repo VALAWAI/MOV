@@ -752,11 +752,11 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that create a connection without notifications because the behaviour
+	 * Check that create a connection without notifications because the behavior
 	 * say it.
 	 */
 	@Test
-	public void shouldCreateConnectionWithoutNotificationBecuaseBehaviourIsDoNothing() {
+	public void shouldCreateConnectionWithoutNotificationBecuaseBehaviorIsDoNothing() {
 
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 				TopologyBehavior.DO_NOTHING.name()));
@@ -848,7 +848,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that can create a connection where no topology when the behaviour is
+	 * Check that can create a connection where no topology when the behavior is
 	 * {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
@@ -874,7 +874,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 	/**
 	 * Check that can create a connection where undefined topology when the
-	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 * behavior is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
 	public void shouldCreateConnectionWhenUndefinedTopologyButApplyTopologyOrAutoDiscover() {
@@ -889,7 +889,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	}
 
 	/**
-	 * Check that can create a connection where empty topology when the behaviour is
+	 * Check that can create a connection where empty topology when the behavior is
 	 * {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
@@ -908,7 +908,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 	/**
 	 * Check that can create a connection where topology without connections when
-	 * the behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 * the behavior is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
 	public void shouldCreateConnectionWhenTopologyDoesNotHJaveconnectionsButApplyTopologyOrAutoDiscover() {
@@ -929,7 +929,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 	/**
 	 * Check that can create a connection where is not defined in topology when the
-	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 * behavior is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
 	public void shouldCreateConnectionWhenConnectionNotDefineInTopologyWhenApplyTopologyOrAutoDiscover() {
@@ -945,7 +945,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 
 	/**
 	 * Check that can create a connection where is not defined in topology when the
-	 * behaviour is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
+	 * behavior is {@link TopologyBehavior#APPLY_TOPOLOGY_OR_AUTO_DISCOVER}.
 	 */
 	@Test
 	public void shouldNotCreateConnectionWhenConnectionNotDefineInTopologyWhenApplyTopology() {
@@ -1062,7 +1062,7 @@ public class CreateConnectionManagerTest extends MovEventTestCase {
 	 * Create a connection where is not defined in a topology.
 	 */
 	@Test
-	public void shouldCreateConnectionDefinedInTopologyWhenBehaviourIsApplyTopologyOrAutoDiscover() {
+	public void shouldCreateConnectionDefinedInTopologyWhenBehaviorIsApplyTopologyOrAutoDiscover() {
 
 		this.assertItemNotNull(this.configuration.setProperty(MOVConfiguration.EVENT_CREATE_CONNECTION_NAME,
 				TopologyBehavior.APPLY_TOPOLOGY_OR_AUTO_DISCOVER.name()));
