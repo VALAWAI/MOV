@@ -23,7 +23,7 @@ import {
 	MovApiService,
 	TOPOLOGY_BEHAVIOR_NAMES,
 	TopologyBehavior,
-	TopologyBehaviourToNamePipe
+	TopologyBehaviorToNamePipe
 } from '@app/shared/mov-api';
 import { MessagesService } from '@app/shared/messages';
 import { ApplyTopologyService } from '@app/shared/apply-topology';
@@ -41,7 +41,7 @@ import { ApplyTopologyService } from '@app/shared/apply-topology';
 		MatSlideToggleModule,
 		RouterModule,
 		MatSelectModule,
-		TopologyBehaviourToNamePipe
+		TopologyBehaviorToNamePipe
 	],
 	changeDetection: ChangeDetectionStrategy.Eager,
 	templateUrl: './config.component.html'
@@ -104,13 +104,13 @@ export class ConfigComponent implements OnInit, OnDestroy {
 			editorAutosaveTime: this.fb.control<number>(this.conf.editorAutosaveTime, [Validators.required, Validators.min(1000)]),
 			editorMaxHistory: this.fb.control<number>(this.conf.editorMaxHistory, [Validators.required, Validators.min(0)]),
 			liveTopologyId: this.fb.control<string | null>(null, Validators.pattern(/[0-9a-fA-F]{24}/)),
-			liveRegisterComponentBehaviour: this.fb.control<TopologyBehavior>("AUTO_DISCOVER", Validators.required),
-			liveCreateConnectionBehaviour: this.fb.control<TopologyBehavior>("AUTO_DISCOVER", Validators.required),
+			liveRegisterComponentBehavior: this.fb.control<TopologyBehavior>("AUTO_DISCOVER", Validators.required),
+			liveCreateConnectionBehavior: this.fb.control<TopologyBehavior>("AUTO_DISCOVER", Validators.required),
 		}
 	);
 
 	/**
-	 * The names for the topology behaviours.
+	 * The names for the topology behaviors.
 	 */
 	public readonly topologyBehaviorNames = TOPOLOGY_BEHAVIOR_NAMES;
 
@@ -173,7 +173,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 			}
 		);
 		this.subscribetoChangesTo(
-			this.confForm.controls.liveRegisterComponentBehaviour,
+			this.confForm.controls.liveRegisterComponentBehavior,
 			(value) => {
 
 				this.liveConfiguration.registerComponent = value;
@@ -181,7 +181,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 			}
 		);
 		this.subscribetoChangesTo(
-			this.confForm.controls.liveCreateConnectionBehaviour,
+			this.confForm.controls.liveCreateConnectionBehavior,
 			(value) => {
 
 				this.liveConfiguration.createConnection = value;
@@ -199,8 +199,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
 		this.confForm.patchValue(
 			{
 				liveTopologyId: conf.topologyId,
-				liveRegisterComponentBehaviour: conf.registerComponent,
-				liveCreateConnectionBehaviour: conf.createConnection
+				liveRegisterComponentBehavior: conf.registerComponent,
+				liveCreateConnectionBehavior: conf.createConnection
 			},
 			{
 				emitEvent: false

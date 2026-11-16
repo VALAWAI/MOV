@@ -8,7 +8,7 @@
 
 import { Injectable } from '@angular/core';
 import { EFConnectionType } from '@foblex/flow';
-import { BehaviourSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
  * This sercice is used to manage the configuration of the MOV.
@@ -21,68 +21,68 @@ export class ConfigService {
 	/**
 	 * The subject to notify the changes on the polling time.
 	 */
-	private pollingTimeSubject: BehaviourSubject<number>;
+	private pollingTimeSubject: BehaviorSubject<number>;
 
 	/**
 	 * The subject to notify the changes on the editor show grid.
 	 */
-	private editorShowGridSubject: BehaviourSubject<boolean>;
+	private editorShowGridSubject: BehaviorSubject<boolean>;
 
 	/**
 	 * The subject to notify the changes on the polling iterations.
 	 */
-	private pollingIterationsSubject: BehaviourSubject<number>;
+	private pollingIterationsSubject: BehaviorSubject<number>;
 
 	/**
 	 * The subject to notify the changes on the editor if it has to autoload the last edited topology.
 	 */
-	private editorAutoloadLastTopologySubject: BehaviourSubject<boolean>;
+	private editorAutoloadLastTopologySubject: BehaviorSubject<boolean>;
 
 	/**
 	 * The subject to notify the changes whne the editor has stored a topology.
 	 */
-	private editorLastStoredTopologyIdSubject: BehaviourSubject<string | null>;
+	private editorLastStoredTopologyIdSubject: BehaviorSubject<string | null>;
 
 	/**
 	 * The subject to notify the changes on the live show grid.
 	 */
-	private liveShowGridSubject: BehaviourSubject<boolean>;
+	private liveShowGridSubject: BehaviorSubject<boolean>;
 
 	/**
 	 * The type of edges in the live graph.
 	 */
-	private liveEdgeTypeSubject: BehaviourSubject<EFConnectionType>;
+	private liveEdgeTypeSubject: BehaviorSubject<EFConnectionType>;
 
 	/**
 	 * The subject to notify the changes on the live graph maximum nodes to show.
 	 */
-	private liveMaxNodesSubject: BehaviourSubject<number>;
+	private liveMaxNodesSubject: BehaviorSubject<number>;
 
 	/**
 	 * The subject to notify the changes on the editor autosave time.
 	 */
-	private editorAutosaveTimeSubject: BehaviourSubject<number>;
+	private editorAutosaveTimeSubject: BehaviorSubject<number>;
 
 	/**
 	 * The subject to notify the changes on the editor max history.
 	 */
-	private editorMaxHistorySubject: BehaviourSubject<number>;
+	private editorMaxHistorySubject: BehaviorSubject<number>;
 
 	/**
 	 * Create the service.
 	 */
 	constructor() {
 
-		this.pollingTimeSubject = new BehaviourSubject<number>(this.pollingTime);
-		this.editorShowGridSubject = new BehaviourSubject<boolean>(this.editorShowGrid);
-		this.pollingIterationsSubject = new BehaviourSubject<number>(this.pollingIterations);
-		this.editorAutoloadLastTopologySubject = new BehaviourSubject<boolean>(this.editorAutoloadLastTopology);
-		this.editorLastStoredTopologyIdSubject = new BehaviourSubject<string | null>(this.editorLastStoredTopologyId);
-		this.liveShowGridSubject = new BehaviourSubject<boolean>(this.liveShowGrid);
-		this.liveEdgeTypeSubject = new BehaviourSubject<EFConnectionType>(this.liveEdgeType);
-		this.liveMaxNodesSubject = new BehaviourSubject<number>(this.liveMaxNodes);
-		this.editorAutosaveTimeSubject = new BehaviourSubject<number>(this.editorAutosaveTime);
-		this.editorMaxHistorySubject = new BehaviourSubject<number>(this.editorMaxHistory);
+		this.pollingTimeSubject = new BehaviorSubject<number>(this.pollingTime);
+		this.editorShowGridSubject = new BehaviorSubject<boolean>(this.editorShowGrid);
+		this.pollingIterationsSubject = new BehaviorSubject<number>(this.pollingIterations);
+		this.editorAutoloadLastTopologySubject = new BehaviorSubject<boolean>(this.editorAutoloadLastTopology);
+		this.editorLastStoredTopologyIdSubject = new BehaviorSubject<string | null>(this.editorLastStoredTopologyId);
+		this.liveShowGridSubject = new BehaviorSubject<boolean>(this.liveShowGrid);
+		this.liveEdgeTypeSubject = new BehaviorSubject<EFConnectionType>(this.liveEdgeType);
+		this.liveMaxNodesSubject = new BehaviorSubject<number>(this.liveMaxNodes);
+		this.editorAutosaveTimeSubject = new BehaviorSubject<number>(this.editorAutosaveTime);
+		this.editorMaxHistorySubject = new BehaviorSubject<number>(this.editorMaxHistory);
 	}
 
 	/**

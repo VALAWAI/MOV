@@ -7,11 +7,11 @@
 */
 
 /**
- * The names of possible behaviours to do when process an event.
+ * The names of possible behaviors to do when process an event.
  *
  * @author VALAWAI
  */
-export const TOPOLOGY_BEHAVIOUR_NAMES = [
+export const TOPOLOGY_BEHAVIOR_NAMES = [
   'DO_NOTHING'
   , 'AUTO_DISCOVER'
   , 'APPLY_TOPOLOGY'
@@ -19,8 +19,8 @@ export const TOPOLOGY_BEHAVIOUR_NAMES = [
 ] as const;
 
 /**
- * Enumerates the possible behaviours to do when process an event.
+ * Enumerates the possible behaviors to do when process an event.
  *
  * @author VALAWAI
  */
-export type TopologyBehaviour = typeof TOPOLOGY_BEHAVIOUR_NAMES[number];
+export type TopologyBehavior = typeof TOPOLOGY_BEHAVIOR_NAMES[number];

@@ -131,18 +131,18 @@
 					i18n="The error message if the live topology identifier is not found@@main_config_live-configuration-topology-id-not-found-error">
 				The specified topology identifier was not found.</mat-error> } </mat-form-field>
 				<mat-form-field> <mat-label
-					i18n="The label of the live configuration register component behaviour@@main_config_editor-live-register-component-behaviour-label">When
+					i18n="The label of the live configuration register component behavior@@main_config_editor-live-register-component-behavior-label">When
 				register a component </mat-label> <mat-select
-					formControlName="liveRegisterComponentBehaviour">
-				@for(behaviour of topologyBehaviorNames; track behaviour) { <mat-option
-					[value]="behaviour">{{behaviour|topologyBehaviourToName}}</mat-option>
+					formControlName="liveRegisterComponentBehavior">
+				@for(behavior of topologyBehaviorNames; track behavior) { <mat-option
+					[value]="behavior">{{behavior|topologyBehaviorToName}}</mat-option>
 				} </mat-select> </mat-form-field>
 				<mat-form-field> <mat-label
-					i18n="The label of the live configuration create connection behaviour@@main_config_editor-live-create-connection-behaviour-label">When
+					i18n="The label of the live configuration create connection behavior@@main_config_editor-live-create-connection-behavior-label">When
 				create a connection </mat-label> <mat-select
-					formControlName="liveCreateConnectionBehaviour">
-				@for(behaviour of topologyBehaviorNames; track behaviour) { <mat-option
-					[value]="behaviour">{{behaviour|topologyBehaviourToName}}</mat-option>
+					formControlName="liveCreateConnectionBehavior">
+				@for(behavior of topologyBehaviorNames; track behavior) { <mat-option
+					[value]="behavior">{{behavior|topologyBehaviorToName}}</mat-option>
 				} </mat-select> </mat-form-field>
 			</div>
 		</fieldset>

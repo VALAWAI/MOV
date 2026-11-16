@@ -35,7 +35,7 @@ export class TopologyNode {
 
 	/**
 	 * A reference to the {@link ComponentDefinition} that this node represents.
-	 * This defines the functional behaviour and capabilities of the node.
+	 * This defines the functional behavior and capabilities of the node.
 	 */
 	public component: ComponentDefinition | null = null;
 

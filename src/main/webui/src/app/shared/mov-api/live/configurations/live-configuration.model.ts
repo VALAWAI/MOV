@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { TopologyBehaviour } from "./topology-behaviour.model";
+import { TopologyBehavior } from "./topology-behavior.model";
 
 
 /**
@@ -22,14 +22,14 @@ export class LiveConfiguration {
 	public topologyId: string | null = null;
 
 	/**
-	 * The behaviour to follow when a component is registered in the MOV.
+	 * The behavior to follow when a component is registered in the MOV.
 	 */
-	public registerComponent: TopologyBehaviour | null = null;
+	public registerComponent: TopologyBehavior | null = null;
 
 	/**
-	 * The behaviour to follow when a component is registered in the MOV.
+	 * The behavior to follow when a component is registered in the MOV.
 	 */
-	public createConnection: TopologyBehaviour | null = null;
+	public createConnection: TopologyBehavior | null = null;
 
 
 }

@@ -59,7 +59,7 @@ export { LiveTopologyComponentOutConnection } from './live/topologies/live-topol
 export { LiveTopologyConnectionEndpoint } from './live/topologies/live-topology-connection-endpoint.model';
 
 export { LiveConfiguration } from './live/configurations/live-configuration.model';
-export { type TopologyBehaviour, TOPOLOGY_BEHAVIOUR_NAMES } from './live/configurations/topology-behaviour.model';
+export { type TopologyBehavior, TOPOLOGY_BEHAVIOR_NAMES } from './live/configurations/topology-behavior.model';
 
 /**
  * Check if two payload schemas match.
@@ -101,4 +101,4 @@ export function sortChannelSchemaByName(channels: ChannelSchema[]): void {
 	});
 }
 
-export { TopologyBehaviourToNamePipe } from './live/configurations/topology-behaviour-to-name.pipe';
+export { TopologyBehaviorToNamePipe } from './live/configurations/topology-behavior-to-name.pipe';
