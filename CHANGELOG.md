@@ -1,14 +1,10 @@
 # Master Of Valawai (MOV)
 
 
-## Version 2.2.0 (October 7,2026)
+## Version 2.1.0 (November 16,2026)
 
  - Upgrade Quarkus and Angular.
- 
-
-## Version 2.1.0 (February 19,2026)
-
- - Upgrade Quarkus and Angular.
+ - Fix translations.
 
 
 ## Version 2.0.1 (February 4,2026)
