@@ -8,7 +8,7 @@
 
 import { Injectable } from '@angular/core';
 import * as dagre from 'dagre';
-import { IPoint } from '@foblex/2d';
+import { IPoint } from '@foblex/flow';
 import { graphlib } from 'dagre';
 import Graph = graphlib.Graph;
 import { Observable, of, from } from 'rxjs';

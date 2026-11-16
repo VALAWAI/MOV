@@ -6,7 +6,7 @@
   https://opensource.org/license/gpl-3-0/
 */
 
-import { IPoint } from "@foblex/2d";
+import { IPoint } from "@foblex/flow";
 import { ChangeNodeAction } from "./change-node.action";
 import { TopologyEditorService } from "../topology.service";
 

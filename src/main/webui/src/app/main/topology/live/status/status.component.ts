@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ConfigService } from '@app/shared';
-import { PointExtensions } from '@foblex/2d';
+import { PointExtensions } from '@foblex/flow';
 import { FCanvasComponent, FFlowComponent, FFlowModule, FSelectionChangeEvent } from '@foblex/flow';
 import { MainService } from '@app/main';
 import { GraphModule } from '@app/shared/graph/graph.module';

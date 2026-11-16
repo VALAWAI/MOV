@@ -12,7 +12,7 @@ import {
 	LiveTopologyComponentOutConnection,
 	ComponentType
 } from "@app/shared/mov-api";
-import { IPoint } from "@foblex/2d";
+import { IPoint } from "@foblex/flow";
 import { StatusEndpoint } from "./status-endpoint.model";
 
 

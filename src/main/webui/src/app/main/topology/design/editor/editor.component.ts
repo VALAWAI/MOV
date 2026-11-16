@@ -46,7 +46,7 @@ import {
 	matchPayloadSchema,
 	ComponentDefinition
 } from '@app/shared/mov-api';
-import { IPoint, PointExtensions } from '@foblex/2d';
+import { IPoint, PointExtensions } from '@foblex/flow';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmSaveBeforeChangeDialog } from './confirm-save-before-change.dialog';
 import { SelectTopologyToOpenDialog } from './select-topology-to-open.dialog';

@@ -7,7 +7,7 @@
 */
 
 import { ChannelSchema, ComponentDefinition } from "@app/shared/mov-api";
-import { IPoint } from "@foblex/2d";
+import { IPoint } from "@foblex/flow";
 import { EditorEndpoint } from './editor-endpoint.model';
 import { calculateMiddlePoint, distance } from "@app/shared/graph";
 
