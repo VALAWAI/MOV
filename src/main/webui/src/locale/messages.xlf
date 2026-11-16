@@ -483,7 +483,7 @@
         <note priority="1" from="description">The acknowledgement text</note>
       </trans-unit>
       <trans-unit id="main_menu_project-web-page" datatype="html">
-        <source> Project web page <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <source>Project web page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
           <context context-type="linenumber">179,181</context>
@@ -491,7 +491,7 @@
         <note priority="1" from="description">The menu item to go to the project web page</note>
       </trans-unit>
       <trans-unit id="main_menu_project-documentation-web-page" datatype="html">
-        <source> Project documentation <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <source>Project documentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
           <context context-type="linenumber">185,187</context>
@@ -499,7 +499,7 @@
         <note priority="1" from="description">The menu item to go to the project documentation web page</note>
       </trans-unit>
       <trans-unit id="main_menu_project-twitter" datatype="html">
-        <source> Twitter <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <source>Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
           <context context-type="linenumber">191,193</context>
@@ -507,7 +507,7 @@
         <note priority="1" from="description">The menu item to go to the project twitter</note>
       </trans-unit>
       <trans-unit id="main_menu_project-github" datatype="html">
-        <source> GitHub <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;"/>arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <source>GitHub</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/main.component.html</context>
           <context context-type="linenumber">197,199</context>
@@ -1874,7 +1874,7 @@ must select one topology to open.</source>
         <note priority="1" from="description">The label to select the type of the component messages</note>
       </trans-unit>
       <trans-unit id="main_components_register-label" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Register a new component </source>
+        <source> Register a new component </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/components/search/search.component.html</context>
           <context context-type="linenumber">36,39</context>
@@ -2314,7 +2314,7 @@ must select one topology to open.</source>
         <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_create-label" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Create a new connection </source>
+        <source> Create a new connection </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/main/topology/live/connections/search/search.component.html</context>
           <context context-type="linenumber">28,31</context>

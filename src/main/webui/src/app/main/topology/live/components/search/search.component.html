@@ -30,11 +30,13 @@ multiple> @for (type of componentTypeNames; track type) {
 </mat-select> </mat-form-field>
 </div>
 <button
-  i18n="Label of the button to register a components@@main_components_register-label"
   routerLink="/main/topology/live/components/register" mat-raised-button
   color="primary" class="max-w-72">
 		<mat-icon>add</mat-icon>
-		Register a new component
+		<span
+			i18n="Label of the button to register a components@@main_components_register-label">
+			Register a new component
+		</span>
 	</button>
 @if (page && page.components && page.components.length > 0) {
   <div

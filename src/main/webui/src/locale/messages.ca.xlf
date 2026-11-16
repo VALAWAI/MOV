@@ -268,27 +268,23 @@
         <note priority="1" from="description">The acknowledgement text</note>
       </trans-unit>
       <trans-unit id="main_menu_project-web-page" datatype="html">
-        <source> Project web page <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;" />arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;" />
-        </source>
-        <target state="translated"> Pàgina web del projecte &lt;x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&amp;quot;ml-1 text-sm&amp;quot;&gt;"/&gt;arrow_outward&lt;x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/&gt;</target>
+        <source>Project web page</source>
+        <target state="translated">Pàgina web del projecte</target>
         <note priority="1" from="description">The menu item to go to the project web page</note>
       </trans-unit>
       <trans-unit id="main_menu_project-documentation-web-page" datatype="html">
-        <source> Project documentation <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;" />arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;" />
-        </source>
-        <target state="translated"> Documentació del projecte &lt;x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&amp;quot;ml-1 text-sm&amp;quot;&gt;"/&gt;arrow_outward&lt;x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/&gt;</target>
+        <source>Project documentation</source>
+        <target state="translated">Documentació del projecte</target>
         <note priority="1" from="description">The menu item to go to the project documentation web page</note>
       </trans-unit>
       <trans-unit id="main_menu_project-twitter" datatype="html">
-        <source> Twitter <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;" />arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;" />
-        </source>
-        <target state="translated"> Twitter &lt;x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&amp;quot;ml-1 text-sm&amp;quot;&gt;"/&gt;arrow_outward&lt;x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/&gt;</target>
+        <source>Twitter</source>
+        <target state="translated">Twitter</target>
         <note priority="1" from="description">The menu item to go to the project twitter</note>
       </trans-unit>
       <trans-unit id="main_menu_project-github" datatype="html">
-        <source> GitHub <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;ml-1 text-sm&quot;&gt;" />arrow_outward<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;" />
-        </source>
-        <target state="translated"> GitHub &lt;x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&amp;quot;ml-1 text-sm&amp;quot;&gt;"/&gt;arrow_outward&lt;x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/&gt;</target>
+        <source>GitHub</source>
+        <target state="translated">GitHub</target>
         <note priority="1" from="description">The menu item to go to the project GitHub</note>
       </trans-unit>
       <trans-unit id="main_copyright-text" datatype="html">
@@ -1163,9 +1159,8 @@ must select one topology to open.</source>
         <note priority="1" from="description">The label to select the type of the component messages</note>
       </trans-unit>
       <trans-unit id="main_components_register-label" datatype="html">
-        <source>
-          <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;" />add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;" /> Register a new component </source>
-        <target state="translated">&lt;x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/&gt;afegeix&lt;x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/&gt; Registra un component nou </target>
+        <source> Register a new component </source>
+        <target state="translated"> Registra un component nou </target>
         <note priority="1" from="description">Label of the button to register a components</note>
       </trans-unit>
       <trans-unit id="main_components_type-header-label" datatype="html">
@@ -1441,9 +1436,8 @@ must select one topology to open.</source>
         <note priority="1" from="description">The label of the checkbox to order in reverse order</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_create-label" datatype="html">
-        <source>
-          <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;" />add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;" /> Create a new connection </source>
-        <target state="translated">&lt;x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/&gt;add&lt;x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/&gt; Crea una nova connexió </target>
+        <source> Create a new connection </source>
+        <target state="translated"> Crea una nova connexió </target>
         <note priority="1" from="description">Label of the button to create a new connections</note>
       </trans-unit>
       <trans-unit id="main_topology_connections_go-back-to-component-label" datatype="html">
